@@ -133,12 +133,17 @@ public:
 };
 
 class Camera {
+    sf::Vector2u screen;
 
 public:
     glm::vec2 rot;
     glm::vec3 pos;
 
     Camera() : rot(0, 0), pos(0, 0, 0) { }
+
+    void setScreen(sf::Vector2u screen) {
+        this->screen = screen;
+    }
 
     /**
      * Rotate on the x an y axis in degrees.
@@ -165,8 +170,10 @@ public:
 
     void pushTransform() {
         glPushMatrix();
+        glScalef(1.0f,(float)screen.x/screen.y,1.0f);
         glRotatef(-this->rot.x, 1, 0, 0);
         glRotatef(-this->rot.y, 0, 1, 0);
+        glScalef(1.0f,(float)screen.y/screen.x,1.0f);
         glTranslatef(-this->pos.x, -this->pos.y, -this->pos.z);
     }
 
@@ -228,10 +235,10 @@ int main() {
     sf::ContextSettings settings;
     settings.depthBits = 24;
     settings.antialiasingLevel = 8;
-    settings.majorVersion = 2;
-    settings.minorVersion = 1;
+    settings.majorVersion = 3;
+    settings.minorVersion = 0;
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My Window", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "My Window", sf::Style::Default | sf::Style::Fullscreen, settings);
 
     window.setVerticalSyncEnabled(true); // call it once, after creating the window
     window.setFramerateLimit(60); // call it once, after creating the window
@@ -254,16 +261,6 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    sf::Text xLabel, yLabel;
-    xLabel.setFont(font);
-    xLabel.setString("0.0");
-    xLabel.setPosition(10, 10);
-    xLabel.setCharacterSize(24);
-    yLabel.setFont(font);
-    yLabel.setString("0.0");
-    yLabel.setPosition(10, 50);
-    yLabel.setCharacterSize(24);
-
     sf::Vector2i lastMouse (200, 200);
     sf::Mouse::setPosition(lastMouse, window);
 
@@ -283,6 +280,7 @@ int main() {
     });
 
     Camera cam;
+    cam.setScreen(window.getSize());
     cam.move(3, 2, 1);
 
     sf::Clock clock;
@@ -320,6 +318,7 @@ int main() {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 glViewport(0, 0, event.size.width, event.size.height);
+                cam.setScreen(window.getSize());
                 break;
             }
         }
@@ -334,13 +333,6 @@ int main() {
             cam.move(x * 0.2, 0, z * 0.2);
         }
 
-        std::stringstream ss1;
-        ss1 << "x: " << cam.pos.x;
-        xLabel.setString(ss1.str());
-        std::stringstream ss2;
-        ss2 << "z: " << cam.pos.z;
-        yLabel.setString(ss2.str());
-
         if (!menu.isVisible) {
             auto pos = sf::Mouse::getPosition(window);
             auto delta = pos - lastMouse;
@@ -352,9 +344,6 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         modeProjection();
-        // gluPerspective(70, self.width / self.height, 0.05, 1000);
-        // gluOrtho2D(0, window->getSize().x, 0, window->getSize().y);
-        // gluPerspective(70, window->getSize().x, 0, window->getSize().y);
         float aspect = window.getSize().x / window.getSize().y;
         gluPerspective(63, aspect, 0.01, 100.0);
         modeModel();
@@ -365,8 +354,6 @@ int main() {
 
         window.pushGLStates();
         window.draw(menu);
-        window.draw(xLabel);
-        window.draw(yLabel);
         window.popGLStates();
 
         window.display();
