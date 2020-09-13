@@ -134,15 +134,30 @@ public:
 
 class Camera {
     sf::Vector2u screen;
-
-public:
     glm::vec2 rot;
     glm::vec3 pos;
 
+public:
     Camera() : rot(0, 0), pos(0, 0, 0) { }
+
+    void setScreen(unsigned width, unsigned height) {
+        setScreen({width, height});
+    }
 
     void setScreen(sf::Vector2u screen) {
         this->screen = screen;
+    }
+
+    void setRotation(float x, float y) {
+        rot = {x, y};
+    }
+
+    void setRotation(sf::Vector2f rot) {
+        this->rot = {rot.x, rot.y};
+    }
+
+    void setRotation(glm::vec2 rot) {
+        this->rot = rot;
     }
 
     /**
@@ -153,11 +168,23 @@ public:
         rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
     }
 
-    void moveLinear(float x, float y, float z) {
-        pos += glm::vec3(x, y, z);
+    void setPosition(float x, float y, float z) {
+        pos = {x, y, z};
+    }
+
+    void setPosition(sf::Vector3f pos) {
+        this->pos = {pos.x, pos.y, pos.z};
+    }
+
+    void setPosition(glm::vec3 pos) {
+        this->pos = pos;
     }
 
     void move(float x, float y, float z) {
+        pos += glm::vec3(x, y, z);
+    }
+
+    void moveLook(float x, float y, float z) {
         float yRot = glm::radians(rot.y);
 
         float dz = -x * std::sin(yRot) + z * std::cos(yRot);
@@ -322,6 +349,7 @@ int main() {
         }
 
         sf::Time delta = clock.restart();
+        float deltaS = delta.asSeconds();
         
         // TODO: update
 
@@ -334,7 +362,7 @@ int main() {
             int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
             int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
             int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-            cam.move(x * 0.2, y * 0.2, z * 0.2);
+            cam.moveLook(x * deltaS, y * deltaS, z * deltaS);
         }
 
         // window.clear(dark);
