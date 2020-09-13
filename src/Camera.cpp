@@ -1,6 +1,7 @@
 #include "Camera.hpp"
 
 namespace game {
+    
     Camera::Camera(): rot(0, 0), pos(0, 0, 0) { }
 
     Camera::~Camera() { }
