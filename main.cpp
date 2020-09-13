@@ -261,7 +261,6 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    // sf::Vector2f lastMouse (200, 200);
     sf::Vector2i lastMouse (200, 200);
     sf::Mouse::setPosition(lastMouse, window);
 
@@ -272,7 +271,6 @@ int main() {
         menu.hide();
         window.setMouseCursorGrabbed(true);
         window.setMouseCursorVisible(false);
-        // sf::Mouse::setPosition(lastMouse, window);
     });
     menu.addMenuItem("Load", []() {});
     menu.addMenuItem("Options", []() {});
@@ -289,8 +287,6 @@ int main() {
     glClearColor(0.2, 0.5, 0.7, 1.0);
 
     while (window.isOpen()) {
-        // sf::Vector2f mouseDelta;
-
         sf::Event event;
         while (window.pollEvent(event)) {
             switch (event.type) {
@@ -300,17 +296,11 @@ int main() {
                     menu.show();
                     window.setMouseCursorGrabbed(false);
                     window.setMouseCursorVisible(true);
-                    // window.close();
                     break;
                 }
                 break;
             case sf::Event::MouseMoved:
                 menu.onMouseMove(event.mouseMove);
-                // if (!menu.isVisible)
-                // {
-                //     mouseDelta.x += event.mouseMove.x - lastMouse.x;
-                //     mouseDelta.y += event.mouseMove.y - lastMouse.y;
-                // }
                 break;
             case sf::Event::MouseButtonPressed:
                 menu.onMouseDown(event.mouseButton);
@@ -342,8 +332,9 @@ int main() {
             sf::Mouse::setPosition(lastMouse, window);
 
             int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+            int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
             int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-            cam.move(x * 0.2, 0, z * 0.2);
+            cam.move(x * 0.2, y * 0.2, z * 0.2);
         }
 
         // window.clear(dark);
@@ -351,7 +342,7 @@ int main() {
 
         modeProjection();
         float aspect = window.getSize().x / window.getSize().y;
-        gluPerspective(63, aspect, 0.01, 100.0);
+        gluPerspective(93, aspect, 0.01, 100.0);
         modeModel();
 
         cam.pushTransform();
