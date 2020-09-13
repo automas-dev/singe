@@ -12,6 +12,7 @@
 #include <memory>
 using namespace std;
 #include "vbo.hpp"
+#include "Camera.hpp"
 
 const sf::Color light (200, 200, 200);
 const sf::Color dark (10, 10, 10);
@@ -129,83 +130,6 @@ public:
             if (item.contains(point))
                 item.click();
         }
-    }
-};
-
-class Camera {
-    sf::Vector2u screen;
-    glm::vec2 rot;
-    glm::vec3 pos;
-
-public:
-    Camera() : rot(0, 0), pos(0, 0, 0) { }
-
-    void setScreen(unsigned width, unsigned height) {
-        setScreen({width, height});
-    }
-
-    void setScreen(sf::Vector2u screen) {
-        this->screen = screen;
-    }
-
-    void setRotation(float x, float y) {
-        rot = {x, y};
-    }
-
-    void setRotation(sf::Vector2f rot) {
-        this->rot = {rot.x, rot.y};
-    }
-
-    void setRotation(glm::vec2 rot) {
-        this->rot = rot;
-    }
-
-    /**
-     * Rotate on the x an y axis in degrees.
-     */
-    void rotate(float x, float y) {
-        rot -= glm::vec2(x, y);
-        rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
-    }
-
-    void setPosition(float x, float y, float z) {
-        pos = {x, y, z};
-    }
-
-    void setPosition(sf::Vector3f pos) {
-        this->pos = {pos.x, pos.y, pos.z};
-    }
-
-    void setPosition(glm::vec3 pos) {
-        this->pos = pos;
-    }
-
-    void move(float x, float y, float z) {
-        pos += glm::vec3(x, y, z);
-    }
-
-    void moveLook(float x, float y, float z) {
-        float yRot = glm::radians(rot.y);
-
-        float dz = -x * std::sin(yRot) + z * std::cos(yRot);
-        float dx = -x * -std::cos(yRot) + z * std::sin(yRot);
-
-        float dy = y;
-
-        pos += glm::vec3(dx, dy, dz);
-    }
-
-    void pushTransform() {
-        glPushMatrix();
-        glScalef(1.0f,(float)screen.x/screen.y,1.0f);
-        glRotatef(-this->rot.x, 1, 0, 0);
-        glRotatef(-this->rot.y, 0, 1, 0);
-        glScalef(1.0f,(float)screen.y/screen.x,1.0f);
-        glTranslatef(-this->pos.x, -this->pos.y, -this->pos.z);
-    }
-
-    void popTransform() {
-        glPopMatrix();
     }
 };
 
