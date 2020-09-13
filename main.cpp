@@ -149,7 +149,7 @@ public:
      * Rotate on the x an y axis in degrees.
      */
     void rotate(float x, float y) {
-        rot += glm::vec2(x, y);
+        rot -= glm::vec2(x, y);
         rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
     }
 
@@ -261,9 +261,9 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    sf::Vector2f lastMouse (200, 200);
-    // sf::Vector2i lastMouse (200, 200);
-    // sf::Mouse::setPosition(lastMouse, window);
+    // sf::Vector2f lastMouse (200, 200);
+    sf::Vector2i lastMouse (200, 200);
+    sf::Mouse::setPosition(lastMouse, window);
 
     Menu menu (font);
     menu.setTitle("Game");
@@ -284,13 +284,13 @@ int main() {
     cam.setScreen(window.getSize());
     cam.move(3, 2, 1);
 
-    bool mouseReset = false;
-
     sf::Clock clock;
 
     glClearColor(0.2, 0.5, 0.7, 1.0);
 
     while (window.isOpen()) {
+        // sf::Vector2f mouseDelta;
+
         sf::Event event;
         while (window.pollEvent(event)) {
             switch (event.type) {
@@ -306,15 +306,11 @@ int main() {
                 break;
             case sf::Event::MouseMoved:
                 menu.onMouseMove(event.mouseMove);
-                if (!menu.isVisible && !mouseReset)
-                {
-                    sf::Vector2f mouse (event.mouseMove.x, event.mouseMove.y);
-                    sf::Vector2f delta (mouse.x - lastMouse.x, mouse.y - lastMouse.y);
-                    mouseReset = true;
-                    sf::Mouse::setPosition({lastMouse.x, lastMouse.y}, window);
-                    mouseReset = false;
-                    cam.rotate(delta.y, delta.x);
-                }
+                // if (!menu.isVisible)
+                // {
+                //     mouseDelta.x += event.mouseMove.x - lastMouse.x;
+                //     mouseDelta.y += event.mouseMove.y - lastMouse.y;
+                // }
                 break;
             case sf::Event::MouseButtonPressed:
                 menu.onMouseDown(event.mouseButton);
@@ -340,17 +336,15 @@ int main() {
         // TODO: update
 
         if (!menu.isVisible) {
+            auto mPos = sf::Mouse::getPosition(window);
+            sf::Vector2f mDelta (mPos.x - lastMouse.x, mPos.y - lastMouse.y);
+            cam.rotate(mDelta.y * 0.2, mDelta.x * 0.2);
+            sf::Mouse::setPosition(lastMouse, window);
+
             int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
             int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
             cam.move(x * 0.2, 0, z * 0.2);
         }
-
-        // if (!menu.isVisible) {
-        //     auto pos = sf::Mouse::getPosition(window);
-        //     auto delta = pos - lastMouse;
-        //     cam.rotate(-delta.y / 2, -delta.x / 2);
-        //     sf::Mouse::setPosition(lastMouse, window);
-        // }
 
         // window.clear(dark);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
