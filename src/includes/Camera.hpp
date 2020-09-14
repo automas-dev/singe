@@ -19,6 +19,8 @@ namespace game {
         Camera(void);
         virtual ~Camera();
 
+        // TODO: update()
+
         void setScreen(unsigned width, unsigned height);
 
         void setScreen(sf::Vector2u screen);
