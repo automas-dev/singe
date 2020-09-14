@@ -2,10 +2,14 @@
 LD=$(CXX)
 
 SFML=`pkg-config --cflags sfml-all glew`
+SFML_LIBS=`pkg-config --cflags sfml-all glew`
+
 INCLUDES=-Isrc/includes
-CFLAGS=-O0 -g $(SFML) $(INCLUDES)
-CPPFLAGS=-O0 -g -std=c++2a $(SFML) $(INCLUDES)
-LDFLAGS=`pkg-config --libs sfml-all glew gl`
+WARNINGS=-Wall -Wextra -Wno-switch
+
+CFLAGS=-O0 -g $(WARNINGS) $(SFML) $(INCLUDES)
+CPPFLAGS=-O0 -g $(WARNINGS) $(SFML) $(INCLUDES) -std=c++2a
+LDFLAGS=$(SFML_LIBS)
 
 TARGET=main
 OBJECTS=main.o Camera.o Menu.o Shader.o
