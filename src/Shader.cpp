@@ -18,7 +18,7 @@ namespace GameLib {
         glDisableClientState(GL_COLOR_ARRAY);
     }
 
-    std::string shaderSource(const std::string &path) {
+    std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
 
         auto start = std::istreambuf_iterator<char>(t);
@@ -60,7 +60,7 @@ namespace GameLib {
     }
 
     GLuint compileShader(GLuint shaderType,
-                            const std::string &shaderSource) {
+                         const std::string & shaderSource) {
 
         GLuint shader = glCreateShader(shaderType);
         const GLchar *src = shaderSource.c_str();
@@ -71,8 +71,8 @@ namespace GameLib {
         return shader;
     }
 
-    Shader::Shader(std::string const &vertexSource,
-            std::string const &fragmentSource) {
+    Shader::Shader(std::string const & vertexSource,
+                   std::string const & fragmentSource) {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
@@ -112,10 +112,14 @@ namespace GameLib {
     GLuint Shader::uniformLocation(std::string const & name) {
         return glGetUniformLocation(this->program, name.c_str());
     }
- 
-    void Shader::bind() { glUseProgram(this->program); }
 
-    void Shader::unbind() { glUseProgram(0); }
+    void Shader::bind() {
+        glUseProgram(this->program);
+    }
+
+    void Shader::unbind() {
+        glUseProgram(0);
+    }
 
     std::shared_ptr<Shader> getShader(std::string const & vPath, std::string const & fPath) {
         std::string vSource = shaderSource(vPath);
