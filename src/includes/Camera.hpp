@@ -4,14 +4,18 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace game {
-    class Camera {
+    class Camera: public std::enable_shared_from_this<Camera> {
         sf::Vector2u screen;
         glm::vec2 rot;
         glm::vec3 pos;
 
     public:
+        typedef std::shared_ptr<Camera> Ptr;
+        typedef std::shared_ptr<const Camera> ConstPtr;
+
         Camera(void);
         virtual ~Camera();
 
@@ -43,5 +47,7 @@ namespace game {
         void pushTransform(void);
 
         void popTransform(void);
+
+        static Ptr create(void);
     };
 }

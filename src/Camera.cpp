@@ -73,4 +73,9 @@ namespace game {
     void Camera::popTransform() {
         glPopMatrix();
     }
+
+    Camera::Ptr Camera::create() {
+        auto camera = std::make_shared<Camera>();
+        return camera;
+    }
 }

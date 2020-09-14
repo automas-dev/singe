@@ -71,8 +71,8 @@ namespace GameLib {
         return shader;
     }
 
-    Shader::Shader(const std::string &vertexSource,
-            const std::string &fragmentSource) {
+    Shader::Shader(std::string const &vertexSource,
+            std::string const &fragmentSource) {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
@@ -109,15 +109,15 @@ namespace GameLib {
         }
     }
 
-    GLuint Shader::uniformLocation(const char *name) {
-        return glGetUniformLocation(this->program, name);
+    GLuint Shader::uniformLocation(std::string const & name) {
+        return glGetUniformLocation(this->program, name.c_str());
     }
  
     void Shader::bind() { glUseProgram(this->program); }
 
     void Shader::unbind() { glUseProgram(0); }
 
-    std::shared_ptr<Shader> getShader(const char *vPath, const char *fPath) {
+    std::shared_ptr<Shader> getShader(std::string const & vPath, std::string const & fPath) {
         std::string vSource = shaderSource(vPath);
         std::string fSource = shaderSource(fPath);
         return std::make_shared<Shader>(vSource, fSource);

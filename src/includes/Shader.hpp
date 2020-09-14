@@ -27,22 +27,22 @@ namespace GameLib {
         using std::runtime_error::runtime_error;
     };
 
-    std::string shaderSource(const std::string &path);
+    std::string shaderSource(std::string const& path);
 
     class Shader {
         GLuint program;
 
     public:
-        Shader(const std::string &vertexSource,
-               const std::string &fragmentSource);
+        Shader(std::string const & vertexSource,
+               std::string const & fragmentSource);
         ~Shader() {}
 
-        GLuint uniformLocation(const char *name);
+        GLuint uniformLocation(std::string const & name);
 
         void bind();
 
         void unbind();
     };
 
-    std::shared_ptr<Shader> getShader(const char *vPath, const char *fPath);
+    std::shared_ptr<Shader> getShader(std::string const & vPath, std::string const & fPath);
 };

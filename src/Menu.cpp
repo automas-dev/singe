@@ -21,18 +21,38 @@ namespace game {
         auto tPoint = getTransform().getInverse().transformPoint(point);
         return getLocalBounds().contains(tPoint);
     }
+
+    MenuItem::Ptr MenuItem::create() {
+        auto item = std::make_shared<MenuItem>();
+        return item;
+    }
 }
 
 namespace game {
 
-    Menu::Menu(sf::Font font) : font(font) {
+    Menu::Menu() { }
+
+    Menu::Menu(const sf::Font & font) : font(font) {
         title.setFont(this->font);
         title.setCharacterSize(48);
+    }
+    Menu::Menu(const sf::Font & font, const std::string &title) : font(font) {
+        this->title.setString(title);
+        this->title.setFont(this->font);
+        this->title.setCharacterSize(48);
     }
 
     Menu::~Menu() { }
 
-    void Menu::setTitle(std::string text) {
+    void Menu::setFont(const sf::Font &font) {
+        this->font = font;
+        this->title.setFont(this->font);
+        for (auto item : items) {
+            item.setFont(this->font);
+        }
+    }
+
+    void Menu::setTitle(const std::string &text) {
         this->title.setString(text);
     }
 
@@ -44,7 +64,7 @@ namespace game {
         isVisible = false;
     }
 
-    void Menu::addMenuItem(std::string text, std::function<void(void)> callback) {
+    void Menu::addMenuItem(const std::string &text, std::function<void(void)> callback) {
         MenuItem menuItem;
         menuItem.setCallback(callback);
         menuItem.setFont(this->font);
@@ -112,5 +132,20 @@ namespace game {
             if (item.contains(point))
                 item.click();
         }
+    }
+
+    Menu::Ptr Menu::create() {
+        auto menu = std::make_shared<Menu>();
+        return menu;
+    }
+
+    Menu::Ptr Menu::create(const sf::Font &font) {
+        auto menu = std::make_shared<Menu>(font);
+        return menu;
+    }
+
+    Menu::Ptr Menu::create(const sf::Font &font, const std::string &title) {
+        auto menu = std::make_shared<Menu>(font, title);
+        return menu;
     }
 }

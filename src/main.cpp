@@ -94,23 +94,23 @@ int main() {
     sf::Vector2i lastMouse (200, 200);
     sf::Mouse::setPosition(lastMouse, window);
 
-    Menu menu (font);
-    menu.setTitle("Game");
-    menu.setPosition(300, 300);
-    menu.addMenuItem("New", [&]() {
-        menu.hide();
+    Menu::Ptr menu = Menu::create(font);
+    menu->setTitle("Game");
+    menu->setPosition(300, 300);
+    menu->addMenuItem("New", [&]() {
+        menu->hide();
         window.setMouseCursorGrabbed(true);
         window.setMouseCursorVisible(false);
     });
-    menu.addMenuItem("Load", []() {});
-    menu.addMenuItem("Options", []() {});
-    menu.addMenuItem("Exit", [&]() {
+    menu->addMenuItem("Load", []() {});
+    menu->addMenuItem("Options", []() {});
+    menu->addMenuItem("Exit", [&]() {
         window.close();
     });
 
-    Camera cam;
-    cam.setScreen(window.getSize());
-    cam.move(3, 2, 1);
+    Camera::Ptr cam = Camera::create();
+    cam->setScreen(window.getSize());
+    cam->move(3, 2, 1);
 
     sf::Clock clock;
 
@@ -123,20 +123,20 @@ int main() {
             case sf::Event::KeyPressed:
                 switch (event.key.code) {
                 case sf::Keyboard::Escape:
-                    menu.show();
+                    menu->show();
                     window.setMouseCursorGrabbed(false);
                     window.setMouseCursorVisible(true);
                     break;
                 }
                 break;
             case sf::Event::MouseMoved:
-                menu.onMouseMove(event.mouseMove);
+                menu->onMouseMove(event.mouseMove);
                 break;
             case sf::Event::MouseButtonPressed:
-                menu.onMouseDown(event.mouseButton);
+                menu->onMouseDown(event.mouseButton);
                 break;
             case sf::Event::MouseButtonReleased:
-                menu.onMouseUp(event.mouseButton);
+                menu->onMouseUp(event.mouseButton);
                 break;
             case sf::Event::KeyReleased:
                 break;
@@ -146,7 +146,7 @@ int main() {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 glViewport(0, 0, event.size.width, event.size.height);
-                cam.setScreen(window.getSize());
+                cam->setScreen(window.getSize());
                 break;
             }
         }
@@ -156,16 +156,16 @@ int main() {
         
         // TODO: update
 
-        if (!menu.isVisible) {
+        if (!menu->isVisible) {
             auto mPos = sf::Mouse::getPosition(window);
             sf::Vector2f mDelta (mPos.x - lastMouse.x, mPos.y - lastMouse.y);
-            cam.rotate(mDelta.y * 0.2, mDelta.x * 0.2);
+            cam->rotate(mDelta.y * 0.2, mDelta.x * 0.2);
             sf::Mouse::setPosition(lastMouse, window);
 
             int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
             int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
             int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-            cam.moveLook(x * deltaS, y * deltaS, z * deltaS);
+            cam->moveLook(x * deltaS, y * deltaS, z * deltaS);
         }
 
         // window.clear(dark);
@@ -176,12 +176,12 @@ int main() {
         gluPerspective(93, aspect, 0.01, 100.0);
         modeModel();
 
-        cam.pushTransform();
+        cam->pushTransform();
         drawGrid(20);
-        cam.popTransform();
+        cam->popTransform();
 
         window.pushGLStates();
-        window.draw(menu);
+        window.draw(*menu);
         window.popGLStates();
 
         window.display();
