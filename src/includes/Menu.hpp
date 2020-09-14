@@ -19,9 +19,9 @@ namespace game {
 
         void setCallback(std::function<void(void)> callback);
 
-        void click();
+        void click() const;
 
-        bool contains(sf::Vector2f point);
+        bool contains(sf::Vector2f point) const;
 
         static Ptr create(void);
     };
@@ -29,7 +29,7 @@ namespace game {
     class Menu : public sf::Drawable, public sf::Transformable {
         sf::Font font;
         sf::Text title;
-        std::list<MenuItem> items;
+        std::list<MenuItem::Ptr> items;
         bool isMouseDown = false;
 
     public:

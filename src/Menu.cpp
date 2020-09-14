@@ -13,11 +13,11 @@ namespace game {
         this->callback = callback;
     }
 
-    void MenuItem::click() {
+    void MenuItem::click() const {
         callback();
     }
 
-    bool MenuItem::contains(sf::Vector2f point) {
+    bool MenuItem::contains(sf::Vector2f point) const {
         auto tPoint = getTransform().getInverse().transformPoint(point);
         return getLocalBounds().contains(tPoint);
     }
@@ -47,8 +47,8 @@ namespace game {
     void Menu::setFont(const sf::Font &font) {
         this->font = font;
         this->title.setFont(this->font);
-        for (auto item : items) {
-            item.setFont(this->font);
+        for (auto &item : items) {
+            item->setFont(this->font);
         }
     }
 
@@ -65,21 +65,21 @@ namespace game {
     }
 
     void Menu::addMenuItem(const std::string &text, std::function<void(void)> callback) {
-        MenuItem menuItem;
-        menuItem.setCallback(callback);
-        menuItem.setFont(this->font);
-        menuItem.setString(text);
-        menuItem.setCharacterSize(24);
-        menuItem.setFillColor(light);
-        menuItem.setOrigin(menuItem.getLocalBounds().left, menuItem.getLocalBounds().top);
+        MenuItem::Ptr menuItem = MenuItem::create();
+        menuItem->setCallback(callback);
+        menuItem->setFont(this->font);
+        menuItem->setString(text);
+        menuItem->setCharacterSize(24);
+        menuItem->setFillColor(light);
+        menuItem->setOrigin(menuItem->getLocalBounds().left, menuItem->getLocalBounds().top);
         if (items.empty()) {
-            menuItem.setPosition(0, title.getGlobalBounds().height * 2);
+            menuItem->setPosition(0, title.getGlobalBounds().height * 2);
         }
         else {
             auto & item = items.back();
-            menuItem.setPosition(0, item.getGlobalBounds().top + item.getGlobalBounds().height * 2);
+            menuItem->setPosition(0, item->getGlobalBounds().top + item->getGlobalBounds().height * 2);
         }
-        items.push_back(std::move(menuItem));
+        items.push_back(menuItem);
     }
 
     void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const {
@@ -97,7 +97,7 @@ namespace game {
         target.draw(title, states);
 
         for (auto & item : items) {
-            target.draw(item, states);
+            target.draw(*item, states);
         }
     }
 
@@ -107,10 +107,10 @@ namespace game {
             return;
 
         for (auto & item : items) {
-            if (item.contains(point))
-                item.setFillColor(sf::Color::Red);
+            if (item->contains(point))
+                item->setFillColor(sf::Color::Red);
             else
-                item.setFillColor(light);
+                item->setFillColor(light);
         }
     }
 
@@ -119,8 +119,8 @@ namespace game {
         isMouseDown = true;
 
         for (auto & item : items) {
-            if (item.contains(point))
-                item.setFillColor(sf::Color::Green);
+            if (item->contains(point))
+                item->setFillColor(sf::Color::Green);
         }
     }
 
@@ -129,8 +129,8 @@ namespace game {
         isMouseDown = false;
 
         for (auto & item : items) {
-            if (item.contains(point))
-                item.click();
+            if (item->contains(point))
+                item->click();
         }
     }
 
