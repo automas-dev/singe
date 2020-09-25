@@ -26,7 +26,7 @@ namespace GameLib {
         typedef std::shared_ptr<Shader> Ptr;
         typedef std::shared_ptr<const Shader> ConstPtr;
 
-        Shader();
+        Shader(void);
         Shader(const std::string & vertexSource,
                const std::string & fragmentSource);
         virtual ~Shader();
@@ -39,9 +39,9 @@ namespace GameLib {
 
         GLuint uniformLocation(const std::string & name);
 
-        void bind();
+        void bind(void);
 
-        void unbind();
+        void unbind(void);
 
         static Ptr create(const std::string & vertexPath,
                           const std::string & fragmentPath);
