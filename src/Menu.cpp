@@ -77,7 +77,7 @@ namespace game {
         }
         else {
             auto & item = items.back();
-            menuItem->setPosition(0, item->getGlobalBounds().top + item->getGlobalBounds().height * 2);
+            menuItem->setPosition(0, item->getGlobalBounds().top + item->getCharacterSize() * 1.5);
         }
         items.push_back(menuItem);
     }
