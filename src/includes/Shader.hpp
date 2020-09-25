@@ -17,32 +17,33 @@ namespace GameLib {
                           size_t n,
                           GLenum mode);
 
-    class shader_compile_error : public std::runtime_error {
-    public:
-        using std::runtime_error::runtime_error;
-    };
-
-    class shader_link_error : public std::runtime_error {
-    public:
-        using std::runtime_error::runtime_error;
-    };
-
-    std::string shaderSource(std::string const& path);
+    std::string shaderSource(const std::string & path);
 
     class Shader {
         GLuint program;
 
     public:
-        Shader(std::string const & vertexSource,
-               std::string const & fragmentSource);
-        ~Shader() {}
+        typedef std::shared_ptr<Shader> Ptr;
+        typedef std::shared_ptr<const Shader> ConstPtr;
 
-        GLuint uniformLocation(std::string const & name);
+        Shader();
+        Shader(const std::string & vertexSource,
+               const std::string & fragmentSource);
+        virtual ~Shader();
+
+        bool loadFromSource(const std::string & vertexSource,
+                          const std::string & fragmentSource);
+
+        bool loadFromPath(const std::string & vertexPath,
+                          const std::string & fragmentPath);
+
+        GLuint uniformLocation(const std::string & name);
 
         void bind();
 
         void unbind();
-    };
 
-    std::shared_ptr<Shader> getShader(std::string const & vPath, std::string const & fPath);
+        static Ptr create(const std::string & vertexPath,
+                          const std::string & fragmentPath);
+    };
 };

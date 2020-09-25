@@ -20,6 +20,8 @@ namespace GameLib {
 
     std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
+        if (!t)
+            return std::string();
 
         auto start = std::istreambuf_iterator<char>(t);
         auto end = std::istreambuf_iterator<char>();
@@ -71,20 +73,40 @@ namespace GameLib {
         return shader;
     }
 
-    Shader::Shader(std::string const & vertexSource,
-                   std::string const & fragmentSource) {
+    Shader::Shader() { }
+
+    Shader::Shader(const std::string & vertexSource,
+                   const std::string & fragmentSource) {
+        loadFromSource(vertexSource, fragmentSource);
+    }
+
+    Shader::~Shader() { }
+
+    bool Shader::loadFromPath(const std::string & vertexPath,
+                        const std::string & fragmentPath) {
+        std::string vertexSource = shaderSource(vertexPath);
+        std::string fragmentSource = shaderSource(fragmentPath);
+
+        if (!vertexSource.empty() || !fragmentSource.empty())
+            return false;
+        
+        return loadFromSource(vertexSource, fragmentSource);
+    }
+
+    bool Shader::loadFromSource(const std::string & vertexSource,
+                                const std::string & fragmentSource) {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
             glDeleteShader(vShader);
-            throw shader_compile_error(compileError(vShader));
+            return false;
         }
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
             glDeleteShader(vShader);
             glDeleteShader(fShader);
-            throw shader_compile_error(compileError(fShader));
+            return false;
         }
 
         this->program = glCreateProgram();
@@ -105,11 +127,13 @@ namespace GameLib {
 
         if (!linkSuccess(this->program)) {
             glDeleteProgram(this->program);
-            throw shader_link_error(linkError(this->program));
+            return false;
         }
+
+        return true;
     }
 
-    GLuint Shader::uniformLocation(std::string const & name) {
+    GLuint Shader::uniformLocation(const std::string & name) {
         return glGetUniformLocation(this->program, name.c_str());
     }
 
@@ -121,9 +145,14 @@ namespace GameLib {
         glUseProgram(0);
     }
 
-    std::shared_ptr<Shader> getShader(std::string const & vPath, std::string const & fPath) {
-        std::string vSource = shaderSource(vPath);
-        std::string fSource = shaderSource(fPath);
-        return std::make_shared<Shader>(vSource, fSource);
+    Shader::Ptr Shader::create(const std::string & vertexPath,
+                               const std::string & fragmentPath) {
+        auto s = std::make_shared<Shader>();
+        if (s) {
+            if (!s->loadFromPath(vertexPath, fragmentPath)) {
+                return nullptr;
+            }
+        }
+        return s;
     }
 };
