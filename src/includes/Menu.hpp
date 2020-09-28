@@ -7,7 +7,8 @@
 #include <memory>
 
 namespace game {
-    class MenuItem : public sf::Text {
+    
+    class MenuItem : public sf::Text, public std::enable_shared_from_this<MenuItem> {
         std::function<void(void)> callback;
 
     public:
@@ -26,7 +27,7 @@ namespace game {
         static Ptr create(void);
     };
 
-    class Menu : public sf::Drawable, public sf::Transformable {
+    class Menu : public sf::Drawable, public sf::Transformable, public std::enable_shared_from_this<Menu> {
         sf::Font font;
         sf::Text title;
         std::list<MenuItem::Ptr> items;

@@ -11,7 +11,7 @@
 
 namespace game {
 
-    class Game {
+    class Game : public std::enable_shared_from_this<Game> {
         sf::RenderWindow & window;
 
         sf::Font font;
@@ -37,7 +37,7 @@ namespace game {
         void onResized(const sf::Event::SizeEvent & e);
 
         void update(const sf::Time & delta);
-        void draw();
+        void draw() const;
 
         static Ptr create(sf::RenderWindow & window, const sf::Font & defaultFont);
     };

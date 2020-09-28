@@ -115,7 +115,7 @@ namespace game {
         }
     }
 
-    void Game::draw() {
+    void Game::draw() const {
         cam->pushTransform();
         drawGrid(20);
         cam->popTransform();

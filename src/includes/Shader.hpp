@@ -19,7 +19,7 @@ namespace GameLib {
 
     std::string shaderSource(const std::string & path);
 
-    class Shader {
+    class Shader : public std::enable_shared_from_this<Shader> {
         GLuint program;
 
     public:

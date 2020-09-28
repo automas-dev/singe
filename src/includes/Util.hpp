@@ -1,0 +1,68 @@
+#pragma once
+
+#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <fstream>
+#include <string>
+#include <stdexcept>
+#include <memory>
+
+namespace game {
+
+    const float pi = std::acos(-1);
+
+    inline float toRadians(float angle) {
+        return angle * pi / 180.0;
+    }
+
+    inline float toDegrees(float angle) {
+        return angle * 180.0 / pi;
+    }
+
+    template <typename T = float> inline void bound(T & val, T min, T max) {
+        if (val < min)
+            val = min;
+        else if (val > max)
+            val = max;
+    }
+
+    void modeProjection(void);
+
+    void modeModel(void);
+
+    void push(glm::vec3 pos, glm::vec2 rot);
+
+    bool strStartsWithChar(char pre, const std::string & str);
+
+    bool strStartsWithStr(const std::string & pre, const std::string & str);
+
+    class Parser : public std::enable_shared_from_this<Parser> {
+        std::ifstream fin;
+
+    public:
+        typedef std::shared_ptr<Parser> Ptr;
+        typedef std::shared_ptr<const Parser> ConstPtr;
+
+        Parser(void);
+        Parser(const std::string & path);
+        ~Parser();
+
+        bool open(const std::string & path);
+
+        void close(void);
+
+        bool is_open(void) const;
+
+        bool eof(void) const;
+
+        std::string readToChar(char delim);
+
+        std::string readLine();
+        
+        void rewind();
+
+        static Ptr create(const std::string & path);
+    };
+};

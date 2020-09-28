@@ -8,12 +8,12 @@ INCLUDES=-Isrc/includes
 WARNINGS=-Wall -Wextra -Wno-switch
 
 CFLAGS=-O0 -g $(WARNINGS) $(SFML) $(INCLUDES)
-CPPFLAGS=-O0 -g $(WARNINGS) $(SFML) $(INCLUDES) -std=c++2a
+CPPFLAGS=-O0 -g $(WARNINGS) $(SFML) $(INCLUDES) -std=c++17
 LDFLAGS=$(SFML_LIBS)
 
 TARGET=main
-OBJECTS=main.o Game.o Camera.o Menu.o Shader.o
-HEADERS=Game.hpp Camera.hpp Menu.hpp Shader.hpp
+OBJECTS=main.o Game.o Camera.o Menu.o Shader.o Model.o Util.o Material.o VBO.o
+HEADERS=Game.hpp Camera.hpp Menu.hpp Shader.hpp Model.hpp VBO.hpp Util.hpp Material.hpp VBO.hpp
 
 SRCDIR=src
 OBJDIR=obj
@@ -39,6 +39,10 @@ $(OBJDIR)/Game.o: $(addprefix $(SRCDIR)/, Game.cpp includes/Game.hpp includes/Ca
 $(OBJDIR)/Camera.o: $(addprefix $(SRCDIR)/, Camera.cpp includes/Camera.hpp)
 $(OBJDIR)/Menu.o: $(addprefix $(SRCDIR)/, Menu.cpp includes/Menu.hpp)
 $(OBJDIR)/Shader.o: $(addprefix $(SRCDIR)/, Shader.cpp includes/Shader.hpp)
+$(OBJDIR)/Model.o: $(addprefix $(SRCDIR)/, Model.cpp includes/Model.hpp includes/VBO.hpp includes/Material.hpp includes/Util.hpp)
+$(OBJDIR)/Util.o: $(addprefix $(SRCDIR)/, Util.cpp includes/Util.hpp)
+$(OBJDIR)/Material.o: $(addprefix $(SRCDIR)/, Material.cpp includes/Material.hpp includes/Util.hpp)
+$(OBJDIR)/VBO.o: $(addprefix $(SRCDIR)/, VBO.cpp includes/VBO.hpp includes/Util.hpp)
 
 clean: $(OBJDIR)
 	$(RM) $(TARGET) $(OBJDIR)/*

@@ -148,11 +148,9 @@ namespace GameLib {
     Shader::Ptr Shader::create(const std::string & vertexPath,
                                const std::string & fragmentPath) {
         auto s = std::make_shared<Shader>();
-        if (s) {
-            if (!s->loadFromPath(vertexPath, fragmentPath)) {
-                return nullptr;
-            }
+        if (s && s->loadFromPath(vertexPath, fragmentPath)) {
+            return s;
         }
-        return s;
+        return nullptr;
     }
 };

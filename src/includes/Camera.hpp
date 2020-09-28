@@ -7,6 +7,7 @@
 #include <memory>
 
 namespace game {
+    
     class Camera: public std::enable_shared_from_this<Camera> {
         sf::Vector2u screen;
         glm::vec2 rot;
