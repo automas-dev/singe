@@ -7,11 +7,13 @@
 #include <memory>
 
 namespace game {
-    
+
     class Camera: public std::enable_shared_from_this<Camera> {
         sf::Vector2u screen;
         glm::vec2 rot;
         glm::vec3 pos;
+
+        float fov = 80;
 
     public:
         typedef std::shared_ptr<Camera> Ptr;
@@ -50,6 +52,10 @@ namespace game {
         void pushTransform(void);
 
         void popTransform(void);
+
+        glm::mat4 projMatrix(void);
+
+        glm::mat4 viewMatrix(void);
 
         static Ptr create(void);
     };

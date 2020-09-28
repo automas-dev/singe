@@ -2,10 +2,6 @@
 #include <map>
 #include "Util.hpp"
 #include "VBO.hpp"
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/matrix_transform.hpp> 
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 #include <iostream>
 
 
@@ -176,12 +172,8 @@ namespace game {
         this->size *= scale;
     }
 
-    glm::mat4 Model::modelProjection() {
-        glm::mat4 mpos = glm::translate(glm::mat4(), pos);
-        glm::quat qrot (rot);
-        glm::mat4 mrot = glm::toMat4(qrot);
-        glm::mat4 msize = glm::scale(glm::mat4(), size);
-        return mpos * mrot * msize;
+    glm::mat4 Model::modelMatrix() {
+        return matFromVecs(pos, rot, size);
     }
 
     MaterialLibrary::ConstPtr Model::getMaterialLibrary(const std::string & library) const {

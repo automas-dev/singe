@@ -8,6 +8,8 @@
 #include <memory>
 #include "Menu.hpp"
 #include "Camera.hpp"
+#include "Shader.hpp"
+#include "Model.hpp"
 
 namespace game {
 

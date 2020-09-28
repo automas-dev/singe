@@ -1,4 +1,6 @@
 #include "Camera.hpp"
+#include "Util.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace game {
 
@@ -72,6 +74,15 @@ namespace game {
 
     void Camera::popTransform() {
         glPopMatrix();
+    }
+
+    glm::mat4 Camera::projMatrix() {
+        float r = (float)screen.x / (float)screen.y;
+        return glm::perspective(glm::radians(fov), r, 0.1f, 100.0f);
+    }
+
+    glm::mat4 Camera::viewMatrix() {
+        return matFromVecs(pos, glm::vec3(rot, 0));
     }
 
     Camera::Ptr Camera::create() {

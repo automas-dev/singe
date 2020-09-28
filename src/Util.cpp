@@ -1,6 +1,10 @@
 #include "Util.hpp"
 #include <cstring>
 #include <cctype>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 namespace game {
 
@@ -27,6 +31,14 @@ namespace game {
         glRotatef(-rot.x, 1, 0, 0);
         glRotatef(-rot.y, 0, 1, 0);
         glTranslatef(-pos.x, -pos.y, -pos.z);
+    }
+
+    glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
+        glm::mat4 mpos = glm::translate(glm::mat4(), pos);
+        glm::quat qrot (rot);
+        glm::mat4 mrot = glm::toMat4(qrot);
+        glm::mat4 msize = glm::scale(glm::mat4(), scale);
+        return mpos * mrot * msize;
     }
 }
 
