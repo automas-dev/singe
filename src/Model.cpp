@@ -52,7 +52,6 @@ namespace game {
             std::vector<face> af;
 
             for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
-                std::cout << "Line: " << line << std::endl;
 
                 if (line.length() == 0 || strStartsWithChar('#', line))
                     continue;

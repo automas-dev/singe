@@ -51,7 +51,15 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    Game::Ptr game = Game::create(window, font);
+    Game::Ptr game;
+    try {
+        game = Game::create(window, font);
+    }
+    catch (std::runtime_error e) {
+        std::cout << "Game failed, exiting" << std::endl;
+        std::cout << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
 
     sf::Clock clock;
 

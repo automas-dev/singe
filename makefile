@@ -35,7 +35,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) -c $(CPPFLAGS) $< -o $@
 
 $(OBJDIR)/main.o: $(addprefix $(SRCDIR)/includes/, $(HEADERS))
-$(OBJDIR)/Game.o: $(addprefix $(SRCDIR)/, Game.cpp includes/Game.hpp includes/Camera.hpp)
+$(OBJDIR)/Game.o: $(addprefix $(SRCDIR)/, Game.cpp includes/Game.hpp includes/Camera.hpp includes/Shader.hpp)
 $(OBJDIR)/Camera.o: $(addprefix $(SRCDIR)/, Camera.cpp includes/Camera.hpp)
 $(OBJDIR)/Menu.o: $(addprefix $(SRCDIR)/, Menu.cpp includes/Menu.hpp)
 $(OBJDIR)/Shader.o: $(addprefix $(SRCDIR)/, Shader.cpp includes/Shader.hpp)

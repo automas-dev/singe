@@ -20,6 +20,10 @@ namespace game {
         Menu::Ptr menu;
         Camera::Ptr cam;
 
+        Shader::Ptr defaultShader;
+
+        Model::Ptr gridModel;
+
         sf::Vector2i lastMouse;
 
     public:

@@ -62,6 +62,19 @@ namespace game {
         cam = Camera::create();
         cam->setScreen(window.getSize());
         cam->move(3, 2, 1);
+        cam->setFov(80);
+
+        defaultShader = Shader::create("res/shader/color.vs", "res/shader/color.fs");
+        if (defaultShader->failed()) {
+            std::cout << "Shader failed: " << defaultShader->getError() << std::endl;
+            throw std::runtime_error("Failed to load default shader");
+        }
+
+        gridModel = Model::create("res/model/grid.obj");
+        // if (!gridModel) {
+        //     std::cout << "Grid model failed" << std::endl;
+        //     throw std::runtime_error("Failed to load grid model");
+        // }
     }
 
     Game::~Game() { }
@@ -117,7 +130,9 @@ namespace game {
 
     void Game::draw() const {
         cam->pushTransform();
+        defaultShader->bind();
         drawGrid(20);
+        defaultShader->unbind();
         cam->popTransform();
 
         window.pushGLStates();

@@ -1,7 +1,8 @@
 #include "Shader.hpp"
 #include <fstream>
+#include <iostream>
 
-namespace GameLib {
+namespace game {
 
     void draw_color_array(const float *vertices,
                           const float *colors,
@@ -95,15 +96,21 @@ namespace GameLib {
 
     bool Shader::loadFromSource(const std::string & vertexSource,
                                 const std::string & fragmentSource) {
+        
+        didFail = false;
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
+            didFail = true;
+            error = compileError(vShader);
             glDeleteShader(vShader);
             return false;
         }
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
+            didFail = true;
+            error = compileError(fShader);
             glDeleteShader(vShader);
             glDeleteShader(fShader);
             return false;
@@ -126,6 +133,8 @@ namespace GameLib {
         glDeleteShader(fShader);
 
         if (!linkSuccess(this->program)) {
+            didFail = true;
+            error = linkError(program);
             glDeleteProgram(this->program);
             return false;
         }
@@ -148,7 +157,8 @@ namespace GameLib {
     Shader::Ptr Shader::create(const std::string & vertexPath,
                                const std::string & fragmentPath) {
         auto s = std::make_shared<Shader>();
-        if (s && s->loadFromPath(vertexPath, fragmentPath)) {
+        if (s) {
+            s->loadFromPath(vertexPath, fragmentPath);
             return s;
         }
         return nullptr;

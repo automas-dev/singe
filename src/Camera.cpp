@@ -8,6 +8,14 @@ namespace game {
 
     Camera::~Camera() { }
 
+    void Camera::setFov(float fov) {
+        this->fov = fov;
+    }
+
+    float Camera::getFov() {
+        return fov;
+    }
+
     void Camera::setScreen(unsigned width, unsigned height) {
         setScreen({width, height});
     }

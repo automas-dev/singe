@@ -88,7 +88,7 @@ namespace game {
     std::string Parser::readToChar(char delim) {
         int len = lengthToDelim(fin, delim);
         if (len < 1)
-            return NULL;
+            return std::string();
 
         std::string buff(len, ' ');
         fin.read(&buff[0], len);

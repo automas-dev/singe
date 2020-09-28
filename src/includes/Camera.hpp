@@ -13,7 +13,7 @@ namespace game {
         glm::vec2 rot;
         glm::vec3 pos;
 
-        float fov = 80;
+        float fov = 45.0f;
 
     public:
         typedef std::shared_ptr<Camera> Ptr;
@@ -23,6 +23,10 @@ namespace game {
         virtual ~Camera();
 
         // TODO: update()
+
+        void setFov(float fov);
+
+        float getFov(void);
 
         void setScreen(unsigned width, unsigned height);
 
