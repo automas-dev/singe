@@ -6,6 +6,7 @@
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 #include "Menu.hpp"
 #include "Camera.hpp"
 #include "Shader.hpp"
@@ -15,6 +16,9 @@ namespace game {
 
     class Game : public std::enable_shared_from_this<Game> {
         sf::RenderWindow & window;
+
+        std::vector<glm::vec3> gridVerts;
+        std::vector<glm::vec3> gridCols;
 
         sf::Font font;
         Menu::Ptr menu;

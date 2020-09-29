@@ -17,6 +17,11 @@ namespace game {
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8, (void *)6);
 
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
         return VertexVBOID;
     }
 

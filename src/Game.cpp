@@ -39,11 +39,77 @@ static void drawGrid(int steps = 10) {
     glEnd();
 }
 
+static std::vector<glm::vec3> genGridVerts(int steps = 10) {
+    std::vector<glm::vec3> verts;
+    for (int x = -steps; x <= steps; x++) {
+        if (x == 0) {
+            verts.push_back({0, 0, -steps});
+            verts.push_back({0, 0, 0});
+            verts.push_back({0, 0, 0});
+            verts.push_back({0, 0, steps});
+        }
+        else {
+            verts.push_back({x, 0, -steps});
+            verts.push_back({x, 0, steps});
+        }
+    }
+    for (int z = -steps; z <= steps; z++) {
+        if (z == 0) {
+            verts.push_back({-steps, 0, 0});
+            verts.push_back({0, 0, 0});
+            verts.push_back({0, 0, 0});
+            verts.push_back({steps, 0, 0});
+        }
+        else {
+            verts.push_back({-steps, 0, z});
+            verts.push_back({steps, 0, z});
+        }
+    }
+    verts.push_back({0, 0, 0});
+    verts.push_back({0, steps, 0});
+    return verts;
+}
+
+static std::vector<glm::vec3> genGridCols(int steps = 10) {
+    std::vector<glm::vec3> cols;
+    glColor3f(1.0, 1.0, 1.0);
+    for (int x = -steps; x <= steps; x++) {
+        if (x == 0) {
+            cols.push_back({1.0, 1.0, 1.0});
+            cols.push_back({1.0, 1.0, 1.0});
+            cols.push_back({0.0, 0.0, 1.0});
+            cols.push_back({0.0, 0.0, 1.0});
+        }
+        else {
+            cols.push_back({1.0, 1.0, 1.0});
+            cols.push_back({1.0, 1.0, 1.0});
+        }
+    }
+    for (int z = -steps; z <= steps; z++) {
+        if (z == 0) {
+            cols.push_back({1.0, 1.0, 1.0});
+            cols.push_back({1.0, 1.0, 1.0});
+            cols.push_back({1.0, 0.0, 0.0});
+            cols.push_back({1.0, 0.0, 0.0});
+        }
+        else {
+            cols.push_back({1.0, 1.0, 1.0});
+            cols.push_back({1.0, 1.0, 1.0});
+        }
+    }
+    cols.push_back({0.0, 1.0, 0.0});
+    cols.push_back({0.0, 1.0, 0.0});
+    return cols;
+}
+
 namespace game {
 
     Game::Game(sf::RenderWindow & window, const sf::Font & defaultFont) : window(window), font(defaultFont) {
         lastMouse = {window.getSize().x / 2, window.getSize().y / 2};
         sf::Mouse::setPosition(lastMouse, window);
+
+        gridVerts = genGridVerts(10);
+        gridCols = genGridCols(10);
 
         menu = Menu::create(font);
         menu->setTitle("Game");
@@ -65,16 +131,15 @@ namespace game {
         cam->setFov(80);
 
         defaultShader = Shader::create("res/shader/color.vs", "res/shader/color.fs");
-        if (defaultShader->failed()) {
-            std::cout << "Shader failed: " << defaultShader->getError() << std::endl;
+        if (!defaultShader) {
             throw std::runtime_error("Failed to load default shader");
         }
 
         gridModel = Model::create("res/model/grid.obj");
-        // if (!gridModel) {
-        //     std::cout << "Grid model failed" << std::endl;
-        //     throw std::runtime_error("Failed to load grid model");
-        // }
+        if (!gridModel) {
+            std::cout << "Grid model failed" << std::endl;
+            throw std::runtime_error("Failed to load grid model");
+        }
     }
 
     Game::~Game() { }
@@ -130,9 +195,10 @@ namespace game {
 
     void Game::draw() const {
         cam->pushTransform();
-        defaultShader->bind();
-        drawGrid(20);
-        defaultShader->unbind();
+        // defaultShader->bind();
+        // drawGrid(20);
+        draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+        // defaultShader->unbind();
         cam->popTransform();
 
         window.pushGLStates();

@@ -21,20 +21,13 @@ namespace game {
 
     class Shader : public std::enable_shared_from_this<Shader> {
         GLuint program;
-        std::string error;
-        bool didFail;
 
     public:
         typedef std::shared_ptr<Shader> Ptr;
         typedef std::shared_ptr<const Shader> ConstPtr;
 
         Shader(void);
-        Shader(const std::string & vertexSource,
-               const std::string & fragmentSource);
         virtual ~Shader();
-
-        bool failed(void) const { return didFail; }
-        const std::string &getError() const { return error; }
 
         bool loadFromSource(const std::string & vertexSource,
                           const std::string & fragmentSource);

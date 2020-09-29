@@ -12,7 +12,7 @@ namespace game {
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, 0, vertices);
         glEnableClientState(GL_COLOR_ARRAY);
-        glColorPointer(4, GL_FLOAT, 0, colors);
+        glColorPointer(3, GL_FLOAT, 0, colors);
 
         glDrawArrays(mode, 0, n);
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -30,19 +30,19 @@ namespace game {
         return std::string((start), end);
     }
 
-    bool compileSuccess(GLuint shader) {
+    static bool compileSuccess(GLuint shader) {
         GLint success = 0;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         return success != GL_FALSE;
     }
 
-    bool linkSuccess(GLuint program) {
+    static bool linkSuccess(GLuint program) {
         GLint success = 0;
         glGetProgramiv(program, GL_LINK_STATUS, &success);
         return success != GL_FALSE;
     }
 
-    std::string compileError(GLuint shader) {
+    static std::string compileError(GLuint shader) {
         GLint logSize = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
 
@@ -52,7 +52,7 @@ namespace game {
         return std::string(errorLog.begin(), errorLog.end());
     }
 
-    std::string linkError(GLuint program) {
+    static std::string linkError(GLuint program) {
         GLint logSize = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logSize);
 
@@ -62,7 +62,7 @@ namespace game {
         return std::string(errorLog.begin(), errorLog.end());
     }
 
-    GLuint compileShader(GLuint shaderType,
+    static GLuint compileShader(GLuint shaderType,
                          const std::string & shaderSource) {
 
         GLuint shader = glCreateShader(shaderType);
@@ -76,19 +76,15 @@ namespace game {
 
     Shader::Shader() { }
 
-    Shader::Shader(const std::string & vertexSource,
-                   const std::string & fragmentSource) {
-        loadFromSource(vertexSource, fragmentSource);
-    }
-
     Shader::~Shader() { }
 
     bool Shader::loadFromPath(const std::string & vertexPath,
                         const std::string & fragmentPath) {
+
         std::string vertexSource = shaderSource(vertexPath);
         std::string fragmentSource = shaderSource(fragmentPath);
 
-        if (!vertexSource.empty() || !fragmentSource.empty())
+        if (vertexSource.empty() || fragmentSource.empty())
             return false;
         
         return loadFromSource(vertexSource, fragmentSource);
@@ -97,45 +93,40 @@ namespace game {
     bool Shader::loadFromSource(const std::string & vertexSource,
                                 const std::string & fragmentSource) {
         
-        didFail = false;
-
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
-            didFail = true;
-            error = compileError(vShader);
+            std::cerr << "Failed to compile vertex shader: " << compileError(vShader) << std::endl;
             glDeleteShader(vShader);
             return false;
         }
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
-            didFail = true;
-            error = compileError(fShader);
+            std::cerr << "Failed to compile fragment shader: " << compileError(fShader) << std::endl;
             glDeleteShader(vShader);
             glDeleteShader(fShader);
             return false;
         }
 
-        this->program = glCreateProgram();
-        glAttachShader(this->program, vShader);
-        glAttachShader(this->program, fShader);
+        program = glCreateProgram();
+        glAttachShader(program, vShader);
+        glAttachShader(program, fShader);
 
         // TODO: Pre-Linking Setup with the following
         // TODO: glBindAttribLocation
         // TODO: glBindFragDataLocation
         // TODO: glTransformFeedbackVaryings
 
-        glLinkProgram(this->program);
+        glLinkProgram(program);
 
-        glDetachShader(this->program, vShader);
-        glDetachShader(this->program, fShader);
+        glDetachShader(program, vShader);
+        glDetachShader(program, fShader);
         glDeleteShader(vShader);
         glDeleteShader(fShader);
 
-        if (!linkSuccess(this->program)) {
-            didFail = true;
-            error = linkError(program);
-            glDeleteProgram(this->program);
+        if (!linkSuccess(program)) {
+            std::cerr << "Failed to link shader: " << linkError(program) << std::endl;
+            glDeleteProgram(program);
             return false;
         }
 
@@ -143,11 +134,11 @@ namespace game {
     }
 
     GLuint Shader::uniformLocation(const std::string & name) {
-        return glGetUniformLocation(this->program, name.c_str());
+        return glGetUniformLocation(program, name.c_str());
     }
 
     void Shader::bind() {
-        glUseProgram(this->program);
+        glUseProgram(program);
     }
 
     void Shader::unbind() {
@@ -157,8 +148,7 @@ namespace game {
     Shader::Ptr Shader::create(const std::string & vertexPath,
                                const std::string & fragmentPath) {
         auto s = std::make_shared<Shader>();
-        if (s) {
-            s->loadFromPath(vertexPath, fragmentPath);
+        if (s && s->loadFromPath(vertexPath, fragmentPath)) {
             return s;
         }
         return nullptr;

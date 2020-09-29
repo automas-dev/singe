@@ -55,7 +55,7 @@ int main() {
     try {
         game = Game::create(window, font);
     }
-    catch (std::runtime_error e) {
+    catch (std::runtime_error & e) {
         std::cout << "Game failed, exiting" << std::endl;
         std::cout << e.what() << std::endl;
         return EXIT_FAILURE;

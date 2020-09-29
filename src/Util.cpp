@@ -82,7 +82,8 @@ namespace game {
     }
 
     bool Parser::eof() const {
-        return !is_open() || fin.eof();
+        return !fin;
+        // return !is_open() || fin.eof();
     }
 
     std::string Parser::readToChar(char delim) {
