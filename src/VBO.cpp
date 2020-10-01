@@ -25,7 +25,7 @@ namespace game {
         return VertexVBOID;
     }
 
-    VBO::VBO() : vbo(0), hasBuffer(false) { }
+    VBO::VBO() : vbo(0), hasBuffer(false), nPoints(0) { }
         
     VBO::VBO(const std::vector<Vertex> &points) : VBO() {
         loadPoints(points);
@@ -39,6 +39,7 @@ namespace game {
         clearPoints();
         vbo = gen_vbo(points);
         hasBuffer = true;
+        nPoints = points.size();
     }
 
     void VBO::clearPoints() {
@@ -50,7 +51,17 @@ namespace game {
     }
 
     void VBO::draw() const {
-        // TODO: VBO::draw()
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
+        
+        glDrawElements(GL_TRIANGLES, nPoints, GL_UNSIGNED_BYTE, 0);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     VBO::Ptr VBO::create(const std::vector<Vertex> &points) {
