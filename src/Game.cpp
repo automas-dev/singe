@@ -135,6 +135,11 @@ namespace game {
             throw std::runtime_error("Failed to load default shader");
         }
 
+        objShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
+        if (!objShader) {
+            throw std::runtime_error("Failed to load obj shader");
+        }
+
         gridModel = Model::create("res/model/grid.obj");
         if (!gridModel) {
             std::cout << "Grid model failed" << std::endl;
@@ -194,10 +199,15 @@ namespace game {
     }
 
     void Game::draw() const {
+        glDisable(GL_CULL_FACE);
+
+        glm::mat4 mvp = gridModel->modelMatrix() * cam->viewMatrix() * cam->projMatrix();
+
         cam->pushTransform();
         // defaultShader->bind();
         // drawGrid(20);
         draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+        gridModel->draw();
         // defaultShader->unbind();
         cam->popTransform();
 
