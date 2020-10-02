@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Util.hpp"
 
 static void drawGrid(int steps = 10) {
     glBegin(GL_LINES);
@@ -140,10 +141,18 @@ namespace game {
             throw std::runtime_error("Failed to load obj shader");
         }
 
+        objUniforms.loadFromShader(objShader);
+
         gridModel = Model::create("res/model/grid.obj");
         if (!gridModel) {
             std::cout << "Grid model failed" << std::endl;
             throw std::runtime_error("Failed to load grid model");
+        }
+
+        texture = Texture::create("res/img/dev_texture_gray.png");
+        if (!texture) {
+            std::cout << "Texture failed to load" << std::endl;
+            throw std::runtime_error("Failed to load texture");
         }
     }
 
@@ -173,6 +182,26 @@ namespace game {
 
     void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
         menu->onMouseUp(e);
+
+        if (e.button == sf::Mouse::Button::Left) {
+            std::cout << "Camera Projection Matrix" << std::endl;
+            glm::mat4 mat = cam->projMatrix();
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    std::cout << mat[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
+
+            std::cout << "Camera View Matrix" << std::endl;
+            mat = cam->viewMatrix();
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    std::cout << mat[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
+        }
     }
 
     void Game::onResized(const sf::Event::SizeEvent & e) {
@@ -201,15 +230,41 @@ namespace game {
     void Game::draw() const {
         glDisable(GL_CULL_FACE);
 
-        glm::mat4 mvp = gridModel->modelMatrix() * cam->viewMatrix() * cam->projMatrix();
+        glEnable(GL_TEXTURE_2D);
 
-        cam->pushTransform();
-        // defaultShader->bind();
-        // drawGrid(20);
-        draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+        defaultShader->bind();
+
+        glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
+        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+
+        texture->bind();
+        // cam->pushTransform();
+
+        // glUniformMatrix4fv(objShader->uniformLocation("proj"), 1, GL_FALSE, &cam->projMatrix()[0][0]);
+        // glUniformMatrix4fv(objShader->uniformLocation("view"), 1, GL_FALSE, &cam->viewMatrix()[0][0]);
+        // glUniformMatrix4fv(objShader->uniformLocation("model"), 1, GL_FALSE, &gridModel->modelMatrix()[0][0]);
+
+        // glUniform3f(objShader->uniformLocation("lightPos"), 1, 2, 3);
+        // glUniform3fv(objShader->uniformLocation("viewPos"), 1, &cam->getPosition()[0]);
+
+        // glUniform3f(objShader->uniformLocation("ambient"), 1, 1, 1);
+        // glUniform3f(objShader->uniformLocation("diffuse"), .5, .5, .5);
+        // glUniform3f(objShader->uniformLocation("specular"), .1, .1, .1);
+
+        // glUniform1f(objShader->uniformLocation("specExp"), 1);
+        // glUniform1f(objShader->uniformLocation("alpha"), 1);
+
         gridModel->draw();
-        // defaultShader->unbind();
-        cam->popTransform();
+        draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+
+        // cam->popTransform();
+
+        glDisable(GL_TEXTURE_2D);
+        defaultShader->unbind();
+
+        // cam->pushTransform();
+        // draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+        // cam->popTransform();
 
         window.pushGLStates();
         window.draw(*menu);

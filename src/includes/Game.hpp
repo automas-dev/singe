@@ -27,6 +27,10 @@ namespace game {
         Shader::Ptr defaultShader;
         Shader::Ptr objShader;
 
+        MaterialUniformLocations objUniforms;
+
+        Texture::Ptr texture;
+
         Model::Ptr gridModel;
 
         sf::Vector2i lastMouse;

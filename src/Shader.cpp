@@ -1,6 +1,80 @@
 #include "Shader.hpp"
+#include <SFML/Graphics/Image.hpp>
 #include <fstream>
 #include <iostream>
+
+namespace game {
+    static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha) {
+        // Create one OpenGL texture
+        GLuint textureID;
+        glGenTextures(1, &textureID);
+
+        // "Bind" the newly created texture : all future texture functions will
+        // modify this texture
+        glBindTexture(GL_TEXTURE_2D, textureID);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, (srcAlpha ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, data);
+
+        // Nice trilinear filtering.
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        // Return the ID of the texture we just created
+        return textureID;
+    }
+
+    // GLuint loadTexture(const char *path, bool srcAlpha) {
+    //     GLuint texId = 0;
+    //     int width, height, nrChannels;
+    //     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0); 
+    //     if (data) {
+    //         texId = loadGlTexture(data, width, height, srcAlpha);
+    //         stbi_image_free(data);
+    //     }
+    //     return texId;
+    // }
+
+    Texture::Texture() {
+
+    }
+
+    Texture::~Texture() {
+        glDeleteTextures(1, &textureId);
+    }
+
+    bool Texture::loadFromPath(const std::string & path) {
+        sf::Image img;
+        if (!img.loadFromFile(path))
+            return false;
+        
+        // glGenTextures(1, &textureId);
+        // glBindTexture(GL_TEXTURE_2D, textureId);
+        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
+        textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true);
+        return true;
+    }
+
+    void Texture::bind() {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+    }
+
+    void Texture::unbind() {
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    Texture::Ptr Texture::create(const std::string & path) {
+        auto texture = std::make_shared<Texture>();
+        if (texture && texture->loadFromPath(path)) {
+            return texture;
+        }
+        return nullptr;
+    }
+}
 
 namespace game {
 

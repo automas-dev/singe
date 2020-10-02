@@ -7,8 +7,27 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <Shader.hpp>
 
 namespace game {
+
+    struct MaterialUniformLocations {
+        GLuint proj;
+        GLuint view;
+        GLuint model;
+
+        GLuint lightPos;
+        GLuint viewPos;
+
+        GLuint ambient;
+        GLuint diffuse;
+        GLuint specular;
+
+        GLuint specExp;
+        GLuint alpha;
+
+        void loadFromShader(const Shader::Ptr &shader);
+    };
 
     struct Material : public std::enable_shared_from_this<Material> {
         glm::vec3 ambient;

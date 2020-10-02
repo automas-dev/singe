@@ -17,6 +17,25 @@ namespace game {
                           size_t n,
                           GLenum mode);
 
+    class Texture : public std::enable_shared_from_this<Texture> {
+        GLuint textureId;
+
+    public:
+        typedef std::shared_ptr<Texture> Ptr;
+        typedef std::shared_ptr<const Texture> ConstPtr;
+
+        Texture(void);
+        virtual ~Texture();
+
+        bool loadFromPath(const std::string &path);
+
+        void bind(void);
+
+        void unbind(void);
+
+        static Ptr create(const std::string &path);
+    };
+
     std::string shaderSource(const std::string & path);
 
     class Shader : public std::enable_shared_from_this<Shader> {

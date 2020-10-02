@@ -24,6 +24,10 @@ namespace game {
         this->screen = screen;
     }
 
+    const glm::vec2 &Camera::getRotation() const {
+        return rot;
+    }
+
     void Camera::setRotation(float x, float y) {
         rot = {x, y};
     }
@@ -42,6 +46,10 @@ namespace game {
     void Camera::rotate(float x, float y) {
         rot -= glm::vec2(x, y);
         rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
+    }
+
+    const glm::vec3 &Camera::getPosition() const {
+        return pos;
     }
 
     void Camera::setPosition(float x, float y, float z) {
@@ -90,7 +98,22 @@ namespace game {
     }
 
     glm::mat4 Camera::viewMatrix() {
-        return matFromVecs(pos, glm::vec3(rot, 0));
+        glm::mat4 m (1);
+        m = glm::rotate(m, -glm::radians(rot.x), glm::vec3(1, 0, 0));
+        m = glm::rotate(m, -glm::radians(rot.y), glm::vec3(0, 1, 0));
+        m = glm::translate(m, -pos);
+        return m;
+
+        // return matFromVecs(pos, glm::radians(glm::vec3(rot.x, 0, rot.y)));
+
+        // auto rx = glm::radians(rot.x);
+        // auto ry = glm::radians(rot.y);
+        // auto x = glm::sin(ry) * glm::sin(rx);
+        // auto y = glm::sin(rx);
+        // auto z = glm::sin(ry) * glm::cos(rx);
+        // glm::vec3 center(x, y, z);
+        // center += pos;
+        // return glm::lookAt(pos, center, glm::vec3(0, 1, 0));
     }
 
     Camera::Ptr Camera::create() {

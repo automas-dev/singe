@@ -34,10 +34,10 @@ namespace game {
     }
 
     glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
-        glm::mat4 mpos = glm::translate(glm::mat4(), pos);
+        glm::mat4 mpos = glm::translate(glm::mat4(1), pos);
         glm::quat qrot (rot);
         glm::mat4 mrot = glm::toMat4(qrot);
-        glm::mat4 msize = glm::scale(glm::mat4(), scale);
+        glm::mat4 msize = glm::scale(glm::mat4(1), scale);
         return mpos * mrot * msize;
     }
 }

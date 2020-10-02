@@ -29,6 +29,8 @@ namespace game {
 
     bool Model::loadFromPath(const std::string & path) {
 
+        std::cout << "Material loaded from " << path << std::endl;
+
         std::string parent = pathParent(path);
 
         Parser p;
@@ -142,6 +144,8 @@ namespace game {
     }
 
     bool Model::loadFromPoints(const std::vector<Vertex> & points, std::vector<MaterialLibrary::Ptr> materials) {
+        std::cout << "Material loaded " << points.size() << " points" << std::endl;
+        
         loadPoints(points);
         this->materials = materials;
         return true;

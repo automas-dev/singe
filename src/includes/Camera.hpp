@@ -32,6 +32,8 @@ namespace game {
 
         void setScreen(sf::Vector2u screen);
 
+        const glm::vec2 &getRotation() const;
+
         void setRotation(float x, float y);
 
         void setRotation(sf::Vector2f rot);
@@ -42,6 +44,8 @@ namespace game {
          * Rotate on the x an y axis in degrees.
          */
         void rotate(float x, float y);
+
+        const glm::vec3 &getPosition() const;
 
         void setPosition(float x, float y, float z);
 
