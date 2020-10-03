@@ -260,11 +260,6 @@ namespace game {
         if (doDrawMatrix) {
             glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
 
-            defaultShader->bind();
-            glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
-
-            draw_color_array(gridVerts, gridCols, GL_LINES);
-
             textureShader->bind();
             glUniformMatrix4fv(textureShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
@@ -274,21 +269,12 @@ namespace game {
             draw_tex_array(planeVerts, planeUVs, GL_QUADS);
 
             glDisable(GL_TEXTURE_2D);
-            // glUniformMatrix4fv(objShader->uniformLocation("proj"), 1, GL_FALSE, &cam->projMatrix()[0][0]);
-            // glUniformMatrix4fv(objShader->uniformLocation("view"), 1, GL_FALSE, &cam->viewMatrix()[0][0]);
-            // glUniformMatrix4fv(objShader->uniformLocation("model"), 1, GL_FALSE, &gridModel->modelMatrix()[0][0]);
+            glDisable(GL_DEPTH_TEST);
 
-            // glUniform3f(objShader->uniformLocation("lightPos"), 1, 2, 3);
-            // glUniform3fv(objShader->uniformLocation("viewPos"), 1, &cam->getPosition()[0]);
+            defaultShader->bind();
+            glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
-            // glUniform3f(objShader->uniformLocation("ambient"), 1, 1, 1);
-            // glUniform3f(objShader->uniformLocation("diffuse"), .5, .5, .5);
-            // glUniform3f(objShader->uniformLocation("specular"), .1, .1, .1);
-
-            // glUniform1f(objShader->uniformLocation("specExp"), 1);
-            // glUniform1f(objShader->uniformLocation("alpha"), 1);
-
-            // gridModel->draw();
+            draw_color_array(gridVerts, gridCols, GL_LINES);
 
             defaultShader->unbind();
         }
