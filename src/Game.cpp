@@ -136,6 +136,11 @@ namespace game {
             throw std::runtime_error("Failed to load default shader");
         }
 
+        textureShader = Shader::create("res/shader/tex.vs", "res/shader/tex.fs");
+        if (!textureShader) {
+            throw std::runtime_error("Failed to load texture shader");
+        }
+
         objShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
         if (!objShader) {
             throw std::runtime_error("Failed to load obj shader");
@@ -236,14 +241,14 @@ namespace game {
     void Game::draw() const {
         glDisable(GL_CULL_FACE);
 
-        // glEnable(GL_TEXTURE_2D);
+        glEnable(GL_TEXTURE_2D);
 
         defaultShader->bind();
 
         glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
         glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
-        // texture->bind();
+        texture->bind();
         // cam->pushTransform();
 
         // glUniformMatrix4fv(objShader->uniformLocation("proj"), 1, GL_FALSE, &cam->projMatrix()[0][0]);
@@ -269,7 +274,7 @@ namespace game {
 
         // cam->popTransform();
 
-        // glDisable(GL_TEXTURE_2D);
+        glDisable(GL_TEXTURE_2D);
         defaultShader->unbind();
 
         if (doDrawLegacy) {

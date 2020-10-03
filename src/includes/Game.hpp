@@ -33,7 +33,7 @@ namespace game {
         Texture::Ptr texture;
 
         bool doDrawMatrix = true;
-        bool doDrawLegacy = true;
+        bool doDrawLegacy = false;
 
         Model::Ptr gridModel;
 

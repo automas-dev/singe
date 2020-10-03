@@ -29,7 +29,7 @@ namespace game {
     // GLuint loadTexture(const char *path, bool srcAlpha) {
     //     GLuint texId = 0;
     //     int width, height, nrChannels;
-    //     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0); 
+    //     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
     //     if (data) {
     //         texId = loadGlTexture(data, width, height, srcAlpha);
     //         stbi_image_free(data);
@@ -49,7 +49,7 @@ namespace game {
         sf::Image img;
         if (!img.loadFromFile(path))
             return false;
-        
+
         // glGenTextures(1, &textureId);
         // glBindTexture(GL_TEXTURE_2D, textureId);
         // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
@@ -78,10 +78,10 @@ namespace game {
 
 namespace game {
 
-    void draw_color_array(const float *vertices,
-                          const float *colors,
-                          size_t n,
-                          GLenum mode) {
+    void draw_color_array_legacy(const float *vertices,
+                                 const float *colors,
+                                 size_t n,
+                                 GLenum mode) {
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_FLOAT, 0, vertices);
@@ -94,14 +94,29 @@ namespace game {
         glDisableClientState(GL_COLOR_ARRAY);
     }
 
-    void draw_two_array(const std::vector<glm::vec3> &vertices,
-                          const std::vector<glm::vec3> &colors,
+    void draw_color_array(const std::vector<glm::vec3> & vertices,
+                          const std::vector<glm::vec3> & colors,
                           GLenum mode) {
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, &vertices[0].x);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, &colors[0].x);
+
+        glDrawArrays(mode, 0, vertices.size());
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+    }
+
+    void draw_tex_array(const std::vector<glm::vec3> & vertices,
+                        const std::vector<glm::vec2> & uvs,
+                        GLenum mode) {
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, &vertices[0].x);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, &uvs[0].x);
 
         glDrawArrays(mode, 0, vertices.size());
 
@@ -153,7 +168,7 @@ namespace game {
     }
 
     static GLuint compileShader(GLuint shaderType,
-                         const std::string & shaderSource) {
+                                const std::string & shaderSource) {
 
         GLuint shader = glCreateShader(shaderType);
         const GLchar *src = shaderSource.c_str();
@@ -169,20 +184,20 @@ namespace game {
     Shader::~Shader() { }
 
     bool Shader::loadFromPath(const std::string & vertexPath,
-                        const std::string & fragmentPath) {
+                              const std::string & fragmentPath) {
 
         std::string vertexSource = shaderSource(vertexPath);
         std::string fragmentSource = shaderSource(fragmentPath);
 
         if (vertexSource.empty() || fragmentSource.empty())
             return false;
-        
+
         return loadFromSource(vertexSource, fragmentSource);
     }
 
     bool Shader::loadFromSource(const std::string & vertexSource,
                                 const std::string & fragmentSource) {
-        
+
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
             std::cerr << "Failed to compile vertex shader: " << compileError(vShader) << std::endl;

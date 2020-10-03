@@ -13,14 +13,18 @@
 
 namespace game {
 
-    void draw_color_array(const float *vertices,
-                          const float *colors,
-                          size_t n,
+    void draw_color_array_legacy(const float *vertices,
+                                 const float *colors,
+                                 size_t n,
+                                 GLenum mode);
+
+    void draw_color_array(const std::vector<glm::vec3> & vertices,
+                          const std::vector<glm::vec3> & colors,
                           GLenum mode);
 
-    void draw_two_array(const std::vector<glm::vec3> &vertices,
-                          const std::vector<glm::vec3> &colors,
-                          GLenum mode);
+    void draw_tex_array(const std::vector<glm::vec3> & vertices,
+                        const std::vector<glm::vec2> & uvs,
+                        GLenum mode);
 
     class Texture : public std::enable_shared_from_this<Texture> {
         GLuint textureId;
@@ -32,13 +36,13 @@ namespace game {
         Texture(void);
         virtual ~Texture();
 
-        bool loadFromPath(const std::string &path);
+        bool loadFromPath(const std::string & path);
 
         void bind(void);
 
         void unbind(void);
 
-        static Ptr create(const std::string &path);
+        static Ptr create(const std::string & path);
     };
 
     std::string shaderSource(const std::string & path);
@@ -54,7 +58,7 @@ namespace game {
         virtual ~Shader();
 
         bool loadFromSource(const std::string & vertexSource,
-                          const std::string & fragmentSource);
+                            const std::string & fragmentSource);
 
         bool loadFromPath(const std::string & vertexPath,
                           const std::string & fragmentPath);
