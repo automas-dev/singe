@@ -29,7 +29,7 @@ namespace game {
 
         Shader::Ptr defaultShader;
         Shader::Ptr textureShader;
-        Shader::Ptr objShader;
+        Shader::Ptr lightingShader;
 
         MaterialUniformLocations objUniforms;
 

@@ -145,7 +145,7 @@ namespace game {
         cam->move(3, 2, 1);
         cam->setFov(80);
 
-        defaultShader = Shader::create("res/shader/color.vs", "res/shader/color.fs");
+        defaultShader = Shader::create("res/shader/default.vs", "res/shader/default.fs");
         if (!defaultShader) {
             throw std::runtime_error("Failed to load default shader");
         }
@@ -155,12 +155,12 @@ namespace game {
             throw std::runtime_error("Failed to load texture shader");
         }
 
-        objShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
-        if (!objShader) {
-            throw std::runtime_error("Failed to load obj shader");
+        lightingShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
+        if (!lightingShader) {
+            throw std::runtime_error("Failed to load lighting shader");
         }
 
-        objUniforms.loadFromShader(objShader);
+        objUniforms.loadFromShader(lightingShader);
 
         gridModel = Model::create("res/model/grid.obj");
         if (!gridModel) {
