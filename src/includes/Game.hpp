@@ -31,6 +31,9 @@ namespace game {
 
         Texture::Ptr texture;
 
+        bool doDrawMatrix = true;
+        bool doDrawLegacy = true;
+
         Model::Ptr gridModel;
 
         sf::Vector2i lastMouse;

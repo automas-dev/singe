@@ -165,6 +165,12 @@ namespace game {
                 window.setMouseCursorGrabbed(false);
                 window.setMouseCursorVisible(true);
                 break;
+            case sf::Keyboard::Num1:
+                doDrawLegacy = !doDrawLegacy;
+                break;
+            case sf::Keyboard::Num2:
+                doDrawMatrix = !doDrawMatrix;
+                break;
         }
     }
 
@@ -237,7 +243,7 @@ namespace game {
         glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
         glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
-        texture->bind();
+        // texture->bind();
         // cam->pushTransform();
 
         // glUniformMatrix4fv(objShader->uniformLocation("proj"), 1, GL_FALSE, &cam->projMatrix()[0][0]);
@@ -254,17 +260,23 @@ namespace game {
         // glUniform1f(objShader->uniformLocation("specExp"), 1);
         // glUniform1f(objShader->uniformLocation("alpha"), 1);
 
-        gridModel->draw();
-        draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+        // gridModel->draw();
+
+        if (doDrawMatrix) {
+            draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+        }
 
         // cam->popTransform();
 
         glDisable(GL_TEXTURE_2D);
         defaultShader->unbind();
 
-        // cam->pushTransform();
-        // draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
-        // cam->popTransform();
+        if (doDrawLegacy) {
+            cam->pushTransform();
+            drawGrid(10);
+            // draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+            cam->popTransform();
+        }
 
         window.pushGLStates();
         window.draw(*menu);
