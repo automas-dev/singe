@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
+#include <glm/glm.hpp>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -15,6 +16,10 @@ namespace game {
     void draw_color_array(const float *vertices,
                           const float *colors,
                           size_t n,
+                          GLenum mode);
+
+    void draw_two_array(const std::vector<glm::vec3> &vertices,
+                          const std::vector<glm::vec3> &colors,
                           GLenum mode);
 
     class Texture : public std::enable_shared_from_this<Texture> {

@@ -89,8 +89,24 @@ namespace game {
         glColorPointer(3, GL_FLOAT, 0, colors);
 
         glDrawArrays(mode, 0, n);
+
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
+    }
+
+    void draw_two_array(const std::vector<glm::vec3> &vertices,
+                          const std::vector<glm::vec3> &colors,
+                          GLenum mode) {
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, &vertices[0].x);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, &colors[0].x);
+
+        glDrawArrays(mode, 0, vertices.size());
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
     }
 
     std::string shaderSource(const std::string & path) {

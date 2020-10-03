@@ -25,6 +25,7 @@ namespace game {
         Camera::Ptr cam;
 
         Shader::Ptr defaultShader;
+        Shader::Ptr textureShader;
         Shader::Ptr objShader;
 
         MaterialUniformLocations objUniforms;

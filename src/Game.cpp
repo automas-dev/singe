@@ -236,7 +236,7 @@ namespace game {
     void Game::draw() const {
         glDisable(GL_CULL_FACE);
 
-        glEnable(GL_TEXTURE_2D);
+        // glEnable(GL_TEXTURE_2D);
 
         defaultShader->bind();
 
@@ -263,18 +263,19 @@ namespace game {
         // gridModel->draw();
 
         if (doDrawMatrix) {
-            draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+            // draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+            draw_two_array(gridVerts, gridCols, GL_LINES);
         }
 
         // cam->popTransform();
 
-        glDisable(GL_TEXTURE_2D);
+        // glDisable(GL_TEXTURE_2D);
         defaultShader->unbind();
 
         if (doDrawLegacy) {
             cam->pushTransform();
-            drawGrid(10);
-            // draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+            // drawGrid(10);
+            draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
             cam->popTransform();
         }
 
