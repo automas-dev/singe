@@ -20,6 +20,9 @@ namespace game {
         std::vector<glm::vec3> gridVerts;
         std::vector<glm::vec3> gridCols;
 
+        std::vector<glm::vec3> planeVerts;
+        std::vector<glm::vec2> planeUVs;
+
         sf::Font font;
         Menu::Ptr menu;
         Camera::Ptr cam;

@@ -112,6 +112,20 @@ namespace game {
         gridVerts = genGridVerts(10);
         gridCols = genGridCols(10);
 
+        planeVerts = {
+            {-10, 0, -10},
+            {-10, 0, 10},
+            {10, 0, 10},
+            {10, 0, -10}
+        };
+
+        planeUVs = {
+            {0, 0},
+            {0, 1},
+            {1, 1},
+            {1, 0}
+        };
+
         menu = Menu::create(font);
         menu->setTitle("Game");
         menu->setPosition(300, 300);
@@ -239,48 +253,50 @@ namespace game {
     }
 
     void Game::draw() const {
-        glDisable(GL_CULL_FACE);
-
-        glEnable(GL_TEXTURE_2D);
-
-        defaultShader->bind();
-
-        glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
-        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
-
-        texture->bind();
-        // cam->pushTransform();
-
-        // glUniformMatrix4fv(objShader->uniformLocation("proj"), 1, GL_FALSE, &cam->projMatrix()[0][0]);
-        // glUniformMatrix4fv(objShader->uniformLocation("view"), 1, GL_FALSE, &cam->viewMatrix()[0][0]);
-        // glUniformMatrix4fv(objShader->uniformLocation("model"), 1, GL_FALSE, &gridModel->modelMatrix()[0][0]);
-
-        // glUniform3f(objShader->uniformLocation("lightPos"), 1, 2, 3);
-        // glUniform3fv(objShader->uniformLocation("viewPos"), 1, &cam->getPosition()[0]);
-
-        // glUniform3f(objShader->uniformLocation("ambient"), 1, 1, 1);
-        // glUniform3f(objShader->uniformLocation("diffuse"), .5, .5, .5);
-        // glUniform3f(objShader->uniformLocation("specular"), .1, .1, .1);
-
-        // glUniform1f(objShader->uniformLocation("specExp"), 1);
-        // glUniform1f(objShader->uniformLocation("alpha"), 1);
-
-        // gridModel->draw();
+        // glDisable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS); 
 
         if (doDrawMatrix) {
-            // draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
-            draw_two_array(gridVerts, gridCols, GL_LINES);
+            glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
+
+            defaultShader->bind();
+            glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+
+            draw_color_array(gridVerts, gridCols, GL_LINES);
+
+            textureShader->bind();
+            glUniformMatrix4fv(textureShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+
+            glEnable(GL_TEXTURE_2D);
+            texture->bind();
+
+            draw_tex_array(planeVerts, planeUVs, GL_QUADS);
+
+            glDisable(GL_TEXTURE_2D);
+            // glUniformMatrix4fv(objShader->uniformLocation("proj"), 1, GL_FALSE, &cam->projMatrix()[0][0]);
+            // glUniformMatrix4fv(objShader->uniformLocation("view"), 1, GL_FALSE, &cam->viewMatrix()[0][0]);
+            // glUniformMatrix4fv(objShader->uniformLocation("model"), 1, GL_FALSE, &gridModel->modelMatrix()[0][0]);
+
+            // glUniform3f(objShader->uniformLocation("lightPos"), 1, 2, 3);
+            // glUniform3fv(objShader->uniformLocation("viewPos"), 1, &cam->getPosition()[0]);
+
+            // glUniform3f(objShader->uniformLocation("ambient"), 1, 1, 1);
+            // glUniform3f(objShader->uniformLocation("diffuse"), .5, .5, .5);
+            // glUniform3f(objShader->uniformLocation("specular"), .1, .1, .1);
+
+            // glUniform1f(objShader->uniformLocation("specExp"), 1);
+            // glUniform1f(objShader->uniformLocation("alpha"), 1);
+
+            // gridModel->draw();
+
+            defaultShader->unbind();
         }
-
-        // cam->popTransform();
-
-        glDisable(GL_TEXTURE_2D);
-        defaultShader->unbind();
 
         if (doDrawLegacy) {
             cam->pushTransform();
             // drawGrid(10);
-            draw_color_array(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
+            draw_color_array_legacy(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
             cam->popTransform();
         }
 

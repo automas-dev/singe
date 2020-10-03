@@ -4,25 +4,24 @@
 #include <iostream>
 
 namespace game {
-    static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha) {
-        // Create one OpenGL texture
+    static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha = false,
+                                GLint magFilter = GL_LINEAR, GLint minFilter = GL_LINEAR_MIPMAP_LINEAR, GLint wrap = GL_REPEAT, bool mipmaps = true) {
         GLuint textureID;
         glGenTextures(1, &textureID);
 
-        // "Bind" the newly created texture : all future texture functions will
-        // modify this texture
         glBindTexture(GL_TEXTURE_2D, textureID);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, (srcAlpha ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, data);
 
-        // Nice trilinear filtering.
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
 
-        // Return the ID of the texture we just created
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+
+        if (mipmaps)
+            glGenerateMipmap(GL_TEXTURE_2D);
+
         return textureID;
     }
 
@@ -53,7 +52,7 @@ namespace game {
         // glGenTextures(1, &textureId);
         // glBindTexture(GL_TEXTURE_2D, textureId);
         // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
-        textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true);
+        textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true, GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR);
         return true;
     }
 
