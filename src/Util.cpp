@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cctype>
 #include <glm/gtx/transform.hpp>
-#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
@@ -39,6 +39,16 @@ namespace game {
         glm::mat4 mrot = glm::toMat4(qrot);
         glm::mat4 msize = glm::scale(glm::mat4(1), scale);
         return mpos * mrot * msize;
+    }
+
+    std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                os << mat[i][j] << " ";
+            }
+            os << std::endl;
+        }
+        return os;
     }
 }
 

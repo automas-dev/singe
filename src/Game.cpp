@@ -141,7 +141,7 @@ namespace game {
         });
 
         cam = Camera::create();
-        cam->setScreen(window.getSize());
+        cam->setScreenSize(window.getSize());
         cam->move(3, 2, 1);
         cam->setFov(80);
 
@@ -211,26 +211,28 @@ namespace game {
         if (e.button == sf::Mouse::Button::Left) {
             std::cout << "Camera Projection Matrix" << std::endl;
             glm::mat4 mat = cam->projMatrix();
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    std::cout << mat[i][j] << " ";
-                }
-                std::cout << std::endl;
-            }
+            std::cout << mat << std::endl;
+            // for (int i = 0; i < 4; i++) {
+            //     for (int j = 0; j < 4; j++) {
+            //         std::cout << mat[i][j] << " ";
+            //     }
+            //     std::cout << std::endl;
+            // }
 
             std::cout << "Camera View Matrix" << std::endl;
             mat = cam->viewMatrix();
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    std::cout << mat[i][j] << " ";
-                }
-                std::cout << std::endl;
-            }
+            std::cout << mat << std::endl;
+            // for (int i = 0; i < 4; i++) {
+            //     for (int j = 0; j < 4; j++) {
+            //         std::cout << mat[i][j] << " ";
+            //     }
+            //     std::cout << std::endl;
+            // }
         }
     }
 
     void Game::onResized(const sf::Event::SizeEvent & e) {
-        cam->setScreen(window.getSize());
+        cam->setScreenSize(window.getSize());
         lastMouse = {window.getSize().x / 2, window.getSize().y / 2};
     }
 

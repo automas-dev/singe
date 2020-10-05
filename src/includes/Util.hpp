@@ -36,6 +36,8 @@ namespace game {
 
     glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale=glm::vec3(1));
 
+    std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat);
+
     bool strStartsWithChar(char pre, const std::string & str);
 
     bool strStartsWithStr(const std::string & pre, const std::string & str);

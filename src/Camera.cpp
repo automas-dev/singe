@@ -16,11 +16,11 @@ namespace game {
         return fov;
     }
 
-    void Camera::setScreen(unsigned width, unsigned height) {
-        setScreen({width, height});
+    void Camera::setScreenSize(unsigned width, unsigned height) {
+        setScreenSize({width, height});
     }
 
-    void Camera::setScreen(sf::Vector2u screen) {
+    void Camera::setScreenSize(sf::Vector2u screen) {
         this->screen = screen;
     }
 

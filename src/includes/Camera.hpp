@@ -9,9 +9,18 @@
 namespace game {
 
     class Camera: public std::enable_shared_from_this<Camera> {
+    public:
+        enum ProjectionMode {
+            Perspective,
+            Orthographic
+        };
+
+    private:
         sf::Vector2u screen;
         glm::vec2 rot;
         glm::vec3 pos;
+
+        ProjectionMode projMode = Perspective;
 
         float fov = 45.0f;
 
@@ -24,13 +33,17 @@ namespace game {
 
         // TODO: update()
 
-        void setFov(float fov);
-
         float getFov(void);
 
-        void setScreen(unsigned width, unsigned height);
+        void setFov(float fov);
 
-        void setScreen(sf::Vector2u screen);
+        void setScreenSize(unsigned width, unsigned height);
+
+        void setScreenSize(sf::Vector2u screen);
+
+        ProjectionMode getProjection(void);
+
+        void setProjection(ProjectionMode mode);
 
         const glm::vec2 &getRotation() const;
 
