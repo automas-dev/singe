@@ -209,25 +209,13 @@ namespace game {
         menu->onMouseUp(e);
 
         if (e.button == sf::Mouse::Button::Left) {
-            std::cout << "Camera Projection Matrix" << std::endl;
-            glm::mat4 mat = cam->projMatrix();
-            std::cout << mat << std::endl;
-            // for (int i = 0; i < 4; i++) {
-            //     for (int j = 0; j < 4; j++) {
-            //         std::cout << mat[i][j] << " ";
-            //     }
-            //     std::cout << std::endl;
-            // }
+            // std::cout << "Camera Projection Matrix" << std::endl;
+            // glm::mat4 mat = cam->projMatrix();
+            // std::cout << mat << std::endl;
 
-            std::cout << "Camera View Matrix" << std::endl;
-            mat = cam->viewMatrix();
-            std::cout << mat << std::endl;
-            // for (int i = 0; i < 4; i++) {
-            //     for (int j = 0; j < 4; j++) {
-            //         std::cout << mat[i][j] << " ";
-            //     }
-            //     std::cout << std::endl;
-            // }
+            // std::cout << "Camera View Matrix" << std::endl;
+            // mat = cam->viewMatrix();
+            // std::cout << mat << std::endl;
         }
     }
 
