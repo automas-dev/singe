@@ -8,9 +8,9 @@
 namespace game {
 
     static std::string pathParent(const std::string &path) {
-        std::size_t i = path.find_last_of("\\");
+        std::size_t i = path.find_last_of("/");
         if (i != std::string::npos) {
-            return path.substr(0, i);
+            return path.substr(0, i + 1);
         }
         return path;
     }
@@ -28,8 +28,6 @@ namespace game {
     Model::~Model() { }
 
     bool Model::loadFromPath(const std::string & path) {
-
-        std::cout << "Material loaded from " << path << std::endl;
 
         std::string parent = pathParent(path);
 
@@ -127,7 +125,7 @@ namespace game {
 
             std::vector<MaterialLibrary::Ptr> materials;
             for (auto &name : mtlNames) {
-                std::string mtlPath = parent + name + ".mtl";
+                std::string mtlPath = parent + name;
                 MaterialLibrary::Ptr matlib = MaterialLibrary::create(mtlPath);
                 if (matlib) {
                     matlib->name = name;
@@ -135,6 +133,7 @@ namespace game {
                 }
                 else {
                     // TODO: Handle fail to load mtl file
+                    std::cerr << "material fail load " << name << std::endl;
                 }
             }
 
@@ -144,8 +143,6 @@ namespace game {
     }
 
     bool Model::loadFromPoints(const std::vector<Vertex> & points, std::vector<MaterialLibrary::Ptr> materials) {
-        std::cout << "Material loaded " << points.size() << " points" << std::endl;
-        
         loadPoints(points);
         this->materials = materials;
         return true;

@@ -62,5 +62,8 @@ namespace game {
         void draw() const;
 
         static Ptr create(sf::RenderWindow & window, const sf::Font & defaultFont);
+
+    private:
+        void drawPass(glm::mat4 vp, const Shader::Ptr &shader) const;
     };
 }

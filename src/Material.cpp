@@ -58,7 +58,6 @@ namespace game {
 
             // for (std::string line = p.readLine(); line.empty(); line = p.readLine()) {
             for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
-                std::cout << "Line: " << line << std::endl;
 
                 if (line.length() == 0 || strStartsWithChar('#', line))
                     continue;
@@ -111,7 +110,13 @@ namespace game {
 
             if (curr)
                 materials.push_back(curr);
+            
+            return true;
         }
+
+        std::cerr << "failed to open " << path << std::endl;
+
+        return false;
     }
 
     std::size_t MaterialLibrary::size() const {

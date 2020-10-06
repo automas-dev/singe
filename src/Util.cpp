@@ -103,6 +103,7 @@ namespace game {
 
         std::string buff(len, ' ');
         fin.read(&buff[0], len);
+        buff.resize(buff.size() - 1); // Hacky way to remove \n
 
         if (!fin) {
             return std::string();

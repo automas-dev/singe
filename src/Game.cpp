@@ -162,7 +162,7 @@ namespace game {
 
         objUniforms.loadFromShader(lightingShader);
 
-        gridModel = Model::create("res/model/grid.obj");
+        gridModel = Model::create("res/model/suzzan.obj");
         if (!gridModel) {
             std::cout << "Grid model failed" << std::endl;
             throw std::runtime_error("Failed to load grid model");
@@ -238,7 +238,7 @@ namespace game {
             int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
             int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
             int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-            cam->moveLook(x * deltaS, y * deltaS, z * deltaS);
+            cam->moveLook(x * deltaS * 5, y * deltaS * 5, z * deltaS * 5);
         }
     }
 
@@ -251,12 +251,14 @@ namespace game {
             glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
 
             textureShader->bind();
-            glUniformMatrix4fv(textureShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+            // glUniformMatrix4fv(textureShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+
 
             glEnable(GL_TEXTURE_2D);
             texture->bind();
 
-            draw_tex_array(planeVerts, planeUVs, GL_QUADS);
+            drawPass(mvp, textureShader);
+            // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
 
             glDisable(GL_TEXTURE_2D);
             glDisable(GL_DEPTH_TEST);
@@ -279,6 +281,16 @@ namespace game {
         window.pushGLStates();
         window.draw(*menu);
         window.popGLStates();
+    }
+
+    void Game::drawPass(glm::mat4 vp, const Shader::Ptr &shader) const {
+        glm::mat4 mvp = vp;
+        
+        glUniformMatrix4fv(shader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+
+        // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
+
+        gridModel->draw();
     }
 
     Game::Ptr Game::create(sf::RenderWindow & window, const sf::Font & defaultFont) {

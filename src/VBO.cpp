@@ -56,7 +56,7 @@ namespace game {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
         
-        glDrawElements(GL_TRIANGLES, nPoints, GL_UNSIGNED_BYTE, 0);
+        glDrawElements(GL_TRIANGLE_FAN, nPoints, GL_UNSIGNED_BYTE, 0);
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);

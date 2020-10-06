@@ -8,16 +8,13 @@ out vec3 ourPos;
 out vec2 ourTex;
 out vec3 ourNorm;
 
-uniform mat4 proj;
-uniform mat4 view;
-uniform mat4 model;
-
 uniform mat4 mvp;
 
 void main()
 {
-    ourPos = mvp * vec4(aPos, 1.0);
-    gl_Position = ourPos;
+    vec4 pos = mvp * vec4(ourPos, 1.0);
+    gl_Position = pos;
+    ourPos = pos.xyz;
     ourTex = aTex;
     ourNorm = aNorm;
 }
