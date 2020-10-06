@@ -21,6 +21,7 @@ namespace game {
     };
 
     class VBO : public std::enable_shared_from_this<VBO> {
+        GLuint vao;
         GLuint vbo;
         bool hasBuffer;
         size_t nPoints;

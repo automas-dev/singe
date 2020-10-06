@@ -105,6 +105,13 @@ static std::vector<glm::vec3> genGridCols(int steps = 10) {
 
 namespace game {
 
+    static void getGlError() {
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            std::cout << "gl error " << err << std::endl;
+        }
+    }
+
     Game::Game(sf::RenderWindow & window, const sf::Font & defaultFont) : window(window), font(defaultFont) {
         lastMouse = {window.getSize().x / 2, window.getSize().y / 2};
         sf::Mouse::setPosition(lastMouse, window);
@@ -173,6 +180,21 @@ namespace game {
             std::cout << "Texture failed to load" << std::endl;
             throw std::runtime_error("Failed to load texture");
         }
+
+        std::vector<Vertex> points = {
+            {{0, 0, 0}, {0, 0, 0}, {0, 0}},
+            {{1, 0, 0}, {0, 0, 0}, {1, 0}},
+            {{1, 0, 1}, {0, 0, 0}, {1, 1}},
+            {{1, 1, 0}, {0, 0, 0}, {1, 1}},
+            {{0, 1, 0}, {0, 0, 0}, {1, 0}},
+            {{0, 0, 0}, {0, 0, 0}, {0, 1}},
+        };
+        vbo = VBO::create(points);
+        if (!vbo) {
+            throw std::runtime_error("Failed to load vbo");
+        }
+
+        getGlError();
     }
 
     Game::~Game() { }
@@ -278,6 +300,8 @@ namespace game {
             cam->popTransform();
         }
 
+        getGlError();
+
         window.pushGLStates();
         window.draw(*menu);
         window.popGLStates();
@@ -289,6 +313,8 @@ namespace game {
         glUniformMatrix4fv(shader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
         // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
+
+        vbo->draw();
 
         gridModel->draw();
     }

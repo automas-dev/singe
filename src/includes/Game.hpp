@@ -39,6 +39,7 @@ namespace game {
         bool doDrawLegacy = false;
 
         Model::Ptr gridModel;
+        VBO::Ptr vbo;
 
         sf::Vector2i lastMouse;
 
