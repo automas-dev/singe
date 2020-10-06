@@ -3,7 +3,7 @@
 
 namespace game {
 
-    static GLuint gen_vbo(const std::vector<Vertex> &points) {
+    static GLuint gen_vbo(const std::vector<Vertex> & points) {
         GLuint VertexVBOID;
 
         // TODO: Handle errors for each gl call in gen_vbo, return -1 on error
@@ -14,9 +14,9 @@ namespace game {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3*sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6*sizeof(float)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6 * sizeof(float)));
 
         // Get size parameter.
         int32_t bsize = 0;
@@ -25,17 +25,12 @@ namespace game {
             std::cerr << "vbo has no data" << std::endl;
         }
 
-        // glDisableVertexAttribArray(0);
-        // glDisableVertexAttribArray(1);
-        // glDisableVertexAttribArray(2);
-        // glBindBuffer(GL_ARRAY_BUFFER, 0);
-
         return VertexVBOID;
     }
 
-    VBO::VBO() : vbo(0), hasBuffer(false), nPoints(0) { }
-        
-    VBO::VBO(const std::vector<Vertex> &points) : VBO() {
+    VBO::VBO() : vao(0), vbo(0), hasBuffer(false), nPoints(0) { }
+
+    VBO::VBO(const std::vector<Vertex> & points) : VBO() {
         loadPoints(points);
     }
 
@@ -43,12 +38,16 @@ namespace game {
         clearPoints();
     }
 
-    void VBO::loadPoints(const std::vector<Vertex> &points) {
+    void VBO::loadPoints(const std::vector<Vertex> & points) {
         clearPoints();
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
         vbo = gen_vbo(points);
         glBindVertexArray(0);
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         hasBuffer = true;
         nPoints = points.size();
     }
@@ -59,6 +58,8 @@ namespace game {
             glDeleteVertexArrays(1, &vao);
             // TODO: Handle error from glDeleteBuffers
             hasBuffer = false;
+            vao = 0;
+            vbo = 0;
         }
     }
 
@@ -71,7 +72,7 @@ namespace game {
         // glEnableVertexAttribArray(0);
         // glEnableVertexAttribArray(1);
         // glEnableVertexAttribArray(2);
-        
+
         // glDrawElements(GL_TRIANGLE_FAN, nPoints, GL_UNSIGNED_BYTE, 0);
 
         // glDisableVertexAttribArray(0);
@@ -80,7 +81,7 @@ namespace game {
         // glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    VBO::Ptr VBO::create(const std::vector<Vertex> &points) {
+    VBO::Ptr VBO::create(const std::vector<Vertex> & points) {
         auto vbo = std::make_shared<VBO>(points);
         return vbo;
     }

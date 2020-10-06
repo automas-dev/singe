@@ -276,13 +276,14 @@ namespace game {
             // glUniformMatrix4fv(textureShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
 
-            glEnable(GL_TEXTURE_2D);
+            // glEnable(GL_TEXTURE_2D);
             texture->bind();
 
             drawPass(mvp, textureShader);
             // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
 
-            glDisable(GL_TEXTURE_2D);
+            texture->unbind();
+            // glDisable(GL_TEXTURE_2D);
             glDisable(GL_DEPTH_TEST);
 
             defaultShader->bind();
