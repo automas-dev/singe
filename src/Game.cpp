@@ -162,14 +162,14 @@ namespace game {
             throw std::runtime_error("Failed to load texture shader");
         }
 
-        lightingShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
+        lightingShader = Shader::create("res/shader/lighting.vs", "res/shader/lighting.fs");
         if (!lightingShader) {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
         objUniforms.loadFromShader(lightingShader);
 
-        gridModel = Model::create("res/model/suzzan.obj");
+        gridModel = Model::create("res/model/simple.obj");
         if (!gridModel) {
             std::cout << "Grid model failed" << std::endl;
             throw std::runtime_error("Failed to load grid model");
@@ -267,26 +267,31 @@ namespace game {
     void Game::draw() const {
         // glDisable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS); 
+        // glDepthFunc(GL_LESS); 
+        glDepthFunc(GL_LEQUAL); 
 
         if (doDrawMatrix) {
             glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
 
             textureShader->bind();
-            // glUniformMatrix4fv(textureShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
-
-
-            // glEnable(GL_TEXTURE_2D);
+            glDisable(GL_BLEND);
             texture->bind();
 
             drawPass(mvp, textureShader);
-            // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
 
             texture->unbind();
-            // glDisable(GL_TEXTURE_2D);
-            glDisable(GL_DEPTH_TEST);
+
+            lightingShader->bind();
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+            // glBlendFunc(GL_ONE, GL_ONE);
+            // glBlendFunc(GL_ONE, GL_ZERO);
+
+            drawPass(mvp, lightingShader);
 
             defaultShader->bind();
+            // glDisable(GL_DEPTH_TEST);
+            glDisable(GL_BLEND);
             glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
             draw_color_array(gridVerts, gridCols, GL_LINES);
@@ -315,7 +320,7 @@ namespace game {
 
         // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
 
-        vbo->draw();
+        // vbo->draw();
 
         gridModel->draw();
     }
