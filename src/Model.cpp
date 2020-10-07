@@ -72,7 +72,7 @@ namespace game {
                 }
                 else if (strStartsWithStr("v ", line)) {
                     glm::vec3 v;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &v.x, &v.y, &v.z);
+                    int nRead = sscanf(line.substr(2).c_str(), "%f %f %f", &v.x, &v.y, &v.z);
                     if (nRead == 3) {
                         av.push_back(v);
                     }
