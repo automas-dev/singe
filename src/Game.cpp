@@ -162,12 +162,12 @@ namespace game {
             throw std::runtime_error("Failed to load texture shader");
         }
 
-        lightingShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
+        lightingShader = Shader::create("res/shader/lighting.vs", "res/shader/lighting.fs");
         if (!lightingShader) {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
-        cubeModel = Model::create("res/model/cube.obj");
+        cubeModel = Model::create("res/model/sphere.obj");
         if (!cubeModel) {
             std::cout << "Cube model failed" << std::endl;
             throw std::runtime_error("Failed to load cube model");
@@ -179,6 +179,7 @@ namespace game {
             throw std::runtime_error("Failed to load sphere model");
         }
         sphereModel->move(1, 2, 3);
+        sphereModel->scale(0.1, 0.1, 0.1);
 
         texture = Texture::create("res/img/dev_texture_gray.png");
         if (!texture) {
