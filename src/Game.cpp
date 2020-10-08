@@ -258,9 +258,8 @@ namespace game {
     }
 
     void Game::draw() const {
-        // glDisable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
-        // glDepthFunc(GL_LESS); 
         glDepthFunc(GL_LEQUAL); 
 
         if (doDrawMatrix) {
@@ -277,19 +276,6 @@ namespace game {
             lightingShader->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-            // glBlendFunc(GL_ONE, GL_ONE);
-            // glBlendFunc(GL_ONE, GL_ZERO);
-
-            // glUniform3f(lightingShader->uniformLocation("lightPos"), 1, 2, 3);
-            // // glUniform3f(lightingShader->uniformLocation("viewPos"), 2, 3, 1);
-            // glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
-
-            // glUniform3f(lightingShader->uniformLocation("ambient"), 0.2, 0.1, 0.1);
-            // glUniform3f(lightingShader->uniformLocation("diffuse"), 0.8, 0.8, 0.8);
-            // glUniform3f(lightingShader->uniformLocation("specular"), 0.1, 0.8, 0.3);
-
-            // glUniform1f(lightingShader->uniformLocation("specExp"), 1);
-            // glUniform1f(lightingShader->uniformLocation("alpha"), 1);
 
             const auto &m = cubeModel->getFirstMaterial();
             
@@ -317,7 +303,6 @@ namespace game {
 
         if (doDrawLegacy) {
             cam->pushTransform();
-            // drawGrid(10);
             draw_color_array_legacy(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
             cam->popTransform();
         }
@@ -330,9 +315,6 @@ namespace game {
     }
 
     void Game::drawPass(glm::mat4 vp, const Shader::ConstPtr &shader) const {
-
-        // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
-
         drawModel(cubeModel, vp, shader);
         drawModel(sphereModel, vp, shader);
     }
