@@ -36,7 +36,9 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), specExp);
     color += spec * specular;
 
-    FragColor = vec4(color, alpha) * texture(tex, ourTex);
+    FragColor = vec4(color, alpha);
+    // FragColor = vec4(ourTex.x, 0.0, ourTex.y, alpha);
+    // FragColor = vec4(color, alpha) * texture(tex, ourTex);
     // FragColor = (vec4(diffuse, 1.0) + vec4(specular, 1.0));
     // FragColor = texture(tex, ourTex);
 }

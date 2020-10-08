@@ -12,7 +12,7 @@ uniform mat4 mvp;
 
 void main()
 {
-    vec4 pos = mvp * vec4(ourPos, 1.0);
+    vec4 pos = mvp * vec4(aPos, 1.0);
     gl_Position = pos;
     ourPos = pos.xyz;
     ourTex = aTex;

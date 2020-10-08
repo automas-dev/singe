@@ -77,14 +77,14 @@ namespace game {
                         av.push_back(v);
                     }
                 }
-                else if (strStartsWithStr("vt", line)) {
+                else if (strStartsWithStr("vt ", line)) {
                     glm::vec2 vt;
                     int nRead = sscanf(line.substr(3).c_str(), "%f %f", &vt.x, &vt.y);
                     if (nRead == 2) {
                         avt.push_back(vt);
                     }
                 }
-                else if (strStartsWithStr("vn", line)) {
+                else if (strStartsWithStr("vn ", line)) {
                     glm::vec3 vn;
                     int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &vn.x, &vn.y, &vn.z);
                     if (nRead == 3) {
@@ -174,6 +174,10 @@ namespace game {
 
     glm::mat4 Model::modelMatrix() {
         return matFromVecs(pos, rot, size);
+    }
+
+    Material::ConstPtr Model::getFirstMaterial(void) const {
+        return materials[0]->getMaterial(0);
     }
 
     MaterialLibrary::ConstPtr Model::getMaterialLibrary(const std::string & library) const {

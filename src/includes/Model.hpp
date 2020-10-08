@@ -42,6 +42,8 @@ namespace game {
 
         glm::mat4 modelMatrix();
 
+        Material::ConstPtr getFirstMaterial(void) const;
+
         MaterialLibrary::ConstPtr getMaterialLibrary(const std::string & library) const;
 
         Material::ConstPtr getMaterial(const std::string & library, const std::string & material) const;

@@ -162,14 +162,14 @@ namespace game {
             throw std::runtime_error("Failed to load texture shader");
         }
 
-        lightingShader = Shader::create("res/shader/lighting.vs", "res/shader/lighting.fs");
+        lightingShader = Shader::create("res/shader/obj.vs", "res/shader/obj.fs");
         if (!lightingShader) {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
         objUniforms.loadFromShader(lightingShader);
 
-        gridModel = Model::create("res/model/simple.obj");
+        gridModel = Model::create("res/model/suzzan.obj");
         if (!gridModel) {
             std::cout << "Grid model failed" << std::endl;
             throw std::runtime_error("Failed to load grid model");
@@ -286,6 +286,29 @@ namespace game {
             glBlendFunc(GL_ZERO, GL_SRC_COLOR);
             // glBlendFunc(GL_ONE, GL_ONE);
             // glBlendFunc(GL_ONE, GL_ZERO);
+
+            // glUniform3f(lightingShader->uniformLocation("lightPos"), 1, 2, 3);
+            // // glUniform3f(lightingShader->uniformLocation("viewPos"), 2, 3, 1);
+            // glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
+
+            // glUniform3f(lightingShader->uniformLocation("ambient"), 0.2, 0.1, 0.1);
+            // glUniform3f(lightingShader->uniformLocation("diffuse"), 0.8, 0.8, 0.8);
+            // glUniform3f(lightingShader->uniformLocation("specular"), 0.1, 0.8, 0.3);
+
+            // glUniform1f(lightingShader->uniformLocation("specExp"), 1);
+            // glUniform1f(lightingShader->uniformLocation("alpha"), 1);
+
+            const auto &m = gridModel->getFirstMaterial();
+            
+            glUniform3f(lightingShader->uniformLocation("lightPos"), 1, 2, 3);
+            glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
+
+            glUniform3fv(lightingShader->uniformLocation("ambient"), 1, &m->ambient.x);
+            glUniform3fv(lightingShader->uniformLocation("diffuse"), 1, &m->diffuse.x);
+            glUniform3fv(lightingShader->uniformLocation("specular"), 1, &m->specular.x);
+
+            glUniform1f(lightingShader->uniformLocation("specExp"), m->specularExponent);
+            glUniform1f(lightingShader->uniformLocation("alpha"), m->alpha);
 
             drawPass(mvp, lightingShader);
 
