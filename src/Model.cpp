@@ -172,6 +172,43 @@ namespace game {
         this->size *= scale;
     }
 
+    const glm::vec3 &Model::getPosition() const {
+        return pos;
+    }
+
+    void Model::setPosition(float x, float y, float z) {
+        setPosition({x, y, z});
+    }
+
+    void Model::setPosition(glm::vec3 pos) {
+        this->pos = pos;
+    }
+
+    const glm::vec3 &Model::getRotation() const {
+        return rot;
+    }
+
+    void Model::setRotation(float x, float y, float z) {
+        setRotation({x, y, z});
+    }
+
+    void Model::setRotation(glm::vec3 rot) {
+        this->rot = rot;
+    }
+
+    const glm::vec3 &Model::getScale() const {
+        return size;
+    }
+
+    void Model::setScale(float x, float y, float z) {
+        setScale({x, y, z});
+    }
+
+    void Model::setScale(glm::vec3 scale) {
+        this->size = scale;
+    }
+
+
     glm::mat4 Model::modelMatrix() const {
         return matFromVecs(pos, rot, size);
     }

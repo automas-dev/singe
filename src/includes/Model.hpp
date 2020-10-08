@@ -40,6 +40,18 @@ namespace game {
         void scale(float x, float y, float z);
         void scale(glm::vec3 scale);
 
+        const glm::vec3 &getPosition(void) const;
+        void setPosition(float x, float y, float z);
+        void setPosition(glm::vec3 pos);
+
+        const glm::vec3 &getRotation(void) const;
+        void setRotation(float x, float y, float z);
+        void setRotation(glm::vec3 rot);
+
+        const glm::vec3 &getScale(void) const;
+        void setScale(float x, float y, float z);
+        void setScale(glm::vec3 scale);
+
         glm::mat4 modelMatrix() const;
 
         Material::ConstPtr getFirstMaterial(void) const;

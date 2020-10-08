@@ -269,7 +269,7 @@ namespace game {
             glDisable(GL_BLEND);
             texture->bind();
 
-            drawPass(mvp, textureShader);
+            // drawPass(mvp, textureShader);
 
             texture->unbind();
 
@@ -279,7 +279,7 @@ namespace game {
 
             const auto &m = cubeModel->getFirstMaterial();
             
-            glUniform3f(lightingShader->uniformLocation("lightPos"), 1, 2, 3);
+            glUniform3fv(lightingShader->uniformLocation("lightPos"), 1, &sphereModel->getPosition().x);
             glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
 
             glUniform3fv(lightingShader->uniformLocation("ambient"), 1, &m->ambient.x);
