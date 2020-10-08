@@ -169,8 +169,8 @@ namespace game {
 
         objUniforms.loadFromShader(lightingShader);
 
-        gridModel = Model::create("res/model/suzzan.obj");
-        if (!gridModel) {
+        cubeModel = Model::create("res/model/cube.obj");
+        if (!cubeModel) {
             std::cout << "Grid model failed" << std::endl;
             throw std::runtime_error("Failed to load grid model");
         }
@@ -179,19 +179,6 @@ namespace game {
         if (!texture) {
             std::cout << "Texture failed to load" << std::endl;
             throw std::runtime_error("Failed to load texture");
-        }
-
-        std::vector<Vertex> points = {
-            {{0, 0, 0}, {0, 0, 0}, {0, 0}},
-            {{1, 0, 0}, {0, 0, 0}, {1, 0}},
-            {{1, 0, 1}, {0, 0, 0}, {1, 1}},
-            {{1, 1, 0}, {0, 0, 0}, {1, 1}},
-            {{0, 1, 0}, {0, 0, 0}, {1, 0}},
-            {{0, 0, 0}, {0, 0, 0}, {0, 1}},
-        };
-        vbo = VBO::create(points);
-        if (!vbo) {
-            throw std::runtime_error("Failed to load vbo");
         }
 
         getGlError();
@@ -298,7 +285,7 @@ namespace game {
             // glUniform1f(lightingShader->uniformLocation("specExp"), 1);
             // glUniform1f(lightingShader->uniformLocation("alpha"), 1);
 
-            const auto &m = gridModel->getFirstMaterial();
+            const auto &m = cubeModel->getFirstMaterial();
             
             glUniform3f(lightingShader->uniformLocation("lightPos"), 1, 2, 3);
             glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
@@ -345,7 +332,7 @@ namespace game {
 
         // vbo->draw();
 
-        gridModel->draw();
+        cubeModel->draw();
     }
 
     Game::Ptr Game::create(sf::RenderWindow & window, const sf::Font & defaultFont) {

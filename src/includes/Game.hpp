@@ -38,8 +38,7 @@ namespace game {
         bool doDrawMatrix = true;
         bool doDrawLegacy = false;
 
-        Model::Ptr gridModel;
-        VBO::Ptr vbo;
+        Model::Ptr cubeModel;
 
         sf::Vector2i lastMouse;
 

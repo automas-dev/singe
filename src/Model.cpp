@@ -116,9 +116,9 @@ namespace game {
                     }
 
                     points.push_back({
-                        av[face.p[i].v],
-                        avn[face.p[i].n],
-                        avt[face.p[i].t]
+                        av[face.p[i].v-1],
+                        avn[face.p[i].n-1],
+                        avt[face.p[i].t-1]
                     });
                 }
             }
