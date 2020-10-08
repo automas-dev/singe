@@ -1,7 +1,5 @@
 #version 330 core
 
-uniform sampler2D tex;
-
 in vec3 ourPos;
 in vec2 ourTex;
 in vec3 ourNorm;
@@ -37,8 +35,4 @@ void main()
     color += spec * specular;
 
     FragColor = vec4(color, alpha);
-    // FragColor = vec4(ourTex.x, 0.0, ourTex.y, alpha);
-    // FragColor = vec4(color, alpha) * texture(tex, ourTex);
-    // FragColor = (vec4(diffuse, 1.0) + vec4(specular, 1.0));
-    // FragColor = texture(tex, ourTex);
 }
