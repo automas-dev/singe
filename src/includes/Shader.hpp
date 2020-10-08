@@ -63,7 +63,7 @@ namespace game {
         bool loadFromPath(const std::string & vertexPath,
                           const std::string & fragmentPath);
 
-        GLuint uniformLocation(const std::string & name);
+        GLuint uniformLocation(const std::string & name) const;
 
         void bind(void);
 

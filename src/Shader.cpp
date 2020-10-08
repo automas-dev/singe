@@ -237,7 +237,7 @@ namespace game {
         return true;
     }
 
-    GLuint Shader::uniformLocation(const std::string & name) {
+    GLuint Shader::uniformLocation(const std::string & name) const {
         return glGetUniformLocation(program, name.c_str());
     }
 

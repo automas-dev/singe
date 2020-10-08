@@ -26,7 +26,7 @@ namespace game {
         GLuint specExp;
         GLuint alpha;
 
-        void loadFromShader(const Shader::Ptr &shader);
+        void loadFromShader(const Shader::ConstPtr &shader);
     };
 
     struct Material : public std::enable_shared_from_this<Material> {

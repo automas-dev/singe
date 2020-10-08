@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace game {
-    void MaterialUniformLocations::loadFromShader(const Shader::Ptr &shader) {
+    void MaterialUniformLocations::loadFromShader(const Shader::ConstPtr &shader) {
         proj = shader->uniformLocation("proj");
         view = shader->uniformLocation("view");
         model = shader->uniformLocation("model");

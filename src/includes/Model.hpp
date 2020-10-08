@@ -40,7 +40,7 @@ namespace game {
         void scale(float x, float y, float z);
         void scale(glm::vec3 scale);
 
-        glm::mat4 modelMatrix();
+        glm::mat4 modelMatrix() const;
 
         Material::ConstPtr getFirstMaterial(void) const;
 

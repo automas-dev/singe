@@ -167,13 +167,18 @@ namespace game {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
-        objUniforms.loadFromShader(lightingShader);
-
         cubeModel = Model::create("res/model/cube.obj");
         if (!cubeModel) {
-            std::cout << "Grid model failed" << std::endl;
-            throw std::runtime_error("Failed to load grid model");
+            std::cout << "Cube model failed" << std::endl;
+            throw std::runtime_error("Failed to load cube model");
         }
+
+        sphereModel = Model::create("res/model/sphere.obj");
+        if (!sphereModel) {
+            std::cout << "Sphere model failed" << std::endl;
+            throw std::runtime_error("Failed to load sphere model");
+        }
+        sphereModel->move(1, 2, 3);
 
         texture = Texture::create("res/img/dev_texture_gray.png");
         if (!texture) {
@@ -323,16 +328,18 @@ namespace game {
         window.popGLStates();
     }
 
-    void Game::drawPass(glm::mat4 vp, const Shader::Ptr &shader) const {
-        glm::mat4 mvp = vp;
-        
-        glUniformMatrix4fv(shader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+    void Game::drawPass(glm::mat4 vp, const Shader::ConstPtr &shader) const {
 
         // draw_tex_array(planeVerts, planeUVs, GL_QUADS);
 
-        // vbo->draw();
+        drawModel(cubeModel, vp, shader);
+        drawModel(sphereModel, vp, shader);
+    }
 
-        cubeModel->draw();
+    void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::ConstPtr &shader) const {
+        glm::mat4 mvp = vp * model->modelMatrix();
+        glUniformMatrix4fv(shader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+        model->draw();
     }
 
     Game::Ptr Game::create(sf::RenderWindow & window, const sf::Font & defaultFont) {

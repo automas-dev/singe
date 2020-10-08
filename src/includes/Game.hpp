@@ -31,14 +31,13 @@ namespace game {
         Shader::Ptr textureShader;
         Shader::Ptr lightingShader;
 
-        MaterialUniformLocations objUniforms;
-
         Texture::Ptr texture;
 
         bool doDrawMatrix = true;
         bool doDrawLegacy = false;
 
         Model::Ptr cubeModel;
+        Model::Ptr sphereModel;
 
         sf::Vector2i lastMouse;
 
@@ -64,6 +63,7 @@ namespace game {
         static Ptr create(sf::RenderWindow & window, const sf::Font & defaultFont);
 
     private:
-        void drawPass(glm::mat4 vp, const Shader::Ptr &shader) const;
+        void drawPass(glm::mat4 vp, const Shader::ConstPtr &shader) const;
+        void drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::ConstPtr &shader) const;
     };
 }

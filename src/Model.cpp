@@ -172,7 +172,7 @@ namespace game {
         this->size *= scale;
     }
 
-    glm::mat4 Model::modelMatrix() {
+    glm::mat4 Model::modelMatrix() const {
         return matFromVecs(pos, rot, size);
     }
 
