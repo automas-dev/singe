@@ -63,7 +63,7 @@ int main() {
 
     sf::Clock clock;
 
-    glClearColor(0.2, 0.5, 0.7, 1.0);
+    // glClearColor(0.2, 0.5, 0.7, 1.0);
 
     while (window.isOpen()) {
         sf::Event event;

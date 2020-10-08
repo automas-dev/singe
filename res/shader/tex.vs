@@ -6,6 +6,7 @@ layout (location = 2) in vec2 aTex;
 out vec2 ourTex;
 
 uniform mat4 mvp;
+uniform mat4 model;
 
 void main()
 {

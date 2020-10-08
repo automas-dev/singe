@@ -33,8 +33,9 @@ namespace game {
 
         Texture::Ptr texture;
 
-        bool doDrawMatrix = true;
         bool doDrawLegacy = false;
+        bool doDrawTexture = true;
+        bool doDrawShading = true;
 
         Model::Ptr cubeModel;
         Model::Ptr sphereModel;

@@ -6,6 +6,7 @@ layout (location = 1) in vec3 aColor;
 out vec4 ourColor;
 
 uniform mat4 mvp;
+uniform mat4 model;
 
 void main()
 {

@@ -167,7 +167,7 @@ namespace game {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
-        cubeModel = Model::create("res/model/sphere.obj");
+        cubeModel = Model::create("res/model/cube.obj");
         if (!cubeModel) {
             std::cout << "Cube model failed" << std::endl;
             throw std::runtime_error("Failed to load cube model");
@@ -203,7 +203,10 @@ namespace game {
                 doDrawLegacy = !doDrawLegacy;
                 break;
             case sf::Keyboard::Num2:
-                doDrawMatrix = !doDrawMatrix;
+                doDrawTexture = !doDrawTexture;
+                break;
+            case sf::Keyboard::Num3:
+                doDrawShading = !doDrawShading;
                 break;
         }
     }
@@ -259,47 +262,50 @@ namespace game {
 
     void Game::draw() const {
         glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glFrontFace(GL_CCW);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL); 
 
-        if (doDrawMatrix) {
-            glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
+        glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
 
-            textureShader->bind();
-            glDisable(GL_BLEND);
-            texture->bind();
+        textureShader->bind();
+        glDisable(GL_BLEND);
+        texture->bind();
 
-            // drawPass(mvp, textureShader);
+        if (doDrawTexture)
+            drawPass(mvp, textureShader);
 
-            texture->unbind();
+        texture->unbind();
 
-            lightingShader->bind();
+        lightingShader->bind();
+        if (doDrawTexture)
             glEnable(GL_BLEND);
-            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+        glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 
-            const auto &m = cubeModel->getFirstMaterial();
-            
-            glUniform3fv(lightingShader->uniformLocation("lightPos"), 1, &sphereModel->getPosition().x);
-            glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
+        const auto &m = cubeModel->getFirstMaterial();
+        
+        glUniform3fv(lightingShader->uniformLocation("lightPos"), 1, &sphereModel->getPosition().x);
+        glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
 
-            glUniform3fv(lightingShader->uniformLocation("ambient"), 1, &m->ambient.x);
-            glUniform3fv(lightingShader->uniformLocation("diffuse"), 1, &m->diffuse.x);
-            glUniform3fv(lightingShader->uniformLocation("specular"), 1, &m->specular.x);
+        glUniform3fv(lightingShader->uniformLocation("ambient"), 1, &m->ambient.x);
+        glUniform3fv(lightingShader->uniformLocation("diffuse"), 1, &m->diffuse.x);
+        glUniform3fv(lightingShader->uniformLocation("specular"), 1, &m->specular.x);
 
-            glUniform1f(lightingShader->uniformLocation("specExp"), m->specularExponent);
-            glUniform1f(lightingShader->uniformLocation("alpha"), m->alpha);
+        glUniform1f(lightingShader->uniformLocation("specExp"), m->specularExponent);
+        glUniform1f(lightingShader->uniformLocation("alpha"), m->alpha);
 
+        if (doDrawShading)
             drawPass(mvp, lightingShader);
 
-            defaultShader->bind();
-            // glDisable(GL_DEPTH_TEST);
-            glDisable(GL_BLEND);
-            glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+        defaultShader->bind();
+        // glDisable(GL_DEPTH_TEST);
+        glDisable(GL_BLEND);
+        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
 
-            draw_color_array(gridVerts, gridCols, GL_LINES);
+        draw_color_array(gridVerts, gridCols, GL_LINES);
 
-            defaultShader->unbind();
-        }
+        defaultShader->unbind();
 
         if (doDrawLegacy) {
             cam->pushTransform();
@@ -322,6 +328,7 @@ namespace game {
     void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::ConstPtr &shader) const {
         glm::mat4 mvp = vp * model->modelMatrix();
         glUniformMatrix4fv(shader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(shader->uniformLocation("model"), 1, GL_FALSE, &model->modelMatrix()[0][0]);
         model->draw();
     }
 
