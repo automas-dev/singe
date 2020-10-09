@@ -263,6 +263,9 @@ namespace game {
             int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
             cam->moveLook(x * deltaS * 5, y * deltaS * 5, z * deltaS * 5);
         }
+
+        time += deltaS;
+        sphereModel->setPosition(glm::cos(time), 2, glm::sin(time));
     }
 
     void Game::draw() const {
@@ -289,7 +292,7 @@ namespace game {
             monoShader->setVec3("lights[0].specular", 1, 1, 1);
             monoShader->setVec3("lights[0].position", sphereModel->getPosition());
             monoShader->setVec3("lights[0].direction", -1, -2, -3);
-            monoShader->setUInt("lights[0].type", 2);
+            monoShader->setUInt("lights[0].type", 0);
 
             monoShader->setFloat("light[0].constant", 1.0);
             monoShader->setFloat("light[0].linear", 0.09);

@@ -43,6 +43,8 @@ namespace game {
 
         sf::Vector2i lastMouse;
 
+        float time = 0.0;
+
     public:
         typedef std::shared_ptr<Game> Ptr;
         typedef std::shared_ptr<const Game> ConstPtr;
