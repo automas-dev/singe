@@ -2,11 +2,11 @@
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNorm;
-layout (location = 1) in vec3 aTex;
+layout (location = 1) in vec2 aTex;
 
 out vec3 FragPos;
 out vec3 FragNorm;
-out vec3 FragTex;
+out vec2 FragTex;
 
 uniform mat4 vp;
 uniform mat4 model;

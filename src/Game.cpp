@@ -167,6 +167,11 @@ namespace game {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
+        monoShader = Shader::create("res/shader/mono.vs", "res/shader/mono.fs");
+        if (!monoShader) {
+            throw std::runtime_error("Failed to load mono shader");
+        }
+
         cubeModel = Model::create("res/model/cube.obj");
         if (!cubeModel) {
             std::cout << "Cube model failed" << std::endl;
@@ -267,41 +272,30 @@ namespace game {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL); 
 
-        glm::mat4 mvp = cam->projMatrix() * cam->viewMatrix();
+        glm::mat4 vp = cam->projMatrix() * cam->viewMatrix();
 
-        textureShader->bind();
-        glDisable(GL_BLEND);
+        monoShader->bind();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         texture->bind();
 
-        if (doDrawTexture)
-            drawPass(mvp, textureShader);
+        monoShader->setMat4("vp", vp);
 
-        texture->unbind();
+        monoShader->setVec3("lights[0].position", sphereModel->getPosition());
+        monoShader->setVec3("lights[0].ambient", 1, 1, 1);
+        monoShader->setVec3("lights[0].diffuse", 1, 1, 1);
+        monoShader->setVec3("lights[0].specular", 1, 1, 1);
+        monoShader->setUInt("lights[0].type", 0);
 
-        lightingShader->bind();
-        if (doDrawTexture)
-            glEnable(GL_BLEND);
-        glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+        monoShader->setInt("nLights", 1);
 
-        const auto &m = cubeModel->getFirstMaterial();
-        
-        glUniform3fv(lightingShader->uniformLocation("lightPos"), 1, &sphereModel->getPosition().x);
-        glUniform3fv(lightingShader->uniformLocation("viewPos"), 1, &cam->getPosition().x);
+        monoShader->setVec3("viewPos", cam->getPosition());
 
-        glUniform3fv(lightingShader->uniformLocation("ambient"), 1, &m->ambient.x);
-        glUniform3fv(lightingShader->uniformLocation("diffuse"), 1, &m->diffuse.x);
-        glUniform3fv(lightingShader->uniformLocation("specular"), 1, &m->specular.x);
-
-        glUniform1f(lightingShader->uniformLocation("specExp"), m->specularExponent);
-        glUniform1f(lightingShader->uniformLocation("alpha"), m->alpha);
-
-        if (doDrawShading)
-            drawPass(mvp, lightingShader);
+        drawPass(vp, monoShader);
 
         defaultShader->bind();
-        // glDisable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
-        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
 
         draw_color_array(gridVerts, gridCols, GL_LINES);
 
@@ -320,15 +314,23 @@ namespace game {
         window.popGLStates();
     }
 
-    void Game::drawPass(glm::mat4 vp, const Shader::ConstPtr &shader) const {
+    void Game::drawPass(glm::mat4 vp, const Shader::Ptr &shader) const {
         drawModel(cubeModel, vp, shader);
         drawModel(sphereModel, vp, shader);
     }
 
-    void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::ConstPtr &shader) const {
-        glm::mat4 mvp = vp * model->modelMatrix();
-        glUniformMatrix4fv(shader->uniformLocation("mvp"), 1, GL_FALSE, &mvp[0][0]);
-        glUniformMatrix4fv(shader->uniformLocation("model"), 1, GL_FALSE, &model->modelMatrix()[0][0]);
+    void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::Ptr &shader) const {
+        shader->setMat4("model", model->modelMatrix());
+
+        const auto &m = cubeModel->getFirstMaterial();
+
+        shader->setVec3("material.ambient", m->ambient);
+        shader->setVec3("material.diffuse", m->diffuse);
+        shader->setVec3("material.specular", m->specular);
+        shader->setFloat("material.shininess", m->specularExponent);
+        shader->setFloat("material.alpha", m->alpha);
+        shader->setInt("material.texture", 0);
+
         model->draw();
     }
 

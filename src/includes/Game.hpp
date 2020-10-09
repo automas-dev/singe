@@ -30,6 +30,7 @@ namespace game {
         Shader::Ptr defaultShader;
         Shader::Ptr textureShader;
         Shader::Ptr lightingShader;
+        Shader::Ptr monoShader;
 
         Texture::Ptr texture;
 
@@ -64,7 +65,7 @@ namespace game {
         static Ptr create(sf::RenderWindow & window, const sf::Font & defaultFont);
 
     private:
-        void drawPass(glm::mat4 vp, const Shader::ConstPtr &shader) const;
-        void drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::ConstPtr &shader) const;
+        void drawPass(glm::mat4 vp, const Shader::Ptr &shader) const;
+        void drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::Ptr &shader) const;
     };
 }
