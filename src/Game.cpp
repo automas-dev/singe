@@ -284,11 +284,19 @@ namespace game {
             monoShader->setVec3("viewPos", cam->getPosition());
             monoShader->setUInt("nLights", 1);
 
-            monoShader->setVec3("lights[0].position", sphereModel->getPosition());
             monoShader->setVec3("lights[0].ambient", 1, 1, 1);
             monoShader->setVec3("lights[0].diffuse", 1, 1, 1);
             monoShader->setVec3("lights[0].specular", 1, 1, 1);
-            monoShader->setUInt("lights[0].type", 0);
+            monoShader->setVec3("lights[0].position", sphereModel->getPosition());
+            monoShader->setVec3("lights[0].direction", -1, -2, -3);
+            monoShader->setUInt("lights[0].type", 2);
+
+            monoShader->setFloat("light[0].constant", 1.0);
+            monoShader->setFloat("light[0].linear", 0.09);
+            monoShader->setFloat("light[0].quadratic", 0.032);
+
+            monoShader->setFloat("light[0].cutOff", glm::cos(glm::radians(12.5)));
+            monoShader->setFloat("light[0].outerCutOff", glm::cos(glm::radians(15.0)));
 
             drawPass(vp, monoShader);
         }

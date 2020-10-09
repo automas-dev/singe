@@ -21,21 +21,6 @@ struct Material {
     sampler2D texture;
 };
 
-struct Point {
-    float constant;
-    float linear;
-    float quadratic;
-};
-
-struct Spot {
-    float cutOff;
-    float outerCutOff;
-
-    float constant;
-    float linear;
-    float quadratic;
-};
-
 struct Light {
     vec3 ambient;
     vec3 diffuse;
@@ -45,8 +30,14 @@ struct Light {
     vec3 direction;
     uint type;
 
-    Point point;
-    Spot spot;
+    // Point
+    float constant;
+    float linear;
+    float quadratic;
+
+    // Spot
+    float cutOff;
+    float outerCutOff;
 };
 
 uniform Material material;
@@ -86,24 +77,30 @@ vec3 calcPointLight(Light light, vec3 normal, vec3 viewDir)
     vec3 color = calcDirLight(light, normal, viewDir);
 
     // attenuation
-    float distance = length(light.position - FragPos);
-    float attenuation = 1.0 / (light.point.constant + light.point.linear * distance + light.point.quadratic * (distance * distance));    
+    // float distance = length(light.position - FragPos);
+    // float attenuation = 1.0 / (light.point.constant + light.point.linear * distance + light.point.quadratic * (distance * distance));    
+    float attenuation = 1.0 / (light.type);
 
-    return color * attenuation;
+    // return color * attenuation;
+    if (attenuation > 1000.0)
+        return vec3(1.0, 0.0, 0.0);
+    return color * 1.0;
 }
 
 vec3 calcSpotLight(Light light, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - FragPos);
-    
-    vec3 color = calcPointLight(light, normal, viewDir);
+
+    // vec3 color = calcPointLight(light, normal, viewDir);
+    vec3 color = calcDirLight(light, normal, viewDir);
 
     // spotlight intensity
     float theta = dot(lightDir, normalize(-light.direction)); 
-    float epsilon = light.spot.cutOff - light.spot.outerCutOff;
-    float intensity = clamp((theta - light.spot.outerCutOff) / epsilon, 0.0, 1.0);
+    float epsilon = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
     return color * intensity;
+    // return color;
 }
 
 vec3 calcLight(Light light, vec3 normal, vec3 viewDir) {
@@ -114,7 +111,7 @@ vec3 calcLight(Light light, vec3 normal, vec3 viewDir) {
     else if (light.type == LIGHT_TYPE_SPOT)
         return calcSpotLight(light, normal, viewDir);
     else
-        return vec3(0.0);
+        return vec3(0.0, 1.0, 0.0);
 }
 
 void main()
