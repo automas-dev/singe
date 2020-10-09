@@ -77,14 +77,10 @@ vec3 calcPointLight(Light light, vec3 normal, vec3 viewDir)
     vec3 color = calcDirLight(light, normal, viewDir);
 
     // attenuation
-    // float distance = length(light.position - FragPos);
-    // float attenuation = 1.0 / (light.point.constant + light.point.linear * distance + light.point.quadratic * (distance * distance));    
-    float attenuation = 1.0 / (light.type);
+    float distance = length(light.position - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
 
-    // return color * attenuation;
-    if (attenuation > 1000.0)
-        return vec3(1.0, 0.0, 0.0);
-    return color * 1.0;
+    return color * attenuation;
 }
 
 vec3 calcSpotLight(Light light, vec3 normal, vec3 viewDir)
@@ -100,7 +96,6 @@ vec3 calcSpotLight(Light light, vec3 normal, vec3 viewDir)
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
     return color * intensity;
-    // return color;
 }
 
 vec3 calcLight(Light light, vec3 normal, vec3 viewDir) {
