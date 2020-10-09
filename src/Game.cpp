@@ -275,29 +275,31 @@ namespace game {
         glm::mat4 vp = cam->projMatrix() * cam->viewMatrix();
 
         monoShader->bind();
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        texture->bind();
+        {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            texture->bind();
 
-        monoShader->setMat4("vp", vp);
+            monoShader->setMat4("vp", vp);
+            monoShader->setVec3("viewPos", cam->getPosition());
+            monoShader->setUInt("nLights", 1);
 
-        monoShader->setVec3("lights[0].position", sphereModel->getPosition());
-        monoShader->setVec3("lights[0].ambient", 1, 1, 1);
-        monoShader->setVec3("lights[0].diffuse", 1, 1, 1);
-        monoShader->setVec3("lights[0].specular", 1, 1, 1);
-        monoShader->setUInt("lights[0].type", 0);
+            monoShader->setVec3("lights[0].position", sphereModel->getPosition());
+            monoShader->setVec3("lights[0].ambient", 1, 1, 1);
+            monoShader->setVec3("lights[0].diffuse", 1, 1, 1);
+            monoShader->setVec3("lights[0].specular", 1, 1, 1);
+            monoShader->setUInt("lights[0].type", 0);
 
-        monoShader->setInt("nLights", 1);
-
-        monoShader->setVec3("viewPos", cam->getPosition());
-
-        drawPass(vp, monoShader);
+            drawPass(vp, monoShader);
+        }
 
         defaultShader->bind();
-        glDisable(GL_BLEND);
-        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
+        {
+            glDisable(GL_BLEND);
+            glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
 
-        draw_color_array(gridVerts, gridCols, GL_LINES);
+            draw_color_array(gridVerts, gridCols, GL_LINES);
+        }
 
         defaultShader->unbind();
 
@@ -322,7 +324,7 @@ namespace game {
     void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::Ptr &shader) const {
         shader->setMat4("model", model->modelMatrix());
 
-        const auto &m = cubeModel->getFirstMaterial();
+        const auto &m = model->getFirstMaterial();
 
         shader->setVec3("material.ambient", m->ambient);
         shader->setVec3("material.diffuse", m->diffuse);
