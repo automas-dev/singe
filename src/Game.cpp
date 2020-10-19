@@ -1,45 +1,6 @@
 #include "Game.hpp"
 #include "Util.hpp"
 
-static void drawGrid(int steps = 10) {
-    glBegin(GL_LINES);
-    {
-        glColor3f(1.0, 1.0, 1.0);
-        for (int x = -steps; x <= steps; x++) {
-            if (x == 0) {
-                glVertex3f(0, 0, -steps);
-                glVertex3f(0, 0, 0);
-                glColor3f(0.0, 0.0, 1.0);
-                glVertex3f(0, 0, 0);
-                glVertex3f(0, 0, steps);
-            }
-            else {
-                glColor3f(1.0, 1.0, 1.0);
-                glVertex3f(x, 0, -steps);
-                glVertex3f(x, 0, steps);
-            }
-        }
-        for (int z = -steps; z <= steps; z++) {
-            if (z == 0) {
-                glVertex3f(-steps, 0, 0);
-                glVertex3f(0, 0, 0);
-                glColor3f(1.0, 0.0, 0.0);
-                glVertex3f(0, 0, 0);
-                glVertex3f(steps, 0, 0);
-            }
-            else {
-                glColor3f(1.0, 1.0, 1.0);
-                glVertex3f(-steps, 0, z);
-                glVertex3f(steps, 0, z);
-            }
-        }
-        glColor3f(0.0, 1.0, 0.0);
-        glVertex3f(0, 0, 0);
-        glVertex3f(0, steps, 0);
-    }
-    glEnd();
-}
-
 static std::vector<glm::vec3> genGridVerts(int steps = 10) {
     std::vector<glm::vec3> verts;
     for (int x = -steps; x <= steps; x++) {
@@ -118,20 +79,6 @@ namespace game {
 
         gridVerts = genGridVerts(10);
         gridCols = genGridCols(10);
-
-        planeVerts = {
-            {-10, 0, -10},
-            {-10, 0, 10},
-            {10, 0, 10},
-            {10, 0, -10}
-        };
-
-        planeUVs = {
-            {0, 0},
-            {0, 1},
-            {1, 1},
-            {1, 0}
-        };
 
         menu = Menu::create(font);
         menu->setTitle("Game");
