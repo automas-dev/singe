@@ -11,10 +11,11 @@
 #include "Camera.hpp"
 #include "Shader.hpp"
 #include "Model.hpp"
+#include "ResourceManager.hpp"
 
 namespace game {
 
-    class Game : public std::enable_shared_from_this<Game> {
+    class Game : public ResourceManager, public std::enable_shared_from_this<Game> {
         sf::RenderWindow & window;
 
         std::vector<glm::vec3> gridVerts;
@@ -46,7 +47,7 @@ namespace game {
         typedef std::shared_ptr<Game> Ptr;
         typedef std::shared_ptr<const Game> ConstPtr;
 
-        Game(sf::RenderWindow & window, const sf::Font & defaultFont);
+        Game(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont);
         virtual ~Game();
 
         void onKeyPressed(const sf::Event::KeyEvent & e);
@@ -61,7 +62,7 @@ namespace game {
         void update(const sf::Time & delta);
         void draw() const;
 
-        static Ptr create(sf::RenderWindow & window, const sf::Font & defaultFont);
+        static Ptr create(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont);
 
     private:
         void drawPass(glm::mat4 vp, const Shader::Ptr &shader) const;

@@ -46,14 +46,14 @@ int main() {
     }
 
     sf::Font font;
-    if (!font.loadFromFile("./Questrial_Regular.ttf")) {
+    if (!font.loadFromFile("../../Questrial_Regular.ttf")) {
         cerr << "Failed to load font" << endl;
         return EXIT_FAILURE;
     }
 
     Game::Ptr game;
     try {
-        game = Game::create(window, font);
+        game = Game::create("../../res/", window, font);
     }
     catch (std::runtime_error & e) {
         std::cout << "Game failed, exiting" << std::endl;

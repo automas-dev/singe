@@ -73,7 +73,7 @@ namespace game {
         }
     }
 
-    Game::Game(sf::RenderWindow & window, const sf::Font & defaultFont) : window(window), font(defaultFont) {
+    Game::Game(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont) : ResourceManager(resPath), window(window), font(defaultFont) {
         lastMouse = {window.getSize().x / 2, window.getSize().y / 2};
         sf::Mouse::setPosition(lastMouse, window);
 
@@ -99,44 +99,42 @@ namespace game {
         cam->move(3, 2, 1);
         cam->setFov(80);
 
-        defaultShader = Shader::create("res/shader/default.vs", "res/shader/default.fs");
+        defaultShader = loadShader("res://shader/default.vs", "res://shader/default.fs");
         if (!defaultShader) {
             throw std::runtime_error("Failed to load default shader");
         }
 
-        textureShader = Shader::create("res/shader/tex.vs", "res/shader/tex.fs");
+        textureShader = loadShader("res://shader/tex.vs", "res://shader/tex.fs");
         if (!textureShader) {
             throw std::runtime_error("Failed to load texture shader");
         }
 
-        lightingShader = Shader::create("res/shader/lighting.vs", "res/shader/lighting.fs");
+        lightingShader = loadShader("res://shader/lighting.vs", "res://shader/lighting.fs");
         if (!lightingShader) {
             throw std::runtime_error("Failed to load lighting shader");
         }
 
-        monoShader = Shader::create("res/shader/mono.vs", "res/shader/mono.fs");
+        monoShader = loadShader("res://shader/mono.vs", "res://shader/mono.fs");
         if (!monoShader) {
             throw std::runtime_error("Failed to load mono shader");
         }
 
-        cubeModel = Model::create("res/model/cube.obj");
+        cubeModel = loadModel("res://model/cube.obj");
         if (!cubeModel) {
             std::cout << "Cube model failed" << std::endl;
             throw std::runtime_error("Failed to load cube model");
         }
 
-        sphereModel = Model::create("res/model/sphere.obj");
+        sphereModel = loadModel("res://model/sphere.obj");
         if (!sphereModel) {
-            std::cout << "Sphere model failed" << std::endl;
             throw std::runtime_error("Failed to load sphere model");
         }
         sphereModel->move(1, 2, 3);
         sphereModel->scale(0.1, 0.1, 0.1);
 
-        texture = Texture::create("res/img/dev_texture_gray.png");
+        texture = loadTexture("dev_texture_gray", "res://img/dev_texture_gray.png");
         if (!texture) {
-            std::cout << "Texture failed to load" << std::endl;
-            throw std::runtime_error("Failed to load texture");
+            throw std::runtime_error("Failed to load dev texture");
         }
 
         getGlError();
@@ -302,8 +300,8 @@ namespace game {
         model->draw();
     }
 
-    Game::Ptr Game::create(sf::RenderWindow & window, const sf::Font & defaultFont) {
-        auto game = std::make_shared<Game>(window, defaultFont);
+    Game::Ptr Game::create(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont) {
+        auto game = std::make_shared<Game>(resPath, window, defaultFont);
         return game;
     }
 }
