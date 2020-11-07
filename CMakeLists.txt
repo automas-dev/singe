@@ -9,6 +9,35 @@ find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 
-add_subdirectory(src game)
+file(GLOB HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.hpp")
+
+add_library(libgame STATIC
+    src/Camera.cpp
+    src/Game.cpp
+    src/Material.cpp
+    src/Menu.cpp
+    src/Model.cpp
+    src/ResourceManager.cpp
+    src/Shader.cpp
+    src/Util.cpp
+    src/VBO.cpp
+    ${HEADER_LIST}
+)
+
+target_compile_features(libgame PRIVATE cxx_std_17)
+
+target_include_directories(libgame PUBLIC includes
+                        PRIVATE ${GLM_INCLUDE_DIRS})
+
+target_link_libraries(libgame
+PUBLIC
+    sfml-window 
+    sfml-graphics 
+    sfml-system
+PRIVATE 
+    OpenGL::OpenGL 
+    GLEW::GLEW
+)
+
+add_subdirectory(demo)

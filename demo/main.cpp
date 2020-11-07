@@ -53,7 +53,7 @@ int main() {
 
     Game::Ptr game;
     try {
-        game = Game::create("../../res/", window, font);
+        game = Game::create("../../demo/res/", window, font);
     }
     catch (std::runtime_error & e) {
         std::cout << "Game failed, exiting" << std::endl;
