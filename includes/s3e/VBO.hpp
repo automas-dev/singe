@@ -20,7 +20,7 @@ namespace Tom::s3e {
         ~Vertex() {}
     };
 
-    class VBO : public std::enable_shared_from_this<VBO> {
+    class VBO {
         GLuint vao;
         GLuint vbo;
         bool hasBuffer;
@@ -43,7 +43,7 @@ namespace Tom::s3e {
         static Ptr create(const std::vector<Vertex> & points);
     };
 
-    // class VAO : public std::enable_shared_from_this<VAO> {
+    // class VAO {
     //     GLuint vao;
 
     // public:

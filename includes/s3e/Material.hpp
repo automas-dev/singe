@@ -29,7 +29,7 @@ namespace Tom::s3e {
         void loadFromShader(const Shader::ConstPtr &shader);
     };
 
-    struct Material : public std::enable_shared_from_this<Material> {
+    struct Material {
         glm::vec3 ambient;
         glm::vec3 diffuse;
         glm::vec3 specular;
@@ -49,7 +49,7 @@ namespace Tom::s3e {
         static Ptr create();
     };
 
-    class MaterialLibrary : public std::enable_shared_from_this<MaterialLibrary> {
+    class MaterialLibrary {
         std::vector<Material::Ptr> materials;
 
     public:

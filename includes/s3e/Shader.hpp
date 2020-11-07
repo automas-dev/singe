@@ -26,7 +26,7 @@ namespace Tom::s3e {
                         const std::vector<glm::vec2> & uvs,
                         GLenum mode);
 
-    class Texture : public std::enable_shared_from_this<Texture> {
+    class Texture {
         GLuint textureId;
 
     public:
@@ -47,7 +47,7 @@ namespace Tom::s3e {
 
     std::string shaderSource(const std::string & path);
 
-    class Shader : public std::enable_shared_from_this<Shader> {
+    class Shader {
         GLuint program;
 
     public:

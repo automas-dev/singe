@@ -44,7 +44,7 @@ namespace Tom::s3e {
 
     bool strStartsWithStr(const std::string & pre, const std::string & str);
 
-    class Parser : public std::enable_shared_from_this<Parser> {
+    class Parser s{
         std::ifstream fin;
 
     public:

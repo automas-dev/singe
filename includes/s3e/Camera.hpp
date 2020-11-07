@@ -8,7 +8,7 @@
 
 namespace Tom::s3e {
 
-    class Camera: public std::enable_shared_from_this<Camera> {
+    class Camera {
     public:
         enum ProjectionMode {
             Perspective,
