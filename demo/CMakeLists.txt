@@ -1,5 +1,9 @@
 
-add_executable(demo main.cpp)
+add_executable(demo 
+    main.cpp
+    Game.hpp
+    Game.cpp
+)
 
 target_compile_features(demo PRIVATE cxx_std_17)
 

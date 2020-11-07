@@ -1,7 +1,7 @@
-#include "VBO.hpp"
+#include "s3e/VBO.hpp"
 #include <iostream>
 
-namespace game {
+namespace Tom::s3e {
 
     static GLuint gen_vbo(const std::vector<Vertex> & points) {
         GLuint VertexVBOID;

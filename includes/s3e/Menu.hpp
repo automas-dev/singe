@@ -6,7 +6,7 @@
 #include <list>
 #include <memory>
 
-namespace game {
+namespace Tom::s3e {
     
     class MenuItem : public sf::Text, public std::enable_shared_from_this<MenuItem> {
         std::function<void(void)> callback;

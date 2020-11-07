@@ -7,7 +7,7 @@
 #include <memory>
 #include <map>
 
-namespace game {
+namespace Tom::s3e {
 
     class ResourceManager {
     private:

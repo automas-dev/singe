@@ -1,9 +1,9 @@
-#include "Shader.hpp"
+#include "s3e/Shader.hpp"
 #include <SFML/Graphics/Image.hpp>
 #include <fstream>
 #include <iostream>
 
-namespace game {
+namespace Tom::s3e {
     static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha = false,
                                 GLint magFilter = GL_LINEAR, GLint minFilter = GL_LINEAR_MIPMAP_LINEAR, GLint wrap = GL_REPEAT, bool mipmaps = true) {
         GLuint textureID;
@@ -75,7 +75,7 @@ namespace game {
     }
 }
 
-namespace game {
+namespace Tom::s3e {
 
     void draw_color_array_legacy(const float *vertices,
                                  const float *colors,

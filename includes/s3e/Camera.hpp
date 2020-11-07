@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-namespace game {
+namespace Tom::s3e {
 
     class Camera: public std::enable_shared_from_this<Camera> {
     public:

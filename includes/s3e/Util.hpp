@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <memory>
 
-namespace game {
+namespace Tom::s3e {
 
     const float pi = std::acos(-1);
 

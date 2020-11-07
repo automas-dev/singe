@@ -1,9 +1,9 @@
-#include "Menu.hpp"
+#include "s3e/Menu.hpp"
 
 const sf::Color light (200, 200, 200);
 const sf::Color dark (10, 10, 10);
 
-namespace game {
+namespace Tom::s3e {
 
     MenuItem::MenuItem() { }
 
@@ -28,7 +28,7 @@ namespace game {
     }
 }
 
-namespace game {
+namespace Tom::s3e {
 
     Menu::Menu() { }
 

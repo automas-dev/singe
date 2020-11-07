@@ -10,11 +10,10 @@ find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
 
-file(GLOB HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.hpp")
+file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.hpp")
 
 add_library(libgame STATIC
     src/Camera.cpp
-    src/Game.cpp
     src/Material.cpp
     src/Menu.cpp
     src/Model.cpp

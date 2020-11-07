@@ -1,11 +1,11 @@
-#include "Model.hpp"
+#include "s3e/Model.hpp"
 #include <map>
-#include "Util.hpp"
-#include "VBO.hpp"
+#include "s3e/Util.hpp"
+#include "s3e/VBO.hpp"
 #include <iostream>
 
 
-namespace game {
+namespace Tom::s3e {
 
     static std::string pathParent(const std::string &path) {
         std::size_t i = path.find_last_of("/");

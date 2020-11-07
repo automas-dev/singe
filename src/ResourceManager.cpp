@@ -1,8 +1,8 @@
-#include "ResourceManager.hpp"
+#include "s3e/ResourceManager.hpp"
 #include <filesystem>
 namespace fs = std::filesystem;
 
-namespace game {
+namespace Tom::s3e {
     ResourceManager::ResourceManager() : ResourceManager("") { }
 
     ResourceManager::ResourceManager(const sf::String & path) : resPath(path) { }

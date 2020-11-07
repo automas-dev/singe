@@ -7,7 +7,7 @@
 #include <vector>
 #include <cstddef>
 
-namespace game {
+namespace Tom::s3e {
 
     struct Vertex {
         glm::vec3 pos;

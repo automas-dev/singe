@@ -8,7 +8,7 @@
 #include "VBO.hpp"
 #include "Material.hpp"
 
-namespace game {
+namespace Tom::s3e {
 
     class Model : VBO, public std::enable_shared_from_this<Model> {
         glm::vec3 pos;

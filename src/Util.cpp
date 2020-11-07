@@ -1,4 +1,4 @@
-#include "Util.hpp"
+#include "s3e/Util.hpp"
 #include <cstring>
 #include <cctype>
 #include <glm/gtx/transform.hpp>
@@ -6,7 +6,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-namespace game {
+namespace Tom::s3e {
 
     bool strStartsWithChar(char pre, const std::string & str) {
         return str.rfind(pre, 0) == 0;
@@ -52,7 +52,7 @@ namespace game {
     }
 }
 
-namespace game {
+namespace Tom::s3e {
 
     static int seekChar(std::ifstream & fin, char find) {
         char c;

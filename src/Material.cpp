@@ -1,8 +1,8 @@
-#include "Material.hpp"
-#include "Util.hpp"
+#include "s3e/Material.hpp"
+#include "s3e/Util.hpp"
 #include <iostream>
 
-namespace game {
+namespace Tom::s3e {
     void MaterialUniformLocations::loadFromShader(const Shader::ConstPtr &shader) {
         proj = shader->uniformLocation("proj");
         view = shader->uniformLocation("view");
@@ -20,7 +20,7 @@ namespace game {
     }
 }
 
-namespace game {
+namespace Tom::s3e {
 
     Material::Material() : ambient(0), diffuse(0), specular(0), specularExponent(0), alpha(1) { }
 
@@ -41,7 +41,7 @@ namespace game {
     }
 }
 
-namespace game {
+namespace Tom::s3e {
 
     MaterialLibrary::MaterialLibrary() { }
 

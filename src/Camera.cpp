@@ -1,8 +1,8 @@
-#include "Camera.hpp"
-#include "Util.hpp"
+#include "s3e/Camera.hpp"
+#include "s3e/Util.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace game {
+namespace Tom::s3e {
 
     Camera::Camera(): rot(0, 0), pos(0, 0, 0) { }
 

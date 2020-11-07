@@ -8,17 +8,6 @@
 using namespace std;
 
 #include "Game.hpp"
-using namespace game;
-
-inline void modeProjection(void) {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-}
-
-inline void modeModel(void) {
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
 
 int main() {
     sf::ContextSettings settings;

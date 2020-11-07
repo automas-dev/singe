@@ -7,9 +7,9 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
-#include <Shader.hpp>
+#include "Shader.hpp"
 
-namespace game {
+namespace Tom::s3e {
 
     struct MaterialUniformLocations {
         GLuint proj;

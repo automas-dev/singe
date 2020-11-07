@@ -11,7 +11,7 @@
 
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
 
-namespace game {
+namespace Tom::s3e {
 
     void draw_color_array_legacy(const float *vertices,
                                  const float *colors,
