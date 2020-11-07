@@ -1,3 +1,6 @@
+#include <iostream>
+using namespace std;
+
 #include "Game.hpp"
 
 static std::vector<glm::vec3> genGridVerts(int steps = 10) {
@@ -70,9 +73,18 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont) : ResourceManager(resPath), window(window), font(defaultFont) {
-    lastMouse = {window.getSize().x / 2, window.getSize().y / 2};
-    sf::Mouse::setPosition(lastMouse, window);
+Game::Game(const sf::String & resPath) : GameBase(resPath) { }
+
+Game::~Game() { }
+
+bool Game::onCreate() {
+    if (!font.loadFromFile(parsePath("res://Questrial_Regular.ttf"))) {
+        cerr << "Failed to load font" << endl;
+        return false;
+    }
+
+    lastMouse = {window->getSize().x / 2, window->getSize().y / 2};
+    sf::Mouse::setPosition(lastMouse, *window);
 
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
@@ -82,17 +94,17 @@ Game::Game(const sf::String &resPath, sf::RenderWindow & window, const sf::Font 
     menu->setPosition(300, 300);
     menu->addMenuItem("New", [&]() {
         menu->hide();
-        window.setMouseCursorGrabbed(true);
-        window.setMouseCursorVisible(false);
+        window->setMouseCursorGrabbed(true);
+        window->setMouseCursorVisible(false);
     });
     menu->addMenuItem("Load", []() {});
     menu->addMenuItem("Options", []() {});
     menu->addMenuItem("Exit", [&]() {
-        window.close();
+        window->close();
     });
 
     cam = Camera::create();
-    cam->setScreenSize(window.getSize());
+    cam->setScreenSize(window->getSize());
     cam->move(3, 2, 1);
     cam->setFov(80);
 
@@ -135,16 +147,17 @@ Game::Game(const sf::String &resPath, sf::RenderWindow & window, const sf::Font 
     }
 
     getGlError();
+    return true;
 }
 
-Game::~Game() { }
+void Game::onDestroy() { }
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     switch (e.code) {
         case sf::Keyboard::Escape:
             menu->show();
-            window.setMouseCursorGrabbed(false);
-            window.setMouseCursorVisible(true);
+            window->setMouseCursorGrabbed(false);
+            window->setMouseCursorVisible(true);
             break;
         case sf::Keyboard::Num1:
             doDrawLegacy = !doDrawLegacy;
@@ -185,17 +198,17 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 }
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
-    cam->setScreenSize(window.getSize());
-    lastMouse = {window.getSize().x / 2, window.getSize().y / 2};
+    cam->setScreenSize(window->getSize());
+    lastMouse = {window->getSize().x / 2, window->getSize().y / 2};
 }
 
-void Game::update(const sf::Time & delta) {
+void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
 
-    auto mPos = sf::Mouse::getPosition(window);
+    auto mPos = sf::Mouse::getPosition(*window);
     sf::Vector2f mDelta (mPos.x - lastMouse.x, mPos.y - lastMouse.y);
     if (!menu->isVisible) {
-        sf::Mouse::setPosition(lastMouse, window);
+        sf::Mouse::setPosition(lastMouse, *window);
         cam->rotate(mDelta.y * 0.2, mDelta.x * 0.2);
     }
 
@@ -207,16 +220,23 @@ void Game::update(const sf::Time & delta) {
     }
 
     time += deltaS;
-    sphereModel->setPosition(glm::cos(time)*3, 2, glm::sin(time)*3);
+    sphereModel->setPosition(glm::cos(time) * 3, 2, glm::sin(time) * 3);
     cubeModel->setRotation(time, 0, 0);
 }
 
-void Game::draw() const {
+void Game::onDraw() const {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    modeProjection();
+    float aspect = window->getSize().x / window->getSize().y;
+    gluPerspective(93, aspect, 0.01, 100.0);
+    modeModel();
+
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL); 
+    glDepthFunc(GL_LEQUAL);
 
     glm::mat4 vp = cam->projMatrix() * cam->viewMatrix();
 
@@ -272,20 +292,20 @@ void Game::draw() const {
 
     getGlError();
 
-    window.pushGLStates();
-    window.draw(*menu);
-    window.popGLStates();
+    window->pushGLStates();
+    window->draw(*menu);
+    window->popGLStates();
 }
 
-void Game::drawPass(glm::mat4 vp, const Shader::Ptr &shader) const {
+void Game::drawPass(glm::mat4 vp, const Shader::Ptr & shader) const {
     drawModel(sphereModel, vp, shader);
     drawModel(cubeModel, vp, shader);
 }
 
-void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::Ptr &shader) const {
+void Game::drawModel(const Model::ConstPtr & model, glm::mat4 vp, const Shader::Ptr & shader) const {
     shader->setMat4("model", model->modelMatrix());
 
-    const auto &m = model->getFirstMaterial();
+    const auto & m = model->getFirstMaterial();
 
     shader->setVec3("material.ambient", m->ambient);
     shader->setVec3("material.diffuse", m->diffuse);
@@ -295,9 +315,4 @@ void Game::drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::P
     shader->setInt("material.texture", 0);
 
     model->draw();
-}
-
-Game::Ptr Game::create(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont) {
-    auto game = std::make_shared<Game>(resPath, window, defaultFont);
-    return game;
 }

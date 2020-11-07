@@ -24,7 +24,7 @@ namespace Tom::s3e {
         this->screen = screen;
     }
 
-    const glm::vec2 &Camera::getRotation() const {
+    const glm::vec2 & Camera::getRotation() const {
         return rot;
     }
 
@@ -48,7 +48,7 @@ namespace Tom::s3e {
         rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
     }
 
-    const glm::vec3 &Camera::getPosition() const {
+    const glm::vec3 & Camera::getPosition() const {
         return pos;
     }
 

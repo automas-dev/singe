@@ -14,6 +14,7 @@ file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/inc
 
 add_library(s3e STATIC
     src/Camera.cpp
+    src/GameBase.cpp
     src/Material.cpp
     src/Menu.cpp
     src/Model.cpp

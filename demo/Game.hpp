@@ -10,9 +10,7 @@
 #include <s3e.hpp>
 using namespace Tom::s3e;
 
-class Game : public ResourceManager, public std::enable_shared_from_this<Game> {
-    sf::RenderWindow & window;
-
+class Game : public GameBase {
     std::vector<glm::vec3> gridVerts;
     std::vector<glm::vec3> gridCols;
 
@@ -39,27 +37,23 @@ class Game : public ResourceManager, public std::enable_shared_from_this<Game> {
     float time = 0.0;
 
 public:
-    typedef std::shared_ptr<Game> Ptr;
-    typedef std::shared_ptr<const Game> ConstPtr;
-
-    Game(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont);
+    Game(const sf::String & resPath);
     virtual ~Game();
 
-    void onKeyPressed(const sf::Event::KeyEvent & e);
-    void onKeyReleased(const sf::Event::KeyEvent & e);
+    bool onCreate(void) override;
+    void onDestroy(void) override;
 
-    void onMouseMove(const sf::Event::MouseMoveEvent & e);
-    void onMouseDown(const sf::Event::MouseButtonEvent & e);
-    void onMouseUp(const sf::Event::MouseButtonEvent & e);
-
-    void onResized(const sf::Event::SizeEvent & e);
-
-    void update(const sf::Time & delta);
-    void draw() const;
-
-    static Ptr create(const sf::String &resPath, sf::RenderWindow & window, const sf::Font & defaultFont);
+    void onKeyPressed(const sf::Event::KeyEvent & e) override;
+    void onKeyReleased(const sf::Event::KeyEvent & e) override;
+    void onMouseMove(const sf::Event::MouseMoveEvent & e) override;
+    void onMouseDown(const sf::Event::MouseButtonEvent & e) override;
+    void onMouseUp(const sf::Event::MouseButtonEvent & e) override;
+    void onResized(const sf::Event::SizeEvent & e) override;
+    
+    void onUpdate(const sf::Time & delta) override;
+    void onDraw() const override;
 
 private:
-    void drawPass(glm::mat4 vp, const Shader::Ptr &shader) const;
-    void drawModel(const Model::ConstPtr &model, glm::mat4 vp, const Shader::Ptr &shader) const;
+    void drawPass(glm::mat4 vp, const Shader::Ptr & shader) const;
+    void drawModel(const Model::ConstPtr & model, glm::mat4 vp, const Shader::Ptr & shader) const;
 };
