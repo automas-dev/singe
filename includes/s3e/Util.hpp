@@ -44,7 +44,7 @@ namespace Tom::s3e {
 
     bool strStartsWithStr(const std::string & pre, const std::string & str);
 
-    class Parser s{
+    class Parser {
         std::ifstream fin;
 
     public:

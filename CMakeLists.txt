@@ -42,4 +42,10 @@ PUBLIC
     GLEW::GLEW
 )
 
+include(CheckLibraryExists)
+CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)                                                                                                
+if (HAVE_LIB_M)                                                                                                                          
+  target_link_libraries(s3e PRIVATE m)                                                                                                      
+endif (HAVE_LIB_M)
+
 add_subdirectory(demo)
