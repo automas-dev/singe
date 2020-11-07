@@ -10,7 +10,7 @@
 
 namespace Tom::s3e {
 
-    class Model : VBO, public std::enable_shared_from_this<Model> {
+    class Model : VBO {
         glm::vec3 pos;
         glm::vec3 rot;
         glm::vec3 size;

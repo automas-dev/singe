@@ -8,20 +8,22 @@
 #include <string>
 #include <stdexcept>
 #include <memory>
+#include <cmath>
 
 namespace Tom::s3e {
 
-    const float pi = std::acos(-1);
+    constexpr double pi = std::acos(-1);
 
-    inline float toRadians(float angle) {
+    constexpr float toRadians(float angle) {
         return angle * pi / 180.0;
     }
 
-    inline float toDegrees(float angle) {
+    constexpr float toDegrees(float angle) {
         return angle * 180.0 / pi;
     }
 
-    template <typename T = float> inline void bound(T & val, T min, T max) {
+    template <typename T = float>
+    constexpr void bound(T & val, T min, T max) {
         if (val < min)
             val = min;
         else if (val > max)
@@ -34,7 +36,7 @@ namespace Tom::s3e {
 
     void push(glm::vec3 pos, glm::vec2 rot);
 
-    glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale=glm::vec3(1));
+    glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale = glm::vec3(1));
 
     std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat);
 
@@ -64,7 +66,7 @@ namespace Tom::s3e {
         std::string readToChar(char delim);
 
         std::string readLine();
-        
+
         void rewind();
 
         static Ptr create(const std::string & path);

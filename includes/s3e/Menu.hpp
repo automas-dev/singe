@@ -8,7 +8,7 @@
 
 namespace Tom::s3e {
     
-    class MenuItem : public sf::Text, public std::enable_shared_from_this<MenuItem> {
+    class MenuItem : public sf::Text {
         std::function<void(void)> callback;
 
     public:
@@ -27,7 +27,7 @@ namespace Tom::s3e {
         static Ptr create(void);
     };
 
-    class Menu : public sf::Drawable, public sf::Transformable, public std::enable_shared_from_this<Menu> {
+    class Menu : public sf::Drawable, public sf::Transformable {
         sf::Font font;
         sf::Text title;
         std::list<MenuItem::Ptr> items;
