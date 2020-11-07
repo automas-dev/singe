@@ -85,6 +85,7 @@ bool Game::onCreate() {
 
     lastMouse = {static_cast<int>(window->getSize().x) / 2, static_cast<int>(window->getSize().y) / 2};
     sf::Mouse::setPosition(lastMouse, *window);
+    SetMouseGrab(true);
 
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);

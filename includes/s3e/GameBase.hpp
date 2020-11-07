@@ -28,6 +28,8 @@ namespace Tom::s3e {
         void Stop(void);
         void Fail(int status = 1) noexcept;
 
+        void SetMouseGrab(bool grab);
+
     protected:
         virtual bool onCreate(void) = 0;
         virtual void onDestroy(void) = 0;

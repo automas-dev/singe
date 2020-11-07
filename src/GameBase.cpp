@@ -31,9 +31,6 @@ namespace Tom::s3e {
         window->setActive();
         window->setKeyRepeatEnabled(false);
 
-        window->setMouseCursorGrabbed(true);
-        window->setMouseCursorVisible(false);
-
         // glewExperimental = true;
         GLenum err = glewInit();
         if (err != GLEW_OK) {
@@ -100,6 +97,11 @@ namespace Tom::s3e {
     void GameBase::Fail(int status) noexcept {
         window->close();
         exit(status);
+    }
+
+    void GameBase::SetMouseGrab(bool grab) {
+        window->setMouseCursorGrabbed(grab);
+        window->setMouseCursorVisible(!grab);
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
