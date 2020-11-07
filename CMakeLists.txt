@@ -12,7 +12,7 @@ find_package(GLM REQUIRED)
 
 file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.hpp")
 
-add_library(libgame STATIC
+add_library(s3e STATIC
     src/Camera.cpp
     src/Material.cpp
     src/Menu.cpp
@@ -24,12 +24,14 @@ add_library(libgame STATIC
     ${HEADER_LIST}
 )
 
-target_compile_features(libgame PRIVATE cxx_std_17)
+add_library(Tom::s3e ALIAS s3e)
 
-target_include_directories(libgame PUBLIC includes
+target_compile_features(s3e PRIVATE cxx_std_17)
+
+target_include_directories(s3e PUBLIC includes
                         PRIVATE ${GLM_INCLUDE_DIRS})
 
-target_link_libraries(libgame
+target_link_libraries(s3e
 PUBLIC
     sfml-window 
     sfml-graphics 

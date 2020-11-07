@@ -9,7 +9,7 @@ target_compile_features(demo PRIVATE cxx_std_17)
 
 target_link_libraries(demo 
 PRIVATE 
-    libgame 
+    Tom::s3e 
     sfml-window 
     sfml-graphics 
     sfml-system 
