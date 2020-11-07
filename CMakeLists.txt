@@ -37,6 +37,7 @@ PUBLIC
     sfml-graphics 
     sfml-system
     OpenGL::OpenGL 
+    OpenGL::GLU
     GLEW::GLEW
 )
 
