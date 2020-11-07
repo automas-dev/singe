@@ -157,8 +157,7 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     switch (e.code) {
         case sf::Keyboard::Escape:
             menu->show();
-            window->setMouseCursorGrabbed(false);
-            window->setMouseCursorVisible(true);
+            SetMouseGrab(false);
             break;
         case sf::Keyboard::Num1:
             doDrawLegacy = !doDrawLegacy;
@@ -249,7 +248,7 @@ void Game::onDraw() const {
 
         monoShader->setMat4("vp", vp);
         monoShader->setVec3("viewPos", cam->getPosition());
-        monoShader->setUInt("nLights", 1);
+        monoShader->setUInt("nLights", 2);
 
         monoShader->setVec3("lights[0].ambient", 0.1, 0.1, 0.1);
         monoShader->setVec3("lights[0].diffuse", 0.8, 0.8, 0.8);
