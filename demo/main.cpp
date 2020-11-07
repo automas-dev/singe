@@ -35,7 +35,7 @@ int main() {
     }
 
     sf::Font font;
-    if (!font.loadFromFile("../../Questrial_Regular.ttf")) {
+    if (!font.loadFromFile("../../demo/res/Questrial_Regular.ttf")) {
         cerr << "Failed to load font" << endl;
         return EXIT_FAILURE;
     }

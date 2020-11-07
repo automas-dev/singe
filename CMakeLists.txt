@@ -36,7 +36,6 @@ PUBLIC
     sfml-window 
     sfml-graphics 
     sfml-system
-PRIVATE 
     OpenGL::OpenGL 
     GLEW::GLEW
 )
