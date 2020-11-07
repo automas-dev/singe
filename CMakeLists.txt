@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(sfml-mc VERSION 0.1 LANGUAGES CXX)
+project(sfml-mc VERSION 0.1.1 LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
@@ -49,3 +49,27 @@ if (HAVE_LIB_M)
 endif (HAVE_LIB_M)
 
 add_subdirectory(demo)
+
+# install(TARGETS s3e
+#         EXPORT Tom::s3e
+#         LIBRARY DESTINATION lib
+#         ARCHIVE DESTINATION lib
+#         INCLUDES DESTINATION include)
+
+# Packaging support
+set(CPACK_PACKAGE_VENDOR "Thomas Harrison")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An awesome 3d lib")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+# set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENCE")
+# set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set(CPACK_SOURCE_IGNORE_FILES
+    /.git
+    /.vscode
+    /.*build.*
+)
+
+include(CPack)
