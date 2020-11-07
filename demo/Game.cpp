@@ -83,7 +83,7 @@ bool Game::onCreate() {
         return false;
     }
 
-    lastMouse = {window->getSize().x / 2, window->getSize().y / 2};
+    lastMouse = {static_cast<int>(window->getSize().x) / 2, static_cast<int>(window->getSize().y) / 2};
     sf::Mouse::setPosition(lastMouse, *window);
 
     gridVerts = genGridVerts(10);
@@ -199,7 +199,7 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
     cam->setScreenSize(window->getSize());
-    lastMouse = {window->getSize().x / 2, window->getSize().y / 2};
+    lastMouse = {static_cast<int>(window->getSize().x) / 2, static_cast<int>(window->getSize().y) / 2};
 }
 
 void Game::onUpdate(const sf::Time & delta) {
