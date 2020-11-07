@@ -78,7 +78,7 @@ Game::Game(const sf::String & resPath) : GameBase(resPath) { }
 Game::~Game() { }
 
 bool Game::onCreate() {
-    if (!font.loadFromFile(parsePath("res://Questrial_Regular.ttf"))) {
+    if (!font.loadFromFile(resPath("res://Questrial_Regular.ttf"))) {
         cerr << "Failed to load font" << endl;
         return false;
     }

@@ -3,43 +3,43 @@
 namespace fs = std::filesystem;
 
 namespace Tom::s3e {
-    ResourceManager::ResourceManager() : ResourceManager("") { }
+    ResourceManager::ResourceManager() : ResourceManager("./") { }
 
-    ResourceManager::ResourceManager(const sf::String & path) : resPath(path) { }
+    ResourceManager::ResourceManager(const std::string & path) : resRoot(path) { }
 
     ResourceManager::~ResourceManager() { }
 
-    void ResourceManager::setResourcePath(const sf::String & path) {
-        resPath = path;
+    void ResourceManager::setResourcePath(const std::string & path) {
+        resRoot = path;
     }
 
-    Texture::Ptr ResourceManager::loadTexture(const sf::String & name) {
+    Texture::Ptr ResourceManager::loadTexture(const std::string & name) {
         if (textures.count(name) > 0)
             return textures[name];
         else
             return nullptr;
     }
 
-    Texture::Ptr ResourceManager::loadTexture(const sf::String & name, const sf::String & path) {
-        auto newTex = Texture::create(parsePath(path));
+    Texture::Ptr ResourceManager::loadTexture(const std::string & name, const std::string & path) {
+        auto newTex = Texture::create(resPath(path));
         if (newTex)
             textures[name] = newTex;
         return newTex;
     }
 
     Shader::Ptr ResourceManager::loadShader(const std::string & vertexPath, const std::string & fragmentPath) {
-        return Shader::create(parsePath(vertexPath), parsePath(fragmentPath));
+        return Shader::create(resPath(vertexPath), resPath(fragmentPath));
     }
 
     Model::Ptr ResourceManager::loadModel(const std::string & path) {
-        return Model::create(parsePath(path));
+        return Model::create(resPath(path));
     }
 
-    sf::String ResourceManager::parsePath(const sf::String & path) const {
+    std::string ResourceManager::resPath(const std::string & path) const {
         auto resProtoPos = path.find("res://");
 
         if (resProtoPos ==  0)
-            return { fs::path(resPath) / fs::path(path.substring(6)) };
+            return { fs::path(resRoot) / fs::path(path.substr(6)) };
         else
             return path;
     }
