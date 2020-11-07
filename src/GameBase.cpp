@@ -82,8 +82,9 @@ namespace Tom::s3e {
             sf::Time delta = clock.restart();
 
             onUpdate(delta);
-            onDraw();
 
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            onDraw();
             window->display();
         }
 
