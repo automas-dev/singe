@@ -10,9 +10,20 @@ find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
 
-file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/includes/*.hpp")
+set(S3E_HEADERS 
+    include/s3e.hpp
+    include/s3e/Camera.hpp
+    include/s3e/GameBase.hpp
+    include/s3e/Material.hpp
+    include/s3e/Menu.hpp
+    include/s3e/Model.hpp
+    include/s3e/ResourceManager.hpp
+    include/s3e/Shader.hpp
+    include/s3e/Util.hpp
+    include/s3e/VBO.hpp
+)
 
-add_library(s3e STATIC
+set(S3E_SOURCES
     src/Camera.cpp
     src/GameBase.cpp
     src/Material.cpp
@@ -22,15 +33,23 @@ add_library(s3e STATIC
     src/Shader.cpp
     src/Util.cpp
     src/VBO.cpp
-    ${HEADER_LIST}
+)
+
+add_library(s3e STATIC
+    ${S3E_SOURCES}
+    ${S3E_HEADERS}
 )
 
 add_library(Tom::s3e ALIAS s3e)
 
 target_compile_features(s3e PRIVATE cxx_std_17)
 
-target_include_directories(s3e PUBLIC includes
-                        PRIVATE ${GLM_INCLUDE_DIRS})
+target_include_directories(s3e
+PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+    ${GLM_INCLUDE_DIRS}
+)
 
 target_link_libraries(s3e
 PUBLIC
@@ -42,19 +61,15 @@ PUBLIC
     GLEW::GLEW
 )
 
-include(CheckLibraryExists)
-CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)                                                                                                
-if (HAVE_LIB_M)                                                                                                                          
-  target_link_libraries(s3e PRIVATE m)                                                                                                      
-endif (HAVE_LIB_M)
-
 add_subdirectory(demo)
 
-# install(TARGETS s3e
-#         EXPORT Tom::s3e
-#         LIBRARY DESTINATION lib
-#         ARCHIVE DESTINATION lib
-#         INCLUDES DESTINATION include)
+export(TARGETS s3e NAMESPACE Tom::
+    FILE ${PROJECT_BINARY_DIR}/s3e-targets.cmake)
+
+install(TARGETS s3e DESTINATION lib EXPORT s3e-targets PUBLIC_HEADER DESTINATION include)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
+# install(EXPORT s3e-targets DESTINATION lib/s3e)
+export(PACKAGE s3e)
 
 # Packaging support
 set(CPACK_PACKAGE_VENDOR "Thomas Harrison")
