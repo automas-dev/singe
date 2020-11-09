@@ -30,7 +30,7 @@ namespace Tom::s3e {
         typedef std::shared_ptr<VBO> Ptr;
         typedef std::shared_ptr<const VBO> ConstPtr;
 
-        VBO();
+        VBO(void);
         VBO(const std::vector<Vertex> & points);
         virtual ~VBO();
 

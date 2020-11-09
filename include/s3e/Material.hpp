@@ -11,24 +11,6 @@
 
 namespace Tom::s3e {
 
-    struct MaterialUniformLocations {
-        GLuint proj;
-        GLuint view;
-        GLuint model;
-
-        GLuint lightPos;
-        GLuint viewPos;
-
-        GLuint ambient;
-        GLuint diffuse;
-        GLuint specular;
-
-        GLuint specExp;
-        GLuint alpha;
-
-        void loadFromShader(const Shader::ConstPtr &shader);
-    };
-
     struct Material {
         glm::vec3 ambient;
         glm::vec3 diffuse;
