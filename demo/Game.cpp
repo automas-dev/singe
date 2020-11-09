@@ -129,7 +129,7 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load mono shader");
     }
 
-    cubeModel = loadModel("res://model/cube.obj");
+    cubeModel = loadModel("res://model/cube_plane.obj");
     if (!cubeModel) {
         std::cout << "Cube model failed" << std::endl;
         throw std::runtime_error("Failed to load cube model");
