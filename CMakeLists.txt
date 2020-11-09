@@ -64,11 +64,11 @@ PUBLIC
 add_subdirectory(demo)
 
 export(TARGETS s3e NAMESPACE Tom::
-    FILE ${PROJECT_BINARY_DIR}/s3e-targets.cmake)
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/s3e-config.cmake)
 
-install(TARGETS s3e DESTINATION lib EXPORT s3e-targets PUBLIC_HEADER DESTINATION include)
+install(TARGETS s3e DESTINATION lib EXPORT s3e-config PUBLIC_HEADER DESTINATION include)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
-# install(EXPORT s3e-targets DESTINATION lib/s3e)
+install(EXPORT s3e-config DESTINATION include/c NAMESPACE Tom::)
 export(PACKAGE s3e)
 
 # Packaging support
