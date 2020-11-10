@@ -21,7 +21,7 @@ class Game : public GameBase {
     Shader::Ptr defaultShader;
     Shader::Ptr textureShader;
     Shader::Ptr lightingShader;
-    Shader::Ptr monoShader;
+    MaterialShader::Ptr monoShader;
 
     Texture::Ptr texture;
 
@@ -54,6 +54,6 @@ public:
     void onDraw() const override;
 
 private:
-    void drawPass(glm::mat4 vp, const Shader::Ptr & shader) const;
-    void drawModel(const Model::ConstPtr & model, glm::mat4 vp, const Shader::Ptr & shader) const;
+    void drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const;
+    void drawModel(const Model::ConstPtr & model, glm::mat4 vp, const MaterialShader::Ptr & shader) const;
 };

@@ -124,7 +124,7 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
-    monoShader = loadShader("res://shader/mono.vs", "res://shader/mono.fs");
+    monoShader = MaterialShader::create(resPath("res://shader/mono.vs"), resPath("res://shader/mono.fs"));
     if (!monoShader) {
         throw std::runtime_error("Failed to load mono shader");
     }
@@ -139,8 +139,8 @@ bool Game::onCreate() {
     if (!sphereModel) {
         throw std::runtime_error("Failed to load sphere model");
     }
-    sphereModel->move(1, 2, 3);
-    sphereModel->scale(0.1, 0.1, 0.1);
+    sphereModel->move({1, 2, 3});
+    sphereModel->scale({0.1, 0.1, 0.1});
 
     texture = loadTexture("dev_texture_gray", "res://img/dev_texture_gray.png");
     if (!texture) {
@@ -220,8 +220,8 @@ void Game::onUpdate(const sf::Time & delta) {
     }
 
     time += deltaS;
-    sphereModel->setPosition(glm::cos(time) * 3, 2, glm::sin(time) * 3);
-    cubeModel->setRotation(time, 0, 0);
+    sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
+    cubeModel->setRotation({time, 0, 0});
 }
 
 void Game::onDraw() const {
@@ -297,22 +297,12 @@ void Game::onDraw() const {
     window->popGLStates();
 }
 
-void Game::drawPass(glm::mat4 vp, const Shader::Ptr & shader) const {
+void Game::drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const {
     drawModel(sphereModel, vp, shader);
     drawModel(cubeModel, vp, shader);
 }
 
-void Game::drawModel(const Model::ConstPtr & model, glm::mat4 vp, const Shader::Ptr & shader) const {
+void Game::drawModel(const Model::ConstPtr & model, glm::mat4 vp, const MaterialShader::Ptr & shader) const {
     shader->setMat4("model", model->modelMatrix());
-
-    const auto & m = model->getFirstMaterial();
-
-    shader->setVec3("material.ambient", m->ambient);
-    shader->setVec3("material.diffuse", m->diffuse);
-    shader->setVec3("material.specular", m->specular);
-    shader->setFloat("material.shininess", m->specularExponent);
-    shader->setFloat("material.alpha", m->alpha);
-    shader->setInt("material.texture", 0);
-
-    model->draw();
+    model->draw(shader);
 }

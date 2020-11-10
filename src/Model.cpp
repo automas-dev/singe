@@ -19,7 +19,8 @@ namespace Tom::s3e {
         return material;
     }
 
-    Mesh::Ptr Mesh::create(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points) {
+    Mesh::Ptr Mesh::create(const std::string & name, const Material::ConstPtr & material,
+                           const std::vector<Vertex> & points) {
         auto mesh = std::make_shared<Mesh>(name, material, points);
         return mesh;
     }
@@ -208,18 +209,19 @@ namespace Tom::s3e {
     }
 
     Material::ConstPtr Model::getMaterial(const std::string & material) const {
-        MaterialLibrary::ConstPtr lib = getMaterialLibrary(library);
-        if (lib) {
-            return lib->getMaterial(material);
-        }
+        // MaterialLibrary::ConstPtr lib = getMaterialLibrary(library);
+        // if (lib) {
+        //     return lib->getMaterial(material);
+        // }
         return nullptr;
     }
 
-    void Model::draw() const {
+    void Model::draw(const MaterialShader::Ptr & shader) const {
         // TODO: bind textures
         // TODO: uniforms
         for (auto & mesh : models) {
             auto & material = mesh->getMaterial();
+            shader->setMaterial(material);
             mesh->draw();
         }
         // TODO unbind textures

@@ -7,7 +7,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
-#include "Shader.hpp"
+#include "s3e/Shader.hpp"
 
 namespace Tom::s3e {
 
@@ -29,6 +29,19 @@ namespace Tom::s3e {
         void print(std::ostream &os = std::cout) const;
 
         static Ptr create();
+    };
+
+    class MaterialShader : public Shader {
+    public:
+        typedef std::shared_ptr<MaterialShader> Ptr;
+        typedef std::shared_ptr<const MaterialShader> ConstPtr;
+
+        using Shader::Shader;
+
+        void setMaterial(const Material::ConstPtr & material) const;
+
+        static Ptr create(const std::string & vertexPath,
+                          const std::string & fragmentPath);
     };
 
     class MaterialLibrary {

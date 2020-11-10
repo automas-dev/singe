@@ -5,28 +5,26 @@
 #include <string>
 #include <memory>
 #include <glm/glm.hpp>
-#include "VBO.hpp"
-#include "Material.hpp"
+#include "s3e/VBO.hpp"
+#include "s3e/Material.hpp"
 
 namespace Tom::s3e {
 
     class Mesh : public VBO {
         std::string name;
         Material::ConstPtr material;
-        
+
     public:
         typedef std::shared_ptr<Mesh> Ptr;
         typedef std::shared_ptr<const Mesh> ConstPtr;
 
         Mesh(void);
-        Mesh(const std::string & name, const Material::ConstPtr &material, const std::vector<Vertex> & points);
+        Mesh(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points);
         virtual ~Mesh();
 
-        const Material::ConstPtr &getMaterial(void) const;
+        const Material::ConstPtr & getMaterial(void) const;
 
-        void draw(void) const;
-
-        static Ptr create(const std::string & name, const Material::ConstPtr &material, const std::vector<Vertex> & points);
+        static Ptr create(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points);
     };
 
     class Model {
@@ -51,20 +49,20 @@ namespace Tom::s3e {
         void rotate(glm::vec3 rot);
         void scale(glm::vec3 scale);
 
-        const glm::vec3 &getPosition(void) const;
+        const glm::vec3 & getPosition(void) const;
         void setPosition(glm::vec3 pos);
 
-        const glm::vec3 &getRotation(void) const;
+        const glm::vec3 & getRotation(void) const;
         void setRotation(glm::vec3 rot);
 
-        const glm::vec3 &getScale(void) const;
+        const glm::vec3 & getScale(void) const;
         void setScale(glm::vec3 scale);
 
         glm::mat4 modelMatrix() const;
 
         Material::ConstPtr getMaterial(const std::string & material) const;
 
-        void draw(void) const;
+        void draw(const MaterialShader::Ptr & shader) const;
 
         static Ptr create(const std::string & path);
     };

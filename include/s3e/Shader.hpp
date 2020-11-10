@@ -69,25 +69,25 @@ namespace Tom::s3e {
 
         GLuint uniformLocation(const std::string & name) const;
 
-        void setBool(const std::string &name, bool value);
+        void setBool(const std::string &name, bool value) const;
         
-        void setInt(const std::string &name, int value);
-        void setUInt(const std::string &name, unsigned int value);
+        void setInt(const std::string &name, int value) const;
+        void setUInt(const std::string &name, unsigned int value) const;
         
-        void setFloat(const std::string &name, float value);
+        void setFloat(const std::string &name, float value) const;
         
-        void setVec2(const std::string &name, const glm::vec2 &value);
-        void setVec2(const std::string &name, float x, float y);
+        void setVec2(const std::string &name, const glm::vec2 &value) const;
+        void setVec2(const std::string &name, float x, float y) const;
 
-        void setVec3(const std::string &name, const glm::vec3 &value);
-        void setVec3(const std::string &name, float x, float y, float z);
+        void setVec3(const std::string &name, const glm::vec3 &value) const;
+        void setVec3(const std::string &name, float x, float y, float z) const;
 
-        void setVec4(const std::string &name, const glm::vec4 &value);
-        void setVec4(const std::string &name, float x, float y, float z, float w);
+        void setVec4(const std::string &name, const glm::vec4 &value) const;
+        void setVec4(const std::string &name, float x, float y, float z, float w) const;
 
-        void setMat2(const std::string &name, const glm::mat2 &value);
-        void setMat3(const std::string &name, const glm::mat3 &value);
-        void setMat4(const std::string &name, const glm::mat4 &value);
+        void setMat2(const std::string &name, const glm::mat2 &value) const;
+        void setMat3(const std::string &name, const glm::mat3 &value) const;
+        void setMat4(const std::string &name, const glm::mat4 &value) const;
 
         static Ptr create(const std::string & vertexPath,
                           const std::string & fragmentPath);

@@ -3,21 +3,21 @@
 #include <iostream>
 
 namespace Tom::s3e {
-    void MaterialUniformLocations::loadFromShader(const Shader::ConstPtr &shader) {
-        proj = shader->uniformLocation("proj");
-        view = shader->uniformLocation("view");
-        model = shader->uniformLocation("model");
+    // void MaterialUniformLocations::loadFromShader(const Shader::ConstPtr &shader) {
+    //     proj = shader->uniformLocation("proj");
+    //     view = shader->uniformLocation("view");
+    //     model = shader->uniformLocation("model");
 
-        lightPos = shader->uniformLocation("lightPos");
-        viewPos = shader->uniformLocation("viewPos");
-        
-        ambient = shader->uniformLocation("ambient");
-        diffuse = shader->uniformLocation("diffuse");
-        specular = shader->uniformLocation("specular");
+    //     lightPos = shader->uniformLocation("lightPos");
+    //     viewPos = shader->uniformLocation("viewPos");
 
-        specExp = shader->uniformLocation("specExp");
-        alpha = shader->uniformLocation("alpha");
-    }
+    //     ambient = shader->uniformLocation("ambient");
+    //     diffuse = shader->uniformLocation("diffuse");
+    //     specular = shader->uniformLocation("specular");
+
+    //     specExp = shader->uniformLocation("specExp");
+    //     alpha = shader->uniformLocation("alpha");
+    // }
 }
 
 namespace Tom::s3e {
@@ -38,6 +38,26 @@ namespace Tom::s3e {
     Material::Ptr Material::create() {
         auto material = std::make_shared<Material>();
         return material;
+    }
+}
+
+namespace Tom::s3e {
+    void MaterialShader::setMaterial(const Material::ConstPtr & m) const {
+        setVec3("material.ambient", m->ambient);
+        setVec3("material.diffuse", m->diffuse);
+        setVec3("material.specular", m->specular);
+        setFloat("material.shininess", m->specularExponent);
+        setFloat("material.alpha", m->alpha);
+        setInt("material.texture", 0);
+    }
+
+    MaterialShader::Ptr MaterialShader::create(const std::string & vertexPath,
+            const std::string & fragmentPath) {
+        auto s = std::make_shared<MaterialShader>();
+        if (s && s->loadFromPath(vertexPath, fragmentPath)) {
+            return s;
+        }
+        return nullptr;
     }
 }
 
@@ -110,7 +130,7 @@ namespace Tom::s3e {
 
             if (curr)
                 materials.push_back(curr);
-            
+
             return true;
         }
 
@@ -131,7 +151,7 @@ namespace Tom::s3e {
     }
 
     Material::ConstPtr MaterialLibrary::getMaterial(const std::string & name) const {
-        for (auto &material : materials) {
+        for (auto & material : materials) {
             if (material->name == name)
                 return material;
         }
