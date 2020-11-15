@@ -3,24 +3,6 @@
 #include <iostream>
 
 namespace Tom::s3e {
-    // void MaterialUniformLocations::loadFromShader(const Shader::ConstPtr &shader) {
-    //     proj = shader->uniformLocation("proj");
-    //     view = shader->uniformLocation("view");
-    //     model = shader->uniformLocation("model");
-
-    //     lightPos = shader->uniformLocation("lightPos");
-    //     viewPos = shader->uniformLocation("viewPos");
-
-    //     ambient = shader->uniformLocation("ambient");
-    //     diffuse = shader->uniformLocation("diffuse");
-    //     specular = shader->uniformLocation("specular");
-
-    //     specExp = shader->uniformLocation("specExp");
-    //     alpha = shader->uniformLocation("alpha");
-    // }
-}
-
-namespace Tom::s3e {
 
     Material::Material() : ambient(0), diffuse(0), specular(0), specularExponent(0), alpha(1) { }
 
