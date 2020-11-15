@@ -19,11 +19,11 @@ namespace Tom::s3e {
         };
 
     private:
-        sf::Vector2u screen;
-        glm::vec2 rot;
-        glm::vec3 pos;
+        sf::Vector2u screenSize;
+        glm::vec2 rotation;
+        glm::vec3 position;
 
-        ProjectionMode projMode = Perspective;
+        ProjectionMode projectionMode = Perspective;
 
         float fov = 45.0f;
 

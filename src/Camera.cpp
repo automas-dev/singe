@@ -4,7 +4,7 @@
 
 namespace Tom::s3e {
 
-    Camera::Camera(): rot(0, 0), pos(0, 0, 0) { }
+    Camera::Camera(): rotation(0, 0), position(0, 0, 0) { }
 
     Camera::~Camera() { }
 
@@ -17,55 +17,55 @@ namespace Tom::s3e {
     }
 
     void Camera::setScreenSize(sf::Vector2u screen) {
-        this->screen = screen;
+        this->screenSize = screen;
     }
 
     const glm::vec2 & Camera::getRotation() const {
-        return rot;
+        return rotation;
     }
 
     void Camera::setRotation(glm::vec2 rot) {
-        this->rot = rot;
+        this->rotation = rot;
     }
 
     void Camera::rotate(glm::vec2 delta) {
-        rot -= delta;
-        rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
+        rotation -= delta;
+        rotation.x = glm::clamp(rotation.x, -89.0f, 89.0f);
     }
 
     const glm::vec3 & Camera::getPosition() const {
-        return pos;
+        return position;
     }
 
     void Camera::setPosition(glm::vec3 pos) {
-        this->pos = pos;
+        this->position = pos;
     }
 
     void Camera::move(glm::vec3 delta) {
-        pos += delta;
+        position += delta;
     }
 
     void Camera::moveDolly(glm::vec3 delta) {
-        float yRot = glm::radians(rot.y);
+        float yRot = glm::radians(rotation.y);
 
         float dz = -delta.x * std::sin(yRot) + delta.z * std::cos(yRot);
         float dx = -delta.x * -std::cos(yRot) + delta.z * std::sin(yRot);
 
         float dy = delta.y;
 
-        pos += glm::vec3(dx, dy, dz);
+        position += glm::vec3(dx, dy, dz);
     }
 
     glm::mat4 Camera::projMatrix() {
-        float r = (float)screen.x / (float)screen.y;
+        float r = (float)screenSize.x / (float)screenSize.y;
         return glm::perspective(glm::radians(fov), r, 0.1f, 100.0f);
     }
 
     glm::mat4 Camera::viewMatrix() {
         glm::mat4 m (1);
-        m = glm::rotate(m, -glm::radians(rot.x), glm::vec3(1, 0, 0));
-        m = glm::rotate(m, -glm::radians(rot.y), glm::vec3(0, 1, 0));
-        m = glm::translate(m, -pos);
+        m = glm::rotate(m, -glm::radians(rotation.x), glm::vec3(1, 0, 0));
+        m = glm::rotate(m, -glm::radians(rotation.y), glm::vec3(0, 1, 0));
+        m = glm::translate(m, -position);
         return m;
     }
 
