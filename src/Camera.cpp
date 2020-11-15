@@ -16,10 +16,6 @@ namespace Tom::s3e {
         return fov;
     }
 
-    void Camera::setScreenSize(unsigned width, unsigned height) {
-        setScreenSize({width, height});
-    }
-
     void Camera::setScreenSize(sf::Vector2u screen) {
         this->screen = screen;
     }
@@ -28,23 +24,12 @@ namespace Tom::s3e {
         return rot;
     }
 
-    void Camera::setRotation(float x, float y) {
-        rot = {x, y};
-    }
-
-    void Camera::setRotation(sf::Vector2f rot) {
-        this->rot = {rot.x, rot.y};
-    }
-
     void Camera::setRotation(glm::vec2 rot) {
         this->rot = rot;
     }
 
-    /**
-     * Rotate on the x an y axis in degrees.
-     */
-    void Camera::rotate(float x, float y) {
-        rot -= glm::vec2(x, y);
+    void Camera::rotate(glm::vec2 delta) {
+        rot -= delta;
         rot.x = glm::clamp(rot.x, -89.0f, 89.0f);
     }
 
@@ -52,44 +37,23 @@ namespace Tom::s3e {
         return pos;
     }
 
-    void Camera::setPosition(float x, float y, float z) {
-        pos = {x, y, z};
-    }
-
-    void Camera::setPosition(sf::Vector3f pos) {
-        this->pos = {pos.x, pos.y, pos.z};
-    }
-
     void Camera::setPosition(glm::vec3 pos) {
         this->pos = pos;
     }
 
-    void Camera::move(float x, float y, float z) {
-        pos += glm::vec3(x, y, z);
+    void Camera::move(glm::vec3 delta) {
+        pos += delta;
     }
 
-    void Camera::moveLook(float x, float y, float z) {
+    void Camera::moveDolly(glm::vec3 delta) {
         float yRot = glm::radians(rot.y);
 
-        float dz = -x * std::sin(yRot) + z * std::cos(yRot);
-        float dx = -x * -std::cos(yRot) + z * std::sin(yRot);
+        float dz = -delta.x * std::sin(yRot) + delta.z * std::cos(yRot);
+        float dx = -delta.x * -std::cos(yRot) + delta.z * std::sin(yRot);
 
-        float dy = y;
+        float dy = delta.y;
 
         pos += glm::vec3(dx, dy, dz);
-    }
-
-    void Camera::pushTransform() {
-        glPushMatrix();
-        glScalef(1.0f, (float)screen.x / screen.y, 1.0f);
-        glRotatef(-this->rot.x, 1, 0, 0);
-        glRotatef(-this->rot.y, 0, 1, 0);
-        glScalef(1.0f, (float)screen.y / screen.x, 1.0f);
-        glTranslatef(-this->pos.x, -this->pos.y, -this->pos.z);
-    }
-
-    void Camera::popTransform() {
-        glPopMatrix();
     }
 
     glm::mat4 Camera::projMatrix() {
@@ -103,17 +67,6 @@ namespace Tom::s3e {
         m = glm::rotate(m, -glm::radians(rot.y), glm::vec3(0, 1, 0));
         m = glm::translate(m, -pos);
         return m;
-
-        // return matFromVecs(pos, glm::radians(glm::vec3(rot.x, 0, rot.y)));
-
-        // auto rx = glm::radians(rot.x);
-        // auto ry = glm::radians(rot.y);
-        // auto x = glm::sin(ry) * glm::sin(rx);
-        // auto y = glm::sin(rx);
-        // auto z = glm::sin(ry) * glm::cos(rx);
-        // glm::vec3 center(x, y, z);
-        // center += pos;
-        // return glm::lookAt(pos, center, glm::vec3(0, 1, 0));
     }
 
     Camera::Ptr Camera::create() {
