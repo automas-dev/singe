@@ -47,18 +47,19 @@ namespace Tom::s3e {
 
     MaterialLibrary::MaterialLibrary() { }
 
-    MaterialLibrary::MaterialLibrary(const std::string & path) {
-        loadFromPath(path);
+    MaterialLibrary::MaterialLibrary(const std::string & mtlPath) {
+        loadFromPath(mtlPath);
     }
 
     MaterialLibrary::~MaterialLibrary() { }
 
-    bool MaterialLibrary::loadFromPath(const std::string & path) {
+    bool MaterialLibrary::loadFromPath(const std::string & mtlPath) {
+        path = mtlPath;
+
         Parser p;
         if (p.open(path)) {
             Material::Ptr curr;
 
-            // for (std::string line = p.readLine(); line.empty(); line = p.readLine()) {
             for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
 
                 if (line.length() == 0 || strStartsWithChar('#', line))
@@ -71,6 +72,7 @@ namespace Tom::s3e {
                         materials.push_back(curr);
 
                     curr = Material::create();
+                    // TODO: Handle nullptr return
                     curr->name = name;
                 }
                 else if (strStartsWithStr("Ns", line)) {

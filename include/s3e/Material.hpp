@@ -14,7 +14,8 @@ namespace Tom::s3e {
     /**
      * A single Wavefront OBJ material loaded from a .mtl file.
      */
-    struct Material {
+    class Material {
+    public:
         /**
          * The materials ambient property.
          */
@@ -45,6 +46,7 @@ namespace Tom::s3e {
          */
         std::string name;
 
+    public:
         /**
          * A shared pointer that manages a Material.
          */
@@ -71,7 +73,7 @@ namespace Tom::s3e {
          *
          * @param os the ostream to write to
          */
-        void print(std::ostream &os = std::cout) const;
+        void print(std::ostream & os = std::cout) const;
 
         /**
          * Create a new Material that is managed by a std::shared_ptr.
@@ -81,40 +83,126 @@ namespace Tom::s3e {
         static Ptr create();
     };
 
+    /**
+     * Specialization of the Shader class that applies a Material as uniforms
+     * before drawing the Model.
+     */
     class MaterialShader : public Shader {
     public:
+        /**
+         * A shared pointer that manages a MaterialShader.
+         */
         typedef std::shared_ptr<MaterialShader> Ptr;
+
+        /**
+         * A shared pointer that manages a const MaterialShader.
+         */
         typedef std::shared_ptr<const MaterialShader> ConstPtr;
 
+        /**
+         * Inherit the constructors from Shader.
+         */
         using Shader::Shader;
 
+        /**
+         * Apply material as shader uniforms.
+         *
+         * @param material the Material to apply as uniforms
+         */
         void setMaterial(const Material::ConstPtr & material) const;
 
+        /**
+         * Create a new MaterialShader that is managed by a std::shared_ptr.
+         *
+         * @param vertexPath the path to the vertex shader source
+         * @param fragmentPath the path to the fragment shader source
+         *
+         * @return a shared pointer to a new MaterialShader
+         */
         static Ptr create(const std::string & vertexPath,
                           const std::string & fragmentPath);
     };
 
+    /**
+     * A collection of Wavefront OBJ Materials loaded from a .mtl file.
+     */
     class MaterialLibrary {
         std::vector<Material::Ptr> materials;
 
     public:
+        /**
+         * A shared pointer that manages a MaterialLibrary.
+         */
         typedef std::shared_ptr<MaterialLibrary> Ptr;
+
+        /**
+         * A shared pointer that manages a const MaterialLibrary.
+         */
         typedef std::shared_ptr<const MaterialLibrary> ConstPtr;
 
-        std::string name;
+        /**
+         * The path to the .mtl file that was loaded.
+         */
+        std::string path;
 
+        /**
+         * Construct a new MaterialLibrary.
+         */
         MaterialLibrary(void);
-        MaterialLibrary(const std::string & path);
+
+        /**
+         * Construct a new MaterialLibrary and load a .mtl file at path.
+         *
+         * @param mtlPath the path to the .mtl file
+         */
+        MaterialLibrary(const std::string & mtlPath);
+
+        /**
+         * Destruct the MaterialLibrary.
+         */
         ~MaterialLibrary();
 
-        bool loadFromPath(const std::string &path);
+        /**
+         * Load a .mtl file from path.
+         *
+         * @param mtlPath the path to the .mtl file
+         *
+         * @return true if the file was loaded successfully
+         */
+        bool loadFromPath(const std::string & mtlPath);
 
+        /**
+         * Get the number of materials loaded from the .mtl file.
+         *
+         * @return the number of materials
+         */
         std::size_t size(void) const;
 
+        /**
+         * Get the material at index or nullptr if the index is out of bounds.
+         *
+         * @param index the index of the material
+         *
+         * @return a const pointer to the material or nullptr
+         */
         Material::ConstPtr getMaterial(int index) const;
 
+        /**
+         * Get the material by name or nullptr if no material exists with name.
+         *
+         * @param name the name of the material to return
+         *
+         * @return a const pointer to the material or nullptr
+         */
         Material::ConstPtr getMaterial(const std::string & name) const;
 
-        static MaterialLibrary::Ptr create(const std::string & path);
+        /**
+         * Create a new MaterialLibrary that is managed by a std::shared_ptr.
+         *
+         * @param mtlPath the path to the .mtl file
+         *
+         * @return a shared pointer to a new MaterialShader
+         */
+        static MaterialLibrary::Ptr create(const std::string & mtlPath);
     };
 }
