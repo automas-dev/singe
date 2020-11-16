@@ -10,60 +10,205 @@
 
 namespace Tom::s3e {
 
+    /**
+     * Manage a single mesh from a Wavefront OBJ file.
+     */
     class Mesh : public VBO {
         std::string name;
         Material::ConstPtr material;
 
     public:
+        /**
+         * A shared pointer that manages a Mesh.
+         */
         typedef std::shared_ptr<Mesh> Ptr;
+
+        /**
+         * A shared pointer that manages a const Mesh.
+         */
         typedef std::shared_ptr<const Mesh> ConstPtr;
 
+        /**
+         * Construct a new empty Mesh.
+         */
         Mesh(void);
+
+        /**
+         * Construct a new Mesh from a name, material and vector of Vertex.
+         *
+         * @param name the material name
+         * @param material the Material for the mesh
+         * @param points the mesh points
+         */
         Mesh(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points);
+
+        /**
+         * Destruct the Mesh.
+         */
         virtual ~Mesh();
 
+        /**
+         * Get a const pointer reference to the Material for this Mesh.
+         *
+         * @return a const pointer reference to the Material for this Mesh
+         */
         const Material::ConstPtr & getMaterial(void) const;
 
+        /**
+         * Create a new Mesh that is manages by a std::shared_ptr and load it
+         * from name, material and points.
+         *
+         * @param name the material name
+         * @param material the Material for the mesh
+         * @param points the mesh points
+         *
+         * @return a shared pointer to a new Mesh
+         */
         static Ptr create(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points);
     };
 
+    /**
+     * A Wavefront OBJ .obj model file.
+     */
     class Model {
         glm::vec3 pos;
         glm::vec3 rot;
         glm::vec3 size;
 
         std::vector<Mesh::Ptr> models;
-        std::string name;
+        std::string path;
 
     public:
+        /**
+         * A shared pointer that manages a Mesh.
+         */
         typedef std::shared_ptr<Model> Ptr;
+
+        /**
+         * A shared pointer that manages a const Mesh.
+         */
         typedef std::shared_ptr<const Model> ConstPtr;
 
+        /**
+         * Construct a new empty Model.
+         */
         Model(void);
-        Model(const std::string & path);
+
+        /**
+         * Construct a new Model and load it from a .obj file. If the obj file
+         * references a .mtl file, the loader will look for a file in the same
+         * directory as the .obj file.
+         *
+         * @param objPath the path to the .obj file
+         */
+        Model(const std::string & objPath);
+
+        /**
+         * Destruct the Model.
+         */
         virtual ~Model();
 
-        bool loadFromPath(const std::string & path);
+        /**
+         * Load a .obj file from objPath.
+         *
+         * @param objPath the path to the .obj file
+         *
+         * @return true if the file was loaded successfully
+         */
+        bool loadFromPath(const std::string & objPath);
 
+        /**
+         * Move the Model by adding pos to the position.
+         *
+         * @param pos the delta position
+         */
         void move(glm::vec3 pos);
+
+        /**
+         * Rotate the Model by adding rot to the rotation.
+         *
+         * @param rot the delta rotation
+         */
         void rotate(glm::vec3 rot);
+
+        /**
+         * Scale the Model by multiplying the scale by scale.
+         *
+         * @param scale the delta scale
+         */
         void scale(glm::vec3 scale);
 
+        /**
+         * Get the current position.
+         * 
+         * @return the current position
+         */
         const glm::vec3 & getPosition(void) const;
+
+        /**
+         * Set the Model position.
+         *
+         * @param pos the new position
+         */
         void setPosition(glm::vec3 pos);
 
+        /**
+         * Get the current rotation.
+         *
+         * @return the current rotation
+         */
         const glm::vec3 & getRotation(void) const;
+
+        /**
+         * Set the Model rotation.
+         *
+         * @param rot the new rotation
+         */
         void setRotation(glm::vec3 rot);
 
+        /**
+         * Get the current scale.
+         *
+         * @return the current scale
+         */
         const glm::vec3 & getScale(void) const;
+        
+        /**
+         * Set the Model scale.
+         *
+         * @param scale the new scale
+         */
         void setScale(glm::vec3 scale);
 
+        /**
+         * Get the model matrix. This is generated from position, rotation and
+         * scale.
+         *
+         * @return the model matrix
+         */
         glm::mat4 modelMatrix() const;
 
+        /**
+         * Get a Material by name or nullptr if none exist.
+         *
+         * @param material the material name
+         *
+         * @return a const pointer reference to the Material
+         */
         Material::ConstPtr getMaterial(const std::string & material) const;
 
+        /**
+         * Draw the Model using shader.
+         *
+         * @param shader the MaterialShader used to draw this Model
+         */
         void draw(const MaterialShader::Ptr & shader) const;
 
+        /**
+         * Create a new Model that is managed by a std::shared_ptr.
+         *
+         * @return a shared pointer to a new Model
+         */
         static Ptr create(const std::string & path);
     };
 };

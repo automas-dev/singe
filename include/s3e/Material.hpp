@@ -163,7 +163,7 @@ namespace Tom::s3e {
         ~MaterialLibrary();
 
         /**
-         * Load a .mtl file from path.
+         * Load a .mtl file from mtlPath.
          *
          * @param mtlPath the path to the .mtl file
          *

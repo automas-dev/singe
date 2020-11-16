@@ -37,14 +37,15 @@ namespace Tom::s3e {
 
     Model::Model() : pos(0), rot(0), size(1) { }
 
-    Model::Model(const std::string & path) : Model() {
-        loadFromPath(path);
+    Model::Model(const std::string & objPath) : Model() {
+        loadFromPath(objPath);
     }
 
     Model::~Model() { }
 
-    bool Model::loadFromPath(const std::string & path) {
+    bool Model::loadFromPath(const std::string & objPath) {
 
+        path = objPath;
         std::string parent = pathParent(path);
 
         Parser p;
@@ -227,9 +228,9 @@ namespace Tom::s3e {
         // TODO unbind textures
     }
 
-    Model::Ptr Model::create(const std::string & path) {
+    Model::Ptr Model::create(const std::string & objPath) {
         auto model = std::make_shared<Model>();
-        if (model && model->loadFromPath(path)) {
+        if (model && model->loadFromPath(objPath)) {
             return model;
         }
         return nullptr;

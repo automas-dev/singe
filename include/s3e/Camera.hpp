@@ -153,7 +153,7 @@ namespace Tom::s3e {
         glm::mat4 viewMatrix(void);
 
         /**
-         * Create a new Camera that is managed by as std::shared_ptr.
+         * Create a new Camera that is managed by a std::shared_ptr.
          *
          * @return a shared pointer to a new Camera
          */
