@@ -84,9 +84,6 @@ namespace Tom::s3e {
          */
         void SetMouseGrab(bool grab);
 
-        // TODO: Implement GameBase::SetFullscreen()
-        void SetFullscreen(bool fullscreen);
-
     protected:
 
         /**
