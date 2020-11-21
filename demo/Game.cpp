@@ -222,12 +222,6 @@ void Game::onUpdate(const sf::Time & delta) {
 }
 
 void Game::onDraw() const {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    modeProjection();
-    float aspect = window->getSize().x / window->getSize().y;
-    gluPerspective(93, aspect, 0.01, 100.0);
-    modeModel();
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
