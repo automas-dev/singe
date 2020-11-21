@@ -25,7 +25,6 @@ class Game : public GameBase {
 
     Texture::Ptr texture;
 
-    bool doDrawLegacy = false;
     bool doDrawTexture = true;
     bool doDrawShading = true;
 

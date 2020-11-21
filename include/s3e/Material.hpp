@@ -128,6 +128,7 @@ namespace Tom::s3e {
      */
     class MaterialLibrary {
         std::vector<Material::Ptr> materials;
+        std::string path;
 
     public:
         /**
@@ -141,9 +142,9 @@ namespace Tom::s3e {
         typedef std::shared_ptr<const MaterialLibrary> ConstPtr;
 
         /**
-         * The path to the .mtl file that was loaded.
+         * The name from the .mtl file.
          */
-        std::string path;
+        std::string name;
 
         /**
          * Construct a new MaterialLibrary.

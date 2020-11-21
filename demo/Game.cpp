@@ -106,7 +106,7 @@ bool Game::onCreate() {
 
     cam = Camera::create();
     cam->setScreenSize(window->getSize());
-    cam->move(3, 2, 1);
+    cam->move({3, 2, 1});
     cam->setFov(80);
 
     defaultShader = loadShader("res://shader/default.vs", "res://shader/default.fs");
@@ -159,9 +159,6 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
             menu->show();
             SetMouseGrab(false);
             break;
-        case sf::Keyboard::Num1:
-            doDrawLegacy = !doDrawLegacy;
-            break;
         case sf::Keyboard::Num2:
             doDrawTexture = !doDrawTexture;
             break;
@@ -209,14 +206,14 @@ void Game::onUpdate(const sf::Time & delta) {
     sf::Vector2f mDelta (mPos.x - lastMouse.x, mPos.y - lastMouse.y);
     if (!menu->isVisible) {
         sf::Mouse::setPosition(lastMouse, *window);
-        cam->rotate(mDelta.y * 0.2, mDelta.x * 0.2);
+        cam->rotate({mDelta.y * 0.2, mDelta.x * 0.2});
     }
 
     if (!menu->isVisible) {
         int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
         int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
         int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        cam->moveLook(x * deltaS * 5, y * deltaS * 5, z * deltaS * 5);
+        cam->moveDolly({x * deltaS * 5, y * deltaS * 5, z * deltaS * 5});
     }
 
     time += deltaS;
@@ -283,12 +280,6 @@ void Game::onDraw() const {
     }
 
     defaultShader->unbind();
-
-    if (doDrawLegacy) {
-        cam->pushTransform();
-        draw_color_array_legacy(&gridVerts[0].x, &gridCols[0].x, gridVerts.size(), GL_LINES);
-        cam->popTransform();
-    }
 
     getGlError();
 
