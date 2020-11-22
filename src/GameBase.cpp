@@ -9,7 +9,7 @@
 
 namespace Tom::s3e {
 
-    GameBase::GameBase(const sf::String & resPath) : ResourceManager(resPath) { }
+    GameBase::GameBase() { }
 
     GameBase::~GameBase() { }
 
@@ -76,6 +76,8 @@ namespace Tom::s3e {
                     case sf::Event::Closed:
                         Stop();
                         break;
+                    default:
+                        break;
                 }
             }
 
@@ -122,3 +124,4 @@ namespace Tom::s3e {
 
     void GameBase::onResized(const sf::Event::SizeEvent & event) { }
 }
+

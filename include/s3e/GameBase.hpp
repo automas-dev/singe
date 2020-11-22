@@ -9,13 +9,12 @@
 #include <vector>
 #include "Camera.hpp"
 #include "Menu.hpp"
-#include "ResourceManager.hpp"
 
 namespace Tom::s3e {
 
     /**
      * Game base to be extended by the user. This class manages the window,
-     * main game loop, event callbacks, resource loading, and mouse capture.
+     * main game loop, event callbacks and mouse capture.
      *
      * The user must provide the onCreate, onDestroy, onUpdate and onDraw
      * methods.
@@ -34,7 +33,7 @@ namespace Tom::s3e {
         /**
          * Construct a new GameBase.
          */
-        GameBase(const sf::String & resPath);
+        GameBase(void);
 
         /**
          * Destruct the GameBase.
@@ -42,8 +41,9 @@ namespace Tom::s3e {
         virtual ~GameBase();
 
         /**
-         * Create the window and load resources. This method calls the
-         * onCreate() virtual method.
+         * Create the window. This method calls the onCreate() virtual method
+         * which is where the user should load and initialize resources before
+         * the game starts.
          *
          * @param title the window title
          * @param width the window width in pixels
@@ -64,8 +64,8 @@ namespace Tom::s3e {
         void Start(void);
 
         /**
-         * Stop the game, close the window and free resources. The onDestroy()
-         * method is called after the game loop ends.
+         * Stop the game and close the window. The onDestroy() method is called
+         * after the game loop ends.
          */
         void Stop(void);
 
@@ -87,9 +87,9 @@ namespace Tom::s3e {
     protected:
 
         /**
-         * Load and initialize any resources required by the game. This method
-         * is called in Start() after the window is created. The return from
-         * this method is returned by Start()
+         * Load and initialize any resources Used by the game. This method is
+         * called in Start() after the window is created. The return from this
+         * method is returned by Start()
          *
          * @return was initialization successful
          */
@@ -163,3 +163,4 @@ namespace Tom::s3e {
         virtual void onResized(const sf::Event::SizeEvent & event);
     };
 }
+
