@@ -64,7 +64,7 @@ namespace Tom::s3e {
          *
          * @return the resolved resource path
          */
-        std::string resPath(const std::string & path) const;
+        std::string resourceAt(const std::string & path) const;
     };
 
     /**

@@ -17,7 +17,7 @@ namespace Tom::s3e {
         return rootPath;
     }
 
-    std::string ResourceManager::resPath(const std::string & path) const {
+    std::string ResourceManager::resourceAt(const std::string & path) const {
         auto resProtoPos = path.find("res://");
 
         if (resProtoPos ==  0)
@@ -36,18 +36,18 @@ namespace Tom::s3e {
     }
 
     Texture::Ptr DefaultResourceManager::loadTexture(const std::string & name, const std::string & path) {
-        auto newTex = Texture::create(resPath(path));
+        auto newTex = Texture::create(resourceAt(path));
         if (newTex)
             textures[name] = newTex;
         return newTex;
     }
 
     Shader::Ptr DefaultResourceManager::loadShader(const std::string & vertexPath, const std::string & fragmentPath) {
-        return Shader::create(resPath(vertexPath), resPath(fragmentPath));
+        return Shader::create(resourceAt(vertexPath), resourceAt(fragmentPath));
     }
 
     Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
-        return Model::create(resPath(path));
+        return Model::create(resourceAt(path));
     }
 }
 

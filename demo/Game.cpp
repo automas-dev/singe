@@ -78,7 +78,7 @@ Game::Game(const sf::String & resPath) : GameBase(resPath) { }
 Game::~Game() { }
 
 bool Game::onCreate() {
-    if (!font.loadFromFile(resPath("res://Questrial_Regular.ttf"))) {
+    if (!font.loadFromFile(resourceAt("res://Questrial_Regular.ttf"))) {
         cerr << "Failed to load font" << endl;
         return false;
     }
@@ -124,7 +124,7 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
-    monoShader = MaterialShader::create(resPath("res://shader/mono.vs"), resPath("res://shader/mono.fs"));
+    monoShader = MaterialShader::create(resourceAt("res://shader/mono.vs"), resourceAt("res://shader/mono.fs"));
     if (!monoShader) {
         throw std::runtime_error("Failed to load mono shader");
     }
