@@ -13,6 +13,8 @@ find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
 
+add_subdirectory(lib/spdlog EXCLUDE_FROM_ALL)
+
 set(S3E_HEADERS 
     include/s3e.hpp
     include/s3e/Camera.hpp
@@ -62,16 +64,17 @@ PUBLIC
     OpenGL::OpenGL 
     OpenGL::GLU
     GLEW::GLEW
+    spdlog::spdlog
 )
 
 add_subdirectory(demo)
 
-export(TARGETS s3e NAMESPACE Tom::
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/s3e-config.cmake)
+#export(TARGETS s3e NAMESPACE Tom::
+#    FILE ${CMAKE_CURRENT_BINARY_DIR}/s3e-config.cmake)
 
 install(TARGETS s3e DESTINATION lib EXPORT s3e-config PUBLIC_HEADER DESTINATION include)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
-install(EXPORT s3e-config DESTINATION include/c NAMESPACE Tom::)
+#install(EXPORT s3e-config DESTINATION include/c NAMESPACE Tom::)
 export(PACKAGE s3e)
 
 # Packaging support
