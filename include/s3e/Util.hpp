@@ -12,13 +12,13 @@
 
 namespace Tom::s3e {
 
-    constexpr double pi = std::acos(-1);
+    const double pi = std::acos(-1);
 
-    constexpr float toRadians(float angle) {
+    inline float toRadians(float angle) {
         return angle * pi / 180.0;
     }
 
-    constexpr float toDegrees(float angle) {
+    inline float toDegrees(float angle) {
         return angle * 180.0 / pi;
     }
 
@@ -66,6 +66,7 @@ namespace Tom::s3e {
         std::string readToChar(char delim);
 
         std::string readLine();
+
 
         void rewind();
 
