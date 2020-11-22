@@ -14,6 +14,8 @@ class Game : public GameBase {
     std::vector<glm::vec3> gridVerts;
     std::vector<glm::vec3> gridCols;
 
+    DefaultResourceManager resManager;
+
     sf::Font font;
     Menu::Ptr menu;
     Camera::Ptr cam;

@@ -73,12 +73,12 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String & resPath) : GameBase(resPath) { }
+Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) { }
 
 Game::~Game() { }
 
 bool Game::onCreate() {
-    if (!font.loadFromFile(resourceAt("res://Questrial_Regular.ttf"))) {
+    if (!font.loadFromFile(resManager.resourceAt("res://Questrial_Regular.ttf"))) {
         cerr << "Failed to load font" << endl;
         return false;
     }
@@ -109,40 +109,41 @@ bool Game::onCreate() {
     cam->move({3, 2, 1});
     cam->setFov(80);
 
-    defaultShader = loadShader("res://shader/default.vs", "res://shader/default.fs");
+    defaultShader = resManager.loadShader("res://shader/default.vs", "res://shader/default.fs");
     if (!defaultShader) {
         throw std::runtime_error("Failed to load default shader");
     }
 
-    textureShader = loadShader("res://shader/tex.vs", "res://shader/tex.fs");
+    textureShader = resManager.loadShader("res://shader/tex.vs", "res://shader/tex.fs");
     if (!textureShader) {
         throw std::runtime_error("Failed to load texture shader");
     }
 
-    lightingShader = loadShader("res://shader/lighting.vs", "res://shader/lighting.fs");
+    lightingShader = resManager.loadShader("res://shader/lighting.vs", "res://shader/lighting.fs");
     if (!lightingShader) {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
-    monoShader = MaterialShader::create(resourceAt("res://shader/mono.vs"), resourceAt("res://shader/mono.fs"));
+    monoShader = MaterialShader::create(resManager.resourceAt("res://shader/mono.vs"),
+                                        resManager.resourceAt("res://shader/mono.fs"));
     if (!monoShader) {
         throw std::runtime_error("Failed to load mono shader");
     }
 
-    cubeModel = loadModel("res://model/cube_plane.obj");
+    cubeModel = resManager.loadModel("res://model/cube_plane.obj");
     if (!cubeModel) {
         std::cout << "Cube model failed" << std::endl;
         throw std::runtime_error("Failed to load cube model");
     }
 
-    sphereModel = loadModel("res://model/sphere.obj");
+    sphereModel = resManager.loadModel("res://model/sphere.obj");
     if (!sphereModel) {
         throw std::runtime_error("Failed to load sphere model");
     }
     sphereModel->move({1, 2, 3});
     sphereModel->scale({0.1, 0.1, 0.1});
 
-    texture = loadTexture("dev_texture_gray", "res://img/dev_texture_gray.png");
+    texture = resManager.loadTexture("dev_texture_gray", "res://img/dev_texture_gray.png");
     if (!texture) {
         throw std::runtime_error("Failed to load dev texture");
     }
@@ -213,7 +214,7 @@ void Game::onUpdate(const sf::Time & delta) {
         int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
         int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
         int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        cam->moveDolly({x * deltaS * 5, y * deltaS * 5, z * deltaS * 5});
+        cam->moveDolly({x *deltaS * 5, y *deltaS * 5, z *deltaS * 5});
     }
 
     time += deltaS;
