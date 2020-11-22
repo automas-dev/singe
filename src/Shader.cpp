@@ -1,13 +1,15 @@
 #include "s3e/Shader.hpp"
 #include <SFML/Graphics/Image.hpp>
 #include <fstream>
-#include <iostream>
+#include "s3e/log.hpp"
 
 namespace Tom::s3e {
     static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha = false,
                                 GLint magFilter = GL_LINEAR, GLint minFilter = GL_LINEAR_MIPMAP_LINEAR, GLint wrap = GL_REPEAT, bool mipmaps = true) {
         GLuint textureID;
         glGenTextures(1, &textureID);
+
+        SPDLOG_DEBUG("Generated opengl texture {}", textureID);
 
         glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -25,34 +27,25 @@ namespace Tom::s3e {
         return textureID;
     }
 
-    // GLuint loadTexture(const char *path, bool srcAlpha) {
-    //     GLuint texId = 0;
-    //     int width, height, nrChannels;
-    //     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
-    //     if (data) {
-    //         texId = loadGlTexture(data, width, height, srcAlpha);
-    //         stbi_image_free(data);
-    //     }
-    //     return texId;
-    // }
-
-    Texture::Texture() {
-
-    }
+    Texture::Texture() { }
 
     Texture::~Texture() {
+        SPDLOG_DEBUG("de-constructing opengl texture {}", textureId);
         glDeleteTextures(1, &textureId);
     }
 
     bool Texture::loadFromPath(const std::string & path) {
         sf::Image img;
-        if (!img.loadFromFile(path))
+        if (!img.loadFromFile(path)) {
+            SPDLOG_WARN("Texture failed to open file {}", path);
             return false;
+        }
 
         // glGenTextures(1, &textureId);
         // glBindTexture(GL_TEXTURE_2D, textureId);
         // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
-        textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true, GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR);
+        textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true, GL_NEAREST,
+                                  GL_NEAREST_MIPMAP_LINEAR);
         return true;
     }
 
@@ -68,12 +61,14 @@ namespace Tom::s3e {
 
     Texture::Ptr Texture::create(const std::string & path) {
         auto texture = std::make_shared<Texture>();
-        if (texture && texture->loadFromPath(path)) {
-            return texture;
+        if (!texture->loadFromPath(path)) {
+            SPDLOG_ERROR("failed in call to Texture::loadFromPath(path={})", path);
+            return nullptr;
         }
-        return nullptr;
+        return texture;
     }
 }
+
 
 namespace Tom::s3e {
 
@@ -125,8 +120,10 @@ namespace Tom::s3e {
 
     std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
-        if (!t)
+        if (!t) {
+            SPDLOG_ERROR("shaderSource(path={}) failed to open file", path);
             return std::string();
+        }
 
         auto start = std::istreambuf_iterator<char>(t);
         auto end = std::istreambuf_iterator<char>();
@@ -180,7 +177,10 @@ namespace Tom::s3e {
 
     Shader::Shader() { }
 
-    Shader::~Shader() { }
+    Shader::~Shader() {
+        // TODO: free shader program
+        SPDLOG_CRITICAL("Shader::~Shader() has not been implemented yet");
+    }
 
     bool Shader::loadFromPath(const std::string & vertexPath,
                               const std::string & fragmentPath) {
@@ -199,14 +199,14 @@ namespace Tom::s3e {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
-            std::cerr << "Failed to compile vertex shader: " << compileError(vShader) << std::endl;
+            SPDLOG_ERROR("failed to compile vertex shader {}: {}", vShader, compileError(vShader));
             glDeleteShader(vShader);
             return false;
         }
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
-            std::cerr << "Failed to compile fragment shader: " << compileError(fShader) << std::endl;
+            SPDLOG_ERROR("failed to compile fragment shader {}: {}", fShader, compileError(fShader));
             glDeleteShader(vShader);
             glDeleteShader(fShader);
             return false;
@@ -216,11 +216,6 @@ namespace Tom::s3e {
         glAttachShader(program, vShader);
         glAttachShader(program, fShader);
 
-        // TODO: Pre-Linking Setup with the following
-        // TODO: glBindAttribLocation
-        // TODO: glBindFragDataLocation
-        // TODO: glTransformFeedbackVaryings
-
         glLinkProgram(program);
 
         glDetachShader(program, vShader);
@@ -229,7 +224,7 @@ namespace Tom::s3e {
         glDeleteShader(fShader);
 
         if (!linkSuccess(program)) {
-            std::cerr << "Failed to link shader: " << linkError(program) << std::endl;
+            SPDLOG_ERROR("failed to link shader program {}: {}", program, linkError(program));
             glDeleteProgram(program);
             return false;
         }
@@ -249,63 +244,64 @@ namespace Tom::s3e {
         return glGetUniformLocation(program, name.c_str());
     }
 
-    void Shader::setBool(const std::string &name, bool value) const {
+    void Shader::setBool(const std::string & name, bool value) const {
         glUniform1i(uniformLocation(name), (int)value);
     }
-    
-    void Shader::setInt(const std::string &name, int value) const {
+
+    void Shader::setInt(const std::string & name, int value) const {
         glUniform1i(uniformLocation(name), value);
     }
-    void Shader::setUInt(const std::string &name, unsigned int value) const {
+    void Shader::setUInt(const std::string & name, unsigned int value) const {
         glUniform1ui(uniformLocation(name),  value);
     }
-    
-    void Shader::setFloat(const std::string &name, float value) const {
+
+    void Shader::setFloat(const std::string & name, float value) const {
         glUniform1f(uniformLocation(name), value);
     }
-    
-    void Shader::setVec2(const std::string &name, const glm::vec2 &value) const {
+
+    void Shader::setVec2(const std::string & name, const glm::vec2 & value) const {
         glUniform2fv(uniformLocation(name), 1, &value.x);
     }
 
-    void Shader::setVec2(const std::string &name, float x, float y) const {
+    void Shader::setVec2(const std::string & name, float x, float y) const {
         glUniform2f(uniformLocation(name), x, y);
     }
 
-    void Shader::setVec3(const std::string &name, const glm::vec3 &value) const {
+    void Shader::setVec3(const std::string & name, const glm::vec3 & value) const {
         glUniform3fv(uniformLocation(name), 1, &value.x);
     }
 
-    void Shader::setVec3(const std::string &name, float x, float y, float z) const {
+    void Shader::setVec3(const std::string & name, float x, float y, float z) const {
         glUniform3f(uniformLocation(name), x, y, z);
     }
 
-    void Shader::setVec4(const std::string &name, const glm::vec4 &value) const {
+    void Shader::setVec4(const std::string & name, const glm::vec4 & value) const {
         glUniform4fv(uniformLocation(name), 1, &value.x);
     }
 
-    void Shader::setVec4(const std::string &name, float x, float y, float z, float w) const {
+    void Shader::setVec4(const std::string & name, float x, float y, float z, float w) const {
         glUniform4f(uniformLocation(name), x, y, z, w);
     }
 
-    void Shader::setMat2(const std::string &name, const glm::mat2 &value) const {
+    void Shader::setMat2(const std::string & name, const glm::mat2 & value) const {
         glUniformMatrix2fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
 
-    void Shader::setMat3(const std::string &name, const glm::mat3 &value) const {
+    void Shader::setMat3(const std::string & name, const glm::mat3 & value) const {
         glUniformMatrix3fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
 
-    void Shader::setMat4(const std::string &name, const glm::mat4 &value) const {
+    void Shader::setMat4(const std::string & name, const glm::mat4 & value) const {
         glUniformMatrix4fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
 
     Shader::Ptr Shader::create(const std::string & vertexPath,
                                const std::string & fragmentPath) {
         auto s = std::make_shared<Shader>();
-        if (s && s->loadFromPath(vertexPath, fragmentPath)) {
-            return s;
+        if (!s->loadFromPath(vertexPath, fragmentPath)) {
+            SPDLOG_ERROR("failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})", vertexPath, fragmentPath);
+            return nullptr;
         }
-        return nullptr;
+        return s;
     }
 };

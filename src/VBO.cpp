@@ -1,15 +1,15 @@
 #include "s3e/VBO.hpp"
-#include <iostream>
+#include "s3e/log.hpp"
 
 namespace Tom::s3e {
 
     static GLuint gen_vbo(const std::vector<Vertex> & points) {
-        GLuint VertexVBOID;
+        GLuint vertexVBOID;
 
         // TODO: Handle errors for each gl call in gen_vbo, return -1 on error
 
-        glGenBuffers(1, &VertexVBOID);
-        glBindBuffer(GL_ARRAY_BUFFER, VertexVBOID);
+        glGenBuffers(1, &vertexVBOID);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexVBOID);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*points.size(), &points[0], GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
@@ -21,11 +21,10 @@ namespace Tom::s3e {
         // Get size parameter.
         int32_t bsize = 0;
         glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bsize);
-        if (bsize == 0) {
-            std::cerr << "vbo has no data" << std::endl;
-        }
+        if (bsize == 0)
+            SPDLOG_ERROR("vbo {} has no data after buffering {} points", vertexVBOID, points.size());
 
-        return VertexVBOID;
+        return vertexVBOID;
     }
 
     VBO::VBO() : vao(0), vbo(0), hasBuffer(false), nPoints(0) { }

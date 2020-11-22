@@ -1,4 +1,5 @@
 #include "s3e/Menu.hpp"
+#include "s3e/log.hpp"
 
 const sf::Color light (200, 200, 200);
 const sf::Color dark (10, 10, 10);
@@ -14,6 +15,7 @@ namespace Tom::s3e {
     }
 
     void MenuItem::click() const {
+        SPDLOG_INFO("MenuItem {} was clicked, calling callback", std::string(getString()));
         callback();
     }
 
@@ -57,10 +59,12 @@ namespace Tom::s3e {
     }
 
     void Menu::show() {
+        SPDLOG_INFO("Menu is shown");
         visible = true;
     }
 
     void Menu::hide() {
+        SPDLOG_INFO("Menu is hidden");
         visible = false;
     }
 
@@ -68,14 +72,20 @@ namespace Tom::s3e {
         return visible;
     }
 
-    void Menu::addMenuItem(const std::string & text, std::function<void(void)> callback) {
+    bool Menu::addMenuItem(const std::string & text, std::function<void(void)> callback) {
         MenuItem::Ptr menuItem = MenuItem::create();
+        if (!menuItem) {
+            SPDLOG_ERROR("failed in call to MenuItem::create()");
+            return false;
+        }
+
         menuItem->setCallback(callback);
         menuItem->setFont(this->font);
         menuItem->setString(text);
         menuItem->setCharacterSize(24);
         menuItem->setFillColor(light);
         menuItem->setOrigin(menuItem->getLocalBounds().left, menuItem->getLocalBounds().top);
+
         if (items.empty()) {
             menuItem->setPosition(0, title.getGlobalBounds().height * 2);
         }
@@ -83,7 +93,9 @@ namespace Tom::s3e {
             auto & item = items.back();
             menuItem->setPosition(0, item->getGlobalBounds().top + item->getCharacterSize() * 1.5);
         }
+
         items.push_back(menuItem);
+        return true;
     }
 
     void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const {
@@ -106,6 +118,9 @@ namespace Tom::s3e {
     }
 
     void Menu::onMouseMove(sf::Event::MouseMoveEvent e) {
+        if (!visible)
+            return;
+
         auto point = getTransform().getInverse().transformPoint(e.x, e.y);
         if (isMouseDown)
             return;
@@ -119,6 +134,9 @@ namespace Tom::s3e {
     }
 
     void Menu::onMouseDown(sf::Event::MouseButtonEvent e) {
+        if (!visible)
+            return;
+
         auto point = getTransform().getInverse().transformPoint(e.x, e.y);
         isMouseDown = true;
 
@@ -129,6 +147,9 @@ namespace Tom::s3e {
     }
 
     void Menu::onMouseUp(sf::Event::MouseButtonEvent e) {
+        if (!visible)
+            return;
+
         auto point = getTransform().getInverse().transformPoint(e.x, e.y);
         isMouseDown = false;
 

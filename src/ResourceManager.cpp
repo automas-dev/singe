@@ -1,4 +1,5 @@
 #include "s3e/ResourceManager.hpp"
+#include "s3e/log.hpp"
 #include <filesystem>
 namespace fs = std::filesystem;
 
@@ -41,18 +42,30 @@ namespace Tom::s3e {
     }
 
     Texture::Ptr DefaultResourceManager::loadTexture(const std::string & name, const std::string & path) {
-        auto newTex = Texture::create(resourceAt(path));
-        if (newTex)
+        auto relPath = resourceAt(path);
+        auto newTex = Texture::create(relPath);
+        if (!newTex)
+            SPDLOG_ERROR("failed in call to Texture::create(path={})", relPath);
+        else
             textures[name] = newTex;
         return newTex;
     }
 
     Shader::Ptr DefaultResourceManager::loadShader(const std::string & vertexPath, const std::string & fragmentPath) {
-        return Shader::create(resourceAt(vertexPath), resourceAt(fragmentPath));
+        auto relVertexPath = resourceAt(vertexPath);
+        auto relFragmentPath = resourceAt(fragmentPath);
+        auto shader = Shader::create(relVertexPath, relFragmentPath);
+        if (!shader)
+            SPDLOG_ERROR("failed in call to Shader::create(vertexPath={}, fragmentPath={})", relVertexPath, relFragmentPath);
+        return shader;
     }
 
     Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
-        return Model::create(resourceAt(path));
+        auto relPath = resourceAt(path);
+        auto model = Model::create(relPath);
+        if (!model)
+            SPDLOG_ERROR("failed in call to Model::create(path={})", relPath);
+        return model;
     }
 
     DefaultResourceManager::Ptr DefaultResourceManager::create(const std::string & path) {

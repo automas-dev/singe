@@ -2,8 +2,7 @@
 #include <map>
 #include "s3e/Util.hpp"
 #include "s3e/VBO.hpp"
-#include <iostream>
-
+#include "s3e/log.hpp"
 
 namespace Tom::s3e {
     Mesh::Mesh() : VBO() { }
@@ -35,11 +34,7 @@ namespace Tom::s3e {
         return path;
     }
 
-    Model::Model() : pos(0), rot(0), size(1) { }
-
-    Model::Model(const std::string & objPath) : Model() {
-        loadFromPath(objPath);
-    }
+    Model::Model() : pos(0), rot(0), size(1), materials(nullptr) { }
 
     Model::~Model() { }
 
@@ -49,106 +44,137 @@ namespace Tom::s3e {
         std::string parent = pathParent(path);
 
         Parser p;
-        if (p.open(path)) {
-            struct Face {
-                struct {
-                    std::size_t v, t, n;
-                } p[3];
-            };
+        if (!p.open(path)) {
+            SPDLOG_WARN("Parser failed to open file {}", path);
+            return false;
+        }
 
-            struct ObjMesh {
-                std::string name;
-                std::string usemtl;
-                std::vector<glm::vec3> av;
-                std::vector<glm::vec2> avt;
-                std::vector<glm::vec3> avn;
-                std::vector<Face> af;
-            };
+        struct Face {
+            struct {
+                std::size_t v, t, n;
+            } p[3];
+        };
 
-            // TODO: Handle 4 point faces
+        struct ObjMesh {
+            std::string name;
+            std::string usemtl;
+            std::vector<glm::vec3> av;
+            std::vector<glm::vec2> avt;
+            std::vector<glm::vec3> avn;
+            std::vector<Face> af;
+        };
 
-            std::string mtllib;
-            std::vector<std::unique_ptr<ObjMesh>> meshs;
-            std::unique_ptr<ObjMesh> mesh (nullptr);
+        // TODO: Handle 4 point faces
 
-            for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
+        std::string mtllib;
+        std::vector<std::unique_ptr<ObjMesh>> meshs;
+        std::unique_ptr<ObjMesh> mesh (nullptr);
 
-                if (line.length() == 0 || strStartsWithChar('#', line))
-                    continue;
+#define PARSE_ERROR(TAG) SPDLOG_ERROR("could not parse {} tag while loading mtl file {}", (TAG), path)
 
-                // TODO: Handle s
-                // TODO: Warn for nRead errors bellow
-                // TODO: Handle sign / unsigned read / store overflow
+        for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
 
-                if (strStartsWithStr("mtllib", line)) {
-                    mtllib = line.substr(7);
+            if (line.length() == 0 || strStartsWithChar('#', line))
+                continue;
+
+            // TODO: Handle s
+            // TODO: Warn for nRead errors bellow
+            // TODO: Handle sign / unsigned read / store overflow
+
+            if (strStartsWithStr("mtllib", line)) {
+                if (line.size() < 8) {
+                    PARSE_ERROR("mtllib");
+                    return false;
                 }
-                else if (strStartsWithStr("o", line)) {
-                    if (mesh) {
-                        meshs.push_back(std::move(mesh));
-                        mesh.reset();
-                    }
-                    mesh = std::make_unique<ObjMesh>();
-                    mesh->name = line.substr(2);
-                }
-                else if (strStartsWithStr("usemtl", line)) {
-                    mesh->usemtl = line.substr(7);
-                }
-                else if (strStartsWithStr("v ", line)) {
-                    glm::vec3 v;
-                    int nRead = sscanf(line.substr(2).c_str(), "%f %f %f", &v.x, &v.y, &v.z);
-                    if (nRead == 3) {
-                        mesh->av.push_back(v);
-                    }
-                }
-                else if (strStartsWithStr("vt ", line)) {
-                    glm::vec2 vt;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f %f", &vt.x, &vt.y);
-                    if (nRead == 2) {
-                        mesh->avt.push_back(vt);
-                    }
-                }
-                else if (strStartsWithStr("vn ", line)) {
-                    glm::vec3 vn;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &vn.x, &vn.y, &vn.z);
-                    if (nRead == 3) {
-                        mesh->avn.push_back(vn);
-                    }
-                }
-                else if (strStartsWithChar('f', line)) {
-                    Face f;
-                    int nRead = sscanf(line.substr(2).c_str(), "%lu/%lu/%lu %lu/%lu/%lu %lu/%lu/%lu",
-                                       &f.p[0].v, &f.p[0].t, &f.p[0].n,
-                                       &f.p[1].v, &f.p[1].t, &f.p[1].n,
-                                       &f.p[2].v, &f.p[2].t, &f.p[2].n);
-                    if (nRead == 9) {
-                        mesh->af.push_back(f);
-                    }
-                }
+                mtllib = line.substr(7);
             }
-
-            std::string mtlPath = parent + mtllib;
-            MaterialLibrary::Ptr materials = MaterialLibrary::create(mtlPath);
-            if (materials) {
-                materials->name = mtllib;
+            else if (strStartsWithStr("o", line)) {
+                if (mesh) {
+                    meshs.push_back(std::move(mesh));
+                    mesh.reset();
+                }
+                mesh = std::make_unique<ObjMesh>();
+                mesh->name = line.substr(2);
             }
-            else {
-                std::cerr << "material fail load " << mtllib << std::endl;
-                return false;
+            else if (strStartsWithStr("usemtl", line)) {
+                if (line.size() < 8) {
+                    PARSE_ERROR("usemtl");
+                    return false;
+                }
+                mesh->usemtl = line.substr(7);
             }
+            else if (strStartsWithStr("v ", line)) {
+                glm::vec3 v;
+                int nRead = sscanf(line.substr(2).c_str(), "%f %f %f", &v.x, &v.y, &v.z);
+                if (nRead < 3) {
+                    PARSE_ERROR("v");
+                    return false;
+                }
+                mesh->av.push_back(v);
+            }
+            else if (strStartsWithStr("vt ", line)) {
+                glm::vec2 vt;
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f", &vt.x, &vt.y);
+                if (nRead < 2) {
+                    PARSE_ERROR("vt");
+                    return false;
+                }
+                mesh->avt.push_back(vt);
+            }
+            else if (strStartsWithStr("vn ", line)) {
+                glm::vec3 vn;
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &vn.x, &vn.y, &vn.z);
+                if (nRead < 3) {
+                    PARSE_ERROR("vn");
+                    return false;
+                }
+                mesh->avn.push_back(vn);
+            }
+            else if (strStartsWithChar('f', line)) {
+                Face f;
+                int nRead = sscanf(line.substr(2).c_str(), "%lu/%lu/%lu %lu/%lu/%lu %lu/%lu/%lu",
+                                   &f.p[0].v, &f.p[0].t, &f.p[0].n,
+                                   &f.p[1].v, &f.p[1].t, &f.p[1].n,
+                                   &f.p[2].v, &f.p[2].t, &f.p[2].n);
+                if (nRead < 9) {
+                    PARSE_ERROR("f");
+                    return false;
+                }
+                mesh->af.push_back(f);
+            }
+        }
 
-            for (auto & mesh : meshs) {
-                std::vector<Vertex> points;
+#undef PARSE_ERROR
 
-                for (auto & face : mesh->af) {
-                    for (int i = 0; i < 3; i++) {
-                        if (face.p[i].v > mesh->av.size()
-                                || face.p[i].n > mesh->avn.size()
-                                || face.p[i].t > mesh->avt.size()) {
-                            std::cerr << "Failed to load mesh " << mesh->name << " face index out of bounds" << std::endl;
-                            break;
-                        }
+        std::string mtlPath = parent + mtllib;
+        materials = MaterialLibrary::create(mtlPath);
+        if (materials) {
+            materials->name = mtllib;
+        }
+        else {
+            SPDLOG_ERROR("failed to load material {}", mtllib);
+            return false;
+        }
 
+        for (auto & mesh : meshs) {
+            std::vector<Vertex> points;
+
+            for (auto & face : mesh->af) {
+                for (int i = 0; i < 3; i++) {
+                    if (face.p[i].v > mesh->av.size()) {
+                        SPDLOG_ERROR("failed to load mesh {} vertex index {} is out of bounds {}", mesh->name, face.p[i].v, mesh->av.size());
+                        return false;
+                    }
+                    else if (face.p[i].n > mesh->avn.size()) {
+                        SPDLOG_ERROR("failed to load mesh {} normal index {} is out of bounds {}", mesh->name, face.p[i].n, mesh->avn.size());
+                        return false;
+                    }
+                    else if (face.p[i].t > mesh->avt.size()) {
+                        SPDLOG_ERROR("failed to load mesh {} texture coordinate index {} is out of bounds {}", mesh->name, face.p[i].t,
+                                     mesh->avt.size());
+                        return false;
+                    }
+                    else {
                         points.push_back({
                             mesh->av[face.p[i].v - 1],
                             mesh->avn[face.p[i].n - 1],
@@ -156,16 +182,17 @@ namespace Tom::s3e {
                         });
                     }
                 }
-
-                Mesh::Ptr model = Mesh::create(mesh->name, materials->getMaterial(mesh->usemtl), points);
-                models.push_back(model);
             }
 
-            return true;
+            Mesh::Ptr model = Mesh::create(mesh->name, materials->getMaterial(mesh->usemtl), points);
+            if (!model) {
+                SPDLOG_ERROR("failed in call to Mesh::create while loading Model {}", path);
+                return false;
+            }
+            models.push_back(model);
         }
-        else {
-            return false;
-        }
+
+        return true;
     }
 
     void Model::move(glm::vec3 pos) {
@@ -209,12 +236,11 @@ namespace Tom::s3e {
         return matFromVecs(pos, rot, size);
     }
 
-    Material::ConstPtr Model::getMaterial(const std::string & material) const {
-        // MaterialLibrary::ConstPtr lib = getMaterialLibrary(library);
-        // if (lib) {
-        //     return lib->getMaterial(material);
-        // }
-        return nullptr;
+    Material::ConstPtr Model::getMaterial(const std::string & name) const {
+        auto material = materials->getMaterial(name);
+        if (!material)
+            SPDLOG_ERROR("failed in call to MaterialLibrary::getMaterial(name={})", name);
+        return material;
     }
 
     void Model::draw(const MaterialShader::Ptr & shader) const {
@@ -230,9 +256,11 @@ namespace Tom::s3e {
 
     Model::Ptr Model::create(const std::string & objPath) {
         auto model = std::make_shared<Model>();
-        if (model && model->loadFromPath(objPath)) {
-            return model;
+        if (!model->loadFromPath(objPath)) {
+            SPDLOG_ERROR("failed in call to Model::loadFromPath(objPath={})", objPath);
+            return nullptr;
         }
-        return nullptr;
+        return model;
     }
 }
+

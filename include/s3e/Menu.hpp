@@ -106,7 +106,7 @@ namespace Tom::s3e {
         bool isVisible(void);
 
         // TODO: Document addMenuItem once it's fate is decided
-        void addMenuItem(const std::string & text, std::function<void(void)> callback);
+        bool addMenuItem(const std::string & text, std::function<void(void)> callback);
 
         /**
          * Override for sf::Drawable::draw. If the menu is visible, this method

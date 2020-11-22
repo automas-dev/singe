@@ -1,5 +1,6 @@
 #include "s3e/Camera.hpp"
 #include "s3e/Util.hpp"
+#include "s3e/log.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Tom::s3e {

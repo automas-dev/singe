@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
-#include <iostream>
 #include "s3e/GameBase.hpp"
+#include "s3e/log.hpp"
 
 namespace Tom::s3e {
 
@@ -14,6 +14,8 @@ namespace Tom::s3e {
     GameBase::~GameBase() { }
 
     bool GameBase::Create(const std::string & title, unsigned int width, unsigned int height, bool fullscreen) {
+        SPDLOG_INFO("Creating sf::RenderWindow and calling onCreate()");
+
         sf::ContextSettings settings;
         settings.depthBits = 24;
         settings.antialiasingLevel = 8;
@@ -34,11 +36,14 @@ namespace Tom::s3e {
         // glewExperimental = true;
         GLenum err = glewInit();
         if (err != GLEW_OK) {
-            std::cerr << "glewInit failed: " << glewGetErrorString(err) << std::endl;
+            SPDLOG_CRITICAL("glewInit failed: {}", glewGetErrorString(err));
             return false;
         }
 
-        return onCreate();
+        bool res = onCreate();
+        if (!res)
+            SPDLOG_ERROR("User overridden onCreate returned false");
+        return res;
     }
 
     void GameBase::Start(void) {
@@ -98,6 +103,7 @@ namespace Tom::s3e {
     }
 
     void GameBase::Fail(int status) noexcept {
+        SPDLOG_CRITICAL("status={} was called, exiting!", status);
         window->close();
         exit(status);
     }

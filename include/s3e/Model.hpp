@@ -78,6 +78,8 @@ namespace Tom::s3e {
         std::vector<Mesh::Ptr> models;
         std::string path;
 
+        MaterialLibrary::Ptr materials;
+
     public:
         /**
          * A shared pointer that manages a Mesh.
@@ -93,15 +95,6 @@ namespace Tom::s3e {
          * Construct a new empty Model.
          */
         Model(void);
-
-        /**
-         * Construct a new Model and load it from a .obj file. If the obj file
-         * references a .mtl file, the loader will look for a file in the same
-         * directory as the .obj file.
-         *
-         * @param objPath the path to the .obj file
-         */
-        Model(const std::string & objPath);
 
         /**
          * Destruct the Model.
@@ -191,11 +184,11 @@ namespace Tom::s3e {
         /**
          * Get a Material by name or nullptr if none exist.
          *
-         * @param material the material name
+         * @param name the material name
          *
          * @return a const pointer reference to the Material
          */
-        Material::ConstPtr getMaterial(const std::string & material) const;
+        Material::ConstPtr getMaterial(const std::string & name) const;
 
         /**
          * Draw the Model using shader.
@@ -207,8 +200,10 @@ namespace Tom::s3e {
         /**
          * Create a new Model that is managed by a std::shared_ptr.
          *
+         * @param objPath the path to the obj file
+         *
          * @return a shared pointer to a new Model
          */
-        static Ptr create(const std::string & path);
+        static Ptr create(const std::string & objPath);
     };
 };

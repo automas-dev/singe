@@ -1,6 +1,6 @@
 #include "s3e/Material.hpp"
 #include "s3e/Util.hpp"
-#include <iostream>
+#include "s3e/log.hpp"
 
 namespace Tom::s3e {
 
@@ -36,10 +36,11 @@ namespace Tom::s3e {
     MaterialShader::Ptr MaterialShader::create(const std::string & vertexPath,
             const std::string & fragmentPath) {
         auto s = std::make_shared<MaterialShader>();
-        if (s && s->loadFromPath(vertexPath, fragmentPath)) {
-            return s;
+        if (!s->loadFromPath(vertexPath, fragmentPath)) {
+            SPDLOG_ERROR("failed in call to MaterialShader::loadFromPath(vertexPath={}, fragmentPath={})", vertexPath, fragmentPath);
+            return nullptr;
         }
-        return nullptr;
+        return s;
     }
 }
 
@@ -47,80 +48,103 @@ namespace Tom::s3e {
 
     MaterialLibrary::MaterialLibrary() { }
 
-    MaterialLibrary::MaterialLibrary(const std::string & mtlPath) {
-        loadFromPath(mtlPath);
-    }
-
     MaterialLibrary::~MaterialLibrary() { }
 
     bool MaterialLibrary::loadFromPath(const std::string & mtlPath) {
         path = mtlPath;
 
         Parser p;
-        if (p.open(path)) {
-            Material::Ptr curr;
-
-            for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
-
-                if (line.length() == 0 || strStartsWithChar('#', line))
-                    continue;
-
-                if (strStartsWithStr("newmtl", line)) {
-                    std::string name = line.substr(7);
-
-                    if (curr)
-                        materials.push_back(curr);
-
-                    curr = Material::create();
-                    // TODO: Handle nullptr return
-                    curr->name = name;
-                }
-                else if (strStartsWithStr("Ns", line)) {
-                    float Ns = 0;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f", &Ns);
-                    if (nRead == 1) {
-                        curr->specularExponent = Ns;
-                    }
-                }
-                else if (strStartsWithStr("Ka", line)) {
-                    glm::vec3 ambient;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &ambient.x, &ambient.y, &ambient.z);
-                    if (nRead == 3) {
-                        curr->ambient = ambient;
-                    }
-                }
-                else if (strStartsWithStr("Kd", line)) {
-                    glm::vec3 diffuse;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &diffuse.x, &diffuse.y, &diffuse.z);
-                    if (nRead == 3) {
-                        curr->diffuse = diffuse;
-                    }
-                }
-                else if (strStartsWithStr("Ks", line)) {
-                    glm::vec3 specular;
-                    int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &specular.x, &specular.y, &specular.z);
-                    if (nRead == 3) {
-                        curr->specular = specular;
-                    }
-                }
-                else if (strStartsWithChar('d', line)) {
-                    float alpha;
-                    int nRead = sscanf(line.substr(2).c_str(), "%f", &alpha);
-                    if (nRead == 1) {
-                        curr->alpha = alpha;
-                    }
-                }
-            }
-
-            if (curr)
-                materials.push_back(curr);
-
-            return true;
+        if (!p.open(path)) {
+            SPDLOG_WARN("Parser failed to open file {}", path);
+            return false;
         }
 
-        std::cerr << "failed to open " << path << std::endl;
+        Material::Ptr curr;
 
-        return false;
+#define PARSE_ERROR(TAG) SPDLOG_ERROR("could not parse {} tag while loading mtl file {}", (TAG), path)
+
+        // TODO: Return line number from Parser
+        for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
+
+            if (line.length() == 0 || strStartsWithChar('#', line))
+                continue;
+
+            if (strStartsWithStr("newmtl", line)) {
+                if (line.size() < 8) {
+                    PARSE_ERROR("newmtl");
+                    return false;
+                }
+
+                std::string name = line.substr(7);
+
+                if (curr)
+                    materials.push_back(curr);
+
+                curr = Material::create();
+                if (!curr) {
+                    SPDLOG_ERROR("failed in call to Material::create()");
+                    return false;
+                }
+                curr->name = name;
+            }
+            else if (strStartsWithStr("Ns", line)) {
+                float Ns = 0;
+                int nRead = sscanf(line.substr(3).c_str(), "%f", &Ns);
+                if (nRead < 1) {
+                    PARSE_ERROR("Ns");
+                    return false;
+                }
+                else
+                    curr->specularExponent = Ns;
+            }
+            else if (strStartsWithStr("Ka", line)) {
+                glm::vec3 ambient;
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &ambient.x, &ambient.y, &ambient.z);
+                if (nRead < 3) {
+                    PARSE_ERROR("Ka");
+                    return false;
+                }
+                else
+                    curr->ambient = ambient;
+            }
+            else if (strStartsWithStr("Kd", line)) {
+                glm::vec3 diffuse;
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &diffuse.x, &diffuse.y, &diffuse.z);
+                if (nRead < 3) {
+                    PARSE_ERROR("Kd");
+                    return false;
+                }
+                else
+                    curr->diffuse = diffuse;
+            }
+            else if (strStartsWithStr("Ks", line)) {
+                glm::vec3 specular;
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &specular.x, &specular.y, &specular.z);
+                if (nRead < 3) {
+                    PARSE_ERROR("Ks");
+                    return false;
+                }
+                else
+                    curr->specular = specular;
+            }
+            else if (strStartsWithChar('d', line)) {
+                float alpha;
+                int nRead = sscanf(line.substr(2).c_str(), "%f", &alpha);
+                if (nRead < 1) {
+                    PARSE_ERROR("d");
+                    return false;
+                }
+                else
+                    curr->alpha = alpha;
+            }
+        }
+
+#undef PARSE_ERROR
+
+        if (curr)
+            materials.push_back(curr);
+
+        return true;
     }
 
     std::size_t MaterialLibrary::size() const {
@@ -128,8 +152,10 @@ namespace Tom::s3e {
     }
 
     Material::ConstPtr MaterialLibrary::getMaterial(int index) const {
-        if (index < 0 || index >= size())
+        if (index < 0 || index >= size()) {
+            SPDLOG_ERROR("MaterialLibrary does not contain a Material at index {} size is {}", index, size());
             return nullptr;
+        }
         else
             return materials[index];
     }
@@ -139,14 +165,17 @@ namespace Tom::s3e {
             if (material->name == name)
                 return material;
         }
+        SPDLOG_ERROR("MaterialLibrary does not contain a Material named {}", name);
         return nullptr;
     }
 
-    MaterialLibrary::Ptr MaterialLibrary::create(const std::string & path) {
+    MaterialLibrary::Ptr MaterialLibrary::create(const std::string & mtlPath) {
         auto matlib = std::make_shared<MaterialLibrary>();
-        if (matlib && matlib->loadFromPath(path)) {
-            return matlib;
+        if (!matlib->loadFromPath(mtlPath)) {
+            SPDLOG_ERROR("failed in call to MaterialLibrary::loadFromPath(mtlPath={})", mtlPath);
+            return nullptr;
         }
-        return nullptr;
+        return matlib;
     }
 }
+

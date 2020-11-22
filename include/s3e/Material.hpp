@@ -152,13 +152,6 @@ namespace Tom::s3e {
         MaterialLibrary(void);
 
         /**
-         * Construct a new MaterialLibrary and load a .mtl file at path.
-         *
-         * @param mtlPath the path to the .mtl file
-         */
-        MaterialLibrary(const std::string & mtlPath);
-
-        /**
          * Destruct the MaterialLibrary.
          */
         ~MaterialLibrary();
