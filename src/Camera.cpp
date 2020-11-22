@@ -20,6 +20,14 @@ namespace Tom::s3e {
         this->screenSize = screen;
     }
 
+    Camera::ProjectionMode Camera::getProjection() {
+        return projectionMode;
+    }
+
+    void Camera::setProjection(Camera::ProjectionMode mode) {
+        projectionMode = mode;
+    }
+
     const glm::vec2 & Camera::getRotation() const {
         return rotation;
     }
@@ -58,7 +66,10 @@ namespace Tom::s3e {
 
     glm::mat4 Camera::projMatrix() {
         float r = (float)screenSize.x / (float)screenSize.y;
-        return glm::perspective(glm::radians(fov), r, 0.1f, 100.0f);
+        if (projectionMode == Perspective)
+            return glm::perspective(glm::radians(fov), r, 0.1f, 100.0f);
+        else
+            return glm::ortho<float>(0, screenSize.x, screenSize.y, 0);
     }
 
     glm::mat4 Camera::viewMatrix() {
