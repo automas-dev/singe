@@ -48,6 +48,13 @@ namespace Tom::s3e {
         void setResourcePath(const std::string & path);
 
         /**
+         * Returns the current resource root directory.
+         *
+         * @return the current resource root directory
+         */
+        const std::string &getResourcePath(void);
+
+        /**
          * Resolve the path to a resource. If `path` has the `res://` protocol
          * as it's prefix, this function with return the path relative to the
          * resource root path. If `path` is relative or absolute, then `path`

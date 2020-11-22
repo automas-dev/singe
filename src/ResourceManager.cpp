@@ -13,6 +13,10 @@ namespace Tom::s3e {
         rootPath = path;
     }
 
+    const std::string &ResourceManager::getResourcePath() {
+        return rootPath;
+    }
+
     std::string ResourceManager::resPath(const std::string & path) const {
         auto resProtoPos = path.find("res://");
 
