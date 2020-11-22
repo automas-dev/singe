@@ -4,7 +4,7 @@
 
 namespace Tom::s3e {
 
-    Camera::Camera(): rotation(0, 0), position(0, 0, 0) { }
+    Camera::Camera(): rotation(0, 0), position(0, 0, 0), projectionMode(Perspective), fov(45.0f) { }
 
     Camera::~Camera() { }
 

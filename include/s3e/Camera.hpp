@@ -23,9 +23,9 @@ namespace Tom::s3e {
         glm::vec2 rotation;
         glm::vec3 position;
 
-        ProjectionMode projectionMode = Perspective;
+        ProjectionMode projectionMode;
 
-        float fov = 45.0f;
+        float fov;
 
     public:
         /**
