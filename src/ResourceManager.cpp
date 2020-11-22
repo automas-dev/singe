@@ -13,7 +13,7 @@ namespace Tom::s3e {
         rootPath = path;
     }
 
-    const std::string &ResourceManager::getResourcePath() {
+    const std::string & ResourceManager::getResourcePath() {
         return rootPath;
     }
 
@@ -24,6 +24,11 @@ namespace Tom::s3e {
             return { fs::path(rootPath) / fs::path(path.substr(6)) };
         else
             return path;
+    }
+
+    ResourceManager::Ptr ResourceManager::create(const std::string & path) {
+        auto resManager = std::make_shared<ResourceManager>(path);
+        return resManager;
     }
 }
 
@@ -48,6 +53,11 @@ namespace Tom::s3e {
 
     Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
         return Model::create(resourceAt(path));
+    }
+
+    DefaultResourceManager::Ptr DefaultResourceManager::create(const std::string & path) {
+        auto resManager = std::make_shared<DefaultResourceManager>(path);
+        return resManager;
     }
 }
 

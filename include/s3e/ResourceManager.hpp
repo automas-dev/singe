@@ -11,8 +11,8 @@
 namespace Tom::s3e {
 
     /**
-     * Manages resources and provides relative paths to resources based on a
-     * root directory.
+     * Manages resources and provides paths to resources based on a root
+     * directory.
      *
      * Files can be accessed by using the `res://` prefix in the file path.
      */
@@ -21,6 +21,16 @@ namespace Tom::s3e {
         std::string rootPath;
 
     public:
+        /**
+         * A shared pointer that manages a ResourceManager.
+         */
+        typedef std::shared_ptr<ResourceManager> Ptr;
+
+        /**
+         * A shared pointer that manages a const ResourceManager.
+         */
+        typedef std::shared_ptr<const ResourceManager> ConstPtr;
+
         /**
          * Construct a ResourceManager with the current working directory as the
          * resource root path.
@@ -52,7 +62,7 @@ namespace Tom::s3e {
          *
          * @return the current resource root directory
          */
-        const std::string &getResourcePath(void);
+        const std::string & getResourcePath(void);
 
         /**
          * Resolve the path to a resource. If `path` has the `res://` protocol
@@ -65,6 +75,15 @@ namespace Tom::s3e {
          * @return the resolved resource path
          */
         std::string resourceAt(const std::string & path) const;
+
+        /**
+         * Create a new ResourceManager that is managed by a std::shared_ptr.
+         *
+         * @param path the new root directory for resource paths
+         *
+         * @return a shared pointer to a new ResourceManager
+         */
+        static ResourceManager::Ptr create(const std::string & path);
     };
 
     /**
@@ -76,6 +95,16 @@ namespace Tom::s3e {
         std::unordered_map<std::string, Texture::Ptr> textures;
 
     public:
+        /**
+         * A shared pointer that manages a DefaultResourceManager.
+         */
+        typedef std::shared_ptr<DefaultResourceManager> Ptr;
+
+        /**
+         * A shared pointer that manages a const DefaultResourceManager.
+         */
+        typedef std::shared_ptr<const DefaultResourceManager> ConstPtr;
+
         using ResourceManager::ResourceManager;
 
         /**
@@ -117,5 +146,14 @@ namespace Tom::s3e {
          * @return a shared_ptr to a Model
          */
         Model::Ptr loadModel(const std::string & path);
+
+        /**
+         * Create a new DefaultResourceManager that is managed by a std::shared_ptr.
+         *
+         * @param path the new root directory for resource paths
+         *
+         * @return a shared pointer to a new DefaultResourceManager
+         */
+        static DefaultResourceManager::Ptr create(const std::string & path);
     };
 }

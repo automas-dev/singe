@@ -23,7 +23,7 @@ namespace Tom::s3e {
      * The user may optionally override the onKeyPressed, onKeyReleased,
      * onMouseMove, onMouseDown, onMouseUp, onMouseScroll or onResized.
      */
-    class GameBase : public ResourceManager {
+    class GameBase {
         sf::Vector2i lastMouse;
 
     protected:
