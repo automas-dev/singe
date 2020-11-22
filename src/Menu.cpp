@@ -36,7 +36,7 @@ namespace Tom::s3e {
         title.setFont(this->font);
         title.setCharacterSize(48);
     }
-    Menu::Menu(const sf::Font & font, const std::string &title) : font(font) {
+    Menu::Menu(const sf::Font & font, const std::string & title) : font(font) {
         this->title.setString(title);
         this->title.setFont(this->font);
         this->title.setCharacterSize(48);
@@ -44,27 +44,31 @@ namespace Tom::s3e {
 
     Menu::~Menu() { }
 
-    void Menu::setFont(const sf::Font &font) {
+    void Menu::setFont(const sf::Font & font) {
         this->font = font;
         this->title.setFont(this->font);
-        for (auto &item : items) {
+        for (auto & item : items) {
             item->setFont(this->font);
         }
     }
 
-    void Menu::setTitle(const std::string &text) {
+    void Menu::setTitle(const std::string & text) {
         this->title.setString(text);
     }
 
     void Menu::show() {
-        isVisible = true;
+        visible = true;
     }
 
     void Menu::hide() {
-        isVisible = false;
+        visible = false;
     }
 
-    void Menu::addMenuItem(const std::string &text, std::function<void(void)> callback) {
+    bool Menu::isVisible() {
+        return visible;
+    }
+
+    void Menu::addMenuItem(const std::string & text, std::function<void(void)> callback) {
         MenuItem::Ptr menuItem = MenuItem::create();
         menuItem->setCallback(callback);
         menuItem->setFont(this->font);
@@ -83,7 +87,7 @@ namespace Tom::s3e {
     }
 
     void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-        if (!isVisible)
+        if (!visible)
             return;
 
         states.transform *= getTransform();
@@ -139,12 +143,12 @@ namespace Tom::s3e {
         return menu;
     }
 
-    Menu::Ptr Menu::create(const sf::Font &font) {
+    Menu::Ptr Menu::create(const sf::Font & font) {
         auto menu = std::make_shared<Menu>(font);
         return menu;
     }
 
-    Menu::Ptr Menu::create(const sf::Font &font, const std::string &title) {
+    Menu::Ptr Menu::create(const sf::Font & font, const std::string & title) {
         auto menu = std::make_shared<Menu>(font, title);
         return menu;
     }

@@ -205,12 +205,12 @@ void Game::onUpdate(const sf::Time & delta) {
 
     auto mPos = sf::Mouse::getPosition(*window);
     sf::Vector2f mDelta (mPos.x - lastMouse.x, mPos.y - lastMouse.y);
-    if (!menu->isVisible) {
+    if (!menu->isVisible()) {
         sf::Mouse::setPosition(lastMouse, *window);
         cam->rotate({mDelta.y * 0.2, mDelta.x * 0.2});
     }
 
-    if (!menu->isVisible) {
+    if (!menu->isVisible()) {
         int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
         int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
         int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
