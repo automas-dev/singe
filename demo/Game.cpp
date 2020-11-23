@@ -242,18 +242,18 @@ void Game::onDraw() const {
         monoShader->setVec3("viewPos", cam->getPosition());
         monoShader->setUInt("nLights", 2);
 
-        monoShader->setVec3("lights[0].ambient", 0.1, 0.1, 0.1);
-        monoShader->setVec3("lights[0].diffuse", 0.8, 0.8, 0.8);
-        monoShader->setVec3("lights[0].specular", 1, 1, 1);
+        monoShader->setVec3("lights[0].ambient", {0.1, 0.1, 0.1});
+        monoShader->setVec3("lights[0].diffuse", {0.8, 0.8, 0.8});
+        monoShader->setVec3("lights[0].specular", {1, 1, 1});
         monoShader->setVec3("lights[0].position", sphereModel->getPosition());
-        monoShader->setVec3("lights[0].direction", -1, -2, -3);
+        monoShader->setVec3("lights[0].direction", {-1, -2, -3});
         monoShader->setUInt("lights[0].type", 1);
 
-        monoShader->setVec3("lights[1].ambient", 0.1, 0.1, 0.1);
-        monoShader->setVec3("lights[1].diffuse", 0.8, 0.8, 0.8);
-        monoShader->setVec3("lights[1].specular", 1, 1, 1);
+        monoShader->setVec3("lights[1].ambient", {0.1, 0.1, 0.1});
+        monoShader->setVec3("lights[1].diffuse", {0.8, 0.8, 0.8});
+        monoShader->setVec3("lights[1].specular", {1, 1, 1});
         monoShader->setVec3("lights[1].position", sphereModel->getPosition() + glm::vec3(1, 0, 1));
-        monoShader->setVec3("lights[1].direction", -1, -2, -3);
+        monoShader->setVec3("lights[1].direction", {-1, -2, -3});
         monoShader->setUInt("lights[1].type", 2);
 
         monoShader->setFloat("lights[0].constant", 1.0);
