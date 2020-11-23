@@ -19,6 +19,7 @@ set(S3E_HEADERS
     include/s3e.hpp
     include/s3e/Camera.hpp
     include/s3e/GameBase.hpp
+    include/s3e/log.hpp
     include/s3e/Material.hpp
     include/s3e/Menu.hpp
     include/s3e/Model.hpp
