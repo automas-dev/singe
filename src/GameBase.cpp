@@ -14,7 +14,7 @@ namespace Tom::s3e {
     GameBase::~GameBase() { }
 
     bool GameBase::Create(const std::string & title, unsigned int width, unsigned int height, bool fullscreen) {
-        SPDLOG_INFO("Creating sf::RenderWindow and calling onCreate()");
+        SPDLOG_INFO("creating game title = \"{}\" width = {} height = {} fullscreen = {}", title, width, height, fullscreen);
 
         sf::ContextSettings settings;
         settings.depthBits = 24;
@@ -33,6 +33,7 @@ namespace Tom::s3e {
         window->setActive();
         window->setKeyRepeatEnabled(false);
 
+        SPDLOG_DEBUG("initializing GLEW");
         // glewExperimental = true;
         GLenum err = glewInit();
         if (err != GLEW_OK) {
@@ -40,6 +41,7 @@ namespace Tom::s3e {
             return false;
         }
 
+        SPDLOG_DEBUG("calling onCreate()");
         bool res = onCreate();
         if (!res)
             SPDLOG_ERROR("User overridden onCreate returned false");
@@ -47,6 +49,8 @@ namespace Tom::s3e {
     }
 
     void GameBase::Start(void) {
+        SPDLOG_INFO("starting main game loop");
+
         sf::Clock clock;
 
         while (window->isOpen()) {
@@ -72,6 +76,7 @@ namespace Tom::s3e {
                         onMouseScroll(event.mouseWheelScroll);
                         break;
                     case sf::Event::Resized: {
+                            SPDLOG_DEBUG("window resized to {} x {}", event.size.width, event.size.height);
                             sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                             window->setView(sf::View(visibleArea));
                             glViewport(0, 0, event.size.width, event.size.height);
@@ -87,6 +92,7 @@ namespace Tom::s3e {
             }
 
             sf::Time delta = clock.restart();
+            SPDLOG_TRACE("last frame delta = {} ms", delta.asMilliseconds());
 
             onUpdate(delta);
 
@@ -99,16 +105,18 @@ namespace Tom::s3e {
     }
 
     void GameBase::Stop(void) {
+        SPDLOG_INFO("stopping main game loop");
         window->close();
     }
 
     void GameBase::Fail(int status) noexcept {
-        SPDLOG_CRITICAL("status={} was called, exiting!", status);
+        SPDLOG_CRITICAL("a failure occurred, status={}, exiting!", status);
         window->close();
         exit(status);
     }
 
     void GameBase::SetMouseGrab(bool grab) {
+        SPDLOG_DEBUG("mouse grab set to {}", grab);
         window->setMouseCursorGrabbed(grab);
         window->setMouseCursorVisible(!grab);
     }

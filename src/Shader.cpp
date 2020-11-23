@@ -6,10 +6,13 @@
 namespace Tom::s3e {
     static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha = false,
                                 GLint magFilter = GL_LINEAR, GLint minFilter = GL_LINEAR_MIPMAP_LINEAR, GLint wrap = GL_REPEAT, bool mipmaps = true) {
+        SPDLOG_DEBUG("creating an opengl texture of size {} x {} srcAlpha = {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
+                     width, height, srcAlpha, magFilter, minFilter, wrap, mipmaps);
+
         GLuint textureID;
         glGenTextures(1, &textureID);
 
-        SPDLOG_DEBUG("Generated opengl texture {}", textureID);
+        SPDLOG_DEBUG("generated opengl texture: {}", textureID);
 
         glBindTexture(GL_TEXTURE_2D, textureID);
 
@@ -27,34 +30,37 @@ namespace Tom::s3e {
         return textureID;
     }
 
-    Texture::Texture() { }
+    Texture::Texture() : textureId(0) { }
 
     Texture::~Texture() {
-        SPDLOG_DEBUG("de-constructing opengl texture {}", textureId);
-        glDeleteTextures(1, &textureId);
+        if (textureId > 0) {
+            SPDLOG_DEBUG("deleting opengl texture: {}", textureId);
+            glDeleteTextures(1, &textureId);
+        }
     }
 
     bool Texture::loadFromPath(const std::string & path) {
+        SPDLOG_DEBUG("loading texture from path: {}", path);
+
         sf::Image img;
         if (!img.loadFromFile(path)) {
             SPDLOG_WARN("Texture failed to open file {}", path);
             return false;
         }
 
-        // glGenTextures(1, &textureId);
-        // glBindTexture(GL_TEXTURE_2D, textureId);
-        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.getSize().x, img.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
         textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true, GL_NEAREST,
                                   GL_NEAREST_MIPMAP_LINEAR);
         return true;
     }
 
     void Texture::bind() {
+        SPDLOG_TRACE("bind opengl texture: {}", textureId);
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
 
     void Texture::unbind() {
+        SPDLOG_TRACE("bind opengl texture: 0 (unbind)");
         glDisable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
