@@ -7,19 +7,28 @@
 #include <glm/gtx/quaternion.hpp>
 #include <spdlog/fmt/fmt.h>
 
+std::ostream & operator<<(std::ostream & os, const glm::vec2 & vec) {
+    return os << fmt::format("[{}, {}]", vec[0], vec[1]);
+}
+
+std::ostream & operator<<(std::ostream & os, const glm::vec3 & vec) {
+    return os << fmt::format("[{}, {}, {}]", vec[0], vec[1], vec[2]);
+}
+
+std::ostream & operator<<(std::ostream & os, const glm::vec4 & vec) {
+    return os << fmt::format("[{}, {}, {}, {}]", vec[0], vec[1], vec[2], vec[3]);
+}
+
 std::ostream & operator<<(std::ostream & os, const glm::mat2 & mat) {
-    return os << fmt::format("[[{}, {}], [{}, {}]]", mat[0][0], mat[0][1], mat[1][0], mat[1][1]);
+    return os << fmt::format("[{}, {}]", mat[0], mat[1]);
 }
 
 std::ostream & operator<<(std::ostream & os, const glm::mat3 & mat) {
-    return os << fmt::format("[[{}, {}, {}], [{}, {}, {}], [{}, {}, {}]]", mat[0][0], mat[0][1], mat[0][2],
-                             mat[1][0], mat[1][1], mat[1][2], mat[2][0], mat[2][1], mat[2][2]);
+    return os << fmt::format("[{}, {}, {}]", mat[0], mat[1], mat[2]);
 }
 
 std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat) {
-    return os << fmt::format("[[{}, {}, {}, {}], [{}, {}, {}, {}], [{}, {}, {}, {}], [{}, {}, {}, {}]]", mat[0][0],
-                             mat[0][1], mat[0][2], mat[0][3], mat[1][0], mat[1][1], mat[1][2], mat[1][3], mat[2][0], mat[2][1], mat[2][2], mat[2][3],
-                             mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+    return os << fmt::format("[{}, {}, {}, {}]", mat[0], mat[1], mat[2], mat[3]);
 }
 
 namespace Tom::s3e {
