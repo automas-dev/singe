@@ -9,8 +9,15 @@
 #include <stdexcept>
 #include <memory>
 #include <cmath>
+#include "s3e/log.hpp"
+#include <spdlog/fmt/ostr.h>
+
+std::ostream & operator<<(std::ostream & os, const glm::mat2 & mat);
+std::ostream & operator<<(std::ostream & os, const glm::mat3 & mat);
+std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat);
 
 namespace Tom::s3e {
+
 
     const double pi = std::acos(-1);
 

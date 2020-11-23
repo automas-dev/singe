@@ -2,7 +2,8 @@
 #include "Game.hpp"
 
 int main() {
-    spdlog::set_level(spdlog::level::debug);
+    spdlog::set_level(spdlog::level::trace);
+    //spdlog::set_level(spdlog::level::debug);
     try {
         Game game ("../../demo/res/");
         if (game.Create("My Game"))

@@ -2,6 +2,7 @@
 #include <SFML/Graphics/Image.hpp>
 #include <fstream>
 #include "s3e/log.hpp"
+#include "s3e/Util.hpp"
 
 namespace Tom::s3e {
     static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha = false,
@@ -190,12 +191,20 @@ namespace Tom::s3e {
 
     bool Shader::loadFromPath(const std::string & vertexPath,
                               const std::string & fragmentPath) {
+        SPDLOG_DEBUG("loading Shader from paths vertex = \"{}\" fragment = \"{}\"", vertexPath, fragmentPath);
 
         std::string vertexSource = shaderSource(vertexPath);
         std::string fragmentSource = shaderSource(fragmentPath);
 
-        if (vertexSource.empty() || fragmentSource.empty())
+        if (vertexSource.empty()) {
+            SPDLOG_ERROR("vertex shader source could not be loaded from path {}", vertexPath);
             return false;
+        }
+
+        if (fragmentSource.empty()) {
+            SPDLOG_ERROR("fragment shader source could not be loaded from path {}", fragmentPath);
+            return false;
+        }
 
         return loadFromSource(vertexSource, fragmentSource);
     }
@@ -235,14 +244,17 @@ namespace Tom::s3e {
             return false;
         }
 
+        SPDLOG_DEBUG("shader was successfully compiled and linked as program = {} with vertex shader = {} fragment shader = {}", program, vShader, fShader);
         return true;
     }
 
     void Shader::bind() {
+        SPDLOG_TRACE("bind opengl shader program: {}", program);
         glUseProgram(program);
     }
 
     void Shader::unbind() {
+        SPDLOG_TRACE("bind opengl shader program: 0 (unbind)");
         glUseProgram(0);
     }
 
@@ -251,53 +263,66 @@ namespace Tom::s3e {
     }
 
     void Shader::setBool(const std::string & name, bool value) const {
+        SPDLOG_TRACE("glUniform1i(name = \"{}\" value = {}) bool variant", name, value);
         glUniform1i(uniformLocation(name), (int)value);
     }
 
     void Shader::setInt(const std::string & name, int value) const {
+        SPDLOG_TRACE("glUniform1i(name = \"{}\" value = {})", name, value);
         glUniform1i(uniformLocation(name), value);
     }
     void Shader::setUInt(const std::string & name, unsigned int value) const {
+        SPDLOG_TRACE("glUniform1ui(name = \"{}\" value = {})", name, value);
         glUniform1ui(uniformLocation(name),  value);
     }
 
     void Shader::setFloat(const std::string & name, float value) const {
+        SPDLOG_TRACE("glUniform1f(name = \"{}\" value = {})", name, value);
         glUniform1f(uniformLocation(name), value);
     }
 
     void Shader::setVec2(const std::string & name, const glm::vec2 & value) const {
+        SPDLOG_TRACE("glUniform2fv(name = \"{}\" value = [{}, {}])", name, value.x, value.y);
         glUniform2fv(uniformLocation(name), 1, &value.x);
     }
 
     void Shader::setVec2(const std::string & name, float x, float y) const {
+        SPDLOG_TRACE("glUniform2f(name = \"{}\" value = [{}, {}])", name, x, y);
         glUniform2f(uniformLocation(name), x, y);
     }
 
     void Shader::setVec3(const std::string & name, const glm::vec3 & value) const {
+        SPDLOG_TRACE("glUniform3fv(name = \"{}\" value = [{}, {}, {}])", name, value.x, value.y, value.z);
         glUniform3fv(uniformLocation(name), 1, &value.x);
     }
 
     void Shader::setVec3(const std::string & name, float x, float y, float z) const {
+        SPDLOG_TRACE("glUniform3f(name = \"{}\" value = [{}, {}, {}])", name, x, y, z);
         glUniform3f(uniformLocation(name), x, y, z);
     }
 
     void Shader::setVec4(const std::string & name, const glm::vec4 & value) const {
+        SPDLOG_TRACE("glUniform4fv(name = \"{}\" value = [{}, {}, {}, {}])", name, value.x, value.y, value.z, value.w);
         glUniform4fv(uniformLocation(name), 1, &value.x);
     }
 
     void Shader::setVec4(const std::string & name, float x, float y, float z, float w) const {
+        SPDLOG_TRACE("glUniform4f(name = \"{}\" value = [{}, {}, {}, {}])", name, x, y, z, w);
         glUniform4f(uniformLocation(name), x, y, z, w);
     }
 
     void Shader::setMat2(const std::string & name, const glm::mat2 & value) const {
+        SPDLOG_TRACE("glUniformMatrix2fv(name = \"{}\" value = {}", name, value);
         glUniformMatrix2fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
 
     void Shader::setMat3(const std::string & name, const glm::mat3 & value) const {
+        SPDLOG_TRACE("glUniformMatrix3fv(name = \"{}\" value = {}", name, value);
         glUniformMatrix3fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
 
     void Shader::setMat4(const std::string & name, const glm::mat4 & value) const {
+        SPDLOG_TRACE("glUniformMatrix4fv(name = \"{}\" value = {}", name, value);
         glUniformMatrix4fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
 
