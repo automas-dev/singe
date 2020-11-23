@@ -286,29 +286,14 @@ namespace Tom::s3e {
         glUniform2fv(uniformLocation(name), 1, &value.x);
     }
 
-    void Shader::setVec2(const std::string & name, float x, float y) const {
-        SPDLOG_TRACE("glUniform2f(name = \"{}\" value = [{}, {}])", name, x, y);
-        glUniform2f(uniformLocation(name), x, y);
-    }
-
     void Shader::setVec3(const std::string & name, const glm::vec3 & value) const {
         SPDLOG_TRACE("glUniform3fv(name = \"{}\" value = [{}, {}, {}])", name, value.x, value.y, value.z);
         glUniform3fv(uniformLocation(name), 1, &value.x);
     }
 
-    void Shader::setVec3(const std::string & name, float x, float y, float z) const {
-        SPDLOG_TRACE("glUniform3f(name = \"{}\" value = [{}, {}, {}])", name, x, y, z);
-        glUniform3f(uniformLocation(name), x, y, z);
-    }
-
     void Shader::setVec4(const std::string & name, const glm::vec4 & value) const {
         SPDLOG_TRACE("glUniform4fv(name = \"{}\" value = [{}, {}, {}, {}])", name, value.x, value.y, value.z, value.w);
         glUniform4fv(uniformLocation(name), 1, &value.x);
-    }
-
-    void Shader::setVec4(const std::string & name, float x, float y, float z, float w) const {
-        SPDLOG_TRACE("glUniform4f(name = \"{}\" value = [{}, {}, {}, {}])", name, x, y, z, w);
-        glUniform4f(uniformLocation(name), x, y, z, w);
     }
 
     void Shader::setMat2(const std::string & name, const glm::mat2 & value) const {
