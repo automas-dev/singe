@@ -37,7 +37,7 @@ namespace Tom::s3e {
         clearPoints();
     }
 
-    void VBO::loadPoints(const std::vector<Vertex> & points) {
+    bool VBO::loadPoints(const std::vector<Vertex> & points) {
         clearPoints();
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -49,6 +49,7 @@ namespace Tom::s3e {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         hasBuffer = true;
         nPoints = points.size();
+        return true;
     }
 
     void VBO::clearPoints() {
@@ -79,9 +80,5 @@ namespace Tom::s3e {
         // glDisableVertexAttribArray(2);
         // glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-
-    VBO::Ptr VBO::create(const std::vector<Vertex> & points) {
-        auto vbo = std::make_shared<VBO>(points);
-        return vbo;
-    }
 };
+

@@ -90,8 +90,7 @@ bool Game::onCreate() {
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
 
-    menu = Menu::create(font);
-    menu->setTitle("Game");
+    menu = std::make_shared<Menu>(font, "Game");
     menu->setPosition(300, 300);
     menu->addMenuItem("New", [&]() {
         menu->hide();
@@ -104,7 +103,7 @@ bool Game::onCreate() {
         window->close();
     });
 
-    cam = Camera::create();
+    cam = std::make_shared<Camera>();
     cam->setScreenSize(window->getSize());
     cam->move({3, 2, 1});
     cam->setFov(80);
@@ -124,9 +123,9 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
-    monoShader = MaterialShader::create(resManager.resourceAt("res://shader/mono.vs"),
-                                        resManager.resourceAt("res://shader/mono.fs"));
-    if (!monoShader) {
+    monoShader = std::make_shared<MaterialShader>();
+    if (!monoShader->loadFromPath(resManager.resourceAt("res://shader/mono.vs"),
+                                  resManager.resourceAt("res://shader/mono.fs"))) {
         throw std::runtime_error("Failed to load mono shader");
     }
 

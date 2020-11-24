@@ -75,15 +75,6 @@ namespace Tom::s3e {
          * @return the resolved resource path
          */
         std::string resourceAt(const std::string & path) const;
-
-        /**
-         * Create a new ResourceManager that is managed by a std::shared_ptr.
-         *
-         * @param path the new root directory for resource paths
-         *
-         * @return a shared pointer to a new ResourceManager
-         */
-        static ResourceManager::Ptr create(const std::string & path);
     };
 
     /**
@@ -146,14 +137,6 @@ namespace Tom::s3e {
          * @return a shared_ptr to a Model
          */
         Model::Ptr loadModel(const std::string & path);
-
-        /**
-         * Create a new DefaultResourceManager that is managed by a std::shared_ptr.
-         *
-         * @param path the new root directory for resource paths
-         *
-         * @return a shared pointer to a new DefaultResourceManager
-         */
-        static DefaultResourceManager::Ptr create(const std::string & path);
     };
 }
+

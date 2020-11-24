@@ -23,11 +23,6 @@ namespace Tom::s3e {
         auto tPoint = getTransform().getInverse().transformPoint(point);
         return getLocalBounds().contains(tPoint);
     }
-
-    MenuItem::Ptr MenuItem::create() {
-        auto item = std::make_shared<MenuItem>();
-        return item;
-    }
 }
 
 namespace Tom::s3e {
@@ -73,11 +68,7 @@ namespace Tom::s3e {
     }
 
     bool Menu::addMenuItem(const std::string & text, std::function<void(void)> callback) {
-        MenuItem::Ptr menuItem = MenuItem::create();
-        if (!menuItem) {
-            SPDLOG_ERROR("failed in call to MenuItem::create()");
-            return false;
-        }
+        auto menuItem = std::make_shared<MenuItem>();
 
         menuItem->setCallback(callback);
         menuItem->setFont(this->font);
@@ -158,19 +149,5 @@ namespace Tom::s3e {
                 item->click();
         }
     }
-
-    Menu::Ptr Menu::create() {
-        auto menu = std::make_shared<Menu>();
-        return menu;
-    }
-
-    Menu::Ptr Menu::create(const sf::Font & font) {
-        auto menu = std::make_shared<Menu>(font);
-        return menu;
-    }
-
-    Menu::Ptr Menu::create(const sf::Font & font, const std::string & title) {
-        auto menu = std::make_shared<Menu>(font, title);
-        return menu;
-    }
 }
+

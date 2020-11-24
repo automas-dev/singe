@@ -34,13 +34,11 @@ namespace Tom::s3e {
         VBO(const std::vector<Vertex> & points);
         virtual ~VBO();
 
-        void loadPoints(const std::vector<Vertex> & points);
+        bool loadPoints(const std::vector<Vertex> & points);
 
         void clearPoints(void);
 
         void draw(void) const;
-
-        static Ptr create(const std::vector<Vertex> & points);
     };
 
     // class VAO {
@@ -56,3 +54,4 @@ namespace Tom::s3e {
     //     }
     // };
 }
+

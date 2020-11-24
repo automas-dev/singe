@@ -7,8 +7,7 @@
 namespace Tom::s3e {
     Mesh::Mesh() : VBO() { }
 
-    Mesh::Mesh(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points)
-        : name(name), material(material), VBO(points) { }
+    Mesh::Mesh(const std::string & name, const Material::ConstPtr & material) : name(name), material(material), VBO() { }
 
     Mesh::~Mesh() {
         VBO::~VBO();
@@ -16,12 +15,6 @@ namespace Tom::s3e {
 
     const Material::ConstPtr & Mesh::getMaterial() const {
         return material;
-    }
-
-    Mesh::Ptr Mesh::create(const std::string & name, const Material::ConstPtr & material,
-                           const std::vector<Vertex> & points) {
-        auto mesh = std::make_shared<Mesh>(name, material, points);
-        return mesh;
     }
 }
 
@@ -147,8 +140,9 @@ namespace Tom::s3e {
 #undef PARSE_ERROR
 
         std::string mtlPath = parent + mtllib;
-        materials = MaterialLibrary::create(mtlPath);
-        if (materials) {
+        materials = std::make_shared<MaterialLibrary>();
+
+        if (materials->loadFromPath(mtlPath)) {
             materials->name = mtllib;
         }
         else {
@@ -184,9 +178,9 @@ namespace Tom::s3e {
                 }
             }
 
-            Mesh::Ptr model = Mesh::create(mesh->name, materials->getMaterial(mesh->usemtl), points);
-            if (!model) {
-                SPDLOG_ERROR("failed in call to Mesh::create while loading Model {}", path);
+            auto model = std::make_shared<Mesh>(mesh->name, materials->getMaterial(mesh->usemtl));
+            if (!model->loadPoints(points)) {
+                SPDLOG_ERROR("failed in call to Mesh::loadPoints while loading Model {}", path);
                 return false;
             }
             models.push_back(model);
@@ -252,15 +246,6 @@ namespace Tom::s3e {
             mesh->draw();
         }
         // TODO unbind textures
-    }
-
-    Model::Ptr Model::create(const std::string & objPath) {
-        auto model = std::make_shared<Model>();
-        if (!model->loadFromPath(objPath)) {
-            SPDLOG_ERROR("failed in call to Model::loadFromPath(objPath={})", objPath);
-            return nullptr;
-        }
-        return model;
     }
 }
 

@@ -26,11 +26,6 @@ namespace Tom::s3e {
         else
             return path;
     }
-
-    ResourceManager::Ptr ResourceManager::create(const std::string & path) {
-        auto resManager = std::make_shared<ResourceManager>(path);
-        return resManager;
-    }
 }
 
 namespace Tom::s3e {
@@ -43,9 +38,9 @@ namespace Tom::s3e {
 
     Texture::Ptr DefaultResourceManager::loadTexture(const std::string & name, const std::string & path) {
         auto relPath = resourceAt(path);
-        auto newTex = Texture::create(relPath);
-        if (!newTex)
-            SPDLOG_ERROR("failed in call to Texture::create(path={})", relPath);
+        auto newTex = std::make_shared<Texture>();
+        if (!newTex->loadFromPath(relPath))
+            SPDLOG_ERROR("failed in call to Texture::loadFromPath(path={})", relPath);
         else
             textures[name] = newTex;
         return newTex;
@@ -54,23 +49,18 @@ namespace Tom::s3e {
     Shader::Ptr DefaultResourceManager::loadShader(const std::string & vertexPath, const std::string & fragmentPath) {
         auto relVertexPath = resourceAt(vertexPath);
         auto relFragmentPath = resourceAt(fragmentPath);
-        auto shader = Shader::create(relVertexPath, relFragmentPath);
-        if (!shader)
-            SPDLOG_ERROR("failed in call to Shader::create(vertexPath={}, fragmentPath={})", relVertexPath, relFragmentPath);
+        auto shader = std::make_shared<Shader>();
+        if (!shader->loadFromPath(relVertexPath, relFragmentPath))
+            SPDLOG_ERROR("failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})", relVertexPath, relFragmentPath);
         return shader;
     }
 
     Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
         auto relPath = resourceAt(path);
-        auto model = Model::create(relPath);
-        if (!model)
-            SPDLOG_ERROR("failed in call to Model::create(path={})", relPath);
+        auto model = std::make_shared<Model>();
+        if (!model->loadFromPath(relPath))
+            SPDLOG_ERROR("failed in call to Model::loadFromPath(path={})", relPath);
         return model;
-    }
-
-    DefaultResourceManager::Ptr DefaultResourceManager::create(const std::string & path) {
-        auto resManager = std::make_shared<DefaultResourceManager>(path);
-        return resManager;
     }
 }
 

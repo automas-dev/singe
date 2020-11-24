@@ -91,7 +91,7 @@ namespace Tom::s3e {
          *
          * @returns the current rotation
          */
-        const glm::vec2 &getRotation() const;
+        const glm::vec2 & getRotation() const;
 
         /**
          * Set the rotation in degrees.
@@ -113,7 +113,7 @@ namespace Tom::s3e {
          *
          * @return the current position
          */
-        const glm::vec3 &getPosition() const;
+        const glm::vec3 & getPosition() const;
 
         /**
          * Set the position.
@@ -151,12 +151,6 @@ namespace Tom::s3e {
          * @return the view matrix
          */
         glm::mat4 viewMatrix(void);
-
-        /**
-         * Create a new Camera that is managed by a std::shared_ptr.
-         *
-         * @return a shared pointer to a new Camera
-         */
-        static Ptr create(void);
     };
 }
+

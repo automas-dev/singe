@@ -23,8 +23,6 @@ namespace Tom::s3e {
         void click() const;
 
         bool contains(sf::Vector2f point) const;
-
-        static Ptr create(void);
     };
 
     /**
@@ -141,32 +139,6 @@ namespace Tom::s3e {
          * @param e the mouse up event
          */
         void onMouseUp(sf::Event::MouseButtonEvent e);
-
-        /**
-         * Create a new Menu that is managed by a std::shared_ptr.
-         *
-         * @return a shared pointer to a new Menu
-         */
-        static Ptr create(void);
-
-        /**
-         * Create a new Menu that is managed by a std::shared_ptr.
-         *
-         * @param font the Font to be used for the title and menu items
-         *
-         * @return a shared pointer to a new Menu
-         */
-        static Ptr create(const sf::Font & font);
-
-        /**
-         * Create a new Menu that is managed by a std::shared_ptr.
-         *
-         * @param font the Font to be used for the title and menu items
-         * @param title the menu title
-         *
-         * @return a shared pointer to a new Menu
-         */
-        static Ptr create(const sf::Font & font, const std::string & title);
     };
 }
 

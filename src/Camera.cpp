@@ -80,9 +80,5 @@ namespace Tom::s3e {
         m = glm::translate(m, -position);
         return m;
     }
-
-    Camera::Ptr Camera::create() {
-        auto camera = std::make_shared<Camera>();
-        return camera;
-    }
 }
+

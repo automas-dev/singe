@@ -38,9 +38,8 @@ namespace Tom::s3e {
          *
          * @param name the material name
          * @param material the Material for the mesh
-         * @param points the mesh points
          */
-        Mesh(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points);
+        Mesh(const std::string & name, const Material::ConstPtr & material);
 
         /**
          * Destruct the Mesh.
@@ -53,18 +52,6 @@ namespace Tom::s3e {
          * @return a const pointer reference to the Material for this Mesh
          */
         const Material::ConstPtr & getMaterial(void) const;
-
-        /**
-         * Create a new Mesh that is manages by a std::shared_ptr and load it
-         * from name, material and points.
-         *
-         * @param name the material name
-         * @param material the Material for the mesh
-         * @param points the mesh points
-         *
-         * @return a shared pointer to a new Mesh
-         */
-        static Ptr create(const std::string & name, const Material::ConstPtr & material, const std::vector<Vertex> & points);
     };
 
     /**
@@ -133,7 +120,7 @@ namespace Tom::s3e {
 
         /**
          * Get the current position.
-         * 
+         *
          * @return the current position
          */
         const glm::vec3 & getPosition(void) const;
@@ -165,7 +152,7 @@ namespace Tom::s3e {
          * @return the current scale
          */
         const glm::vec3 & getScale(void) const;
-        
+
         /**
          * Set the Model scale.
          *
@@ -196,14 +183,6 @@ namespace Tom::s3e {
          * @param shader the MaterialShader used to draw this Model
          */
         void draw(const MaterialShader::Ptr & shader) const;
-
-        /**
-         * Create a new Model that is managed by a std::shared_ptr.
-         *
-         * @param objPath the path to the obj file
-         *
-         * @return a shared pointer to a new Model
-         */
-        static Ptr create(const std::string & objPath);
     };
 };
+

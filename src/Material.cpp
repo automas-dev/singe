@@ -16,11 +16,6 @@ namespace Tom::s3e {
         os << "Specular Exponent: " << this->specularExponent << std::endl;
         os << "Alpha: " << this->alpha << std::endl;
     }
-
-    Material::Ptr Material::create() {
-        auto material = std::make_shared<Material>();
-        return material;
-    }
 }
 
 namespace Tom::s3e {
@@ -31,16 +26,6 @@ namespace Tom::s3e {
         setFloat("material.shininess", m->specularExponent);
         setFloat("material.alpha", m->alpha);
         setInt("material.texture", 0);
-    }
-
-    MaterialShader::Ptr MaterialShader::create(const std::string & vertexPath,
-            const std::string & fragmentPath) {
-        auto s = std::make_shared<MaterialShader>();
-        if (!s->loadFromPath(vertexPath, fragmentPath)) {
-            SPDLOG_ERROR("failed in call to MaterialShader::loadFromPath(vertexPath={}, fragmentPath={})", vertexPath, fragmentPath);
-            return nullptr;
-        }
-        return s;
     }
 }
 
@@ -80,11 +65,7 @@ namespace Tom::s3e {
                 if (curr)
                     materials.push_back(curr);
 
-                curr = Material::create();
-                if (!curr) {
-                    SPDLOG_ERROR("failed in call to Material::create()");
-                    return false;
-                }
+                curr = std::make_shared<Material>();
                 curr->name = name;
             }
             else if (strStartsWithStr("Ns", line)) {
@@ -167,15 +148,6 @@ namespace Tom::s3e {
         }
         SPDLOG_ERROR("MaterialLibrary does not contain a Material named {}", name);
         return nullptr;
-    }
-
-    MaterialLibrary::Ptr MaterialLibrary::create(const std::string & mtlPath) {
-        auto matlib = std::make_shared<MaterialLibrary>();
-        if (!matlib->loadFromPath(mtlPath)) {
-            SPDLOG_ERROR("failed in call to MaterialLibrary::loadFromPath(mtlPath={})", mtlPath);
-            return nullptr;
-        }
-        return matlib;
     }
 }
 

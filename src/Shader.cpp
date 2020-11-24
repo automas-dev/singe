@@ -65,15 +65,6 @@ namespace Tom::s3e {
         glDisable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-
-    Texture::Ptr Texture::create(const std::string & path) {
-        auto texture = std::make_shared<Texture>();
-        if (!texture->loadFromPath(path)) {
-            SPDLOG_ERROR("failed in call to Texture::loadFromPath(path={})", path);
-            return nullptr;
-        }
-        return texture;
-    }
 }
 
 
@@ -244,7 +235,8 @@ namespace Tom::s3e {
             return false;
         }
 
-        SPDLOG_DEBUG("shader was successfully compiled and linked as program = {} with vertex shader = {} fragment shader = {}", program, vShader, fShader);
+        SPDLOG_DEBUG("shader was successfully compiled and linked as program = {} with vertex shader = {} fragment shader = {}",
+                     program, vShader, fShader);
         return true;
     }
 
@@ -310,14 +302,5 @@ namespace Tom::s3e {
         SPDLOG_TRACE("glUniformMatrix4fv(name = \"{}\" value = {}", name, value);
         glUniformMatrix4fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
-
-    Shader::Ptr Shader::create(const std::string & vertexPath,
-                               const std::string & fragmentPath) {
-        auto s = std::make_shared<Shader>();
-        if (!s->loadFromPath(vertexPath, fragmentPath)) {
-            SPDLOG_ERROR("failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})", vertexPath, fragmentPath);
-            return nullptr;
-        }
-        return s;
-    }
 };
+

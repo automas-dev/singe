@@ -74,13 +74,6 @@ namespace Tom::s3e {
          * @param os the ostream to write to
          */
         void print(std::ostream & os = std::cout) const;
-
-        /**
-         * Create a new Material that is managed by a std::shared_ptr.
-         *
-         * @return a shared pointer to a new Material
-         */
-        static Ptr create();
     };
 
     /**
@@ -110,17 +103,6 @@ namespace Tom::s3e {
          * @param material the Material to apply as uniforms
          */
         void setMaterial(const Material::ConstPtr & material) const;
-
-        /**
-         * Create a new MaterialShader that is managed by a std::shared_ptr.
-         *
-         * @param vertexPath the path to the vertex shader source
-         * @param fragmentPath the path to the fragment shader source
-         *
-         * @return a shared pointer to a new MaterialShader
-         */
-        static Ptr create(const std::string & vertexPath,
-                          const std::string & fragmentPath);
     };
 
     /**
@@ -189,14 +171,6 @@ namespace Tom::s3e {
          * @return a const pointer to the material or nullptr
          */
         Material::ConstPtr getMaterial(const std::string & name) const;
-
-        /**
-         * Create a new MaterialLibrary that is managed by a std::shared_ptr.
-         *
-         * @param mtlPath the path to the .mtl file
-         *
-         * @return a shared pointer to a new MaterialShader
-         */
-        static MaterialLibrary::Ptr create(const std::string & mtlPath);
     };
 }
+
