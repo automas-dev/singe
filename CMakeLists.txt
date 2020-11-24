@@ -27,6 +27,7 @@ set(S3E_HEADERS
     include/s3e/Shader.hpp
     include/s3e/Util.hpp
     include/s3e/VBO.hpp
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
 set(S3E_SOURCES
