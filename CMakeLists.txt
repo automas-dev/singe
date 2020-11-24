@@ -5,7 +5,7 @@ project(sfml-s3e VERSION 0.2.0 LANGUAGES CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-configure_file(cmake/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(cmake/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
@@ -27,7 +27,7 @@ set(S3E_HEADERS
     include/s3e/Shader.hpp
     include/s3e/Util.hpp
     include/s3e/VBO.hpp
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/config.h
 )
 
 set(S3E_SOURCES
@@ -54,6 +54,7 @@ target_compile_features(s3e PRIVATE cxx_std_17)
 target_include_directories(s3e
 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:include>
     ${GLM_INCLUDE_DIRS}
 )
