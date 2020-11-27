@@ -100,6 +100,7 @@ bool Game::onCreate() {
     });
 
     camera->move({3, 2, 1});
+    camera->rotate({30, -70});
     camera->setFov(80);
 
     defaultShader = resManager.loadShader("res://shader/default.vs", "res://shader/default.fs");
