@@ -23,10 +23,13 @@ namespace Tom::s3e {
      * onMouseMove, onMouseDown, onMouseUp, onMouseScroll or onResized.
      */
     class GameBase {
-        sf::Vector2i lastMouse;
+        bool grab;
+        sf::Vector2f mouseSensitivity;
+        float moveSpeed;
 
     protected:
         std::shared_ptr<sf::RenderWindow> window;
+        Camera::Ptr camera;
 
     public:
 
@@ -83,6 +86,20 @@ namespace Tom::s3e {
          * @param grab should the mouse be grabbed or released
          */
         void SetMouseGrab(bool grab);
+
+        /**
+         * Set the mouse sensitivity for the x and y axis.
+         *
+         * @param sensitivity the new mouse sensitivity
+         */
+        void SetMouseSensitivity(sf::Vector2f sensitivity);
+
+        /**
+         * Set the move speed for the camera.
+         *
+         * @param speed the new move speed
+         */
+        void SetMoveSpeed(float speed);
 
     protected:
 

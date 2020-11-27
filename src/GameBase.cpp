@@ -9,7 +9,7 @@
 
 namespace Tom::s3e {
 
-    GameBase::GameBase() { }
+    GameBase::GameBase() : grab(false), mouseSensitivity(0.2, 0.2), moveSpeed(5) { }
 
     GameBase::~GameBase() { }
 
@@ -40,6 +40,9 @@ namespace Tom::s3e {
             SPDLOG_CRITICAL("glewInit failed: {}", glewGetErrorString(err));
             return false;
         }
+
+        camera = std::make_shared<Camera>();
+        camera->setScreenSize(window->getSize());
 
         SPDLOG_DEBUG("calling onCreate()");
         bool res = onCreate();
@@ -94,6 +97,24 @@ namespace Tom::s3e {
             sf::Time delta = clock.restart();
             SPDLOG_TRACE("last frame delta = {} ms", delta.asMilliseconds());
 
+            if (grab) {
+                sf::Vector2i center (window->getSize().x / 2, window->getSize().y / 2);
+                sf::Vector2i mouse = sf::Mouse::getPosition(*window);
+                sf::Vector2f mouseDelta (mouse.x - center.x, mouse.y - center.y);
+                sf::Mouse::setPosition(center);
+
+                int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+                int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+                int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+
+                camera->rotate({ mouseDelta.y * mouseSensitivity.y, mouseDelta.x * mouseSensitivity.x });
+                camera->moveDolly({
+                    x * delta.asSeconds() * moveSpeed,
+                    y * delta.asSeconds() * moveSpeed,
+                    z * delta.asSeconds() * moveSpeed
+                });
+            }
+
             onUpdate(delta);
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -117,8 +138,22 @@ namespace Tom::s3e {
 
     void GameBase::SetMouseGrab(bool grab) {
         SPDLOG_DEBUG("mouse grab set to {}", grab);
+        this->grab = grab;
+
         window->setMouseCursorGrabbed(grab);
         window->setMouseCursorVisible(!grab);
+
+        auto size = window->getSize();
+        sf::Vector2i center (size.x / 2, size.y / 2);
+        sf::Mouse::setPosition(center);
+    }
+
+    void GameBase::SetMouseSensitivity(sf::Vector2f sensitivity) {
+        mouseSensitivity = sensitivity;
+    }
+
+    void GameBase::SetMoveSpeed(float speed) {
+        moveSpeed = speed;
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
@@ -136,6 +171,8 @@ namespace Tom::s3e {
 
     void GameBase::onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) { }
 
-    void GameBase::onResized(const sf::Event::SizeEvent & event) { }
+    void GameBase::onResized(const sf::Event::SizeEvent & event) {
+        camera->setScreenSize({ event.width, event.height });
+    }
 }
 
