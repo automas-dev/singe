@@ -83,8 +83,6 @@ bool Game::onCreate() {
         return false;
     }
 
-    SetMouseGrab(true);
-
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
 
@@ -142,6 +140,8 @@ bool Game::onCreate() {
     if (!texture) {
         throw std::runtime_error("Failed to load dev texture");
     }
+
+    SetMouseGrab(true);
 
     getGlError();
     return true;

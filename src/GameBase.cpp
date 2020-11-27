@@ -101,13 +101,14 @@ namespace Tom::s3e {
                 sf::Vector2i center (window->getSize().x / 2, window->getSize().y / 2);
                 sf::Vector2i mouse = sf::Mouse::getPosition(*window);
                 sf::Vector2f mouseDelta (mouse.x - center.x, mouse.y - center.y);
-                sf::Mouse::setPosition(center);
+                sf::Mouse::setPosition(center, *window);
 
                 int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
                 int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
                 int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 
                 camera->rotate({ mouseDelta.y * mouseSensitivity.y, mouseDelta.x * mouseSensitivity.x });
+
                 camera->moveDolly({
                     x * delta.asSeconds() * moveSpeed,
                     y * delta.asSeconds() * moveSpeed,
@@ -143,9 +144,11 @@ namespace Tom::s3e {
         window->setMouseCursorGrabbed(grab);
         window->setMouseCursorVisible(!grab);
 
-        auto size = window->getSize();
-        sf::Vector2i center (size.x / 2, size.y / 2);
-        sf::Mouse::setPosition(center);
+        if (grab) {
+            auto size = window->getSize();
+            sf::Vector2i center (size.x / 2, size.y / 2);
+            sf::Mouse::setPosition(center, *window);
+        }
     }
 
     void GameBase::SetMouseSensitivity(sf::Vector2f sensitivity) {
