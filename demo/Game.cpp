@@ -83,8 +83,6 @@ bool Game::onCreate() {
         return false;
     }
 
-    lastMouse = {static_cast<int>(window->getSize().x) / 2, static_cast<int>(window->getSize().y) / 2};
-    sf::Mouse::setPosition(lastMouse, *window);
     SetMouseGrab(true);
 
     gridVerts = genGridVerts(10);
@@ -103,10 +101,8 @@ bool Game::onCreate() {
         window->close();
     });
 
-    cam = std::make_shared<Camera>();
-    cam->setScreenSize(window->getSize());
-    cam->move({3, 2, 1});
-    cam->setFov(80);
+    camera->move({3, 2, 1});
+    camera->setFov(80);
 
     defaultShader = resManager.loadShader("res://shader/default.vs", "res://shader/default.fs");
     if (!defaultShader) {
@@ -183,38 +179,16 @@ void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
 void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
     menu->onMouseUp(e);
 
-    if (e.button == sf::Mouse::Button::Left) {
-        // std::cout << "Camera Projection Matrix" << std::endl;
-        // glm::mat4 mat = cam->projMatrix();
-        // std::cout << mat << std::endl;
-
-        // std::cout << "Camera View Matrix" << std::endl;
-        // mat = cam->viewMatrix();
-        // std::cout << mat << std::endl;
-    }
+    // TODO: Find a better solution to grabbing mouse after Menu close
+    SetMouseGrab(!menu->isVisible());
 }
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
-    cam->setScreenSize(window->getSize());
-    lastMouse = {static_cast<int>(window->getSize().x) / 2, static_cast<int>(window->getSize().y) / 2};
+
 }
 
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
-
-    auto mPos = sf::Mouse::getPosition(*window);
-    sf::Vector2f mDelta (mPos.x - lastMouse.x, mPos.y - lastMouse.y);
-    if (!menu->isVisible()) {
-        sf::Mouse::setPosition(lastMouse, *window);
-        cam->rotate({mDelta.y * 0.2, mDelta.x * 0.2});
-    }
-
-    if (!menu->isVisible()) {
-        int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-        int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
-        int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-        cam->moveDolly({x *deltaS * 5, y *deltaS * 5, z *deltaS * 5});
-    }
 
     time += deltaS;
     sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
@@ -229,7 +203,7 @@ void Game::onDraw() const {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    glm::mat4 vp = cam->projMatrix() * cam->viewMatrix();
+    glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
 
     monoShader->bind();
     {
@@ -238,7 +212,7 @@ void Game::onDraw() const {
         texture->bind();
 
         monoShader->setMat4("vp", vp);
-        monoShader->setVec3("viewPos", cam->getPosition());
+        monoShader->setVec3("viewPos", camera->getPosition());
         monoShader->setUInt("nLights", 2);
 
         monoShader->setVec3("lights[0].ambient", {0.1, 0.1, 0.1});

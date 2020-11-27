@@ -18,7 +18,6 @@ class Game : public GameBase {
 
     sf::Font font;
     Menu::Ptr menu;
-    Camera::Ptr cam;
 
     Shader::Ptr defaultShader;
     Shader::Ptr textureShader;
@@ -32,8 +31,6 @@ class Game : public GameBase {
 
     Model::Ptr cubeModel;
     Model::Ptr sphereModel;
-
-    sf::Vector2i lastMouse;
 
     float time = 0.0;
 
