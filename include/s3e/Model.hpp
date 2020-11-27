@@ -178,6 +178,11 @@ namespace Tom::s3e {
         Material::ConstPtr getMaterial(const std::string & name) const;
 
         /**
+         * Draw the Model.
+         */
+        void draw() const;
+
+        /**
          * Draw the Model using shader.
          *
          * @param shader the MaterialShader used to draw this Model

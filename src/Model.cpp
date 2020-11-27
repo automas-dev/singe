@@ -237,6 +237,14 @@ namespace Tom::s3e {
         return material;
     }
 
+    void Model::draw() const {
+        // TODO: bind textures
+        for (auto & mesh : models) {
+            mesh->draw();
+        }
+        // TODO unbind textures
+    }
+
     void Model::draw(const MaterialShader::Ptr & shader) const {
         // TODO: bind textures
         // TODO: uniforms
