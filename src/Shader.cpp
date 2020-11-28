@@ -51,6 +51,24 @@ namespace Tom::s3e {
         glDisableVertexAttribArray(1);
     }
 
+    void draw_quad(glm::vec2 pos, glm::vec2 size) {
+        std::vector<glm::vec3> vertices = {
+            {pos.x, pos.y, 0.0},
+            {pos.x + size.x, pos.y, 0.0},
+            {pos.x + size.x, pos.y + size.y, 0.0},
+            {pos.x, pos.y + size.y, 0.0},
+        };
+
+        std::vector<glm::vec2> tex = {
+            {0.0, 0.0},
+            {1.0, 0.0},
+            {1.0, 1.0},
+            {0.0, 1.0},
+        };
+
+        draw_tex_array(vertices, tex, GL_QUADS);
+    }
+
     std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
         if (!t) {

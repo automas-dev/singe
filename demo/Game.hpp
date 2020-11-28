@@ -19,8 +19,9 @@ class Game : public GameBase {
     sf::Font font;
 
     Shader::Ptr defaultShader;
+    Shader::Ptr debugShader;
     Shader::Ptr geometryShader;
-    Shader::Ptr lightingShader;
+    MaterialShader::Ptr lightingShader;
     MaterialShader::Ptr monoShader;
 
     Texture::Ptr texture;

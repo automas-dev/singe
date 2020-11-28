@@ -26,6 +26,8 @@ namespace Tom::s3e {
                         const std::vector<glm::vec2> & uvs,
                         GLenum mode);
 
+    void draw_quad(glm::vec2 pos, glm::vec2 size);
+
     std::string shaderSource(const std::string & path);
 
     class Shader {

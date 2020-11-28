@@ -128,8 +128,14 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load texture shader");
     }
 
-    lightingShader = resManager.loadShader("shader/lighting.vert", "shader/lighting.frag");
-    if (!lightingShader) {
+    debugShader = resManager.loadShader("shader/debug.vert", "shader/debug.frag");
+    if (!debugShader) {
+        throw std::runtime_error("Failed to load debug shader");
+    }
+
+    lightingShader = std::make_shared<MaterialShader>();
+    if (!lightingShader->loadFromPath(resManager.resourceAt("shader/lighting.vert"),
+                                  resManager.resourceAt("shader/lighting.frag"))) {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
@@ -248,42 +254,42 @@ void Game::onDraw() const {
     fbuff->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    monoShader->bind();
+    lightingShader->bind();
     if (true) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         texture->bind();
 
-        monoShader->setMat4("vp", vp);
-        monoShader->setVec3("viewPos", camera->getPosition());
-        monoShader->setUInt("nLights", 2);
+        lightingShader->setMat4("vp", vp);
+        lightingShader->setVec3("viewPos", camera->getPosition());
+        lightingShader->setUInt("nLights", 2);
 
-        monoShader->setVec3("lights[0].ambient", {0.1, 0.1, 0.1});
-        monoShader->setVec3("lights[0].diffuse", {0.8, 0.8, 0.8});
-        monoShader->setVec3("lights[0].specular", {1, 1, 1});
-        monoShader->setVec3("lights[0].position", sphereModel->getPosition());
-        monoShader->setVec3("lights[0].direction", {-1, -2, -3});
-        monoShader->setUInt("lights[0].type", 1);
+        lightingShader->setVec3("lights[0].ambient", {0.1, 0.1, 0.1});
+        lightingShader->setVec3("lights[0].diffuse", {0.8, 0.8, 0.8});
+        lightingShader->setVec3("lights[0].specular", {1, 1, 1});
+        lightingShader->setVec3("lights[0].position", sphereModel->getPosition());
+        lightingShader->setVec3("lights[0].direction", {-1, -2, -3});
+        lightingShader->setUInt("lights[0].type", 1);
 
-        monoShader->setFloat("lights[0].constant", 1.0);
-        monoShader->setFloat("lights[0].linear", 0.09);
-        monoShader->setFloat("lights[0].quadratic", 0.032);
+        lightingShader->setFloat("lights[0].constant", 1.0);
+        lightingShader->setFloat("lights[0].linear", 0.09);
+        lightingShader->setFloat("lights[0].quadratic", 0.032);
 
-        monoShader->setVec3("lights[1].ambient", {0.1, 0.1, 0.1});
-        monoShader->setVec3("lights[1].diffuse", {0.8, 0.8, 0.8});
-        monoShader->setVec3("lights[1].specular", {1, 1, 1});
-        monoShader->setVec3("lights[1].position", sphereModel->getPosition() + glm::vec3(1, 0, 1));
-        monoShader->setVec3("lights[1].direction", {-1, -2, -3});
-        monoShader->setUInt("lights[1].type", 2);
+        lightingShader->setVec3("lights[1].ambient", {0.1, 0.1, 0.1});
+        lightingShader->setVec3("lights[1].diffuse", {0.8, 0.8, 0.8});
+        lightingShader->setVec3("lights[1].specular", {1, 1, 1});
+        lightingShader->setVec3("lights[1].position", sphereModel->getPosition() + glm::vec3(1, 0, 1));
+        lightingShader->setVec3("lights[1].direction", {-1, -2, -3});
+        lightingShader->setUInt("lights[1].type", 2);
 
-        monoShader->setFloat("lights[1].constant", 1.0);
-        monoShader->setFloat("lights[1].linear", 0.09);
-        monoShader->setFloat("lights[1].quadratic", 0.032);
+        lightingShader->setFloat("lights[1].constant", 1.0);
+        lightingShader->setFloat("lights[1].linear", 0.09);
+        lightingShader->setFloat("lights[1].quadratic", 0.032);
 
-        monoShader->setFloat("lights[1].cutOff", glm::cos(glm::radians(12.5)));
-        monoShader->setFloat("lights[1].outerCutOff", glm::cos(glm::radians(15.0)));
+        lightingShader->setFloat("lights[1].cutOff", glm::cos(glm::radians(12.5)));
+        lightingShader->setFloat("lights[1].outerCutOff", glm::cos(glm::radians(15.0)));
 
-        drawPass(vp, monoShader);
+        drawPass(vp, lightingShader);
     }
 
     fbuff->unbind();
@@ -299,7 +305,7 @@ void Game::onDraw() const {
         draw_color_array(gridVerts, gridCols, GL_LINES);
     }
 
-    lightingShader->bind();
+    debugShader->bind();
     {
         glEnable(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0);
@@ -309,25 +315,11 @@ void Game::onDraw() const {
         glActiveTexture(GL_TEXTURE2);
         gbuff->getTextures()[2]->bind();
 
-        lightingShader->setInt("gPosition", 0);
-        lightingShader->setInt("gNormal", 1);
-        lightingShader->setInt("gAlbedo", 2);
+        debugShader->setInt("gPosition", 0);
+        debugShader->setInt("gNormal", 1);
+        debugShader->setInt("gAlbedo", 2);
 
-        std::vector<glm::vec3> vertices = {
-            {0.0, 0.0, 0.0},
-            {1.0, 0.0, 0.0},
-            {1.0, 1.0, 0.0},
-            {0.0, 1.0, 0.0},
-        };
-
-        std::vector<glm::vec2> tex = {
-            {0.0, 0.0},
-            {1.0, 0.0},
-            {1.0, 1.0},
-            {0.0, 1.0},
-        };
-
-        draw_tex_array(vertices, tex, GL_QUADS);
+        draw_quad({0.5, 0.5}, {0.5, 0.5});
 
         glActiveTexture(GL_TEXTURE0);
         glDisable(GL_TEXTURE_2D);
