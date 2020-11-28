@@ -6,7 +6,7 @@ namespace Tom::s3e {
 
     void Texture::realloc() {
         SPDLOG_DEBUG("updating opengl texture {} to size {} x {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
-                     textureId, size.width, size.height, magFilter, minFilter, wrap, mipmaps);
+                     textureId, size.x, size.y, magFilter, minFilter, wrap, mipmaps);
 
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexImage2D(GL_TEXTURE_2D, 0, internal, size.x, size.y, 0, format, type, (image ? image->getPixelsPtr() : NULL));

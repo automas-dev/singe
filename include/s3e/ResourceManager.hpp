@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Shader.hpp"
-#include "Model.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include "Shader.hpp"
+#include "Texture.hpp"
+#include "Model.hpp"
 
 namespace Tom::s3e {
 
