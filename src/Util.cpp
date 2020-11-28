@@ -33,28 +33,11 @@ std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat) {
 
 namespace Tom::s3e {
     bool strStartsWithChar(char pre, const std::string & str) {
-        return str.rfind(pre, 0) == 0;
+        return !str.empty() && str[0] == pre;
     }
 
     bool strStartsWithStr(const std::string & pre, const std::string & str) {
         return str.rfind(pre, 0) == 0;
-    }
-
-    void modeProjection(void) {
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-    }
-
-    void modeModel(void) {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-    }
-
-    void push(glm::vec3 pos, glm::vec2 rot) {
-        glPushMatrix();
-        glRotatef(-rot.x, 1, 0, 0);
-        glRotatef(-rot.y, 0, 1, 0);
-        glTranslatef(-pos.x, -pos.y, -pos.z);
     }
 
     glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
@@ -63,16 +46,6 @@ namespace Tom::s3e {
         glm::mat4 mrot = glm::toMat4(qrot);
         glm::mat4 msize = glm::scale(glm::mat4(1), scale);
         return mpos * mrot * msize;
-    }
-
-    std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                os << mat[i][j] << " ";
-            }
-            os << std::endl;
-        }
-        return os;
     }
 }
 

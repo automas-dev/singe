@@ -21,7 +21,6 @@ std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat);
 
 namespace Tom::s3e {
 
-
     const double pi = std::acos(-1);
 
     inline float toRadians(float angle) {
@@ -40,15 +39,7 @@ namespace Tom::s3e {
             val = max;
     }
 
-    void modeProjection(void);
-
-    void modeModel(void);
-
-    void push(glm::vec3 pos, glm::vec2 rot);
-
     glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale = glm::vec3(1));
-
-    std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat);
 
     bool strStartsWithChar(char pre, const std::string & str);
 
