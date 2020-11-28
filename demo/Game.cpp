@@ -77,11 +77,27 @@ Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) { }
 
 Game::~Game() { }
 
+void GLAPIENTRY MessageCallback( GLenum source,
+                                 GLenum type,
+                                 GLuint id,
+                                 GLenum severity,
+                                 GLsizei length,
+                                 const GLchar *message,
+                                 const void *userParam ) {
+    SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
+                 ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+                 type, severity, message );
+}
+
 bool Game::onCreate() {
     if (!font.loadFromFile(resManager.resourceAt("Questrial_Regular.ttf"))) {
         cerr << "Failed to load font" << endl;
         return false;
     }
+
+    // During init, enable debug output
+    glEnable              ( GL_DEBUG_OUTPUT );
+    glDebugMessageCallback( MessageCallback, 0 );
 
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
@@ -107,12 +123,12 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load default shader");
     }
 
-    textureShader = resManager.loadShader("shader/tex.vs", "shader/tex.fs");
-    if (!textureShader) {
+    geometryShader = resManager.loadShader("shader/geom.vert", "shader/geom.frag");
+    if (!geometryShader) {
         throw std::runtime_error("Failed to load texture shader");
     }
 
-    lightingShader = resManager.loadShader("shader/lighting.vs", "shader/lighting.fs");
+    lightingShader = resManager.loadShader("shader/lighting.vert", "shader/lighting.frag");
     if (!lightingShader) {
         throw std::runtime_error("Failed to load lighting shader");
     }
@@ -144,6 +160,15 @@ bool Game::onCreate() {
     fbuff = std::make_shared<FrameBuffer>(window->getSize());
     fbuff->addTexture(GL_COLOR_ATTACHMENT0);
     fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
+    fbuff->finalize();
+
+    gbuff = std::make_shared<FrameBuffer>(window->getSize());
+    gbuff->addTexture(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT);
+    gbuff->addTexture(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT);
+    gbuff->addTexture(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT);
+    //gbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
+    gbuff->finalize();
+    gbuff->addDepthBuffer();
 
     SetMouseGrab(true);
 
@@ -206,11 +231,25 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
 
+    geometryShader->bind();
+    {
+        gbuff->bind();
+        texture->bind();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        geometryShader->setMat4("mvp", vp);
+        geometryShader->setMat4("model", cubeModel->modelMatrix());
+        cubeModel->draw();
+
+        texture->unbind();
+        gbuff->unbind();
+    }
+
     fbuff->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     monoShader->bind();
-    {
+    if (true) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         texture->bind();
@@ -247,21 +286,56 @@ void Game::onDraw() const {
         drawPass(vp, monoShader);
     }
 
-    defaultShader->bind();
-    {
-        //glDisable(GL_BLEND);
-        //glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
+    fbuff->unbind();
+    fbuff->blit(0, GL_COLOR_BUFFER_BIT);
 
-        //draw_color_array(gridVerts, gridCols, GL_LINES);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+
+    defaultShader->bind();
+    if (false) {
+        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
+
+        draw_color_array(gridVerts, gridCols, GL_LINES);
+    }
+
+    lightingShader->bind();
+    {
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        gbuff->getTextures()[0]->bind();
+        glActiveTexture(GL_TEXTURE1);
+        gbuff->getTextures()[1]->bind();
+        glActiveTexture(GL_TEXTURE2);
+        gbuff->getTextures()[2]->bind();
+
+        lightingShader->setInt("gPosition", 0);
+        lightingShader->setInt("gNormal", 1);
+        lightingShader->setInt("gAlbedo", 2);
+
+        std::vector<glm::vec3> vertices = {
+            {0.0, 0.0, 0.0},
+            {1.0, 0.0, 0.0},
+            {1.0, 1.0, 0.0},
+            {0.0, 1.0, 0.0},
+        };
+
+        std::vector<glm::vec2> tex = {
+            {0.0, 0.0},
+            {1.0, 0.0},
+            {1.0, 1.0},
+            {0.0, 1.0},
+        };
+
+        draw_tex_array(vertices, tex, GL_QUADS);
+
+        glActiveTexture(GL_TEXTURE0);
+        glDisable(GL_TEXTURE_2D);
     }
 
     defaultShader->unbind();
 
-    fbuff->unbind();
-
-    fbuff->blit(0, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    getGlError();
+    //getGlError();
 }
 
 void Game::drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const {

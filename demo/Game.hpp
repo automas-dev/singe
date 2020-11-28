@@ -19,7 +19,7 @@ class Game : public GameBase {
     sf::Font font;
 
     Shader::Ptr defaultShader;
-    Shader::Ptr textureShader;
+    Shader::Ptr geometryShader;
     Shader::Ptr lightingShader;
     MaterialShader::Ptr monoShader;
 
@@ -32,6 +32,7 @@ class Game : public GameBase {
     Model::Ptr sphereModel;
 
     FrameBuffer::Ptr fbuff;
+    FrameBuffer::Ptr gbuff;
 
     float time = 0.0;
 

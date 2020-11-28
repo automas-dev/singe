@@ -17,7 +17,7 @@ namespace Tom::s3e {
 
         FrameBufferTexture(void);
         FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT,
-                GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_REPEAT, bool mipmaps = true);
+                GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_REPEAT, bool mipmaps = false);
         virtual ~FrameBufferTexture();
     
         GLuint getAttachment(void) const;
@@ -29,6 +29,7 @@ namespace Tom::s3e {
         GLuint fboId;
         sf::Vector2u size;
         std::vector<FrameBufferTexture::Ptr> textures;
+        GLuint rboDepth;
 
     public:
         typedef std::shared_ptr<FrameBuffer> Ptr;
@@ -45,6 +46,10 @@ namespace Tom::s3e {
         void setSize(sf::Vector2u size);
 
         void addTexture(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT);
+
+        void addDepthBuffer(void);
+
+        void finalize(void);
 
         size_t count(void) const;
 

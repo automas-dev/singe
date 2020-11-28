@@ -26,11 +26,15 @@ namespace Tom::s3e {
 namespace Tom::s3e {
     FrameBuffer::FrameBuffer() : FrameBuffer({0, 0}) { }
 
-    FrameBuffer::FrameBuffer(sf::Vector2u size) : size(size) {
+    FrameBuffer::FrameBuffer(sf::Vector2u size) : size(size), rboDepth(0) {
         glGenFramebuffers(1, &fboId);
     }
 
-    FrameBuffer::~FrameBuffer() { }
+    FrameBuffer::~FrameBuffer() {
+        glDeleteFramebuffers(1, &fboId);
+        if (rboDepth > 0)
+            glDeleteRenderbuffers(1, &rboDepth);
+    }
 
     GLuint FrameBuffer::getId() const {
         return fboId;
@@ -55,14 +59,36 @@ namespace Tom::s3e {
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->getTextureId(), 0);
         textures.push_back(texture);
 
-        std::vector<GLuint> buffers(count());
-        for (int i = 0; i < count(); i++)
-            buffers[i] = textures[i]->getAttachment();
-        glDrawBuffers(count(), &buffers[0]);
+        unbind();
+    }
+
+    void FrameBuffer::addDepthBuffer() {
+        bind();
+
+        glGenRenderbuffers(1, &rboDepth);
+        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
         unbind();
     }
-    
+
+    void FrameBuffer::finalize() {
+        bind();
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            SPDLOG_ERROR("FrameBuffer is not complete");
+
+        std::vector<GLuint> buffers;
+        for (int i = 0; i < count(); i++) {
+            auto a = textures[i]->getAttachment();
+            if (a != GL_DEPTH_ATTACHMENT && a != GL_STENCIL_ATTACHMENT) 
+                buffers.push_back(a);
+        }
+        glDrawBuffers(buffers.size(), &buffers[0]);
+
+        unbind();
+    }
+
     const std::vector<FrameBufferTexture::Ptr> & FrameBuffer::getTextures() const {
         return textures;
     }
