@@ -66,6 +66,10 @@ namespace Tom::s3e {
 
     void FrameBuffer::bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+        for (int i = 0; i < count(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            textures[i]->bind();
+        }
     }
 
     void FrameBuffer::unbind() {
