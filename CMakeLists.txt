@@ -18,6 +18,7 @@ add_subdirectory(lib/spdlog EXCLUDE_FROM_ALL)
 set(S3E_HEADERS 
     include/s3e.hpp
     include/s3e/Camera.hpp
+    include/s3e/FrameBuffer.hpp
     include/s3e/GameBase.hpp
     include/s3e/log.hpp
     include/s3e/Material.hpp
@@ -25,6 +26,7 @@ set(S3E_HEADERS
     include/s3e/Model.hpp
     include/s3e/ResourceManager.hpp
     include/s3e/Shader.hpp
+    include/s3e/Texture.hpp
     include/s3e/Util.hpp
     include/s3e/VBO.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/include/config.h
@@ -32,12 +34,14 @@ set(S3E_HEADERS
 
 set(S3E_SOURCES
     src/Camera.cpp
+    src/FrameBuffer.cpp
     src/GameBase.cpp
     src/Material.cpp
     src/Menu.cpp
     src/Model.cpp
     src/ResourceManager.cpp
     src/Shader.cpp
+    src/Texture.cpp
     src/Util.cpp
     src/VBO.cpp
 )

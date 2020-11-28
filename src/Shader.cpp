@@ -1,72 +1,7 @@
 #include "s3e/Shader.hpp"
-#include <SFML/Graphics/Image.hpp>
 #include <fstream>
 #include "s3e/log.hpp"
 #include "s3e/Util.hpp"
-
-namespace Tom::s3e {
-    static GLuint loadGlTexture(const unsigned char *data, int width, int height, bool srcAlpha = false,
-                                GLint magFilter = GL_LINEAR, GLint minFilter = GL_LINEAR_MIPMAP_LINEAR, GLint wrap = GL_REPEAT, bool mipmaps = true) {
-        SPDLOG_DEBUG("creating an opengl texture of size {} x {} srcAlpha = {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
-                     width, height, srcAlpha, magFilter, minFilter, wrap, mipmaps);
-
-        GLuint textureID;
-        glGenTextures(1, &textureID);
-
-        SPDLOG_DEBUG("generated opengl texture: {}", textureID);
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, (srcAlpha ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, data);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
-
-        if (mipmaps)
-            glGenerateMipmap(GL_TEXTURE_2D);
-
-        return textureID;
-    }
-
-    Texture::Texture() : textureId(0) { }
-
-    Texture::~Texture() {
-        if (textureId > 0) {
-            SPDLOG_DEBUG("deleting opengl texture: {}", textureId);
-            glDeleteTextures(1, &textureId);
-        }
-    }
-
-    bool Texture::loadFromPath(const std::string & path) {
-        SPDLOG_DEBUG("loading texture from path: {}", path);
-
-        sf::Image img;
-        if (!img.loadFromFile(path)) {
-            SPDLOG_WARN("Texture failed to open file {}", path);
-            return false;
-        }
-
-        textureId = loadGlTexture(img.getPixelsPtr(), img.getSize().x, img.getSize().y, true, GL_NEAREST,
-                                  GL_NEAREST_MIPMAP_LINEAR);
-        return true;
-    }
-
-    void Texture::bind() {
-        SPDLOG_TRACE("bind opengl texture: {}", textureId);
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, textureId);
-    }
-
-    void Texture::unbind() {
-        SPDLOG_TRACE("bind opengl texture: 0 (unbind)");
-        glDisable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-}
-
 
 namespace Tom::s3e {
 

@@ -26,23 +26,6 @@ namespace Tom::s3e {
                         const std::vector<glm::vec2> & uvs,
                         GLenum mode);
 
-    class Texture {
-        GLuint textureId;
-
-    public:
-        typedef std::shared_ptr<Texture> Ptr;
-        typedef std::shared_ptr<const Texture> ConstPtr;
-
-        Texture(void);
-        virtual ~Texture();
-
-        bool loadFromPath(const std::string & path);
-
-        void bind(void);
-
-        void unbind(void);
-    };
-
     std::string shaderSource(const std::string & path);
 
     class Shader {
