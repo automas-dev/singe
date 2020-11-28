@@ -50,6 +50,8 @@ namespace Tom::s3e {
 
         const std::vector<FrameBufferTexture::Ptr> & getTextures(void) const;
 
+        void blit(GLint src, GLint dest, GLbitfield bitfield=GL_COLOR_BUFFER_BIT);
+
         void bind(void);
         
         void unbind(void);

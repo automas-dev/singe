@@ -38,6 +38,9 @@ namespace Tom::s3e {
 
     void FrameBuffer::setSize(sf::Vector2u size) {
         this->size = size;
+        for (auto & texture : textures) {
+            texture->setSize(size);
+        }
     }
 
     void FrameBuffer::addTexture(GLenum attachment, GLint internal, GLenum format, GLenum type) {
@@ -62,6 +65,12 @@ namespace Tom::s3e {
 
     size_t FrameBuffer::count() const {
         return textures.size();
+    }
+
+    void FrameBuffer::blit(GLint src, GLint dest, GLbitfield bitfield) {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, src);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dest);
+        glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
     }
 
     void FrameBuffer::bind() {
