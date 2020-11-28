@@ -13,8 +13,6 @@ namespace Tom::s3e {
     /**
      * Manages resources and provides paths to resources based on a root
      * directory.
-     *
-     * Files can be accessed by using the `res://` prefix in the file path.
      */
     class ResourceManager {
     private:
@@ -65,17 +63,16 @@ namespace Tom::s3e {
         const std::string & getResourcePath(void);
 
         /**
-         * Resolve the path to a resource. If `path` has the `res://` protocol
-         * as it's prefix, this function with return the path relative to the
-         * resource root path. If `path` is relative or absolute, then `path`
-         * will be returned without modification.
+         * Resolve the path to a resource. If `path` is relative, this
+         * function with return the path relative to the resource root path. If
+         * `path` is absolute, then `path` will be returned without
+         * modification.
          *
          * @param path the resource path
          *
          * @return the resolved resource path
          */
-        std::string resourceAt(const std::string & path) const;
-    };
+        std::string resourceAt(const std::string & path) const; };
 
     /**
      * An implementation of ResourceManager that has methods for loading

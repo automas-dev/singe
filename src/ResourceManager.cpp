@@ -19,12 +19,11 @@ namespace Tom::s3e {
     }
 
     std::string ResourceManager::resourceAt(const std::string & path) const {
-        auto resProtoPos = path.find("res://");
-
-        if (resProtoPos ==  0)
-            return { fs::path(rootPath) / fs::path(path.substr(6)) };
-        else
+        fs::path base(path);
+        if (base.is_absolute())
             return path;
+        else
+            return { fs::path(rootPath) / base };
     }
 }
 
