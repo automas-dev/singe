@@ -188,7 +188,7 @@ void Game::onUpdate(const sf::Time & delta) {
 
     time += deltaS;
     sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
-    cubeModel->setRotation({time, 0, 0});
+    //cubeModel->setRotation({time, time / 3, time / 7});
 }
 
 void Game::onDraw() const {
@@ -218,6 +218,10 @@ void Game::onDraw() const {
         monoShader->setVec3("lights[0].direction", {-1, -2, -3});
         monoShader->setUInt("lights[0].type", 1);
 
+        monoShader->setFloat("lights[0].constant", 1.0);
+        monoShader->setFloat("lights[0].linear", 0.09);
+        monoShader->setFloat("lights[0].quadratic", 0.032);
+
         monoShader->setVec3("lights[1].ambient", {0.1, 0.1, 0.1});
         monoShader->setVec3("lights[1].diffuse", {0.8, 0.8, 0.8});
         monoShader->setVec3("lights[1].specular", {1, 1, 1});
@@ -225,12 +229,12 @@ void Game::onDraw() const {
         monoShader->setVec3("lights[1].direction", {-1, -2, -3});
         monoShader->setUInt("lights[1].type", 2);
 
-        monoShader->setFloat("lights[0].constant", 1.0);
-        monoShader->setFloat("lights[0].linear", 0.09);
-        monoShader->setFloat("lights[0].quadratic", 0.032);
+        monoShader->setFloat("lights[1].constant", 1.0);
+        monoShader->setFloat("lights[1].linear", 0.09);
+        monoShader->setFloat("lights[1].quadratic", 0.032);
 
-        monoShader->setFloat("lights[0].cutOff", glm::cos(glm::radians(12.5)));
-        monoShader->setFloat("lights[0].outerCutOff", glm::cos(glm::radians(15.0)));
+        monoShader->setFloat("lights[1].cutOff", glm::cos(glm::radians(12.5)));
+        monoShader->setFloat("lights[1].outerCutOff", glm::cos(glm::radians(15.0)));
 
         drawPass(vp, monoShader);
     }
