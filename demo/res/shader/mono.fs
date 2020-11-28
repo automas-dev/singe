@@ -109,6 +109,13 @@ vec3 calcLight(Light light, vec3 normal, vec3 viewDir) {
         return vec3(0.0, 1.0, 0.0);
 }
 
+vec3 tonemap(vec3 color)
+{
+    const float gamma = 2.2;
+    vec3 mapped = color / (color + vec3(1.0));
+    return pow(mapped, vec3(1.0 / gamma));
+}
+
 void main()
 {
     vec3 normal = normalize(FragNorm);
@@ -119,5 +126,5 @@ void main()
         color += calcLight(lights[i], normal, viewDir);
     }
 
-    FragColor = vec4(color, material.alpha);
+    FragColor = vec4(tonemap(color), material.alpha);
 }
