@@ -48,12 +48,13 @@ namespace Tom::s3e {
             } p[3];
         };
 
+        std::vector<glm::vec3> av;
+        std::vector<glm::vec2> avt;
+        std::vector<glm::vec3> avn;
+
         struct ObjMesh {
             std::string name;
             std::string usemtl;
-            std::vector<glm::vec3> av;
-            std::vector<glm::vec2> avt;
-            std::vector<glm::vec3> avn;
             std::vector<Face> af;
         };
 
@@ -103,7 +104,7 @@ namespace Tom::s3e {
                     PARSE_ERROR("v");
                     return false;
                 }
-                mesh->av.push_back(v);
+                av.push_back(v);
             }
             else if (strStartsWithStr("vt ", line)) {
                 glm::vec2 vt;
@@ -112,7 +113,7 @@ namespace Tom::s3e {
                     PARSE_ERROR("vt");
                     return false;
                 }
-                mesh->avt.push_back(vt);
+                avt.push_back(vt);
             }
             else if (strStartsWithStr("vn ", line)) {
                 glm::vec3 vn;
@@ -121,7 +122,7 @@ namespace Tom::s3e {
                     PARSE_ERROR("vn");
                     return false;
                 }
-                mesh->avn.push_back(vn);
+                avn.push_back(vn);
             }
             else if (strStartsWithChar('f', line)) {
                 Face f;
@@ -137,7 +138,14 @@ namespace Tom::s3e {
             }
         }
 
+        if (mesh) {
+            meshs.push_back(std::move(mesh));
+            mesh.reset();
+        }
+
 #undef PARSE_ERROR
+
+        SPDLOG_DEBUG("Loaded {} meshes", meshs.size());
 
         std::string mtlPath = parent + mtllib;
         materials = std::make_shared<MaterialLibrary>();
@@ -155,24 +163,24 @@ namespace Tom::s3e {
 
             for (auto & face : mesh->af) {
                 for (int i = 0; i < 3; i++) {
-                    if (face.p[i].v > mesh->av.size()) {
-                        SPDLOG_ERROR("failed to load mesh {} vertex index {} is out of bounds {}", mesh->name, face.p[i].v, mesh->av.size());
+                    if (face.p[i].v > av.size()) {
+                        SPDLOG_ERROR("failed to load mesh {} vertex index {} is out of bounds {}", mesh->name, face.p[i].v, av.size());
                         return false;
                     }
-                    else if (face.p[i].n > mesh->avn.size()) {
-                        SPDLOG_ERROR("failed to load mesh {} normal index {} is out of bounds {}", mesh->name, face.p[i].n, mesh->avn.size());
+                    else if (face.p[i].n > avn.size()) {
+                        SPDLOG_ERROR("failed to load mesh {} normal index {} is out of bounds {}", mesh->name, face.p[i].n, avn.size());
                         return false;
                     }
-                    else if (face.p[i].t > mesh->avt.size()) {
+                    else if (face.p[i].t > avt.size()) {
                         SPDLOG_ERROR("failed to load mesh {} texture coordinate index {} is out of bounds {}", mesh->name, face.p[i].t,
-                                     mesh->avt.size());
+                                     avt.size());
                         return false;
                     }
                     else {
                         points.push_back({
-                            mesh->av[face.p[i].v - 1],
-                            mesh->avn[face.p[i].n - 1],
-                            mesh->avt[face.p[i].t - 1]
+                            av[face.p[i].v - 1],
+                            avn[face.p[i].n - 1],
+                            avt[face.p[i].t - 1]
                         });
                     }
                 }
