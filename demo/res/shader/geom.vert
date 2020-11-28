@@ -13,8 +13,8 @@ uniform mat4 model;
 
 void main()
 {
-    gl_Position = mvp * vec4(aPos, 1.0);
-    FragPos = (model * vec4(aPos, 1.0)).xyz;
+    gl_Position = mvp * model * vec4(aPos, 1.0);
+    FragPos = vec3(model * vec4(aPos, 1.0));
     FragNorm = aNorm;
     FragTex = aTex;
 }

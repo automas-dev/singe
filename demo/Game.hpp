@@ -50,7 +50,7 @@ public:
     void onMouseDown(const sf::Event::MouseButtonEvent & e) override;
     void onMouseUp(const sf::Event::MouseButtonEvent & e) override;
     void onResized(const sf::Event::SizeEvent & e) override;
-    
+
     void onUpdate(const sf::Time & delta) override;
     void onDraw() const override;
 

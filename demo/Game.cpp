@@ -135,7 +135,7 @@ bool Game::onCreate() {
 
     lightingShader = std::make_shared<MaterialShader>();
     if (!lightingShader->loadFromPath(resManager.resourceAt("shader/lighting.vert"),
-                                  resManager.resourceAt("shader/lighting.frag"))) {
+                                      resManager.resourceAt("shader/lighting.frag"))) {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
@@ -244,6 +244,10 @@ void Game::onDraw() const {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         geometryShader->setMat4("mvp", vp);
+
+        geometryShader->setMat4("model", sphereModel->modelMatrix());
+        sphereModel->draw();
+
         geometryShader->setMat4("model", cubeModel->modelMatrix());
         cubeModel->draw();
 
@@ -255,7 +259,7 @@ void Game::onDraw() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     lightingShader->bind();
-    if (true) {
+    {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         texture->bind();
@@ -321,8 +325,16 @@ void Game::onDraw() const {
 
         debugShader->setInt("show", 0);
         debugShader->setInt("tonemap", 1);
-
         draw_quad({0.5, 0.5}, {0.5, 0.5});
+
+        debugShader->setInt("show", 1);
+        draw_quad({0.5, 0.0}, {0.5, 0.5});
+
+        debugShader->setInt("show", 2);
+        draw_quad({0.5, -0.5}, {0.5, 0.5});
+
+        debugShader->setInt("show", 3);
+        draw_quad({0.5, -1.0}, {0.5, 0.5});
 
         glActiveTexture(GL_TEXTURE0);
         glDisable(GL_TEXTURE_2D);

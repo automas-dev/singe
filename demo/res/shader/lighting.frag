@@ -49,13 +49,13 @@ uniform vec3 viewPos;
 
 out vec4 FragColor;
 
+in vec3 FragPos;
+in vec3 FragNorm;
 in vec2 FragTex;
 
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedo;
-
-vec3 FragPos;
 
 vec3 calcDirLight(Light light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(light.position - FragPos);
@@ -122,8 +122,7 @@ vec3 tonemap(vec3 color)
 
 void main()
 {
-    FragPos = texture(gPosition, FragTex).rgb;
-    vec3 normal = texture(gNormal, FragTex).rgb;
+    vec3 normal = normalize(FragNorm);
     vec3 viewDir = normalize(viewPos - FragPos);
 
     vec3 color = vec3(0.0);
