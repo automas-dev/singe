@@ -165,7 +165,7 @@ bool Game::onCreate() {
 
     fbuff = std::make_shared<FrameBuffer>(window->getSize());
     fbuff->addTexture(GL_COLOR_ATTACHMENT0);
-    fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
+    fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
     fbuff->finalize();
 
     gbuff = std::make_shared<FrameBuffer>(window->getSize());
@@ -174,7 +174,7 @@ bool Game::onCreate() {
     gbuff->addTexture(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT);
     //gbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
     gbuff->finalize();
-    gbuff->addDepthBuffer();
+    gbuff->enableDepthBuffer();
 
     SetMouseGrab(true);
 

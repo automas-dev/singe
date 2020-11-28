@@ -7,8 +7,8 @@ namespace Tom::s3e {
     }) { }
 
     FrameBufferTexture::FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal, GLenum format, GLenum type,
-                                           GLint magFilter, GLint minFilter, GLint wrap, bool mipmaps) : Texture(size, internal, format, type, magFilter,
-                                                       minFilter, wrap, mipmaps), attachment(attachment) { }
+                                           GLint magFilter, GLint minFilter, GLint wrap) : Texture(size, internal, format, type, magFilter,
+                                                       minFilter, wrap, false), attachment(attachment) { }
 
     FrameBufferTexture::~FrameBufferTexture() {
         Texture::~Texture();
@@ -55,7 +55,7 @@ namespace Tom::s3e {
         bind();
 
         auto texture = std::make_shared<FrameBufferTexture>(attachment, size, internal, format, type, GL_NEAREST, GL_NEAREST,
-                       GL_REPEAT);
+                       GL_CLAMP);
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->getTextureId(), 0);
         textures.push_back(texture);
 
@@ -81,7 +81,7 @@ namespace Tom::s3e {
         std::vector<GLuint> buffers;
         for (int i = 0; i < count(); i++) {
             auto a = textures[i]->getAttachment();
-            if (a != GL_DEPTH_ATTACHMENT && a != GL_STENCIL_ATTACHMENT) 
+            if (a != GL_DEPTH_ATTACHMENT && a != GL_STENCIL_ATTACHMENT)
                 buffers.push_back(a);
         }
         glDrawBuffers(buffers.size(), &buffers[0]);
