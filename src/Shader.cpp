@@ -173,11 +173,11 @@ namespace Tom::s3e {
         return shader;
     }
 
-    Shader::Shader() { }
+    Shader::Shader() : program(0) { }
 
     Shader::~Shader() {
-        // TODO: free shader program
-        SPDLOG_CRITICAL("Shader::~Shader() has not been implemented yet");
+        if (program > 0)
+            glDeleteProgram(program);
     }
 
     bool Shader::loadFromPath(const std::string & vertexPath,
