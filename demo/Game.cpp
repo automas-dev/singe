@@ -319,6 +319,9 @@ void Game::onDraw() const {
         debugShader->setInt("gNormal", 1);
         debugShader->setInt("gAlbedo", 2);
 
+        debugShader->setInt("show", 0);
+        debugShader->setInt("tonemap", 1);
+
         draw_quad({0.5, 0.5}, {0.5, 0.5});
 
         glActiveTexture(GL_TEXTURE0);
