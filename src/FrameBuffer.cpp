@@ -10,6 +10,10 @@ namespace Tom::s3e {
                                            GLint magFilter, GLint minFilter, GLint wrap, bool mipmaps) : Texture(size, internal, format, type, magFilter,
                                                        minFilter, wrap, mipmaps), attachment(attachment) { }
 
+    FrameBufferTexture::~FrameBufferTexture() {
+        Texture::~Texture();
+    }
+
     GLuint FrameBufferTexture::getAttachment() const {
         return attachment;
     }
@@ -67,18 +71,14 @@ namespace Tom::s3e {
         return textures.size();
     }
 
-    void FrameBuffer::blit(GLint src, GLint dest, GLbitfield bitfield) {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, src);
+    void FrameBuffer::blit(GLint dest, GLbitfield bitfield) {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dest);
         glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
     }
 
     void FrameBuffer::bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, fboId);
-        for (int i = 0; i < count(); i++) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            textures[i]->bind();
-        }
     }
 
     void FrameBuffer::unbind() {

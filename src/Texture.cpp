@@ -49,8 +49,8 @@ namespace Tom::s3e {
             return false;
         }
 
-        setSize(image->getSize());
-        realloc();
+        type = GL_UNSIGNED_BYTE;
+        setSize(image->getSize());  // Calls realloc
 
         return true;
     }

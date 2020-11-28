@@ -31,6 +31,8 @@ class Game : public GameBase {
     Model::Ptr cubeModel;
     Model::Ptr sphereModel;
 
+    FrameBuffer::Ptr fbuff;
+
     float time = 0.0;
 
 public:

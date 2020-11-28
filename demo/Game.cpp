@@ -141,6 +141,10 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load dev texture");
     }
 
+    fbuff = std::make_shared<FrameBuffer>(window->getSize());
+    fbuff->addTexture(GL_COLOR_ATTACHMENT0);
+    fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
+
     SetMouseGrab(true);
 
     getGlError();
@@ -181,6 +185,7 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
     GameBase::onResized(e);
+    fbuff->setSize({e.width, e.height});
 }
 
 void Game::onUpdate(const sf::Time & delta) {
@@ -200,6 +205,9 @@ void Game::onDraw() const {
     glDepthFunc(GL_LEQUAL);
 
     glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
+
+    fbuff->bind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     monoShader->bind();
     {
@@ -241,13 +249,17 @@ void Game::onDraw() const {
 
     defaultShader->bind();
     {
-        glDisable(GL_BLEND);
-        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
+        //glDisable(GL_BLEND);
+        //glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
 
-        draw_color_array(gridVerts, gridCols, GL_LINES);
+        //draw_color_array(gridVerts, gridCols, GL_LINES);
     }
 
     defaultShader->unbind();
+
+    fbuff->unbind();
+
+    fbuff->blit(0, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     getGlError();
 }
