@@ -47,7 +47,7 @@ namespace Tom::s3e {
 
         void addTexture(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT);
 
-        void addDepthBuffer(void);
+        void enableDepthBuffer(void);
 
         void finalize(void);
 

@@ -62,7 +62,7 @@ namespace Tom::s3e {
         unbind();
     }
 
-    void FrameBuffer::addDepthBuffer() {
+    void FrameBuffer::enableDepthBuffer() {
         bind();
 
         glGenRenderbuffers(1, &rboDepth);
