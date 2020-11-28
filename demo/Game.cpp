@@ -90,8 +90,7 @@ bool Game::onCreate() {
     menu->setPosition(300, 300);
     menu->addMenuItem("New", [&]() {
         menu->hide();
-        window->setMouseCursorGrabbed(true);
-        window->setMouseCursorVisible(false);
+        SetMouseGrab(true);
     });
     menu->addMenuItem("Load", []() {});
     menu->addMenuItem("Options", []() {});
@@ -152,40 +151,36 @@ void Game::onDestroy() { }
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     switch (e.code) {
-        case sf::Keyboard::Escape:
-            menu->show();
-            SetMouseGrab(false);
-            break;
         case sf::Keyboard::Num2:
             doDrawTexture = !doDrawTexture;
             break;
         case sf::Keyboard::Num3:
             doDrawShading = !doDrawShading;
             break;
+        default:
+            GameBase::onKeyPressed(e);
+            break;
     }
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
-
+    GameBase::onKeyReleased(e);
 }
 
 void Game::onMouseMove(const sf::Event::MouseMoveEvent & e) {
-    menu->onMouseMove(e);
+    GameBase::onMouseMove(e);
 }
 
 void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
-    menu->onMouseDown(e);
+    GameBase::onMouseDown(e);
 }
 
 void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
-    menu->onMouseUp(e);
-
-    // TODO: Find a better solution to grabbing mouse after Menu close
-    SetMouseGrab(!menu->isVisible());
+    GameBase::onMouseUp(e);
 }
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
-
+    GameBase::onResized(e);
 }
 
 void Game::onUpdate(const sf::Time & delta) {
@@ -251,10 +246,6 @@ void Game::onDraw() const {
     defaultShader->unbind();
 
     getGlError();
-
-    window->pushGLStates();
-    window->draw(*menu);
-    window->popGLStates();
 }
 
 void Game::drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const {

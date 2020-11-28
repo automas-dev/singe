@@ -9,7 +9,7 @@
 
 namespace Tom::s3e {
 
-    GameBase::GameBase() : grab(false), mouseSensitivity(0.2, 0.2), moveSpeed(5) { }
+    GameBase::GameBase() : grab(false), mouseSensitivity(0.2, 0.2), moveSpeed(5), camera(nullptr), menu(nullptr) { }
 
     GameBase::~GameBase() { }
 
@@ -120,6 +120,11 @@ namespace Tom::s3e {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             onDraw();
+            if (menu) {
+                window->pushGLStates();
+                window->draw(*menu);
+                window->popGLStates();
+            }
             window->display();
         }
 
@@ -160,17 +165,34 @@ namespace Tom::s3e {
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
-        if (event.code == sf::Keyboard::Escape)
-            Stop();
+        if (menu) {
+            if (event.code == sf::Keyboard::Escape) {
+                menu->show();
+                SetMouseGrab(false);
+            }
+        }
+        else {
+            if (event.code == sf::Keyboard::Escape)
+                Stop();
+        }
     }
 
     void GameBase::onKeyReleased(const sf::Event::KeyEvent & event) { }
 
-    void GameBase::onMouseMove(const sf::Event::MouseMoveEvent & event) { }
+    void GameBase::onMouseMove(const sf::Event::MouseMoveEvent & event) {
+        if (menu)
+            menu->onMouseMove(event);
+    }
 
-    void GameBase::onMouseDown(const sf::Event::MouseButtonEvent & event) { }
+    void GameBase::onMouseDown(const sf::Event::MouseButtonEvent & event) {
+        if (menu)
+            menu->onMouseDown(event);
+    }
 
-    void GameBase::onMouseUp(const sf::Event::MouseButtonEvent & event) { }
+    void GameBase::onMouseUp(const sf::Event::MouseButtonEvent & event) {
+        if (menu)
+            menu->onMouseUp(event);
+    }
 
     void GameBase::onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) { }
 

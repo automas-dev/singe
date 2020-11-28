@@ -17,7 +17,6 @@ class Game : public GameBase {
     DefaultResourceManager resManager;
 
     sf::Font font;
-    Menu::Ptr menu;
 
     Shader::Ptr defaultShader;
     Shader::Ptr textureShader;

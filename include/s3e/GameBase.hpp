@@ -30,6 +30,7 @@ namespace Tom::s3e {
     protected:
         std::shared_ptr<sf::RenderWindow> window;
         Camera::Ptr camera;
+        Menu::Ptr menu;
 
     public:
 
