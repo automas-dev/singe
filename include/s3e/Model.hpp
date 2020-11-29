@@ -97,6 +97,8 @@ namespace Tom::s3e {
          */
         bool loadFromPath(const std::string & objPath);
 
+        bool loadFromPoints(const std::vector<Vertex> & points);
+
         /**
          * Move the Model by adding pos to the position.
          *

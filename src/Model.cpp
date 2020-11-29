@@ -197,6 +197,16 @@ namespace Tom::s3e {
         return true;
     }
 
+    bool Model::loadFromPoints(const std::vector<Vertex> & points) {
+        auto mesh = std::make_shared<Mesh>();
+        if (!mesh->loadFromPoints(points)) {
+            SPDLOG_ERROR("failed in call to Mesh::loadFromPoints()");
+            return false;
+        }
+        models.push_back(mesh);
+        return true;
+    }
+
     void Model::move(glm::vec3 pos) {
         this->pos += pos;
     }
