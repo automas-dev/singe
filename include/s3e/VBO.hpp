@@ -23,7 +23,6 @@ namespace Tom::s3e {
     class VBO {
         GLuint vao;
         GLuint vbo;
-        bool hasBuffer;
         size_t nPoints;
 
     public:
@@ -31,27 +30,11 @@ namespace Tom::s3e {
         typedef std::shared_ptr<const VBO> ConstPtr;
 
         VBO(void);
-        VBO(const std::vector<Vertex> & points);
         virtual ~VBO();
 
         bool loadPoints(const std::vector<Vertex> & points);
 
-        void clearPoints(void);
-
         void draw(void) const;
     };
-
-    // class VAO {
-    //     GLuint vao;
-
-    // public:
-    //     VAO() {
-    //         glGenVertexArrays(1, &vao);
-    //         glBindVertexArray(vao);
-    //     }
-
-    //     ~VAO(void) {
-    //     }
-    // };
 }
 
