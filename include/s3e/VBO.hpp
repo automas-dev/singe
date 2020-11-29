@@ -32,7 +32,7 @@ namespace Tom::s3e {
         VBO(void);
         virtual ~VBO();
 
-        bool loadPoints(const std::vector<Vertex> & points);
+        bool loadFromPoints(const std::vector<Vertex> & points);
 
         void draw(void) const;
     };

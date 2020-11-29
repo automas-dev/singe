@@ -15,7 +15,7 @@ namespace Tom::s3e {
         }
     }
 
-    bool VBO::loadPoints(const std::vector<Vertex> & points) {
+    bool VBO::loadFromPoints(const std::vector<Vertex> & points) {
         nPoints = points.size();
 
         glBindVertexArray(vao);

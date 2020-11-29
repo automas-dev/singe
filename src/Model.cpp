@@ -187,7 +187,7 @@ namespace Tom::s3e {
             }
 
             auto model = std::make_shared<Mesh>(mesh->name, materials->getMaterial(mesh->usemtl));
-            if (!model->loadPoints(points)) {
+            if (!model->loadFromPoints(points)) {
                 SPDLOG_ERROR("failed in call to Mesh::loadPoints while loading Model {}", path);
                 return false;
             }
