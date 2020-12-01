@@ -18,6 +18,7 @@ add_subdirectory(lib/spdlog EXCLUDE_FROM_ALL)
 set(S3E_HEADERS 
     include/s3e.hpp
     include/s3e/Camera.hpp
+    include/s3e/FPSDisplay.hpp
     include/s3e/FrameBuffer.hpp
     include/s3e/GameBase.hpp
     include/s3e/log.hpp
@@ -34,6 +35,7 @@ set(S3E_HEADERS
 
 set(S3E_SOURCES
     src/Camera.cpp
+    src/FPSDisplay.cpp
     src/FrameBuffer.cpp
     src/GameBase.cpp
     src/Material.cpp

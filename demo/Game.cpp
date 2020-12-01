@@ -1,7 +1,5 @@
-#include <iostream>
-using namespace std;
-
 #include "Game.hpp"
+#include <spdlog/spdlog.h>
 
 static std::vector<glm::vec3> genGridVerts(int steps = 10) {
     std::vector<glm::vec3> verts;
@@ -69,7 +67,7 @@ static std::vector<glm::vec3> genGridCols(int steps = 10) {
 static void getGlError() {
     GLenum err;
     while ((err = glGetError()) != GL_NO_ERROR) {
-        std::cout << "gl error " << err << std::endl;
+        SPDLOG_ERROR("glGetError() returned {}", err);
     }
 }
 
@@ -91,13 +89,17 @@ void GLAPIENTRY MessageCallback( GLenum source,
 
 bool Game::onCreate() {
     if (!font.loadFromFile(resManager.resourceAt("Questrial_Regular.ttf"))) {
-        cerr << "Failed to load font" << endl;
+        SPDLOG_ERROR("failed to load Questrial_Regular.ttf");
         return false;
     }
 
+    fps = std::make_shared<FPSDisplay>();
+    fps->setFont(font);
+    fps->setRate(0.1f);
+
     // During init, enable debug output
-    glEnable              ( GL_DEBUG_OUTPUT );
-    glDebugMessageCallback( MessageCallback, 0 );
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(MessageCallback, 0);
 
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
@@ -147,7 +149,6 @@ bool Game::onCreate() {
 
     cubeModel = resManager.loadModel("model/cube_plane.obj");
     if (!cubeModel) {
-        std::cout << "Cube model failed" << std::endl;
         throw std::runtime_error("Failed to load cube model");
     }
 
@@ -221,6 +222,8 @@ void Game::onResized(const sf::Event::SizeEvent & e) {
 
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
+
+    fps->update(delta);
 
     time += deltaS;
     sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
@@ -343,6 +346,10 @@ void Game::onDraw() const {
     defaultShader->unbind();
 
     //getGlError();
+
+    window->pushGLStates();
+    window->draw(*fps);
+    window->popGLStates();
 }
 
 void Game::drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const {

@@ -18,6 +18,8 @@ class Game : public GameBase {
 
     sf::Font font;
 
+    FPSDisplay::Ptr fps;
+
     Shader::Ptr defaultShader;
     Shader::Ptr debugShader;
     Shader::Ptr geometryShader;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "s3e/Camera.hpp"
+#include "s3e/FPSDisplay.hpp"
 #include "s3e/FrameBuffer.hpp"
 #include "s3e/GameBase.hpp"
 #include "s3e/Material.hpp"
