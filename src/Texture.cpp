@@ -8,25 +8,35 @@ namespace Tom::s3e {
         SPDLOG_DEBUG("updating opengl texture {} to size {} x {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
                      textureId, size.x, size.y, magFilter, minFilter, wrap, mipmaps);
 
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexImage2D(GL_TEXTURE_2D, 0, internal, size.x, size.y, 0, format, type, (image ? image->getPixelsPtr() : NULL));
+        GLenum target;
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+        if (multisample) {
+            target = GL_TEXTURE_2D_MULTISAMPLE;
+            glBindTexture(target, textureId);
+            glTexImage2DMultisample(target, samples, internal, size.x, size.y, GL_TRUE);
+        }
+        else {
+            target = GL_TEXTURE_2D;
+            glBindTexture(target, textureId);
+            glTexImage2D(target, 0, internal, size.x, size.y, 0, format, type, (image ? image->getPixelsPtr() : NULL));
+        }
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
 
-        if (mipmaps)
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, wrap);
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, wrap);
+
+        if (!multisample && mipmaps)
             glGenerateMipmap(GL_TEXTURE_2D);
     }
 
     Texture::Texture() : Texture({0, 0}) { }
 
     Texture::Texture(sf::Vector2u size, GLint internal, GLenum format, GLenum type, GLint magFilter, GLint minFilter,
-                     GLint wrap, bool mipmaps) : textureId(0), size(size),
+                     GLint wrap, bool mipmaps, bool multisample, int samples) : textureId(0), size(size),
         internal(internal), format(format), type(type), minFilter(minFilter), magFilter(magFilter), wrap(wrap),
-        mipmaps(mipmaps) {
+        mipmaps(mipmaps), multisample(multisample), samples(samples) {
         glGenTextures(1, &textureId);
         SPDLOG_DEBUG("generated opengl texture: {}", textureId);
         if (size.x > 0 && size.y > 0)

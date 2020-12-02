@@ -18,6 +18,8 @@ namespace Tom::s3e {
         GLint magFilter, minFilter;
         GLint wrap;
         bool mipmaps;
+        bool multisample;
+        int samples;
 
         std::unique_ptr<sf::Image> image;
 
@@ -29,7 +31,8 @@ namespace Tom::s3e {
 
         Texture(void);
         Texture(sf::Vector2u size, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT,
-                GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_REPEAT, bool mipmaps = true);
+                GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_REPEAT, bool mipmaps = true,
+                bool multisample = false, int samples = 4);
         virtual ~Texture();
 
         bool loadFromPath(const std::string & path);

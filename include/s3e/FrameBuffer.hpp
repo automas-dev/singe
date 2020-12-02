@@ -41,9 +41,11 @@ namespace Tom::s3e {
          * @param magFilter the magnification filter (default GL_NEAREST)
          * @param minFilter the minification filter (default GL_NEAREST)
          * @param wrap the wrap mode when drawing
+         * @param multisample should the texture support multisampleing
          */
         FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal = GL_RGBA, GLenum format = GL_RGBA,
-                           GLenum type = GL_FLOAT, GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_CLAMP);
+                           GLenum type = GL_FLOAT, GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_CLAMP,
+                           bool multisample = false);
 
         /**
          * Destruct the FrameBufferTexture.
@@ -123,6 +125,24 @@ namespace Tom::s3e {
          * @param size the new size in pixels
          */
         void setSize(sf::Vector2u size);
+
+        /**
+         * Add a texture that supports multisampling to the FrameBuffer. The
+         * new texture will be attached using glFramebufferTexture2D.
+         *
+         * **NOTE** Do not use this texture for sampling. If you need to sample
+         * from it, you will need to create a non-multisampled texture and blit
+         * this texture to it to resolve the multisampling.
+         *
+         * @param attachment the frame buffer attachment like
+         *                   GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
+         * @param internal the internal format like GL_RGBA16F, GL_RGBA,
+         *                 GL_DEPTH_COMPONENT, etc.
+         * @param format the format of pixel data
+         * @param type the data type of pixel data
+         */
+        void addMultisampleTexture(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA,
+                                   GLenum type = GL_FLOAT);
 
         /**
          * Add a texture to the FrameBuffer. The new texture will be attached

@@ -165,8 +165,9 @@ bool Game::onCreate() {
     }
 
     fbuff = std::make_shared<FrameBuffer>(window->getSize());
-    fbuff->addTexture(GL_COLOR_ATTACHMENT0);
-    fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
+    fbuff->addMultisampleTextureG(GL_COLOR_ATTACHMENT0);
+    fbuff->enableDepthBuffer();
+    //fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
     fbuff->finalize();
 
     gbuff = std::make_shared<FrameBuffer>(window->getSize());

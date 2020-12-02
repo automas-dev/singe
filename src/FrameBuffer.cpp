@@ -7,8 +7,8 @@ namespace Tom::s3e {
     }) { }
 
     FrameBufferTexture::FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal, GLenum format, GLenum type,
-                                           GLint magFilter, GLint minFilter, GLint wrap) : Texture(size, internal, format, type, magFilter,
-                                                       minFilter, wrap, false), attachment(attachment) { }
+                                           GLint magFilter, GLint minFilter, GLint wrap, bool multisample) : Texture(size, internal, format, type, magFilter,
+                                                       minFilter, wrap, multisample), attachment(attachment) { }
 
     FrameBufferTexture::~FrameBufferTexture() {
         Texture::~Texture();
@@ -51,11 +51,22 @@ namespace Tom::s3e {
         }
     }
 
+    void FrameBuffer::addMultisampleTexture(GLenum attachment, GLint internal, GLenum format, GLenum type) {
+        bind();
+
+        auto texture = std::make_shared<FrameBufferTexture>(attachment, size, internal, format, type, GL_NEAREST, GL_NEAREST,
+                       GL_CLAMP, true);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D_MULTISAMPLE, texture->getTextureId(), 0);
+        textures.push_back(texture);
+
+        unbind();
+    }
+
     void FrameBuffer::addTexture(GLenum attachment, GLint internal, GLenum format, GLenum type) {
         bind();
 
         auto texture = std::make_shared<FrameBufferTexture>(attachment, size, internal, format, type, GL_NEAREST, GL_NEAREST,
-                       GL_CLAMP);
+                       GL_CLAMP, false);
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->getTextureId(), 0);
         textures.push_back(texture);
 
