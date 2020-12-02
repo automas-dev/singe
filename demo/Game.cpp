@@ -164,19 +164,23 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load dev texture");
     }
 
-    fbuff = std::make_shared<FrameBuffer>(window->getSize());
-    fbuff->addMultisampleTextureG(GL_COLOR_ATTACHMENT0);
+    fbuff = std::make_shared<FrameBuffer>(window->getSize(), 8);
+    fbuff->bind();
+    fbuff->addTexture(GL_COLOR_ATTACHMENT0);
     fbuff->enableDepthBuffer();
     //fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
     fbuff->finalize();
+    fbuff->unbind();
 
     gbuff = std::make_shared<FrameBuffer>(window->getSize());
+    gbuff->bind();
     gbuff->addTexture(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT);
     gbuff->addTexture(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT);
     gbuff->addTexture(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT);
     //gbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
     gbuff->finalize();
     gbuff->enableDepthBuffer();
+    gbuff->unbind();
 
     SetMouseGrab(true);
 

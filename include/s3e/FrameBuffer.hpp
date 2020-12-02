@@ -41,11 +41,12 @@ namespace Tom::s3e {
          * @param magFilter the magnification filter (default GL_NEAREST)
          * @param minFilter the minification filter (default GL_NEAREST)
          * @param wrap the wrap mode when drawing
-         * @param multisample should the texture support multisampleing
+         * @param samples the number of samples to use, 0 to disable
+         *                multisampling
          */
         FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal = GL_RGBA, GLenum format = GL_RGBA,
                            GLenum type = GL_FLOAT, GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_CLAMP,
-                           bool multisample = false);
+                           GLsizei samples = 0);
 
         /**
          * Destruct the FrameBufferTexture.
@@ -75,6 +76,7 @@ namespace Tom::s3e {
         sf::Vector2u size;
         std::vector<FrameBufferTexture::Ptr> textures;
         GLuint rboDepth;
+        GLsizei samples;
 
     public:
         /**
@@ -89,15 +91,20 @@ namespace Tom::s3e {
 
         /**
          * Construct a new FrameBuffer with size 0, 0.
+         *
+         * @param samples the number of samples to use, 0 to disable
+         *                multisampling
          */
-        FrameBuffer(void);
+        FrameBuffer(GLsizei multisample = 0);
 
         /**
          * Construct a new FrameBuffer with the given size.
          *
          * @param size the size in pixels
+         * @param samples the number of samples to use, 0 to disable
+         *                multisampling
          */
-        FrameBuffer(sf::Vector2u size);
+        FrameBuffer(sf::Vector2u size, GLsizei multisample = 0);
 
         /**
          * Destruct the FrameBuffer.
@@ -141,7 +148,7 @@ namespace Tom::s3e {
          * @param format the format of pixel data
          * @param type the data type of pixel data
          */
-        void addMultisampleTexture(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA,
+        void addMultisampleTexture(GLenum attachment, GLint internal = GL_RGB, GLenum format = GL_RGB,
                                    GLenum type = GL_FLOAT);
 
         /**

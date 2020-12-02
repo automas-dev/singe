@@ -7,8 +7,8 @@ namespace Tom::s3e {
     }) { }
 
     FrameBufferTexture::FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal, GLenum format, GLenum type,
-                                           GLint magFilter, GLint minFilter, GLint wrap, bool multisample) : Texture(size, internal, format, type, magFilter,
-                                                       minFilter, wrap, multisample), attachment(attachment) { }
+                                           GLint magFilter, GLint minFilter, GLint wrap, GLsizei samples) : Texture(size, internal, format, type, magFilter,
+                                                       minFilter, wrap, false, samples), attachment(attachment) { }
 
     FrameBufferTexture::~FrameBufferTexture() {
         Texture::~Texture();
@@ -24,9 +24,9 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    FrameBuffer::FrameBuffer() : FrameBuffer({0, 0}) { }
+    FrameBuffer::FrameBuffer(GLsizei multisample) : FrameBuffer({0, 0}, multisample) { }
 
-    FrameBuffer::FrameBuffer(sf::Vector2u size) : size(size), rboDepth(0) {
+    FrameBuffer::FrameBuffer(sf::Vector2u size, GLsizei samples) : size(size), rboDepth(0), samples(samples) {
         glGenFramebuffers(1, &fboId);
     }
 
@@ -51,41 +51,25 @@ namespace Tom::s3e {
         }
     }
 
-    void FrameBuffer::addMultisampleTexture(GLenum attachment, GLint internal, GLenum format, GLenum type) {
-        bind();
-
-        auto texture = std::make_shared<FrameBufferTexture>(attachment, size, internal, format, type, GL_NEAREST, GL_NEAREST,
-                       GL_CLAMP, true);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D_MULTISAMPLE, texture->getTextureId(), 0);
-        textures.push_back(texture);
-
-        unbind();
-    }
-
     void FrameBuffer::addTexture(GLenum attachment, GLint internal, GLenum format, GLenum type) {
-        bind();
-
         auto texture = std::make_shared<FrameBufferTexture>(attachment, size, internal, format, type, GL_NEAREST, GL_NEAREST,
-                       GL_CLAMP, false);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->getTextureId(), 0);
+                       GL_CLAMP, samples);
+        GLenum textarget = (samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textarget, texture->getTextureId(), 0);
         textures.push_back(texture);
-
-        unbind();
     }
 
     void FrameBuffer::enableDepthBuffer() {
-        bind();
-
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
+        if (samples > 0)
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
+        else
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-
-        unbind();
     }
 
     void FrameBuffer::finalize() {
-        bind();
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             SPDLOG_ERROR("FrameBuffer is not complete");
 
@@ -96,8 +80,6 @@ namespace Tom::s3e {
                 buffers.push_back(a);
         }
         glDrawBuffers(buffers.size(), &buffers[0]);
-
-        unbind();
     }
 
     const std::vector<FrameBufferTexture::Ptr> & FrameBuffer::getTextures() const {
