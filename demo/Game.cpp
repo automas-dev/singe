@@ -159,10 +159,44 @@ bool Game::onCreate() {
     sphereModel->move({1, 2, 3});
     sphereModel->scale({0.1, 0.1, 0.1});
 
+    hallModel = resManager.loadModel("model/hall.obj");
+    if (!hallModel) {
+        throw std::runtime_error("Failed to load hall model");
+    }
+    hallModel->move({0, 0, -4});
+
     texture = resManager.loadTexture("dev_texture_gray", "img/dev_texture_gray.png");
     if (!texture) {
         throw std::runtime_error("Failed to load dev texture");
     }
+
+    light0 = {
+        .index = 0,
+        .ambient = {0.1, 0.1, 0.1},
+        .diffuse = {0.8, 0.8, 0.8},
+        .specular = {1, 1, 1},
+        .position = {0, 0, 0},
+        .direction = {-1, -2, -3},
+        .type = Light::POINT,
+        .constant = 1.0,
+        .linear = 0.09,
+        .quadratic = 0.032,
+    };
+
+    light1 = {
+        .index = 1,
+        .ambient = {0.1, 0.1, 0.1},
+        .diffuse = {0.8, 0.8, 0.8},
+        .specular = {1, 1, 1},
+        .position = {0, 0, 0},
+        .direction = {-1, -2, -3},
+        .type = Light::SPOT,
+        .constant = 1.0,
+        .linear = 0.09,
+        .quadratic = 0.032,
+        .cutOff = glm::cos(glm::radians(12.5f)),
+        .outerCutOff = glm::cos(glm::radians(15.0f))
+    };
 
     fbuff = std::make_shared<FrameBuffer>(window->getSize(), 8);
     fbuff->bind();
@@ -192,11 +226,11 @@ void Game::onDestroy() { }
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     switch (e.code) {
-        case sf::Keyboard::Num2:
-            doDrawTexture = !doDrawTexture;
+        case sf::Keyboard::Num1:
+            doDrawGrid = !doDrawGrid;
             break;
-        case sf::Keyboard::Num3:
-            doDrawShading = !doDrawShading;
+        case sf::Keyboard::Num2:
+            drawGridOver = !drawGridOver;
             break;
         default:
             GameBase::onKeyPressed(e);
@@ -233,6 +267,9 @@ void Game::onUpdate(const sf::Time & delta) {
     time += deltaS;
     sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
     //cubeModel->setRotation({time, time / 3, time / 7});
+
+    light0.position = sphereModel->getPosition();
+    //light1.position = sphereModel->getPosition();
 }
 
 void Game::onDraw() const {
@@ -276,45 +313,30 @@ void Game::onDraw() const {
         lightingShader->setVec3("viewPos", camera->getPosition());
         lightingShader->setUInt("nLights", 2);
 
-        lightingShader->setVec3("lights[0].ambient", {0.1, 0.1, 0.1});
-        lightingShader->setVec3("lights[0].diffuse", {0.8, 0.8, 0.8});
-        lightingShader->setVec3("lights[0].specular", {1, 1, 1});
-        lightingShader->setVec3("lights[0].position", sphereModel->getPosition());
-        lightingShader->setVec3("lights[0].direction", {-1, -2, -3});
-        lightingShader->setUInt("lights[0].type", 1);
-
-        lightingShader->setFloat("lights[0].constant", 1.0);
-        lightingShader->setFloat("lights[0].linear", 0.09);
-        lightingShader->setFloat("lights[0].quadratic", 0.032);
-
-        lightingShader->setVec3("lights[1].ambient", {0.1, 0.1, 0.1});
-        lightingShader->setVec3("lights[1].diffuse", {0.8, 0.8, 0.8});
-        lightingShader->setVec3("lights[1].specular", {1, 1, 1});
-        lightingShader->setVec3("lights[1].position", sphereModel->getPosition() + glm::vec3(1, 0, 1));
-        lightingShader->setVec3("lights[1].direction", {-1, -2, -3});
-        lightingShader->setUInt("lights[1].type", 2);
-
-        lightingShader->setFloat("lights[1].constant", 1.0);
-        lightingShader->setFloat("lights[1].linear", 0.09);
-        lightingShader->setFloat("lights[1].quadratic", 0.032);
-
-        lightingShader->setFloat("lights[1].cutOff", glm::cos(glm::radians(12.5)));
-        lightingShader->setFloat("lights[1].outerCutOff", glm::cos(glm::radians(15.0)));
+        light0.uniform(lightingShader);
+        light1.uniform(lightingShader);
 
         drawPass(vp, lightingShader);
     }
 
     fbuff->unbind();
-    fbuff->blit(0, GL_COLOR_BUFFER_BIT);
+    fbuff->blit(0, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
+    if (drawGridOver) {
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
+    }
 
     defaultShader->bind();
-    if (false) {
+    if (doDrawGrid) {
         glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
 
         draw_color_array(gridVerts, gridCols, GL_LINES);
+    }
+
+    if (!drawGridOver) {
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
     }
 
     debugShader->bind();
@@ -360,6 +382,7 @@ void Game::onDraw() const {
 void Game::drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const {
     drawModel(sphereModel, vp, shader);
     drawModel(cubeModel, vp, shader);
+    drawModel(hallModel, vp, shader);
 }
 
 void Game::drawModel(const Model::ConstPtr & model, glm::mat4 vp, const MaterialShader::Ptr & shader) const {

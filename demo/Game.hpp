@@ -10,6 +10,51 @@
 #include <s3e.hpp>
 using namespace Tom::s3e;
 
+struct Light {
+    size_t index;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+    glm::vec3 position;
+    glm::vec3 direction;
+
+    enum Type {
+        DIRECTIONAL = 0,
+        POINT,
+        SPOT
+    };
+    Type type;
+
+    // Point
+    float constant;
+    float linear;
+    float quadratic;
+
+    // Spot
+    float cutOff;
+    float outerCutOff;
+
+    void uniform(Shader::Ptr shader) const {
+        auto light = fmt::format("lights[{}]", index);
+
+        shader->setVec3(light + ".ambient", ambient);
+        shader->setVec3(light + ".diffuse", diffuse);
+        shader->setVec3(light + ".specular", specular);
+        shader->setVec3(light + ".position", position);
+        shader->setVec3(light + ".direction", direction);
+        shader->setUInt(light + ".type", type);
+
+        shader->setFloat(light + ".constant", constant);
+        shader->setFloat(light + ".linear", linear);
+        shader->setFloat(light + ".quadratic", quadratic);
+
+        shader->setFloat(light + ".cutOff", cutOff);
+        shader->setFloat(light + ".outerCutOff", outerCutOff);
+    }
+};
+
 class Game : public GameBase {
     std::vector<glm::vec3> gridVerts;
     std::vector<glm::vec3> gridCols;
@@ -28,11 +73,15 @@ class Game : public GameBase {
 
     Texture::Ptr texture;
 
-    bool doDrawTexture = true;
-    bool doDrawShading = true;
+    bool doDrawGrid = true;
+    bool drawGridOver = false;
 
     Model::Ptr cubeModel;
     Model::Ptr sphereModel;
+    Model::Ptr hallModel;
+
+    Light light0;
+    Light light1;
 
     FrameBuffer::Ptr fbuff;
     FrameBuffer::Ptr gbuff;
