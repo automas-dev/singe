@@ -125,8 +125,9 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load default shader");
     }
 
-    geometryShader = resManager.loadShader("shader/geom.vert", "shader/geom.frag");
-    if (!geometryShader) {
+    geometryShader = std::make_shared<MaterialShader>();
+    if (!geometryShader->loadFromPath(resManager.resourceAt("shader/geom.vert"),
+                                      resManager.resourceAt("shader/geom.frag"))) {
         throw std::runtime_error("Failed to load texture shader");
     }
 
@@ -221,6 +222,15 @@ bool Game::onCreate() {
     fbuff->finalize();
     fbuff->unbind();
 
+    gbuffMulti = std::make_shared<FrameBuffer>(window->getSize(), 8);
+    gbuffMulti->bind();
+    gbuffMulti->addTexture(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT);
+    gbuffMulti->addTexture(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT);
+    gbuffMulti->addTexture(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT);
+    gbuffMulti->finalize();
+    gbuffMulti->enableDepthBuffer();
+    gbuffMulti->unbind();
+
     gbuff = std::make_shared<FrameBuffer>(window->getSize());
     gbuff->bind();
     gbuff->addTexture(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT);
@@ -274,6 +284,8 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
     GameBase::onResized(e);
+    gbuff->setSize({e.width, e.height});
+    gbuffMulti->setSize({e.width, e.height});
     fbuff->setSize({e.width, e.height});
 }
 
@@ -302,30 +314,39 @@ void Game::onDraw() const {
 
     geometryShader->bind();
     {
-        gbuff->bind();
+        gbuffMulti->bind();
         texture->bind();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         geometryShader->setMat4("mvp", vp);
 
-        geometryShader->setMat4("model", sphereModel->modelMatrix());
-        sphereModel->draw();
-
-        geometryShader->setMat4("model", cubeModel->modelMatrix());
-        cubeModel->draw();
+        drawPass(geometryShader);
 
         texture->unbind();
-        gbuff->unbind();
+        gbuffMulti->unbind();
     }
+
+    gbuffMulti->blit(gbuff->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     fbuff->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     lightingShader->bind();
     {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        texture->bind();
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
+
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        gbuff->getTextures()[0]->bind();
+        glActiveTexture(GL_TEXTURE1);
+        gbuff->getTextures()[1]->bind();
+        glActiveTexture(GL_TEXTURE2);
+        gbuff->getTextures()[2]->bind();
+
+        lightingShader->setInt("gPosition", 0);
+        lightingShader->setInt("gNormal", 1);
+        lightingShader->setInt("gAlbedo", 2);
 
         lightingShader->setMat4("vp", vp);
         lightingShader->setVec3("viewPos", camera->getPosition());
@@ -335,28 +356,17 @@ void Game::onDraw() const {
         light1.uniform(lightingShader);
         light2.uniform(lightingShader);
 
-        drawPass(vp, lightingShader);
+        draw_quad({-1, -1}, {2, 2});
+
+        glActiveTexture(GL_TEXTURE0);
+        glDisable(GL_TEXTURE_2D);
     }
 
     fbuff->unbind();
     fbuff->blit(0, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (drawGridOver) {
-        glDisable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-    }
-
-    defaultShader->bind();
-    if (doDrawGrid) {
-        glUniformMatrix4fv(defaultShader->uniformLocation("mvp"), 1, GL_FALSE, &vp[0][0]);
-
-        draw_color_array(gridVerts, gridCols, GL_LINES);
-    }
-
-    if (!drawGridOver) {
-        glDisable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-    }
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
 
     debugShader->bind();
     if (doDrawDebug) {
@@ -382,9 +392,6 @@ void Game::onDraw() const {
         debugShader->setInt("show", 2);
         draw_quad({0.5, -0.5}, {0.5, 0.5});
 
-        debugShader->setInt("show", 3);
-        draw_quad({0.5, -1.0}, {0.5, 0.5});
-
         glActiveTexture(GL_TEXTURE0);
         glDisable(GL_TEXTURE_2D);
     }
@@ -398,13 +405,13 @@ void Game::onDraw() const {
     window->popGLStates();
 }
 
-void Game::drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const {
-    drawModel(sphereModel, vp, shader);
-    drawModel(cubeModel, vp, shader);
-    drawModel(hallModel, vp, shader);
+void Game::drawPass(const MaterialShader::Ptr & shader) const {
+    drawModel(sphereModel, shader);
+    drawModel(cubeModel, shader);
+    drawModel(hallModel, shader);
 }
 
-void Game::drawModel(const Model::ConstPtr & model, glm::mat4 vp, const MaterialShader::Ptr & shader) const {
+void Game::drawModel(const Model::ConstPtr & model, const MaterialShader::Ptr & shader) const {
     shader->setMat4("model", model->modelMatrix());
     model->draw(shader);
 }

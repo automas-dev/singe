@@ -67,15 +67,15 @@ class Game : public GameBase {
 
     Shader::Ptr defaultShader;
     Shader::Ptr debugShader;
-    Shader::Ptr geometryShader;
+    MaterialShader::Ptr geometryShader;
     MaterialShader::Ptr lightingShader;
     MaterialShader::Ptr monoShader;
 
     Texture::Ptr texture;
 
-    bool doDrawGrid = true;
+    bool doDrawGrid = false;
     bool drawGridOver = false;
-    bool doDrawDebug = false;
+    bool doDrawDebug = true;
 
     Model::Ptr cubeModel;
     Model::Ptr sphereModel;
@@ -86,6 +86,7 @@ class Game : public GameBase {
     Light light2;
 
     FrameBuffer::Ptr fbuff;
+    FrameBuffer::Ptr gbuffMulti;
     FrameBuffer::Ptr gbuff;
 
     float time = 0.0;
@@ -108,6 +109,6 @@ public:
     void onDraw() const override;
 
 private:
-    void drawPass(glm::mat4 vp, const MaterialShader::Ptr & shader) const;
-    void drawModel(const Model::ConstPtr & model, glm::mat4 vp, const MaterialShader::Ptr & shader) const;
+    void drawPass(const MaterialShader::Ptr & shader) const;
+    void drawModel(const Model::ConstPtr & model, const MaterialShader::Ptr & shader) const;
 };

@@ -10,17 +10,6 @@ const float ambientStrength = 1.0;
 const float diffuseStrength = 1.0;
 const float specularStrength = 1.0;
 
-struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-
-    float shininess;
-    float alpha;
-
-    sampler2D texture;
-};
-
 struct Light {
     vec3 ambient;
     vec3 diffuse;
@@ -40,8 +29,6 @@ struct Light {
     float outerCutOff;
 };
 
-uniform Material material;
-
 uniform Light lights[N_MAX_LIGHTS];
 uniform uint nLights;
 
@@ -49,9 +36,11 @@ uniform vec3 viewPos;
 
 out vec4 FragColor;
 
-in vec3 FragPos;
-in vec3 FragNorm;
+vec3 FragPos;
+vec3 FragNorm;
 in vec2 FragTex;
+vec3 FragAlbedo;
+float FragShine;
 
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
@@ -65,13 +54,12 @@ vec3 calcDirLight(Light light, vec3 normal, vec3 viewDir) {
 
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), FragShine);
 
     // combine results
-    vec3 texColor = vec3(texture(material.texture, FragTex));
-    vec3 ambient = light.ambient * material.ambient * texColor * ambientStrength;
-    vec3 diffuse = light.diffuse * material.diffuse * texColor * diff * diffuseStrength;
-    vec3 specular = light.specular * material.specular * spec * diffuseStrength;
+    vec3 ambient = light.ambient * FragAlbedo * ambientStrength;
+    vec3 diffuse = light.diffuse * FragAlbedo * diff * diffuseStrength;
+    vec3 specular = light.specular * FragShine * spec * diffuseStrength;
 
     return (ambient + diffuse + specular);
 }
@@ -122,6 +110,11 @@ vec3 tonemap(vec3 color)
 
 void main()
 {
+    FragPos = texture(gPosition, FragTex).rgb;
+    FragNorm = texture(gNormal, FragTex).rgb;
+    FragAlbedo = texture(gAlbedo, FragTex).rgb;
+    FragShine = texture(gAlbedo, FragTex).a;
+
     vec3 normal = normalize(FragNorm);
     vec3 viewDir = normalize(viewPos - FragPos);
 
@@ -130,7 +123,8 @@ void main()
         color += calcLight(lights[i], normal, viewDir);
     }
 
-    FragColor = vec4(tonemap(color), material.alpha);
+    FragColor = vec4(tonemap(color), 1.0);
+    //FragColor = texture(gAlbedo, FragTex);
     
     //if (color.r >= 1.0 || color.g >= 1.0 || color.b >= 1.0)
     //    color = vec3(1.0, 0.0, 0.0);

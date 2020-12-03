@@ -18,16 +18,13 @@ void main()
     vec3 albedo = texture(gAlbedo, FragTex).rgb;
     vec3 color;
     switch (show) {
-        default:
-            color = albedo * pos;
-            break;
-        case 1:
+        case 0:
             color = pos;
             break;
-        case 2:
+        case 1:
             color = normal;
             break;
-        case 3:
+        default:
             color = albedo;
             break;
     }

@@ -49,6 +49,13 @@ namespace Tom::s3e {
         for (auto & texture : textures) {
             texture->setSize(size);
         }
+        if (rboDepth > 0) {
+            glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+            if (samples > 0)
+                glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
+            else
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
+        }
     }
 
     void FrameBuffer::addTexture(GLenum attachment, GLint internal, GLenum format, GLenum type) {
@@ -60,12 +67,17 @@ namespace Tom::s3e {
     }
 
     void FrameBuffer::enableDepthBuffer() {
+        if (rboDepth > 0)
+            SPDLOG_ERROR("trying to depth buffer which already exists fbo = {} rbo = {}", fboId, rboDepth);
+
         glGenRenderbuffers(1, &rboDepth);
         glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+
         if (samples > 0)
             glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
         else
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
+
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
     }
 
@@ -93,7 +105,18 @@ namespace Tom::s3e {
     void FrameBuffer::blit(GLint dest, GLbitfield bitfield) {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dest);
-        glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
+        if (count() > 1) {
+            for (int i = 0; i < count(); i++) {
+                auto a = textures[i]->getAttachment();
+                if (a != GL_DEPTH_ATTACHMENT && a != GL_STENCIL_ATTACHMENT) {
+                    glReadBuffer(a);
+                    glDrawBuffer(a);
+                    glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
+                }
+            }
+        }
+        else
+            glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
     }
 
     void FrameBuffer::bind() {
