@@ -198,6 +198,21 @@ bool Game::onCreate() {
         .outerCutOff = glm::cos(glm::radians(15.0f))
     };
 
+    light2 = {
+        .index = 2,
+        .ambient = {0.1, 0.1, 0.1},
+        .diffuse = {2.0, 2.0, 2.0},
+        .specular = {3.0, 3.0, 3.0},
+        .position = {0, 1, -9},
+        .direction = {0, 0, -1},
+        .type = Light::SPOT,
+        .constant = 1.0,
+        .linear = 0.09,
+        .quadratic = 0.032,
+        .cutOff = glm::cos(glm::radians(12.5f)),
+        .outerCutOff = glm::cos(glm::radians(15.0f))
+    };
+
     fbuff = std::make_shared<FrameBuffer>(window->getSize(), 8);
     fbuff->bind();
     fbuff->addTexture(GL_COLOR_ATTACHMENT0);
@@ -231,6 +246,9 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
             break;
         case sf::Keyboard::Num2:
             drawGridOver = !drawGridOver;
+            break;
+        case sf::Keyboard::Num3:
+            doDrawDebug = !doDrawDebug;
             break;
         default:
             GameBase::onKeyPressed(e);
@@ -269,7 +287,7 @@ void Game::onUpdate(const sf::Time & delta) {
     //cubeModel->setRotation({time, time / 3, time / 7});
 
     light0.position = sphereModel->getPosition();
-    //light1.position = sphereModel->getPosition();
+    light1.position = sphereModel->getPosition();
 }
 
 void Game::onDraw() const {
@@ -311,10 +329,11 @@ void Game::onDraw() const {
 
         lightingShader->setMat4("vp", vp);
         lightingShader->setVec3("viewPos", camera->getPosition());
-        lightingShader->setUInt("nLights", 2);
+        lightingShader->setUInt("nLights", 3);
 
         light0.uniform(lightingShader);
         light1.uniform(lightingShader);
+        light2.uniform(lightingShader);
 
         drawPass(vp, lightingShader);
     }
@@ -340,7 +359,7 @@ void Game::onDraw() const {
     }
 
     debugShader->bind();
-    {
+    if (doDrawDebug) {
         glEnable(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0);
         gbuff->getTextures()[0]->bind();

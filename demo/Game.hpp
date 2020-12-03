@@ -75,6 +75,7 @@ class Game : public GameBase {
 
     bool doDrawGrid = true;
     bool drawGridOver = false;
+    bool doDrawDebug = false;
 
     Model::Ptr cubeModel;
     Model::Ptr sphereModel;
@@ -82,6 +83,7 @@ class Game : public GameBase {
 
     Light light0;
     Light light1;
+    Light light2;
 
     FrameBuffer::Ptr fbuff;
     FrameBuffer::Ptr gbuff;

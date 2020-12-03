@@ -5,8 +5,8 @@
 namespace Tom::s3e {
 
     void Texture::realloc() {
-        SPDLOG_DEBUG("updating opengl texture {} to size {} x {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
-                     textureId, size.x, size.y, magFilter, minFilter, wrap, mipmaps);
+        SPDLOG_DEBUG("updating opengl texture {} to size {} x {} intermal = {} format = {} type = {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
+                     textureId, size.x, size.y, internal, format, type, magFilter, minFilter, wrap, mipmaps);
 
         if (samples > 0) {
             glBindTexture(target, textureId);

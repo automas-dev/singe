@@ -131,5 +131,12 @@ void main()
     }
 
     FragColor = vec4(tonemap(color), material.alpha);
+    
+    //if (color.r >= 1.0 || color.g >= 1.0 || color.b >= 1.0)
+    //    color = vec3(1.0, 0.0, 0.0);
+    //if (color.r < 0.0 || color.g < 0.0 || color.b < 0.0)
+    //    color = vec3(0.0, 0.0, 1.0);
+
+    //FragColor = vec4(color, material.alpha);
 }
 
