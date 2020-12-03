@@ -99,7 +99,7 @@ public:
         shader = res.loadShader("shader/shader.vert", "shader/shader.frag");
 
         model = res.loadModel("model/cube.obj");
-        model->setPosition({-1, -2, -3});
+        model->setPosition({0, 0, 0});
         model->setScale({0.1, 0.1, 0.1});
         model->setRotation({M_PI/2, M_PI/3, M_PI/6});
 
@@ -123,13 +123,6 @@ public:
         shader->bind();
         shader->setMat4("mvp", vp);
 
-        shader->setMat4("model", glm::mat4(1));
-        glBegin(GL_TRIANGLES);
-        glVertex2d(0.0, 0.0);
-        glVertex2d(1.0, 0.0);
-        glVertex2d(0.0, 1.0);
-        glEnd();
-
         shader->setMat4("model", model->modelMatrix());
         model->draw();
 
@@ -143,6 +136,31 @@ int main() {
     if (game.Create("Window"))
         game.Start();
     return 0;
+}
+```
+
+shader.vert
+```glsl
+#version 330 core
+
+layout (location = 0) in vec3 position;
+
+uniform mat4 mvp;
+uniform mat4 model;
+
+void main() {
+    gl_Position = mvp * model * vec4(position, 1.0);
+}
+```
+
+shader.frag
+```glsl
+#version 330 core
+
+out vec4 FragColor;
+
+void main() {
+    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
 ```
 
