@@ -68,6 +68,16 @@ namespace Tom::s3e {
         void setAttachment(GLuint attachment);
     };
 
+    struct FrameBufferAttachment {
+        GLenum attachment;
+        GLint internal = GL_RGBA;
+        GLenum format = GL_RGBA;
+        GLenum type = GL_FLOAT;
+
+        FrameBufferAttachment(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT)
+            : attachment(attachment), internal(internal), format(format), type(type) { }
+    };
+
     /**
      * Manage a single frame buffer object.
      */
@@ -77,6 +87,8 @@ namespace Tom::s3e {
         std::vector<FrameBufferTexture::Ptr> textures;
         GLuint rboDepth;
         GLsizei samples;
+
+        std::shared_ptr<FrameBuffer> resolved;
 
     public:
         /**
@@ -90,21 +102,16 @@ namespace Tom::s3e {
         typedef std::shared_ptr<const FrameBuffer> ConstPtr;
 
         /**
-         * Construct a new FrameBuffer with size 0, 0.
-         *
-         * @param samples the number of samples to use, 0 to disable
-         *                multisampling
-         */
-        FrameBuffer(GLsizei multisample = 0);
-
-        /**
          * Construct a new FrameBuffer with the given size.
          *
          * @param size the size in pixels
+         * @param attachments a list of texture attachments for this frame buffer
+         * @param depthBuffer should a render buffer be crated for depth
          * @param samples the number of samples to use, 0 to disable
          *                multisampling
          */
-        FrameBuffer(sf::Vector2u size, GLsizei multisample = 0);
+        FrameBuffer(sf::Vector2u size, std::vector<FrameBufferAttachment> attachments, bool depthBuffer = true,
+                    GLsizei samples = 0);
 
         /**
          * Destruct the FrameBuffer.
@@ -134,50 +141,6 @@ namespace Tom::s3e {
         void setSize(sf::Vector2u size);
 
         /**
-         * Add a texture that supports multisampling to the FrameBuffer. The
-         * new texture will be attached using glFramebufferTexture2D.
-         *
-         * **NOTE** Do not use this texture for sampling. If you need to sample
-         * from it, you will need to create a non-multisampled texture and blit
-         * this texture to it to resolve the multisampling.
-         *
-         * @param attachment the frame buffer attachment like
-         *                   GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
-         * @param internal the internal format like GL_RGBA16F, GL_RGBA,
-         *                 GL_DEPTH_COMPONENT, etc.
-         * @param format the format of pixel data
-         * @param type the data type of pixel data
-         */
-        void addMultisampleTexture(GLenum attachment, GLint internal = GL_RGB, GLenum format = GL_RGB,
-                                   GLenum type = GL_FLOAT);
-
-        /**
-         * Add a texture to the FrameBuffer. The new texture will be attached
-         * using glFramebufferTexture2D.
-         *
-         * @param attachment the frame buffer attachment like
-         *                   GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
-         * @param internal the internal format like GL_RGBA16F, GL_RGBA,
-         *                 GL_DEPTH_COMPONENT, etc.
-         * @param format the format of pixel data
-         * @param type the data type of pixel data
-         */
-        void addTexture(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT);
-
-        /**
-         * Generate a Readbuffer for the depth component. Use this instead of
-         * addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT) if you do not
-         * need to read from the depth buffer.
-         */
-        void enableDepthBuffer(void);
-
-        /**
-         * Finalize the construction of the FrameBuffer by calling
-         * glDrawBuffers. This can be called multiple times.
-         */
-        void finalize(void);
-
-        /**
          * Get the number of FrameBufferTexture textures in the FrameBuffer.
          *
          * @return the number of FrameBufferTexture textures
@@ -200,6 +163,15 @@ namespace Tom::s3e {
          * GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT)
          */
         void blit(GLint dest, GLbitfield bitfield = GL_COLOR_BUFFER_BIT);
+
+        /**
+         * Get the resolved FrameBuffer. If this FrameBuffer is multisampled,
+         * the resolved FrameBuffer will be an identical FrameBuffer that is
+         * not multisampled.
+         *
+         * @returns the resolved FrameBuffer
+         */
+        FrameBuffer::Ptr & getResovled(void);
 
         /**
          * Bind the FrameBuffer. All draw calls after this will be sent to the

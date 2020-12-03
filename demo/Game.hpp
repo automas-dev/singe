@@ -87,7 +87,6 @@ class Game : public GameBase {
 
     FrameBuffer::Ptr fbuff;
     FrameBuffer::Ptr gbuffMulti;
-    FrameBuffer::Ptr gbuff;
 
     float time = 0.0;
 

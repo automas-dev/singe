@@ -214,32 +214,15 @@ bool Game::onCreate() {
         .outerCutOff = glm::cos(glm::radians(15.0f))
     };
 
-    fbuff = std::make_shared<FrameBuffer>(window->getSize(), 8);
-    fbuff->bind();
-    fbuff->addTexture(GL_COLOR_ATTACHMENT0);
-    fbuff->enableDepthBuffer();
-    //fbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT);
-    fbuff->finalize();
-    fbuff->unbind();
+    fbuff = std::make_shared<FrameBuffer>(window->getSize(), std::vector<FrameBufferAttachment> {
+        FrameBufferAttachment(GL_COLOR_ATTACHMENT0),
+    }, true, 8);
 
-    gbuffMulti = std::make_shared<FrameBuffer>(window->getSize(), 8);
-    gbuffMulti->bind();
-    gbuffMulti->addTexture(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT);
-    gbuffMulti->addTexture(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT);
-    gbuffMulti->addTexture(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT);
-    gbuffMulti->finalize();
-    gbuffMulti->enableDepthBuffer();
-    gbuffMulti->unbind();
-
-    gbuff = std::make_shared<FrameBuffer>(window->getSize());
-    gbuff->bind();
-    gbuff->addTexture(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT);
-    gbuff->addTexture(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT);
-    gbuff->addTexture(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT);
-    //gbuff->addTexture(GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
-    gbuff->finalize();
-    gbuff->enableDepthBuffer();
-    gbuff->unbind();
+    gbuffMulti = std::make_shared<FrameBuffer>(window->getSize(), std::vector<FrameBufferAttachment> {
+        FrameBufferAttachment(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT),
+        FrameBufferAttachment(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT),
+        FrameBufferAttachment(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT),
+    }, true, 8);
 
     SetMouseGrab(true);
 
@@ -284,7 +267,6 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
     GameBase::onResized(e);
-    gbuff->setSize({e.width, e.height});
     gbuffMulti->setSize({e.width, e.height});
     fbuff->setSize({e.width, e.height});
 }
@@ -326,7 +308,7 @@ void Game::onDraw() const {
         gbuffMulti->unbind();
     }
 
-    gbuffMulti->blit(gbuff->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    auto gbuff = gbuffMulti->getResovled();
 
     fbuff->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
