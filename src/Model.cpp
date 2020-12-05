@@ -27,7 +27,7 @@ namespace Tom::s3e {
         return path;
     }
 
-    Model::Model() : pos(0), rot(0), size(1), materials(nullptr) { }
+    Model::Model() : pos(0), rot(0), size(1), materials(std::make_shared<MaterialLibrary>()) { }
 
     Model::~Model() { }
 
@@ -148,7 +148,6 @@ namespace Tom::s3e {
         SPDLOG_DEBUG("Loaded {} meshes", meshs.size());
 
         std::string mtlPath = parent + mtllib;
-        materials = std::make_shared<MaterialLibrary>();
 
         if (materials->loadFromPath(mtlPath)) {
             materials->name = mtllib;
