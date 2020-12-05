@@ -198,11 +198,19 @@ namespace Tom::s3e {
     }
 
     bool Model::loadFromPoints(const std::vector<Vertex> & points) {
-        auto mesh = std::make_shared<Mesh>();
+        auto material = std::make_shared<Material>();
+        return loadFromPoints(points, material);
+    }
+
+    bool Model::loadFromPoints(const std::vector<Vertex> & points, Material::Ptr & material) {
+        materials->addMaterial(material);
+
+        auto mesh = std::make_shared<Mesh>("mesh", material);
         if (!mesh->loadFromPoints(points)) {
             SPDLOG_ERROR("failed in call to Mesh::loadFromPoints()");
             return false;
         }
+
         models.push_back(mesh);
         return true;
     }

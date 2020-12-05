@@ -97,7 +97,20 @@ namespace Tom::s3e {
          */
         bool loadFromPath(const std::string & objPath);
 
+        /**
+         * Load a single Mesh from points and use the default Material.
+         *
+         * @param points the points for the mesh
+         */
         bool loadFromPoints(const std::vector<Vertex> & points);
+
+        /**
+         * Load a single Mesh from points and use material.
+         *
+         * @param points the points for the mesh
+         * @param material the material to use
+         */
+        bool loadFromPoints(const std::vector<Vertex> & points, Material::Ptr & material);
 
         /**
          * Move the Model by adding pos to the position.
