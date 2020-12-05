@@ -4,7 +4,9 @@
 
 namespace Tom::s3e {
 
-    Material::Material() : ambient(0.8), diffuse(0.8), specular(0.8), specularExponent(500), alpha(1) { }
+    Material::Material() : Material("default") { }
+
+    Material::Material(const std::string & name) : ambient(0.8), diffuse(0.8), specular(0.8), specularExponent(500), alpha(1), name(name) { }
 
     Material::~Material() { }
 

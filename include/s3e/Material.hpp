@@ -59,9 +59,17 @@ namespace Tom::s3e {
 
         /**
          * Construct a new Material with ambient, diffuse and specular set to
-         * (0, 0, 0) and the specular exponent set to 0.
+         * (0.8, 0.8, 0.8) and the specular exponent set to 500.
          */
         Material(void);
+
+        /**
+         * Construct a new Material with ambient, diffuse and specular set to
+         * (0.8, 0.8, 0.8) and the specular exponent set to 500.
+         *
+         * @param name the material name
+         */
+        Material(const std::string & name);
 
         /**
          * Destruct the Material.
