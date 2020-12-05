@@ -4,7 +4,7 @@
 
 namespace Tom::s3e {
 
-    Material::Material() : ambient(0), diffuse(0), specular(0), specularExponent(0), alpha(1) { }
+    Material::Material() : ambient(0.8), diffuse(0.8), specular(0.8), specularExponent(500), alpha(1) { }
 
     Material::~Material() { }
 
@@ -63,7 +63,7 @@ namespace Tom::s3e {
                 std::string name = line.substr(7);
 
                 if (curr)
-                    materials.push_back(curr);
+                    addMaterial(curr);
 
                 curr = std::make_shared<Material>();
                 curr->name = name;
@@ -123,9 +123,13 @@ namespace Tom::s3e {
 #undef PARSE_ERROR
 
         if (curr)
-            materials.push_back(curr);
+            addMaterial(curr);
 
         return true;
+    }
+
+    void MaterialLibrary::addMaterial(Material::Ptr & material) {
+        materials.push_back(material);
     }
 
     std::size_t MaterialLibrary::size() const {

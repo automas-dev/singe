@@ -148,6 +148,13 @@ namespace Tom::s3e {
         bool loadFromPath(const std::string & mtlPath);
 
         /**
+         * Add a single Material to this MaterialLibrary.
+         *
+         * @param material the material to add
+         */
+        void addMaterial(Material::Ptr & material);
+
+        /**
          * Get the number of materials loaded from the .mtl file.
          *
          * @return the number of materials
