@@ -95,7 +95,6 @@ namespace Tom::s3e {
             }
 
             sf::Time delta = clock.restart();
-            SPDLOG_TRACE("last frame delta = {} ms", delta.asMilliseconds());
 
             if (grab) {
                 sf::Vector2i center (window->getSize().x / 2, window->getSize().y / 2);

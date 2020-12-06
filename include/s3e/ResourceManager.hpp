@@ -73,7 +73,8 @@ namespace Tom::s3e {
          *
          * @return the resolved resource path
          */
-        std::string resourceAt(const std::string & path) const; };
+        std::string resourceAt(const std::string & path) const;
+    };
 
     /**
      * An implementation of ResourceManager that has methods for loading

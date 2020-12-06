@@ -90,12 +90,10 @@ namespace Tom::s3e {
     }
 
     void Texture::bind() {
-        SPDLOG_TRACE("bind opengl texture: {}", textureId);
         glBindTexture(target, textureId);
     }
 
     void Texture::unbind() {
-        SPDLOG_TRACE("bind opengl texture: 0 (unbind)");
         glBindTexture(target, 0);
     }
 }
