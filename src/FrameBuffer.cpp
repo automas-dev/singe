@@ -102,6 +102,10 @@ namespace Tom::s3e {
         return textures;
     }
 
+    bool FrameBuffer::isMultisampled() {
+        return samples > 0;
+    }
+
     size_t FrameBuffer::count() const {
         return textures.size();
     }
@@ -124,7 +128,8 @@ namespace Tom::s3e {
     }
 
     FrameBuffer::Ptr & FrameBuffer::getResovled() {
-        blit(resolved->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        if (resolved)
+            blit(resolved->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         return resolved;
     }
 

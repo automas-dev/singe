@@ -141,6 +141,12 @@ namespace Tom::s3e {
         void setSize(sf::Vector2u size);
 
         /**
+         * Does the FrameBuffer support multisampling. If so, you need to use
+         * the FrameBuffer from getResovled() for any sampleing.
+         */
+        bool isMultisampled(void);
+
+        /**
          * Get the number of FrameBufferTexture textures in the FrameBuffer.
          *
          * @return the number of FrameBufferTexture textures

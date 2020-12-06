@@ -308,7 +308,11 @@ void Game::onDraw() const {
         gbuffMulti->unbind();
     }
 
-    auto gbuff = gbuffMulti->getResovled();
+    std::shared_ptr<FrameBuffer> gbuff;
+    if (gbuffMulti->isMultisampled())
+        gbuff = gbuffMulti->getResovled();
+    else
+        gbuff = gbuffMulti;
 
     fbuff->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
