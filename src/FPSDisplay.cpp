@@ -19,7 +19,7 @@ namespace Tom::s3e {
     }
 
     void FPSDisplay::updateLabel() {
-        setString(fmt::format("FPS: {:.2}", fps));
+        setString(fmt::format("FPS: {:.2f}", fps));
     }
 
     void FPSDisplay::setRate(float delta) {

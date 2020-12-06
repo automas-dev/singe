@@ -243,6 +243,9 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
         case sf::Keyboard::Num3:
             doDrawDebug = !doDrawDebug;
             break;
+        case sf::Keyboard::Num4:
+            doBlitFbuff = !doBlitFbuff;
+            break;
         default:
             GameBase::onKeyPressed(e);
             break;
@@ -295,7 +298,7 @@ void Game::onDraw() const {
     glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
 
     geometryShader->bind();
-    {
+    if (true) {
         gbuffMulti->bind();
         texture->bind();
 
@@ -308,7 +311,7 @@ void Game::onDraw() const {
         gbuffMulti->unbind();
     }
 
-    std::shared_ptr<FrameBuffer> gbuff;
+    std::shared_ptr<FrameBuffer> gbuff (nullptr);
     if (gbuffMulti->isMultisampled())
         gbuff = gbuffMulti->getResovled();
     else
@@ -348,11 +351,35 @@ void Game::onDraw() const {
         glDisable(GL_TEXTURE_2D);
     }
 
-    fbuff->unbind();
-    fbuff->blit(0, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
+
+    std::shared_ptr<FrameBuffer> fbuffTmp (nullptr);
+    if (fbuff->isMultisampled())
+        fbuffTmp = fbuff->getResovled();
+    else
+        fbuffTmp = fbuff;
+
+    debugShader->bind();
+    if (doBlitFbuff) {
+        fbuff->blit(0, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        fbuff->unbind();
+    }
+    else {
+        fbuff->unbind();
+        glEnable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        fbuffTmp->getTextures()[0]->bind();
+
+        debugShader->setInt("gPosition", 0);
+        debugShader->setInt("show", 0);
+        debugShader->setInt("tonemap", 0);
+
+        draw_quad({-1, -1}, {2, 2});
+
+        fbuffTmp->getTextures()[0]->unbind();
+        glDisable(GL_TEXTURE_2D);
+    }
 
     debugShader->bind();
     if (doDrawDebug) {
@@ -368,8 +395,9 @@ void Game::onDraw() const {
         debugShader->setInt("gNormal", 1);
         debugShader->setInt("gAlbedo", 2);
 
-        debugShader->setInt("show", 0);
         debugShader->setInt("tonemap", 1);
+
+        debugShader->setInt("show", 0);
         draw_quad({0.5, 0.5}, {0.5, 0.5});
 
         debugShader->setInt("show", 1);
