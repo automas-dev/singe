@@ -12,7 +12,8 @@ find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
-find_package(SPDLOG REQUIRED)
+find_package(fmt REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 set(S3E_HEADERS 
     include/s3e.hpp
@@ -65,6 +66,13 @@ PUBLIC
 )
 
 target_link_libraries(s3e
+<<<<<<< HEAD
+=======
+PRIVATE
+    fmt::fmt
+    spdlog::spdlog
+    OSN::OSN
+>>>>>>> 03fe4af (Added fmtlib, updated glm::vec and glm::mat ostream formatters)
 PUBLIC
     sfml-window 
     sfml-graphics 

@@ -5,29 +5,35 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <spdlog/fmt/fmt.h>
+#include <fmt/format.h>
 
-std::ostream & operator<<(std::ostream & os, const glm::vec2 & vec) {
+template<typename OStream>
+OStream & operator<<(OStream & os, const glm::vec2 & vec) {
     return os << fmt::format("[{}, {}]", vec[0], vec[1]);
 }
 
-std::ostream & operator<<(std::ostream & os, const glm::vec3 & vec) {
+template<typename OStream>
+OStream & operator<<(OStream & os, const glm::vec3 & vec) {
     return os << fmt::format("[{}, {}, {}]", vec[0], vec[1], vec[2]);
 }
 
-std::ostream & operator<<(std::ostream & os, const glm::vec4 & vec) {
+template<typename OStream>
+OStream & operator<<(OStream & os, const glm::vec4 & vec) {
     return os << fmt::format("[{}, {}, {}, {}]", vec[0], vec[1], vec[2], vec[3]);
 }
 
-std::ostream & operator<<(std::ostream & os, const glm::mat2 & mat) {
+template<typename OStream>
+OStream & operator<<(OStream & os, const glm::mat2 & mat) {
     return os << fmt::format("[{}, {}]", mat[0], mat[1]);
 }
 
-std::ostream & operator<<(std::ostream & os, const glm::mat3 & mat) {
+template<typename OStream>
+OStream & operator<<(OStream & os, const glm::mat3 & mat) {
     return os << fmt::format("[{}, {}, {}]", mat[0], mat[1], mat[2]);
 }
 
-std::ostream & operator<<(std::ostream & os, const glm::mat4 & mat) {
+template<typename OStream>
+OStream & operator<<(OStream & os, const glm::mat4 & mat) {
     return os << fmt::format("[{}, {}, {}, {}]", mat[0], mat[1], mat[2], mat[3]);
 }
 
