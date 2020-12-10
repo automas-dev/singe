@@ -12,8 +12,7 @@ find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
-
-add_subdirectory(lib/spdlog EXCLUDE_FROM_ALL)
+find_package(SPDLOG REQUIRED)
 
 set(S3E_HEADERS 
     include/s3e.hpp
