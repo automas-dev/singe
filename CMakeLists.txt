@@ -66,13 +66,9 @@ PUBLIC
 )
 
 target_link_libraries(s3e
-<<<<<<< HEAD
-=======
 PRIVATE
     fmt::fmt
     spdlog::spdlog
-    OSN::OSN
->>>>>>> 03fe4af (Added fmtlib, updated glm::vec and glm::mat ostream formatters)
 PUBLIC
     sfml-window 
     sfml-graphics 

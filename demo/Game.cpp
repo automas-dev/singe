@@ -302,6 +302,8 @@ void Game::onDraw() const {
         gbuffMulti->bind();
         texture->bind();
 
+        geometryShader->setFloat("specular", 0.8);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         geometryShader->setMat4("mvp", vp);
 
