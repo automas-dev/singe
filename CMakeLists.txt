@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(sfml-s3e VERSION 0.3.4 LANGUAGES CXX)
+project(sfml-s3e VERSION 0.3.5 LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
