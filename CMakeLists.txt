@@ -21,6 +21,7 @@ set(S3E_HEADERS
     include/s3e/FPSDisplay.hpp
     include/s3e/FrameBuffer.hpp
     include/s3e/GameBase.hpp
+    include/s3e/Keymap.hpp
     include/s3e/log.hpp
     include/s3e/Material.hpp
     include/s3e/Menu.hpp
@@ -38,6 +39,7 @@ set(S3E_SOURCES
     src/FPSDisplay.cpp
     src/FrameBuffer.cpp
     src/GameBase.cpp
+    src/Keymap.cpp
     src/Material.cpp
     src/Menu.cpp
     src/Model.cpp
