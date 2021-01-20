@@ -12,10 +12,6 @@ namespace Tom::s3e {
         return key != sf::Keyboard::Unknown;
     }
 
-    bool Keymap::isJustHandled(sf::Keyboard::Key key) {
-        return states[key] != last_states[key];
-    }
-
     void Keymap::onKeyPressed(const sf::Event::KeyEvent & event) {
         if (isKeyValid(event.code))
             states[event.code] = true;
