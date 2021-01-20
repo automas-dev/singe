@@ -1,68 +1,79 @@
 #include "s3e/Keymap.hpp"
 
 namespace Tom::s3e {
-    Keymap::Keymap() { }
+    Keymap::Keymap() {
+        states.fill(false);
+        last_states = states;
+    }
 
     Keymap::~Keymap() { }
 
-    bool Keymap::wasHandled(const sf::Keyboard::Key & key) {
-        return handledThisFrame.find(key) != handledThisFrame.end();
+    bool Keymap::isKeyValid(sf::Keyboard::Key key) {
+        return key != sf::Keyboard::Unknown;
+    }
+
+    bool Keymap::isJustHandled(sf::Keyboard::Key key) {
+        return states[key] != last_states[key];
     }
 
     void Keymap::onKeyPressed(const sf::Event::KeyEvent & event) {
-        if (!states[event.code] && !wasHandled(event.code))
-            justPressed.insert(event.code);
-        states[event.code] = true;
-        handledThisFrame.insert(event.code);
+        if (isKeyValid(event.code))
+            states[event.code] = true;
     }
 
     void Keymap::onKeyReleased(const sf::Event::KeyEvent & event) {
-        if (states[event.code] && !wasHandled(event.code))
-            justReleased.insert(event.code);
-        states[event.code] = false;
-        handledThisFrame.insert(event.code);
+        if (isKeyValid(event.code))
+            states[event.code] = false;
     }
 
     void Keymap::update() {
-        handledThisFrame.clear();
-        justPressed.clear();
-        justReleased.clear();
+        last_states = states;
     }
 
-    bool Keymap::isKeyPressed(const sf::Keyboard::Key & key) {
+    bool Keymap::addAction(const std::string & name, sf::Keyboard::Key key) {
+        if (isKeyValid(key)) {
+            actions[name] = key;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool Keymap::isKeyPressed(sf::Keyboard::Key key) {
         return states[key];
     }
 
-    bool Keymap::isKeyJustPressed(const sf::Keyboard::Key & key) {
-        return justPressed.find(key) != justPressed.end();
+    bool Keymap::isKeyReleased(sf::Keyboard::Key key) {
+        return !states[key];
+    }
+
+    bool Keymap::isKeyJustPressed(sf::Keyboard::Key key) {
+        return isKeyPressed(key) && !last_states[key];
+    }
+
+    bool Keymap::isKeyJustReleased(sf::Keyboard::Key key) {
+        return isKeyReleased(key) && last_states[key];
     }
 
     bool Keymap::isActionPressed(const std::string & action) {
-        auto key = actions[action];
-        return states[key];
-    }
-
-    bool Keymap::isActionJustPressed(const std::string & action) {
-        auto key = actions[action];
-        return justPressed.find(key) != justPressed.end();
-    }
-
-    bool Keymap::isKeyReleased(const sf::Keyboard::Key & key) {
-        return !states[key];
-    }
-
-    bool Keymap::isKeyJustReleased(const sf::Keyboard::Key & key) {
-        return justReleased.find(key) != justReleased.end();
+        auto kv = actions.find(action);
+        return kv != actions.end() && isKeyPressed(kv->second);
     }
 
     bool Keymap::isActionReleased(const std::string & action) {
-        auto key = actions[action];
-        return !states[key];
+        auto kv = actions.find(action);
+        return kv != actions.end() && isKeyReleased(kv->second);
+    }
+
+    bool Keymap::isActionJustPressed(const std::string & action) {
+        auto kv = actions.find(action);
+        return kv != actions.end() && isKeyJustPressed(kv->second);
     }
 
     bool Keymap::isActionJustReleased(const std::string & action) {
-        auto key = actions[action];
-        return justReleased.find(key) != justReleased.end();
+        auto kv = actions.find(action);
+        return kv != actions.end() && isKeyJustReleased(kv->second);
     }
 }
 
