@@ -92,6 +92,9 @@ class Game : public GameBase {
     Keymap keymap;
 
     float time = 0.0;
+    float tps = 20.0;
+    float timeSinceLastTick = 0.0;
+    sf::Clock tickTimer;
 
 public:
     Game(const sf::String & resPath);
@@ -111,6 +114,7 @@ public:
     void onDraw() const override;
 
 private:
+    void tick(void);
     void drawPass(const MaterialShader::Ptr & shader) const;
     void drawModel(const Model::ConstPtr & model, const MaterialShader::Ptr & shader) const;
 };

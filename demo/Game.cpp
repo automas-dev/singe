@@ -278,10 +278,21 @@ void Game::onResized(const sf::Event::SizeEvent & e) {
 
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
-
     fps->update(delta);
-
     time += deltaS;
+    timeSinceLastTick += deltaS;
+
+    float spt = 1 / tps;
+    if (timeSinceLastTick >= spt) {
+        timeSinceLastTick -= spt;
+        tickTimer.restart();
+        tick();
+        auto tickTime = tickTimer.getElapsedTime();
+        SPDLOG_DEBUG("tick took {} mss", tickTime.asMilliseconds());
+    }
+}
+
+void Game::tick() {
     sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
     //cubeModel->setRotation({time, time / 3, time / 7});
 

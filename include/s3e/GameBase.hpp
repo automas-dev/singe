@@ -9,7 +9,6 @@
 #include <vector>
 #include "Camera.hpp"
 #include "Menu.hpp"
-#include "spdlog/logger.h"
 
 namespace Tom::s3e {
 
@@ -27,8 +26,6 @@ namespace Tom::s3e {
         bool grab;
         sf::Vector2f mouseSensitivity;
         float moveSpeed;
-
-        std::shared_ptr<spdlog::logger> logGeneral;
 
     protected:
         std::shared_ptr<sf::RenderWindow> window;
