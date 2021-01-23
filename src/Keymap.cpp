@@ -1,7 +1,7 @@
 #include "s3e/Keymap.hpp"
 
 namespace Tom::s3e {
-    Keymap::Keymap() : currentSet(std::make_shared<KeySet>()) {
+    Keymap::Keymap() {
         states.fill(false);
         last_states = states;
     }
@@ -15,21 +15,12 @@ namespace Tom::s3e {
     void Keymap::onKeyPressed(const sf::Event::KeyEvent & event) {
         if (isKeyValid(event.code)) {
             states[event.code] = true;
-
-            currentSet->addKey(event.code);
         }
     }
 
     void Keymap::onKeyReleased(const sf::Event::KeyEvent & event) {
         if (isKeyValid(event.code)) {
             states[event.code] = false;
-
-            currentChord.addSet(currentSet);
-            currentSet = std::make_shared<KeySet>();
-
-            if (currentIsAction()) {
-                sendActionEvent();
-            }
         }
     }
 
