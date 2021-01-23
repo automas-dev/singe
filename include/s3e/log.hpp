@@ -6,3 +6,5 @@
 
 #include <spdlog/spdlog.h>
 
+#define log_general spdlog::get("general")
+

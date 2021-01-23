@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include "s3e/GameBase.hpp"
 #include "s3e/log.hpp"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 namespace Tom::s3e {
 
@@ -14,6 +16,14 @@ namespace Tom::s3e {
     GameBase::~GameBase() { }
 
     bool GameBase::Create(const std::string & title, unsigned int width, unsigned int height, bool fullscreen) {
+        
+	    spdlog::sink_ptr console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+	    spdlog::sink_ptr file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("log.txt",  false);
+
+	    logGeneral = std::shared_ptr<spdlog::logger>(new spdlog::logger("general", {console_sink, file_sink}));
+	    logGeneral->info("Made general logger");
+	    spdlog::register_logger(logGeneral);
+
         SPDLOG_INFO("creating game title = \"{}\" width = {} height = {} fullscreen = {}", title, width, height, fullscreen);
 
         sf::ContextSettings settings;
