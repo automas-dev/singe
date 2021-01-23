@@ -250,10 +250,12 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
             GameBase::onKeyPressed(e);
             break;
     }
+    keymap.onKeyPressed(e);
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
     GameBase::onKeyReleased(e);
+    keymap.onKeyReleased(e);
 }
 
 void Game::onMouseMove(const sf::Event::MouseMoveEvent & e) {

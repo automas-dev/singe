@@ -89,6 +89,8 @@ class Game : public GameBase {
     FrameBuffer::Ptr fbuff;
     FrameBuffer::Ptr gbuffMulti;
 
+    Keymap keymap;
+
     float time = 0.0;
 
 public:
