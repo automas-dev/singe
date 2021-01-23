@@ -4,6 +4,7 @@
 #include "s3e/FPSDisplay.hpp"
 #include "s3e/FrameBuffer.hpp"
 #include "s3e/GameBase.hpp"
+#include "s3e/Keymap.hpp"
 #include "s3e/Material.hpp"
 #include "s3e/Menu.hpp"
 #include "s3e/Model.hpp"
