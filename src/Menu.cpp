@@ -14,7 +14,7 @@ namespace Tom::s3e {
         this->callback = callback;
     }
 
-    void MenuItem::click() const {
+    void MenuItem::onClick() const {
         SPDLOG_INFO("MenuItem {} was clicked, calling callback", std::string(getString()));
         callback();
     }
@@ -146,7 +146,7 @@ namespace Tom::s3e {
 
         for (auto & item : items) {
             if (item->contains(point))
-                item->click();
+                item->onClick();
         }
     }
 }

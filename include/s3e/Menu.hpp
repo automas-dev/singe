@@ -20,7 +20,7 @@ namespace Tom::s3e {
 
         void setCallback(std::function<void(void)> callback);
 
-        void click() const;
+        void onClick() const;
 
         bool contains(sf::Vector2f point) const;
     };
