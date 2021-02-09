@@ -288,7 +288,7 @@ void Game::onUpdate(const sf::Time & delta) {
         tickTimer.restart();
         tick();
         auto tickTime = tickTimer.getElapsedTime();
-        SPDLOG_DEBUG("tick took {} mss", tickTime.asMilliseconds());
+        SPDLOG_TRACE("tick took {} mss", tickTime.asMilliseconds());
     }
 }
 
