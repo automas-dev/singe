@@ -17,6 +17,7 @@ find_package(spdlog CONFIG REQUIRED)
 
 set(S3E_HEADERS 
     include/s3e.hpp
+    include/default_font.h
     include/s3e/Camera.hpp
     include/s3e/FPSDisplay.hpp
     include/s3e/FrameBuffer.hpp
@@ -57,6 +58,7 @@ add_library(s3e STATIC
 
 add_library(Tom::s3e ALIAS s3e)
 
+set_property(TARGET s3e PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_compile_features(s3e PRIVATE cxx_std_17)
 
 target_include_directories(s3e

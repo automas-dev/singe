@@ -8,6 +8,7 @@
 #include "s3e/log.hpp"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include "default_font.h"
 
 namespace Tom::s3e {
 
@@ -16,7 +17,7 @@ namespace Tom::s3e {
     GameBase::~GameBase() { }
 
     bool GameBase::Create(const std::string & title, unsigned int width, unsigned int height, bool fullscreen) {
-        
+
         SPDLOG_INFO("creating game title = \"{}\" width = {} height = {} fullscreen = {}", title, width, height, fullscreen);
 
         sf::ContextSettings settings;
@@ -46,6 +47,11 @@ namespace Tom::s3e {
 
         camera = std::make_shared<Camera>();
         camera->setScreenSize(window->getSize());
+
+        font.loadFromMemory(__default_font_start, __default_font_size);
+
+        menu = std::make_shared<Menu>(font, title);
+        menu->setPosition(300, 300);
 
         SPDLOG_DEBUG("calling onCreate()");
         bool res = onCreate();
@@ -164,6 +170,14 @@ namespace Tom::s3e {
 
     void GameBase::SetMoveSpeed(float speed) {
         moveSpeed = speed;
+    }
+
+    const sf::Font & GameBase::GetUIFont() {
+        return font;
+    }
+
+    void GameBase::SetUIFont(const sf::Font & uiFont) {
+        font = uiFont;
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {

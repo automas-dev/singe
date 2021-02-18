@@ -104,8 +104,6 @@ bool Game::onCreate() {
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
 
-    menu = std::make_shared<Menu>(font, "Game");
-    menu->setPosition(300, 300);
     menu->addMenuItem("New", [&]() {
         menu->hide();
         SetMouseGrab(true);
