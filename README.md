@@ -86,8 +86,6 @@ public:
         camera->rotate({30, -70});
         camera->setFov(80);
 
-        menu = std::make_shared<Menu>(font, "Game");
-        menu->setPosition(300, 300);
         menu->addMenuItem("Resume", [&]() {
             menu->hide();
             SetMouseGrab(true);
