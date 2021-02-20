@@ -1,5 +1,26 @@
 # SFML 3D  Engine
 
+My implementation of C++ support classes and functions for 3D rendering using
+OpenGL and SFML.
+
+
+### Project Goals
+
+This project is meant to provide a quick setup, with all of the basic features
+of an opengl project already implemented, so that I can work on new opengl / 3d
+rendering concepts faster.
+
+The features implemented here are not meant to be full featured, but provide
+the basic functionality with minimal setup. This means having any required
+resources built-in, and having sensible defaults.
+
+1. Fast setup
+2. No external resources
+3. Provide basic functionality
+4. Provide access to underlying objects for finer control
+5. Sensible Defaults
+
+
 ## Building
 
 ```sh
@@ -10,6 +31,7 @@ cd build
 cmake ..
 make
 ```
+
 
 ## Quickstart
 
@@ -59,6 +81,7 @@ int main() {
     return 0;
 }
 ```
+
 
 ## Demo
 
