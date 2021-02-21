@@ -181,15 +181,15 @@ namespace Tom::s3e {
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
-        if (menu) {
-            if (event.code == sf::Keyboard::Escape) {
+        if (event.code == sf::Keyboard::Escape) {
+            if (menu->isVisible()) {
+                menu->hide();
+                SetMouseGrab(true);
+            }
+            else {
                 menu->show();
                 SetMouseGrab(false);
             }
-        }
-        else {
-            if (event.code == sf::Keyboard::Escape)
-                Stop();
         }
     }
 
