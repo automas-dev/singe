@@ -23,10 +23,7 @@ if __name__ == '__main__':
     hname = os.path.basename(hfile)
 
     with open(binfile, 'rb') as fin, open(hfile, 'w') as fh:
-        size = fin.seek(0, io.SEEK_END)
-        size = fin.tell()
-        fin.seek(0, io.SEEK_SET)
-        buff = fin.read(size)
+        buff = fin.read()
 
         
         #fc.write('#include "{}"\n'.format(hfile))
@@ -40,7 +37,7 @@ if __name__ == '__main__':
         ifndef = hname.upper().replace('.', '_')
         fh.write('#ifndef {}\n'.format(ifndef))
         fh.write('#define {}\n'.format(ifndef))
-        fh.write('#define __{}_size  {}\n'.format(structname, size))
+        fh.write('#define __{}_size  {}\n'.format(structname, len(buff)))
         fh.write('#define __{}_start "'.format(structname))
         for byte in buff:
             fh.write('\\x{:02X}'.format(byte))
