@@ -26,6 +26,7 @@ set(S3E_HEADERS
     include/s3e/log.hpp
     include/s3e/Material.hpp
     include/s3e/Menu.hpp
+    include/s3e/Model.hpp
     include/s3e/ResourceManager.hpp
     include/s3e/Shader.hpp
     include/s3e/Texture.hpp
@@ -42,6 +43,7 @@ set(S3E_SOURCES
     src/Keymap.cpp
     src/Material.cpp
     src/Menu.cpp
+    src/Model.cpp
     src/ResourceManager.cpp
     src/Shader.cpp
     src/Texture.cpp
