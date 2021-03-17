@@ -61,8 +61,10 @@ namespace Tom::s3e {
     Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
         auto relPath = resourceAt(path);
         auto model = std::make_shared<Model>();
-        if (!model->loadFromPath(relPath))
+        if (!model->loadFromPath(relPath)) {
             SPDLOG_ERROR("failed in call to Model::loadFromPath(path={})", relPath);
+            return nullptr;
+        }
         return model;
     }
 }
