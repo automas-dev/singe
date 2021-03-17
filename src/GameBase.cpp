@@ -48,9 +48,9 @@ namespace Tom::s3e {
         camera = std::make_shared<Camera>();
         camera->setScreenSize(window->getSize());
 
-        font.loadFromMemory(__default_font_start, __default_font_size);
+        uiFont.loadFromMemory(__default_font_start, __default_font_size);
 
-        menu = std::make_shared<Menu>(font, title);
+        menu = std::make_shared<Menu>(uiFont, title);
         menu->setPosition(300, 300);
 
         SPDLOG_DEBUG("calling onCreate()");
@@ -170,14 +170,6 @@ namespace Tom::s3e {
 
     void GameBase::SetMoveSpeed(float speed) {
         moveSpeed = speed;
-    }
-
-    const sf::Font & GameBase::GetUIFont() {
-        return font;
-    }
-
-    void GameBase::SetUIFont(const sf::Font & uiFont) {
-        font = uiFont;
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {

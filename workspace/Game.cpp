@@ -28,7 +28,7 @@ void GLAPIENTRY MessageCallback( GLenum source,
 bool Game::onCreate() {
     // defautFont loaded from memory by GameBase
     fps = std::make_shared<FPSDisplay>();
-    fps->setFont(defaultFont);
+    fps->setFont(uiFont);
     fps->setRate(0.1f);
 
     // During init, enable debug output

@@ -26,12 +26,12 @@ namespace Tom::s3e {
         bool grab;
         sf::Vector2f mouseSensitivity;
         float moveSpeed;
-        sf::Font font;
 
     protected:
         std::shared_ptr<sf::RenderWindow> window;
         Camera::Ptr camera;
         Menu::Ptr menu;
+        sf::Font uiFont;
 
     public:
 
@@ -102,21 +102,6 @@ namespace Tom::s3e {
          * @param speed the new move speed
          */
         void SetMoveSpeed(float speed);
-
-        /**
-         * Get the current UI font. The default is a font in memory from the
-         * application binary. The font can be changed with `GameBase::SetUIFont`.
-         *
-         * @return the current UI font
-         */
-        const sf::Font & GetUIFont(void);
-
-        /**
-         * Set the font used by the menu and other text UI components.
-         *
-         * @param uiFont the new ui font
-         */
-        void SetUIFont(const sf::Font & uiFont);
 
     protected:
 
