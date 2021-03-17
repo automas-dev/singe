@@ -34,6 +34,8 @@ namespace Tom::s3e {
 
         bool loadFromPoints(const std::vector<Vertex> & points);
 
+        bool loadFromPoints(const Vertex *points, size_t n);
+
         void draw(void) const;
     };
 }
