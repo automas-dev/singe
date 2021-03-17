@@ -81,7 +81,8 @@ PUBLIC
     spdlog::spdlog
 )
 
-add_subdirectory(demo)
+add_subdirectory(workspace)
+# add_subdirectory(demo)
 
 #export(TARGETS s3e NAMESPACE Tom::
 #    FILE ${CMAKE_CURRENT_BINARY_DIR}/s3e-config.cmake)
