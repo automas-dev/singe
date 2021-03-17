@@ -15,7 +15,7 @@ class Game : public GameBase {
     Shader::Ptr shader;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
-    VBO::Ptr vbo;
+    Model::Ptr model;
 
 public:
     Game(const sf::String & resPath);

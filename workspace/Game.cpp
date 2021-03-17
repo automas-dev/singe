@@ -57,16 +57,23 @@ bool Game::onCreate() {
     if (!devTexture)
         return false;
 
-    devTexture->bind();
-    vbo = std::make_shared<VBO>();
-    bool res = vbo->loadFromPoints({
+    model = std::shared_ptr<Model>();
+    bool res = model->loadFromPoints({
         {{0, 0, 0}, {0, 0, 0}, {0, 0}},
         {{1, 0, 0}, {1, 0, 0}, {1, 0}},
         {{0, 1, 0}, {0, 1, 0}, {0, 1}},
     });
-    devTexture->unbind();
     if (!res)
         return false;
+
+    //vbo = std::make_shared<VBO>();
+    //bool res = vbo->loadFromPoints({
+    //    {{0, 0, 0}, {0, 0, 0}, {0, 0}},
+    //    {{1, 0, 0}, {1, 0, 0}, {1, 0}},
+    //    {{0, 1, 0}, {0, 1, 0}, {0, 1}},
+    //});
+    //if (!res)
+    //    return false;
 
     SetMouseGrab(true);
     getGlError();
@@ -119,7 +126,7 @@ void Game::onDraw() const {
     shader->setMat4("mvp", vp);
     shader->setInt("gTexture", devTexture->getTextureId());
     {
-        vbo->draw();
+        model->draw();
 
         //glBegin(GL_TRIANGLES);
         //{
