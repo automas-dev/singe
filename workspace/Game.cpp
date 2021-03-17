@@ -50,10 +50,23 @@ bool Game::onCreate() {
     camera->setFov(80);
 
     shader = resManager.loadShader("shader/shader.vert", "shader/shader.frag");
+    if (!shader)
+        return false;
 
     devTexture = resManager.loadTexture("devTexture", "img/dev_texture_gray.png");
+    if (!devTexture)
+        return false;
 
+    devTexture->bind();
     vbo = std::make_shared<VBO>();
+    bool res = vbo->loadFromPoints({
+        {{0, 0, 0}, {0, 0, 0}, {0, 0}},
+        {{1, 0, 0}, {1, 0, 0}, {1, 0}},
+        {{0, 1, 0}, {0, 1, 0}, {0, 1}},
+    });
+    devTexture->unbind();
+    if (!res)
+        return false;
 
     SetMouseGrab(true);
     getGlError();
@@ -102,9 +115,28 @@ void Game::onDraw() const {
     glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
 
     shader->bind();
+    devTexture->bind();
+    shader->setMat4("mvp", vp);
+    shader->setInt("gTexture", devTexture->getTextureId());
     {
+        vbo->draw();
+
+        //glBegin(GL_TRIANGLES);
+        //{
+        //    glTexCoord2d(0, 0);
+        //    glVertex3d(0, 0, 0);
+
+        //    glTexCoord2d(1, 0);
+        //    glVertex3d(1, 0, 0);
+
+        //    glTexCoord2d(0, 1);
+        //    glVertex3d(0, 1, 0);
+        //}
+        //glEnd();
     }
     shader->unbind();
+    devTexture->unbind();
+
 
     window->pushGLStates();
     window->draw(*fps);

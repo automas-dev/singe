@@ -10,6 +10,7 @@ in vec2 FragTex;
 
 void main()
 {
-    FragColor = texture(gTexture, FragTex);
+    //FragColor = texture(gTexture, FragTex);
+    FragColor = vec4(1, 0, 0, 1);
 }
 
