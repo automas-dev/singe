@@ -6,6 +6,7 @@ namespace Tom::s3e {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
         glGenBuffers(1, &vbo);
+        glBindVertexArray(0);
     }
 
     VBO::~VBO() {
