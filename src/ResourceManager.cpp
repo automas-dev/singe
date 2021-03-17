@@ -53,13 +53,5 @@ namespace Tom::s3e {
             SPDLOG_ERROR("failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})", relVertexPath, relFragmentPath);
         return shader;
     }
-
-    Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
-        auto relPath = resourceAt(path);
-        auto model = std::make_shared<Model>();
-        if (!model->loadFromPath(relPath))
-            SPDLOG_ERROR("failed in call to Model::loadFromPath(path={})", relPath);
-        return model;
-    }
 }
 

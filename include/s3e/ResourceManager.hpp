@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include "Model.hpp"
 
 namespace Tom::s3e {
 
@@ -127,15 +126,6 @@ namespace Tom::s3e {
          * @return a shard_ptr to a Shader
          */
         Shader::Ptr loadShader(const std::string & vertexPath, const std::string & fragmentPath);
-
-        /**
-         * Load a Model from `path`.
-         *
-         * @param path the path to the obj file
-         *
-         * @return a shared_ptr to a Model
-         */
-        Model::Ptr loadModel(const std::string & path);
     };
 }
 
