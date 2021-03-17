@@ -38,8 +38,10 @@ namespace Tom::s3e {
     Texture::Ptr DefaultResourceManager::loadTexture(const std::string & name, const std::string & path) {
         auto relPath = resourceAt(path);
         auto newTex = std::make_shared<Texture>();
-        if (!newTex->loadFromPath(relPath))
+        if (!newTex->loadFromPath(relPath)) {
             SPDLOG_ERROR("failed in call to Texture::loadFromPath(path={})", relPath);
+            return nullptr;
+        }
         else
             textures[name] = newTex;
         return newTex;
@@ -49,8 +51,10 @@ namespace Tom::s3e {
         auto relVertexPath = resourceAt(vertexPath);
         auto relFragmentPath = resourceAt(fragmentPath);
         auto shader = std::make_shared<Shader>();
-        if (!shader->loadFromPath(relVertexPath, relFragmentPath))
+        if (!shader->loadFromPath(relVertexPath, relFragmentPath)) {
             SPDLOG_ERROR("failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})", relVertexPath, relFragmentPath);
+            return nullptr;
+        }
         return shader;
     }
 }
