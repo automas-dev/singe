@@ -7,8 +7,31 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
+#include <array>
 #include <s3e.hpp>
 using namespace Tom::s3e;
+
+struct Quad {
+    Vertex p1, p2, p3, p4;
+
+    Quad(const Vertex & p1, const Vertex & p2, const Vertex & p3) : p1(p1), p2(p2), p3(p3) {
+        p4.pos = p1.pos + p3.pos - p2.pos;
+        p4.norm = p1.norm + p3.norm - p2.norm;
+        p4.uv = p1.uv + p3.uv - p2.uv;
+    }
+
+    std::vector<Vertex> toPoints() {
+        std::vector<Vertex> p;
+        p.push_back(p1);
+        p.push_back(p2);
+        p.push_back(p3);
+
+        p.push_back(p3);
+        p.push_back(p4);
+        p.push_back(p1);
+        return p;
+    }
+};
 
 class Game : public GameBase {
     DefaultResourceManager resManager;
