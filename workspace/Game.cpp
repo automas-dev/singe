@@ -63,8 +63,16 @@ bool Game::onCreate() {
         {{0, 0, 0}, {0, 0, 0}, {0, 0}},
         {{1, 0, 0}, {1, 0, 0}, {1, 0}});
 
+    Cube c(
+        {0, 0, 0},
+        {1, 0, 0},
+        {0, 1, 0},
+        {0, 0, 1}
+        );
+
     model = std::make_shared<Model>();
-    bool res = model->loadFromPoints(q.toPoints());
+    //bool res = model->loadFromPoints(q.toPoints());
+    bool res = model->loadFromPoints(c.toPoints());
     if (!res)
         return false;
 
