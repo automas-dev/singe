@@ -129,7 +129,6 @@ void Game::onDraw() const {
     shader->bind();
     devTexture->bind();
     shader->setMat4("mvp", vp);
-    shader->setInt("gTexture", devTexture->getTextureId());
     {
         model->draw();
 
