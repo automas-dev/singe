@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <exception>
 #include <spdlog/spdlog.h>
 
 
@@ -57,11 +58,15 @@ bool Game::onCreate() {
     if (!devTexture)
         return false;
 
-    model = std::shared_ptr<Model>();
+    model = std::make_shared<Model>();
     bool res = model->loadFromPoints({
         {{0, 0, 0}, {0, 0, 0}, {0, 0}},
         {{1, 0, 0}, {1, 0, 0}, {1, 0}},
         {{0, 1, 0}, {0, 1, 0}, {0, 1}},
+
+        {{0, 1, 0}, {0, 0, 0}, {0, 0}},
+        {{1, 1, 0}, {1, 0, 0}, {1, 0}},
+        {{0, 2, 0}, {0, 1, 0}, {0, 1}},
     });
     if (!res)
         return false;
@@ -113,9 +118,9 @@ void Game::onUpdate(const sf::Time & delta) {
 
 void Game::onDraw() const {
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    //glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -128,18 +133,27 @@ void Game::onDraw() const {
     {
         model->draw();
 
-        //glBegin(GL_TRIANGLES);
-        //{
-        //    glTexCoord2d(0, 0);
-        //    glVertex3d(0, 0, 0);
+        glBegin(GL_TRIANGLES);
+        {
+            glTexCoord2d(0, 0);
+            glVertex3d(0, 0, -1);
 
-        //    glTexCoord2d(1, 0);
-        //    glVertex3d(1, 0, 0);
+            glTexCoord2d(1, 0);
+            glVertex3d(1, 0, -1);
 
-        //    glTexCoord2d(0, 1);
-        //    glVertex3d(0, 1, 0);
-        //}
-        //glEnd();
+            glTexCoord2d(0, 1);
+            glVertex3d(0, 1, -1);
+
+            glTexCoord2d(0, 0);
+            glVertex3d(0, 0, 1);
+
+            glTexCoord2d(1, 0);
+            glVertex3d(1, 0, 1);
+
+            glTexCoord2d(0, 1);
+            glVertex3d(0, 1, 1);
+        }
+        glEnd();
     }
     shader->unbind();
     devTexture->unbind();
