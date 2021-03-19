@@ -79,7 +79,6 @@ struct Cube {
 
     Cube(void) : Cube({0, 0, 0}) { }
 
-    /// p1 = origin, p2 = +x, p3 = +y, p4 = +z
     Cube(const glm::vec3 & origin, const UV & north=UV(), const UV & east=UV(), const UV & south=UV(), const UV & west=UV(), const UV & bottom=UV(), const UV & top=UV()) {
         auto & p = origin;
         glm::vec3 px = origin + glm::vec3(1, 0, 0);
@@ -108,6 +107,29 @@ struct Cube {
         f6 = Quad({pyz, {0, 0, -1}, {north.u1, north.v1}},
                   {pz, {0, 0, -1}, {north.u1, north.v2}},
                   {pxz, {0, 0, -1}, {north.u2, north.v2}});
+    }
+
+    Cube(const Cube & other) : f1(other.f1), f2(other.f2), f3(other.f3), f4(other.f4), f5(other.f5) { }
+
+    Cube(Cube && other) {
+        std::swap(f1, other.f1);
+        std::swap(f2, other.f2);
+        std::swap(f3, other.f3);
+        std::swap(f4, other.f4);
+        std::swap(f5, other.f5);
+    }
+
+    Cube & operator=(const Cube & other) {
+        if (this == &other)
+            return *this;
+        
+        f1 = other.f1;
+        f2 = other.f2;
+        f3 = other.f3;
+        f4 = other.f4;
+        f5 = other.f5;
+
+        return *this;
     }
 
     std::vector<Vertex> toPoints() {
