@@ -13,48 +13,39 @@
 using namespace Tom::s3e;
 
 struct Quad {
-    Vertex p1, p2, p3, p4;
+    std::array<Vertex, 4> points;
 
     Quad() { }
 
+    Quad(const Vertex & p1, const Vertex & p2, const Vertex & p3) : Quad({p1, p2, p3, p1 + p3 - p2}) { }
+
+    Quad(const std::array<Vertex, 4> p) {
+        points = p;
+    }
+
     Quad(const Quad & other) {
-        p1 = other.p1;
-        p2 = other.p2;
-        p3 = other.p3;
-        p4 = other.p4;
+        points = other.points;
     }
 
     Quad(Quad && other) {
-        std::swap(p1, other.p1);
-        std::swap(p2, other.p2);
-        std::swap(p3, other.p3);
-        std::swap(p4, other.p4);
+        std::swap(points, other.points);
     }
-
-    Quad(const Vertex & p1, const Vertex & p2, const Vertex & p3) : p1(p1), p2(p2), p3(p3) {
-        p4 = p1 + p3 - p2;
-    }
-
-    Quad(const Vertex & p1, const Vertex & p2, const Vertex & p3, const Vertex & p4) : p1(p1), p2(p2), p3(p3), p4(p4) { }
 
     Quad & operator=(const Quad & other) {
-        p1 = other.p1;
-        p2 = other.p2;
-        p3 = other.p3;
-        p4 = other.p4;
+        points = other.points;
         return *this;
     }
 
     std::vector<Vertex> toPoints() {
-        std::vector<Vertex> points;
-        points.push_back(p1);
-        points.push_back(p2);
-        points.push_back(p3);
+        std::vector<Vertex> cloud;
+        cloud.push_back(points[0]);
+        cloud.push_back(points[1]);
+        cloud.push_back(points[2]);
 
-        points.push_back(p3);
-        points.push_back(p4);
-        points.push_back(p1);
-        return points;
+        cloud.push_back(points[2]);
+        cloud.push_back(points[3]);
+        cloud.push_back(points[0]);
+        return cloud;
     }
 };
 
@@ -134,9 +125,10 @@ struct Cube {
 
     std::vector<Vertex> toPoints() {
         std::vector<Vertex> points;
-#define tmp(F) for (auto &p : F.toPoints()) {\
+        std::vector<Vertex> p;
+#define tmp(F) for (auto & p : F.toPoints()) {\
             points.push_back(p);\
-        }
+}
         tmp(f1);
         tmp(f2);
         tmp(f3);
@@ -144,6 +136,35 @@ struct Cube {
         tmp(f5);
         tmp(f6);
 #undef tmp
+        return points;
+    }
+};
+
+
+template<std::size_t N=8>
+struct Chunk {
+    std::array<std::array<std::array<Cube, N>, N>, N> cubes;
+
+    Chunk(void) {
+        for (int x = 0; x < N; x++) {
+            for (int y = 0; y < N; y++) {
+                for (int z = 0; z < N; z++) {
+                    cubes[x][y][z].pos = {x, y, z};
+                }
+            }
+        }
+    }
+
+    std::vector<Vertex> toPoints() {
+        std::vector<Vertex> points;
+        for (auto & y : cubes) {
+            for (auto & z : y) {
+                for (auto & cube : z) {
+                    auto p = cube.toPoints();
+                    points.insert(points.end(), p.begin(), p.end());
+                }
+            }
+        }
         return points;
     }
 };
