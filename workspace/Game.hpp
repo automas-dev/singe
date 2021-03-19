@@ -80,34 +80,34 @@ struct Cube {
     Cube(void) : Cube({0, 0, 0}) { }
 
     /// p1 = origin, p2 = +x, p3 = +y, p4 = +z
-    Cube(const glm::vec3 & origin, const UV & north=UV(), const UV & east=UV(), const UV & south=UV(), const UV & west=UV(), const UV & top=UV(), const UV & bottom=UV()) {
-        auto & p1 = origin;
-        glm::vec3 p2 = origin + glm::vec3(1, 0, 0);
-        glm::vec3 p3 = origin + glm::vec3(0, 1, 0);
-        glm::vec3 p4 = origin + glm::vec3(0, 0, 1);
-        glm::vec3 p5 = p2 + (p3 - p1);
-        glm::vec3 p6 = p2 + (p4 - p1);
-        glm::vec3 p7 = p3 + (p4 - p1);
-        glm::vec3 p8 = p2 + (p3 - p1) + (p4 - p1);
+    Cube(const glm::vec3 & origin, const UV & north=UV(), const UV & east=UV(), const UV & south=UV(), const UV & west=UV(), const UV & bottom=UV(), const UV & top=UV()) {
+        auto & p = origin;
+        glm::vec3 px = origin + glm::vec3(1, 0, 0);
+        glm::vec3 py = origin + glm::vec3(0, 1, 0);
+        glm::vec3 pz = origin + glm::vec3(0, 0, 1);
+        glm::vec3 pxy = px + (py - p);
+        glm::vec3 pxz = px + (pz - p);
+        glm::vec3 pyz = py + (pz - p);
+        glm::vec3 pxyz = px + (py - p) + (pz - p);
 
-        f1 = Quad({p3, {-1, 0, 0}, {west.u2, west.v2}},
-                  {p1, {-1, 0, 0}, {west.u2, west.v1}},
-                  {p4, {-1, 0, 0}, {west.u1, west.v1}});
-        f2 = Quad({p8, {1, 0, 0}, {east.u2, east.v2}},
-                  {p6, {1, 0, 0}, {east.u2, east.v1}},
-                  {p2, {1, 0, 0}, {east.u1, east.v1}});
-        f3 = Quad({p6, {0, -1, 0}, {bottom.u2, bottom.v2}},
-                  {p4, {0, -1, 0}, {bottom.u2, bottom.v1}},
-                  {p1, {0, -1, 0}, {bottom.u1, bottom.v1}});
-        f4 = Quad({p5, {0, 1, 0}, {top.u2, top.v2}},
-                  {p3, {0, 1, 0}, {top.u2, top.v1}},
-                  {p7, {0, 1, 0}, {top.u1, top.v1}});
-        f5 = Quad({p5, {0, 0, -1}, {south.u2, south.v2}},
-                  {p2, {0, 0, -1}, {south.u2, south.v1}},
-                  {p1, {0, 0, -1}, {south.u1, south.v1}});
-        f6 = Quad({p7, {0, 0, 1}, {north.u2, north.v2}},
-                  {p4, {0, 0, 1}, {north.u2, north.v1}},
-                  {p6, {0, 0, 1}, {north.u1, north.v1}});
+        f1 = Quad({py, {-1, 0, 0}, {west.u1, west.v1}},
+                  {p, {-1, 0, 0}, {west.u1, west.v2}},
+                  {pz, {-1, 0, 0}, {west.u2, west.v2}});
+        f2 = Quad({pxyz, {1, 0, 0}, {east.u1, east.v1}},
+                  {pxz, {1, 0, 0}, {east.u1, east.v2}},
+                  {px, {1, 0, 0}, {east.u2, east.v2}});
+        f3 = Quad({pz, {0, -1, 0}, {bottom.u1, bottom.v1}},
+                  {p, {0, -1, 0}, {bottom.u1, bottom.v2}},
+                  {px, {0, -1, 0}, {bottom.u2, bottom.v2}});
+        f4 = Quad({py, {0, 1, 0}, {top.u1, top.v1}},
+                  {pyz, {0, 1, 0}, {top.u1, top.v2}},
+                  {pxyz, {0, 1, 0}, {top.u2, top.v2}});
+        f5 = Quad({pxy, {0, 0, -1}, {south.u1, south.v1}},
+                  {px, {0, 0, -1}, {south.u1, south.v2}},
+                  {p, {0, 0, -1}, {south.u2, south.v2}});
+        f6 = Quad({pyz, {0, 0, 1}, {north.u1, north.v1}},
+                  {pz, {0, 0, 1}, {north.u1, north.v2}},
+                  {pxz, {0, 0, 1}, {north.u2, north.v2}});
     }
 
     std::vector<Vertex> toPoints() {

@@ -81,10 +81,10 @@ bool Game::onCreate() {
     UV north (origin);
     UV east (origin + offset_x);
     UV south (origin + offset_x + offset_x);
-    UV west (origin + offset_x + offset_x + offset_x);
+    UV west (origin - offset_x);
     UV top (origin - offset_y);
     UV bottom (origin + offset_y);
-    Cube c({0, 0, 0}, north, east, south, west, top, bottom);
+    Cube c({0, 0, 0}, north, east, south, west, bottom, top);
 
     model = std::make_shared<Model>();
     //bool res = model->loadFromPoints(q.toPoints());
