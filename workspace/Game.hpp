@@ -175,6 +175,22 @@ struct Chunk {
         if (!enabled)
             return points;
 
+        for (int x = 0; x < N; x++) {
+            for (int y = 0; y < N; y++) {
+                for (int z = 0; z < N; z++) {
+                    auto & cube = cubes[x][y][z];
+                    if (!cube.enabled)
+                        continue;
+
+                    cube.faces[0].enabled = x == 0 || !cubes[x-1][y][z].enabled;
+                    cube.faces[1].enabled = x == (N-1) || !cubes[x+1][y][z].enabled;
+                    cube.faces[2].enabled = y == 0 || !cubes[x][y-1][z].enabled;
+                    cube.faces[3].enabled = y == (N-1) || !cubes[x][y+1][z].enabled;
+                    cube.faces[4].enabled = z == 0 || !cubes[x][y][z-1].enabled;
+                    cube.faces[5].enabled = z == (N-1) || !cubes[x][y][z+1].enabled;
+                }
+            }
+        }
         for (auto & y : cubes) {
             for (auto & z : y) {
                 for (auto & cube : z) {
