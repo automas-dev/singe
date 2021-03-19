@@ -102,12 +102,12 @@ struct Cube {
         f4 = Quad({py, {0, 1, 0}, {top.u1, top.v1}},
                   {pyz, {0, 1, 0}, {top.u1, top.v2}},
                   {pxyz, {0, 1, 0}, {top.u2, top.v2}});
-        f5 = Quad({pxy, {0, 0, -1}, {south.u1, south.v1}},
-                  {px, {0, 0, -1}, {south.u1, south.v2}},
-                  {p, {0, 0, -1}, {south.u2, south.v2}});
-        f6 = Quad({pyz, {0, 0, 1}, {north.u1, north.v1}},
-                  {pz, {0, 0, 1}, {north.u1, north.v2}},
-                  {pxz, {0, 0, 1}, {north.u2, north.v2}});
+        f5 = Quad({pxy, {0, 0, 1}, {south.u1, south.v1}},
+                  {px, {0, 0, 1}, {south.u1, south.v2}},
+                  {p, {0, 0, 1}, {south.u2, south.v2}});
+        f6 = Quad({pyz, {0, 0, -1}, {north.u1, north.v1}},
+                  {pz, {0, 0, -1}, {north.u1, north.v2}},
+                  {pxz, {0, 0, -1}, {north.u2, north.v2}});
     }
 
     std::vector<Vertex> toPoints() {
