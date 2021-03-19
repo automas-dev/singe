@@ -24,6 +24,12 @@ namespace Tom::s3e {
             uv = other.uv;
         }
 
+        Vertex(Vertex && other) {
+            std::swap(pos, other.pos);
+            std::swap(norm, other.norm);
+            std::swap(uv, other.uv);
+        }
+
         Vertex & operator=(const Vertex & other) {
             if (this == &other)
                 return *this;
@@ -55,14 +61,6 @@ namespace Tom::s3e {
             uv -= other.uv;
             return *this;
         }
-
-        Vertex(Vertex && other) {
-            std::swap(pos, other.pos);
-            std::swap(norm, other.norm);
-            std::swap(uv, other.uv);
-        }
-
-        ~Vertex() {}
     };
 
     class VBO {
