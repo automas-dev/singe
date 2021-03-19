@@ -59,21 +59,6 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-#define n {0, 0, 0}
-#define o {0, 0, 0}
-#define x {1, 0, 0}
-#define y {0, 1, 0}
-#define z {0, 0, 1}
-#define xy {1, 1, 0}
-#define xz {1, 0, 1}
-#define yz {0, 1, 1}
-#define xyz {1, 1, 1}
-
-    Quad q(
-        {yz, n, {0, 1}},
-        {z, n, {0, 0}},
-        {o, n, {1, 0}});
-
     glm::vec4 offset_x(0.1, 0.0, 0.1, 0.0);
     glm::vec4 offset_y(0.0, 0.1, 0.0, 0.1);
     glm::vec4 offset = offset_x + offset_y;
@@ -87,7 +72,6 @@ bool Game::onCreate() {
     Cube c({0, 0, 0}, north, east, south, west, bottom, top);
 
     model = std::make_shared<Model>();
-    //bool res = model->loadFromPoints(q.toPoints());
     bool res = model->loadFromPoints(c.toPoints());
     if (!res)
         return false;
