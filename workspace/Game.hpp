@@ -131,7 +131,10 @@ struct Chunk {
         for (int x = 0; x < N; x++) {
             for (int y = 0; y < N; y++) {
                 for (int z = 0; z < N; z++) {
-                    cubes[x][y][z].pos = {x, y, z};
+
+                    UV uv (0.1 * (x+z), 0.1 * y, 0.1 * (z+x+1), 0.1 * (y+1));
+
+                    cubes[x][y][z]= Cube({x, y, z}, uv, uv, uv, uv, uv, uv);
                 }
             }
         }

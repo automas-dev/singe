@@ -46,8 +46,8 @@ bool Game::onCreate() {
     });
 
     // Initialize camera to look at origin
-    camera->move({3, 2, 1});
-    camera->rotate({30, -70});
+    camera->move({-3, 2, -1});
+    camera->rotate({0, 110});
     camera->setFov(80);
 
     shader = resManager.loadShader("shader/shader.vert", "shader/shader.frag");
@@ -71,8 +71,10 @@ bool Game::onCreate() {
     UV bottom (origin + offset_y);
     Cube c({0, 0, 0}, north, east, south, west, bottom, top);
 
+    Chunk ck;
+
     model = std::make_shared<Model>();
-    bool res = model->loadFromPoints(c.toPoints());
+    bool res = model->loadFromPoints(ck.toPoints());
     if (!res)
         return false;
 
