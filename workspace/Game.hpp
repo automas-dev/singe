@@ -61,12 +61,7 @@ struct UV {
 };
 
 struct Cube {
-    Quad f1;
-    Quad f2;
-    Quad f3;
-    Quad f4;
-    Quad f5;
-    Quad f6;
+    std::array<Quad, 6> faces;
 
     Cube(void) : Cube({0, 0, 0}) { }
 
@@ -80,62 +75,49 @@ struct Cube {
         glm::vec3 pyz = py + (pz - p);
         glm::vec3 pxyz = px + (py - p) + (pz - p);
 
-        f1 = Quad({py, {-1, 0, 0}, {west.u1, west.v1}},
-                  {p, {-1, 0, 0}, {west.u1, west.v2}},
-                  {pz, {-1, 0, 0}, {west.u2, west.v2}});
-        f2 = Quad({pxyz, {1, 0, 0}, {east.u1, east.v1}},
-                  {pxz, {1, 0, 0}, {east.u1, east.v2}},
-                  {px, {1, 0, 0}, {east.u2, east.v2}});
-        f3 = Quad({pz, {0, -1, 0}, {bottom.u1, bottom.v1}},
-                  {p, {0, -1, 0}, {bottom.u1, bottom.v2}},
-                  {px, {0, -1, 0}, {bottom.u2, bottom.v2}});
-        f4 = Quad({py, {0, 1, 0}, {top.u1, top.v1}},
-                  {pyz, {0, 1, 0}, {top.u1, top.v2}},
-                  {pxyz, {0, 1, 0}, {top.u2, top.v2}});
-        f5 = Quad({pxy, {0, 0, 1}, {south.u1, south.v1}},
-                  {px, {0, 0, 1}, {south.u1, south.v2}},
-                  {p, {0, 0, 1}, {south.u2, south.v2}});
-        f6 = Quad({pyz, {0, 0, -1}, {north.u1, north.v1}},
+        faces[0] = Quad({py, {-1, 0, 0}, {west.u1, west.v1}},
+                    {p, {-1, 0, 0}, {west.u1, west.v2}},
+                    {pz, {-1, 0, 0}, {west.u2, west.v2}});
+        faces[1] = Quad({pxyz, {1, 0, 0}, {east.u1, east.v1}},
+                    {pxz, {1, 0, 0}, {east.u1, east.v2}},
+                    {px, {1, 0, 0}, {east.u2, east.v2}});
+        faces[2] = Quad({pz, {0, -1, 0}, {bottom.u1, bottom.v1}},
+                    {p, {0, -1, 0}, {bottom.u1, bottom.v2}},
+                    {px, {0, -1, 0}, {bottom.u2, bottom.v2}});
+        faces[3] = Quad({py, {0, 1, 0}, {top.u1, top.v1}},
+                    {pyz, {0, 1, 0}, {top.u1, top.v2}},
+                    {pxyz, {0, 1, 0}, {top.u2, top.v2}});
+        faces[4] = Quad({pxy, {0, 0, 1}, {south.u1, south.v1}},
+                    {px, {0, 0, 1}, {south.u1, south.v2}},
+                    {p, {0, 0, 1}, {south.u2, south.v2}});
+        faces[5] = Quad({pyz, {0, 0, -1}, {north.u1, north.v1}},
                   {pz, {0, 0, -1}, {north.u1, north.v2}},
                   {pxz, {0, 0, -1}, {north.u2, north.v2}});
     }
 
-    Cube(const Cube & other) : f1(other.f1), f2(other.f2), f3(other.f3), f4(other.f4), f5(other.f5) { }
+    Cube(const Cube & other) {
+        faces = other.faces;
+    }
 
     Cube(Cube && other) {
-        std::swap(f1, other.f1);
-        std::swap(f2, other.f2);
-        std::swap(f3, other.f3);
-        std::swap(f4, other.f4);
-        std::swap(f5, other.f5);
+        std::swap(faces, other.faces);
     }
 
     Cube & operator=(const Cube & other) {
         if (this == &other)
             return *this;
         
-        f1 = other.f1;
-        f2 = other.f2;
-        f3 = other.f3;
-        f4 = other.f4;
-        f5 = other.f5;
+        faces = other.faces;
 
         return *this;
     }
 
     std::vector<Vertex> toPoints() {
         std::vector<Vertex> points;
-        std::vector<Vertex> p;
-#define tmp(F) for (auto & p : F.toPoints()) {\
-            points.push_back(p);\
-}
-        tmp(f1);
-        tmp(f2);
-        tmp(f3);
-        tmp(f4);
-        tmp(f5);
-        tmp(f6);
-#undef tmp
+        for (auto & face : faces) {
+            auto p = face.toPoints();
+            points.insert(points.end(), p.begin(), p.end());
+        }
         return points;
     }
 };
