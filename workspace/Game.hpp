@@ -14,6 +14,7 @@ using namespace Tom::s3e;
 
 struct Quad {
     std::array<Vertex, 4> points;
+    bool enabled = true;
 
     Quad() { }
 
@@ -38,6 +39,9 @@ struct Quad {
 
     std::vector<Vertex> toPoints() {
         std::vector<Vertex> cloud;
+        if (!enabled)
+            return cloud;
+
         cloud.push_back(points[0]);
         cloud.push_back(points[1]);
         cloud.push_back(points[2]);
@@ -62,6 +66,7 @@ struct UV {
 
 struct Cube {
     std::array<Quad, 6> faces;
+    bool enabled = true;
 
     Cube(void) : Cube({0, 0, 0}) { }
 
@@ -113,12 +118,15 @@ struct Cube {
     }
 
     std::vector<Vertex> toPoints() {
-        std::vector<Vertex> points;
+        std::vector<Vertex> cloud;
+        if (!enabled)
+            return cloud;
+
         for (auto & face : faces) {
             auto p = face.toPoints();
-            points.insert(points.end(), p.begin(), p.end());
+            cloud.insert(cloud.end(), p.begin(), p.end());
         }
-        return points;
+        return cloud;
     }
 };
 
@@ -126,6 +134,7 @@ struct Cube {
 template<std::size_t N=8>
 struct Chunk {
     std::array<std::array<std::array<Cube, N>, N>, N> cubes;
+    bool enabled = true;
 
     Chunk(void) {
         for (int x = 0; x < N; x++) {
@@ -134,14 +143,38 @@ struct Chunk {
 
                     UV uv (0.1 * (x+z), 0.1 * y, 0.1 * (z+x+1), 0.1 * (y+1));
 
-                    cubes[x][y][z]= Cube({x, y, z}, uv, uv, uv, uv, uv, uv);
+                    cubes[x][y][z] = Cube({x, y, z}, uv, uv, uv, uv, uv, uv);
+                    cubes[x][y][z].enabled = x % 2 == 0 && z % 2 == 0 && y % 2 == 0;
                 }
             }
         }
     }
 
+    Chunk(const Chunk & other) {
+        cubes = other.cubes;
+        enabled = other.enabled;
+    }
+
+    Chunk(Chunk && other) {
+        std::swap(cubes, other.cubes);
+        std::swap(enabled, other.enabled);
+    }
+
+    Chunk & operator=(const Chunk & other) {
+        if (this == &other)
+            return *this;
+
+        cubes = other.cubes;
+        enabled = other.enabled;
+
+        return *this;
+    }
+
     std::vector<Vertex> toPoints() {
         std::vector<Vertex> points;
+        if (!enabled)
+            return points;
+
         for (auto & y : cubes) {
             for (auto & z : y) {
                 for (auto & cube : z) {
