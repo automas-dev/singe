@@ -54,21 +54,37 @@ bool Game::onCreate() {
     if (!shader)
         return false;
 
-    devTexture = resManager.loadTexture("devTexture", "img/dev_texture_gray.png");
+    devTexture = resManager.loadTexture("devTexture", "img/uv.png");
     if (!devTexture)
         return false;
+    devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
+
+#define n {0, 0, 0}
+#define o {0, 0, 0}
+#define x {1, 0, 0}
+#define y {0, 1, 0}
+#define z {0, 0, 1}
+#define xy {1, 1, 0}
+#define xz {1, 0, 1}
+#define yz {0, 1, 1}
+#define xyz {1, 1, 1}
 
     Quad q(
-        {{0, 1, 0}, {0, 1, 0}, {0, 1}},
-        {{0, 0, 0}, {0, 0, 0}, {0, 0}},
-        {{1, 0, 0}, {1, 0, 0}, {1, 0}});
+        {yz, n, {0, 1}},
+        {z, n, {0, 0}},
+        {o, n, {1, 0}});
 
-    Cube c(
-        {0, 0, 0},
-        {1, 0, 0},
-        {0, 1, 0},
-        {0, 0, 1}
-        );
+    glm::vec4 offset_x(0.1, 0.0, 0.1, 0.0);
+    glm::vec4 offset_y(0.0, 0.1, 0.0, 0.1);
+    glm::vec4 offset = offset_x + offset_y;
+    glm::vec4 origin = {0.1, 0.1, 0.2, 0.2};
+    UV north (origin);
+    UV east (origin + offset_x);
+    UV south (origin + offset_x + offset_x);
+    UV west (origin + offset_x + offset_x + offset_x);
+    UV top (origin - offset_y);
+    UV bottom (origin + offset_y);
+    Cube c({0, 0, 0}, north, east, south, west, top, bottom);
 
     model = std::make_shared<Model>();
     //bool res = model->loadFromPoints(q.toPoints());
@@ -119,6 +135,7 @@ void Game::onDraw() const {
     glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
+    glPointSize(10);
 
     glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
 
@@ -128,6 +145,17 @@ void Game::onDraw() const {
     shader->setMat4("model", model->modelMatrix());
     {
         model->draw();
+
+        glBegin(GL_POINTS);
+        {
+            glVertex3d(0, 0, 0);
+            glVertex3d(1, 0, 0);
+            glVertex3d(0, 1, 0);
+            glVertex3d(0, 0, 1);
+            glVertex3d(-0.5, 0, 0);
+            //glVertex3d(0, 0, -0.5);
+        }
+        glEnd();
     }
     shader->unbind();
     devTexture->unbind();

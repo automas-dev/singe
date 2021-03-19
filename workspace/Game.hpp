@@ -58,6 +58,17 @@ struct Quad {
     }
 };
 
+struct UV {
+    float u1, u2;
+    float v1, v2;
+
+    UV(void) : UV(0, 0, 1, 1) { }
+
+    UV(const glm::vec4 & vec) : UV(vec[0], vec[1], vec[2], vec[3]) { }
+
+    UV(float u1, float v1, float u2, float v2) : u1(std::min(u1, u2)), u2(std::max(u1, u2)), v1(std::min(v1, v2)), v2(std::max(v1, v2)) { }
+};
+
 struct Cube {
     Quad f1;
     Quad f2;
@@ -66,23 +77,37 @@ struct Cube {
     Quad f5;
     Quad f6;
 
-    /// p1 = origin, p2 = +x, p3 = +y, p4 = +z
-    Cube(const glm::vec3 & origin, const glm::vec3 & x, const glm::vec3 & y, const glm::vec3 & z) {
-        Vertex p1(origin, {0, 0, 0}, {0, 0});
-        Vertex p2(x, {0, 0, 0}, {1, 0});
-        Vertex p3(y, {0, 0, 0}, {0, 1});
-        Vertex p4(z, {0, 0, 0}, {1, 0});
-        Vertex p5 = p2 + (p3 - p1);
-        Vertex p6 = p2 + (p4 - p1);
-        Vertex p7 = p3 + (p4 - p1);
-        Vertex p8 = p2 + (p3 - p1) + (p4 - p1);
+    Cube(void) : Cube({0, 0, 0}) { }
 
-        f1 = Quad(p3, p1, p4);
-        f2 = Quad(p8, p6, p2);
-        f3 = Quad(p6, p4, p1);
-        f4 = Quad(p5, p3, p7);
-        f5 = Quad(p5, p2, p1);
-        f6 = Quad(p7, p4, p6);
+    /// p1 = origin, p2 = +x, p3 = +y, p4 = +z
+    Cube(const glm::vec3 & origin, const UV & north=UV(), const UV & east=UV(), const UV & south=UV(), const UV & west=UV(), const UV & top=UV(), const UV & bottom=UV()) {
+        auto & p1 = origin;
+        glm::vec3 p2 = origin + glm::vec3(1, 0, 0);
+        glm::vec3 p3 = origin + glm::vec3(0, 1, 0);
+        glm::vec3 p4 = origin + glm::vec3(0, 0, 1);
+        glm::vec3 p5 = p2 + (p3 - p1);
+        glm::vec3 p6 = p2 + (p4 - p1);
+        glm::vec3 p7 = p3 + (p4 - p1);
+        glm::vec3 p8 = p2 + (p3 - p1) + (p4 - p1);
+
+        f1 = Quad({p3, {-1, 0, 0}, {west.u2, west.v2}},
+                  {p1, {-1, 0, 0}, {west.u2, west.v1}},
+                  {p4, {-1, 0, 0}, {west.u1, west.v1}});
+        f2 = Quad({p8, {1, 0, 0}, {east.u2, east.v2}},
+                  {p6, {1, 0, 0}, {east.u2, east.v1}},
+                  {p2, {1, 0, 0}, {east.u1, east.v1}});
+        f3 = Quad({p6, {0, -1, 0}, {bottom.u2, bottom.v2}},
+                  {p4, {0, -1, 0}, {bottom.u2, bottom.v1}},
+                  {p1, {0, -1, 0}, {bottom.u1, bottom.v1}});
+        f4 = Quad({p5, {0, 1, 0}, {top.u2, top.v2}},
+                  {p3, {0, 1, 0}, {top.u2, top.v1}},
+                  {p7, {0, 1, 0}, {top.u1, top.v1}});
+        f5 = Quad({p5, {0, 0, -1}, {south.u2, south.v2}},
+                  {p2, {0, 0, -1}, {south.u2, south.v1}},
+                  {p1, {0, 0, -1}, {south.u1, south.v1}});
+        f6 = Quad({p7, {0, 0, 1}, {north.u2, north.v2}},
+                  {p4, {0, 0, 1}, {north.u2, north.v1}},
+                  {p6, {0, 0, 1}, {north.u1, north.v1}});
     }
 
     std::vector<Vertex> toPoints() {
