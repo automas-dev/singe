@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include <map>
 #include <algorithm>
 #include <s3e.hpp>
 using namespace Tom::s3e;
@@ -16,7 +17,7 @@ struct Quad {
     std::array<Vertex, 4> points;
     bool enabled = true;
 
-    Quad() { }
+    Quad(void) { }
 
     Quad(const Vertex & p1, const Vertex & p2, const Vertex & p3) : Quad({p1, p2, p3, p1 + p3 - p2}) { }
 
@@ -24,20 +25,13 @@ struct Quad {
         points = p;
     }
 
-    Quad(const Quad & other) {
-        points = other.points;
-    }
+    Quad(const Quad & other) = default;
 
-    Quad(Quad && other) {
-        std::swap(points, other.points);
-    }
+    Quad(Quad && other) = default;
 
-    Quad & operator=(const Quad & other) {
-        points = other.points;
-        return *this;
-    }
+    Quad & operator=(const Quad & other) = default;
 
-    std::vector<Vertex> toPoints() {
+    std::vector<Vertex> toPoints(void) {
         std::vector<Vertex> cloud;
         if (!enabled)
             return cloud;
@@ -64,13 +58,37 @@ struct UV {
     UV(float u1, float v1, float u2, float v2) : u1(std::min(u1, u2)), u2(std::max(u1, u2)), v1(std::min(v1, v2)), v2(std::max(v1, v2)) { }
 };
 
+struct BlockStyle {
+    UV north;
+    UV south;
+    UV east;
+    UV west;
+    UV bottom;
+    UV top;
+
+    typedef std::shared_ptr<BlockStyle> Ptr;
+    typedef std::shared_ptr<const BlockStyle> ConstPtr;
+
+    BlockStyle(void) { }
+
+    BlockStyle(const UV & north,  const UV & south, const UV & east, const UV & west, const UV & bottom, const UV & top) 
+        : north(north), south(south), east(east), west(west), bottom(bottom), top(top) { }
+
+    BlockStyle(const BlockStyle & other) = default;
+
+    BlockStyle(BlockStyle && other) = default; 
+
+    BlockStyle & operator=(const BlockStyle & other) = default;
+};
+
 struct Cube {
     std::array<Quad, 6> faces;
     bool enabled = true;
+    std::shared_ptr<BlockStyle> style;
 
-    Cube(void) : Cube({0, 0, 0}) { }
+    Cube(void) : Cube({0, 0, 0}, std::make_shared<BlockStyle>()) { }
 
-    Cube(const glm::vec3 & origin, const UV & north=UV(), const UV & east=UV(), const UV & south=UV(), const UV & west=UV(), const UV & bottom=UV(), const UV & top=UV()) {
+    Cube(const glm::vec3 & origin, const std::shared_ptr<BlockStyle> & style) : style(style) {
         auto & p = origin;
         glm::vec3 px = origin + glm::vec3(1, 0, 0);
         glm::vec3 py = origin + glm::vec3(0, 1, 0);
@@ -80,44 +98,33 @@ struct Cube {
         glm::vec3 pyz = py + (pz - p);
         glm::vec3 pxyz = px + (py - p) + (pz - p);
 
-        faces[0] = Quad({py, {-1, 0, 0}, {west.u1, west.v1}},
-                    {p, {-1, 0, 0}, {west.u1, west.v2}},
-                    {pz, {-1, 0, 0}, {west.u2, west.v2}});
-        faces[1] = Quad({pxyz, {1, 0, 0}, {east.u1, east.v1}},
-                    {pxz, {1, 0, 0}, {east.u1, east.v2}},
-                    {px, {1, 0, 0}, {east.u2, east.v2}});
-        faces[2] = Quad({pz, {0, -1, 0}, {bottom.u1, bottom.v1}},
-                    {p, {0, -1, 0}, {bottom.u1, bottom.v2}},
-                    {px, {0, -1, 0}, {bottom.u2, bottom.v2}});
-        faces[3] = Quad({py, {0, 1, 0}, {top.u1, top.v1}},
-                    {pyz, {0, 1, 0}, {top.u1, top.v2}},
-                    {pxyz, {0, 1, 0}, {top.u2, top.v2}});
-        faces[4] = Quad({pxy, {0, 0, 1}, {south.u1, south.v1}},
-                    {px, {0, 0, 1}, {south.u1, south.v2}},
-                    {p, {0, 0, 1}, {south.u2, south.v2}});
-        faces[5] = Quad({pyz, {0, 0, -1}, {north.u1, north.v1}},
-                  {pz, {0, 0, -1}, {north.u1, north.v2}},
-                  {pxz, {0, 0, -1}, {north.u2, north.v2}});
+        faces[0] = Quad({py, {-1, 0, 0}, {style->west.u1, style->west.v1}},
+                    {p, {-1, 0, 0}, {style->west.u1, style->west.v2}},
+                    {pz, {-1, 0, 0}, {style->west.u2, style->west.v2}});
+        faces[1] = Quad({pxyz, {1, 0, 0}, {style->east.u1, style->east.v1}},
+                    {pxz, {1, 0, 0}, {style->east.u1, style->east.v2}},
+                    {px, {1, 0, 0}, {style->east.u2, style->east.v2}});
+        faces[2] = Quad({pz, {0, -1, 0}, {style->bottom.u1, style->bottom.v1}},
+                    {p, {0, -1, 0}, {style->bottom.u1, style->bottom.v2}},
+                    {px, {0, -1, 0}, {style->bottom.u2, style->bottom.v2}});
+        faces[3] = Quad({py, {0, 1, 0}, {style->top.u1, style->top.v1}},
+                    {pyz, {0, 1, 0}, {style->top.u1, style->top.v2}},
+                    {pxyz, {0, 1, 0}, {style->top.u2, style->top.v2}});
+        faces[4] = Quad({pxy, {0, 0, 1}, {style->south.u1, style->south.v1}},
+                    {px, {0, 0, 1}, {style->south.u1, style->south.v2}},
+                    {p, {0, 0, 1}, {style->south.u2, style->south.v2}});
+        faces[5] = Quad({pyz, {0, 0, -1}, {style->north.u1, style->north.v1}},
+                  {pz, {0, 0, -1}, {style->north.u1, style->north.v2}},
+                  {pxz, {0, 0, -1}, {style->north.u2, style->north.v2}});
     }
 
-    Cube(const Cube & other) {
-        faces = other.faces;
-    }
+    Cube(const Cube & other) = default;
 
-    Cube(Cube && other) {
-        std::swap(faces, other.faces);
-    }
+    Cube(Cube && other) = default;
 
-    Cube & operator=(const Cube & other) {
-        if (this == &other)
-            return *this;
-        
-        faces = other.faces;
+    Cube & operator=(const Cube & other) = default;
 
-        return *this;
-    }
-
-    std::vector<Vertex> toPoints() {
+    std::vector<Vertex> toPoints(void) {
         std::vector<Vertex> cloud;
         if (!enabled)
             return cloud;
@@ -131,46 +138,44 @@ struct Cube {
 };
 
 
-template<std::size_t N=8>
 struct Chunk {
+    static constexpr size_t N = 16;
+
     std::array<std::array<std::array<Cube, N>, N>, N> cubes;
     bool enabled = true;
 
+    typedef std::shared_ptr<Chunk> Ptr;
+    typedef std::shared_ptr<const Chunk> ConstPtr;
+
     Chunk(void) {
+        std::map<int, std::shared_ptr<BlockStyle>> styles;
+
         for (int x = 0; x < N; x++) {
             for (int y = 0; y < N; y++) {
                 for (int z = 0; z < N; z++) {
 
                     UV uv (0.1 * (x+z), 0.1 * y, 0.1 * (z+x+1), 0.1 * (y+1));
 
-                    cubes[x][y][z] = Cube({x, y, z}, uv, uv, uv, uv, uv, uv);
+                    std::shared_ptr<BlockStyle> style;
+                    if (styles.count(x+z) > 0)
+                        style = styles[x+z];
+                    else
+                        style = std::make_shared<BlockStyle>(uv, uv, uv, uv, uv, uv);
+
+                    cubes[x][y][z] = Cube({x, y, z}, style);
                     cubes[x][y][z].enabled = x % 2 == 0 && z % 2 == 0 && y % 2 == 0;
                 }
             }
         }
     }
 
-    Chunk(const Chunk & other) {
-        cubes = other.cubes;
-        enabled = other.enabled;
-    }
+    Chunk(const Chunk & other) = default;
 
-    Chunk(Chunk && other) {
-        std::swap(cubes, other.cubes);
-        std::swap(enabled, other.enabled);
-    }
+    Chunk(Chunk && other) = default;
 
-    Chunk & operator=(const Chunk & other) {
-        if (this == &other)
-            return *this;
+    Chunk & operator=(const Chunk & other) = default;
 
-        cubes = other.cubes;
-        enabled = other.enabled;
-
-        return *this;
-    }
-
-    std::vector<Vertex> toPoints() {
+    std::vector<Vertex> toPoints(void) {
         std::vector<Vertex> points;
         if (!enabled)
             return points;
@@ -209,6 +214,9 @@ class Game : public GameBase {
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
     Model::Ptr model;
+    Chunk::Ptr chunk;
+
+    int step = 8;
 
 public:
     Game(const sf::String & resPath);

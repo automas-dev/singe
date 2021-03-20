@@ -48,7 +48,7 @@ bool Game::onCreate() {
     // Initialize camera to look at origin
     camera->move({-3, 2, -1});
     camera->rotate({0, 110});
-    camera->setFov(80);
+    camera->setFov(70);
 
     shader = resManager.loadShader("shader/shader.vert", "shader/shader.frag");
     if (!shader)
@@ -69,12 +69,12 @@ bool Game::onCreate() {
     UV west (origin - offset_x);
     UV top (origin - offset_y);
     UV bottom (origin + offset_y);
-    Cube c({0, 0, 0}, north, east, south, west, bottom, top);
+    Cube c({0, 0, 0}, std::make_shared<BlockStyle>(north, east, south, west, bottom, top));
 
-    Chunk ck;
+    chunk = std::make_shared<Chunk>();
 
     model = std::make_shared<Model>();
-    bool res = model->loadFromPoints(ck.toPoints());
+    bool res = model->loadFromPoints(chunk->toPoints());
     if (!res)
         return false;
 
@@ -103,6 +103,20 @@ void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
     GameBase::onMouseUp(e);
+
+    if (e.button == sf::Mouse::Left)
+        step -= 1;
+    else
+        step += 1;
+
+    for (int x = 0; x < Chunk::N; x++) {
+        for (int y = 0; y < Chunk::N; y++) {
+            for (int z = 0; z < Chunk::N; z++) {
+                chunk->cubes[x][y][z].enabled = x % step == 0 && z % step == 0 && y % step == 0;
+            }
+        }
+    }
+    model->loadFromPoints(chunk->toPoints());
 }
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
