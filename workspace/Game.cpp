@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include <exception>
+#include <glm/gtc/noise.hpp>
 #include <spdlog/spdlog.h>
 
 
@@ -59,21 +60,32 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    glm::vec4 offset_x(0.1, 0.0, 0.1, 0.0);
-    glm::vec4 offset_y(0.0, 0.1, 0.0, 0.1);
-    glm::vec4 offset = offset_x + offset_y;
-    glm::vec4 origin = {0.1, 0.1, 0.2, 0.2};
-    UV north (origin);
-    UV east (origin + offset_x);
-    UV south (origin + offset_x + offset_x);
-    UV west (origin - offset_x);
-    UV top (origin - offset_y);
-    UV bottom (origin + offset_y);
-    Cube c({0, 0, 0}, std::make_shared<BlockStyle>(north, east, south, west, bottom, top));
+    for (int x = 0; x < SubChunk::N; x++) {
+        for (int z = 0; z < SubChunk::N; z++) {
+            float u1 = x / (float)SubChunk::N;
+            float u2 = (x + 1) / (float)SubChunk::N;
+            float v1 = z / (float)SubChunk::N;
+            float v2 = (z + 1) / (float)SubChunk::N;
+            UV uv(u1, v1, u2, v2);
+            styles.push_back(std::make_shared<BlockStyle>(uv, uv, uv, uv, uv, uv));
+        }
+    }
 
-    chunk = std::make_shared<Chunk>();
+    auto style = std::make_shared<BlockStyle>();
+    Cube cube ({0, 0, 0}, style);
 
+    chunk = std::make_shared<Chunk>(glm::vec3(0, 0, 0), 5);
+    for (int x = 0; x < SubChunk::N; x++) {
+        for (int z = 0; z < SubChunk::N; z++) {
+            auto height = 1 + glm::simplex(glm::vec2(x * 0.05, z * 0.05)) * 4;
+            SPDLOG_DEBUG("Height {}", height);
+            for (int y = 0; y < height; y++) {
+                chunk->set(x, y, z, styles[x * 8 + z]);
+            }
+        }
+    }
     model = std::make_shared<Model>();
+    //bool res = model->loadFromPoints(cube.toPoints({0, 0, 0}));
     bool res = model->loadFromPoints(chunk->toPoints());
     if (!res)
         return false;
@@ -104,18 +116,21 @@ void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
 void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
     GameBase::onMouseUp(e);
 
-    if (e.button == sf::Mouse::Left)
-        step -= 1;
+    if (e.button == sf::Mouse::Left) {
+        if (step > 1)
+            step -= 1;
+    }
     else
         step += 1;
 
-    for (int x = 0; x < Chunk::N; x++) {
-        for (int y = 0; y < Chunk::N; y++) {
-            for (int z = 0; z < Chunk::N; z++) {
-                chunk->cubes[x][y][z].enabled = x % step == 0 && z % step == 0 && y % step == 0;
+    for (int x = 0; x < SubChunk::N; x++) {
+        for (int y = 0; y < SubChunk::N * chunk->subchunks.size(); y++) {
+            for (int z = 0; z < SubChunk::N; z++) {
+                chunk->get(x, y, z).enabled = x % step == 0 && z % step == 0 && y % step == 0;
             }
         }
     }
+    model = std::make_shared<Model>();
     model->loadFromPoints(chunk->toPoints());
 }
 

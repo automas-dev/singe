@@ -44,6 +44,10 @@ namespace Tom::s3e {
             return Vertex(pos + other.pos, norm + other.norm, uv + other.uv);
         }
 
+        Vertex operator+(const glm::vec3 & offset) const {
+            return Vertex(pos + offset, norm, uv);
+        }
+
         Vertex operator-(const Vertex & other) const {
             return Vertex(pos - other.pos, norm - other.norm, uv - other.uv);
         }

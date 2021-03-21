@@ -10,42 +10,10 @@
 #include <array>
 #include <map>
 #include <algorithm>
+#include <exception>
 #include <s3e.hpp>
+#include <glm/gtx/normal.hpp>
 using namespace Tom::s3e;
-
-struct Quad {
-    std::array<Vertex, 4> points;
-    bool enabled = true;
-
-    Quad(void) { }
-
-    Quad(const Vertex & p1, const Vertex & p2, const Vertex & p3) : Quad({p1, p2, p3, p1 + p3 - p2}) { }
-
-    Quad(const std::array<Vertex, 4> p) {
-        points = p;
-    }
-
-    Quad(const Quad & other) = default;
-
-    Quad(Quad && other) = default;
-
-    Quad & operator=(const Quad & other) = default;
-
-    std::vector<Vertex> toPoints(void) {
-        std::vector<Vertex> cloud;
-        if (!enabled)
-            return cloud;
-
-        cloud.push_back(points[0]);
-        cloud.push_back(points[1]);
-        cloud.push_back(points[2]);
-
-        cloud.push_back(points[2]);
-        cloud.push_back(points[3]);
-        cloud.push_back(points[0]);
-        return cloud;
-    }
-};
 
 struct UV {
     float u1, u2;
@@ -55,7 +23,63 @@ struct UV {
 
     UV(const glm::vec4 & vec) : UV(vec[0], vec[1], vec[2], vec[3]) { }
 
-    UV(float u1, float v1, float u2, float v2) : u1(std::min(u1, u2)), u2(std::max(u1, u2)), v1(std::min(v1, v2)), v2(std::max(v1, v2)) { }
+    UV(const UV & other) = default;
+
+    UV(UV && other) = default;
+
+    UV & operator=(const UV & other) = default;
+
+    UV(float u1, float v1, float u2, float v2) : u1(std::min(u1, u2)), u2(std::max(u1, u2)), v1(std::min(v1, v2)),
+        v2(std::max(v1, v2)) { }
+};
+
+struct Quad {
+    std::array<Vertex, 4> points;
+    bool enabled = true;
+
+    Quad(void) { }
+
+    Quad(const glm::vec3 & p1, const glm::vec3 & p2, const glm::vec3 & p3) {
+        auto norm = glm::triangleNormal(p1, p2, p3);
+        auto p4 = p1 + p3 - p2;
+        points = {
+            Vertex(p1, norm, {0, 1}),
+            Vertex(p2, norm, {0, 0}),
+            Vertex(p3, norm, {1, 0}),
+            Vertex(p4, norm, {1, 1})
+        };
+    }
+
+    Quad(const std::array<Vertex, 4> p) : points(p) { }
+
+    Quad(const Quad & other) = default;
+
+    Quad(Quad && other) = default;
+
+    Quad & operator=(const Quad & other) = default;
+
+    void setUV(const UV & uv) {
+        points[0].uv = {uv.u1, uv.v1};
+        points[1].uv = {uv.u1, uv.v2};
+        points[2].uv = {uv.u2, uv.v2};
+        points[3].uv = {uv.u2, uv.v1};
+    }
+
+    std::vector<Vertex> toPoints(const glm::vec3 & offset) {
+        std::vector<Vertex> cloud;
+        if (!enabled)
+            return cloud;
+
+        cloud.push_back(points[0] + offset);
+        cloud.push_back(points[1] + offset);
+        cloud.push_back(points[2] + offset);
+
+        cloud.push_back(points[2] + offset);
+        cloud.push_back(points[3] + offset);
+        cloud.push_back(points[0] + offset);
+
+        return cloud;
+    }
 };
 
 struct BlockStyle {
@@ -71,24 +95,33 @@ struct BlockStyle {
 
     BlockStyle(void) { }
 
-    BlockStyle(const UV & north,  const UV & south, const UV & east, const UV & west, const UV & bottom, const UV & top) 
+    BlockStyle(const UV & north,  const UV & south, const UV & east, const UV & west, const UV & bottom, const UV & top)
         : north(north), south(south), east(east), west(west), bottom(bottom), top(top) { }
 
     BlockStyle(const BlockStyle & other) = default;
 
-    BlockStyle(BlockStyle && other) = default; 
+    BlockStyle(BlockStyle && other) = default;
 
     BlockStyle & operator=(const BlockStyle & other) = default;
 };
 
 struct Cube {
     std::array<Quad, 6> faces;
-    bool enabled = true;
-    std::shared_ptr<BlockStyle> style;
+    bool enabled = false;
+    BlockStyle::Ptr style;
+
+    enum Face {
+        West = 0,
+        East,
+        Bottom,
+        Top,
+        South,
+        North
+    };
 
     Cube(void) : Cube({0, 0, 0}, std::make_shared<BlockStyle>()) { }
 
-    Cube(const glm::vec3 & origin, const std::shared_ptr<BlockStyle> & style) : style(style) {
+    Cube(const glm::vec3 & origin, const BlockStyle::Ptr & style) : style(style) {
         auto & p = origin;
         glm::vec3 px = origin + glm::vec3(1, 0, 0);
         glm::vec3 py = origin + glm::vec3(0, 1, 0);
@@ -98,24 +131,12 @@ struct Cube {
         glm::vec3 pyz = py + (pz - p);
         glm::vec3 pxyz = px + (py - p) + (pz - p);
 
-        faces[0] = Quad({py, {-1, 0, 0}, {style->west.u1, style->west.v1}},
-                    {p, {-1, 0, 0}, {style->west.u1, style->west.v2}},
-                    {pz, {-1, 0, 0}, {style->west.u2, style->west.v2}});
-        faces[1] = Quad({pxyz, {1, 0, 0}, {style->east.u1, style->east.v1}},
-                    {pxz, {1, 0, 0}, {style->east.u1, style->east.v2}},
-                    {px, {1, 0, 0}, {style->east.u2, style->east.v2}});
-        faces[2] = Quad({pz, {0, -1, 0}, {style->bottom.u1, style->bottom.v1}},
-                    {p, {0, -1, 0}, {style->bottom.u1, style->bottom.v2}},
-                    {px, {0, -1, 0}, {style->bottom.u2, style->bottom.v2}});
-        faces[3] = Quad({py, {0, 1, 0}, {style->top.u1, style->top.v1}},
-                    {pyz, {0, 1, 0}, {style->top.u1, style->top.v2}},
-                    {pxyz, {0, 1, 0}, {style->top.u2, style->top.v2}});
-        faces[4] = Quad({pxy, {0, 0, 1}, {style->south.u1, style->south.v1}},
-                    {px, {0, 0, 1}, {style->south.u1, style->south.v2}},
-                    {p, {0, 0, 1}, {style->south.u2, style->south.v2}});
-        faces[5] = Quad({pyz, {0, 0, -1}, {style->north.u1, style->north.v1}},
-                  {pz, {0, 0, -1}, {style->north.u1, style->north.v2}},
-                  {pxz, {0, 0, -1}, {style->north.u2, style->north.v2}});
+        faces[West  ] = Quad(py, p, pz);
+        faces[East  ] = Quad(pxyz, pxz, px);
+        faces[Bottom] = Quad(pz, p, px);
+        faces[Top   ] = Quad(py, pyz, pxyz);
+        faces[South ] = Quad(pxy, px, p);
+        faces[North ] = Quad(pyz, pz, pxz);
     }
 
     Cube(const Cube & other) = default;
@@ -124,13 +145,20 @@ struct Cube {
 
     Cube & operator=(const Cube & other) = default;
 
-    std::vector<Vertex> toPoints(void) {
+    std::vector<Vertex> toPoints(const glm::vec3 & offset) {
+        faces[West  ].setUV(style->west);
+        faces[East  ].setUV(style->east);
+        faces[Bottom].setUV(style->bottom);
+        faces[Top   ].setUV(style->top);
+        faces[South ].setUV(style->south);
+        faces[North ].setUV(style->north);
+
         std::vector<Vertex> cloud;
         if (!enabled)
             return cloud;
 
         for (auto & face : faces) {
-            auto p = face.toPoints();
+            auto p = face.toPoints(offset);
             cloud.insert(cloud.end(), p.begin(), p.end());
         }
         return cloud;
@@ -138,44 +166,45 @@ struct Cube {
 };
 
 
-struct Chunk {
-    static constexpr size_t N = 16;
+struct SubChunk {
+    static constexpr size_t N = 10;
 
     std::array<std::array<std::array<Cube, N>, N>, N> cubes;
     bool enabled = true;
 
-    typedef std::shared_ptr<Chunk> Ptr;
-    typedef std::shared_ptr<const Chunk> ConstPtr;
+    typedef std::shared_ptr<SubChunk> Ptr;
+    typedef std::shared_ptr<const SubChunk> ConstPtr;
 
-    Chunk(void) {
-        std::map<int, std::shared_ptr<BlockStyle>> styles;
+    SubChunk(void) {
+        auto style = std::make_shared<BlockStyle>();
 
-        for (int x = 0; x < N; x++) {
-            for (int y = 0; y < N; y++) {
+        for (int y = 0; y < N; y++) {
+            for (int x = 0; x < N; x++) {
                 for (int z = 0; z < N; z++) {
-
-                    UV uv (0.1 * (x+z), 0.1 * y, 0.1 * (z+x+1), 0.1 * (y+1));
-
-                    std::shared_ptr<BlockStyle> style;
-                    if (styles.count(x+z) > 0)
-                        style = styles[x+z];
-                    else
-                        style = std::make_shared<BlockStyle>(uv, uv, uv, uv, uv, uv);
-
-                    cubes[x][y][z] = Cube({x, y, z}, style);
-                    cubes[x][y][z].enabled = x % 2 == 0 && z % 2 == 0 && y % 2 == 0;
+                    cubes[y][x][z] = Cube({x, y, z}, style);
                 }
             }
         }
     }
 
-    Chunk(const Chunk & other) = default;
+    SubChunk(const SubChunk & other) = default;
 
-    Chunk(Chunk && other) = default;
+    SubChunk(SubChunk && other) = default;
 
-    Chunk & operator=(const Chunk & other) = default;
+    SubChunk & operator=(const SubChunk & other) = default;
 
-    std::vector<Vertex> toPoints(void) {
+    Cube & get(int x, int y, int z) {
+        if (y < 0 || y >= SubChunk::N)
+            throw std::out_of_range("Cube access y is out of range");
+        if (x < 0 || x >= SubChunk::N)
+            throw std::out_of_range("Cube access x is out of range");
+        if (z < 0 || z >= SubChunk::N)
+            throw std::out_of_range("Cube access z is out of range");
+
+        return cubes[y][x][z];
+    }
+
+    std::vector<Vertex> toPoints(const glm::vec3 & offset) {
         std::vector<Vertex> points;
         if (!enabled)
             return points;
@@ -183,28 +212,99 @@ struct Chunk {
         for (int x = 0; x < N; x++) {
             for (int y = 0; y < N; y++) {
                 for (int z = 0; z < N; z++) {
-                    auto & cube = cubes[x][y][z];
+                    auto & cube = cubes[y][x][z];
                     if (!cube.enabled)
                         continue;
 
-                    cube.faces[0].enabled = x == 0 || !cubes[x-1][y][z].enabled;
-                    cube.faces[1].enabled = x == (N-1) || !cubes[x+1][y][z].enabled;
-                    cube.faces[2].enabled = y == 0 || !cubes[x][y-1][z].enabled;
-                    cube.faces[3].enabled = y == (N-1) || !cubes[x][y+1][z].enabled;
-                    cube.faces[4].enabled = z == 0 || !cubes[x][y][z-1].enabled;
-                    cube.faces[5].enabled = z == (N-1) || !cubes[x][y][z+1].enabled;
+                    cube.faces[Cube::West  ].enabled = x == 0 || !cubes[y][x - 1][z].enabled;
+                    cube.faces[Cube::East  ].enabled = x == (N - 1) || !cubes[y][x + 1][z].enabled;
+                    cube.faces[Cube::Bottom].enabled = y == 0 || !cubes[y - 1][x][z].enabled;
+                    cube.faces[Cube::Top   ].enabled = y == (N - 1) || !cubes[y + 1][x][z].enabled;
+                    cube.faces[Cube::South ].enabled = z == 0 || !cubes[y][x][z - 1].enabled;
+                    cube.faces[Cube::North ].enabled = z == (N - 1) || !cubes[y][x][z + 1].enabled;
                 }
             }
         }
+
         for (auto & y : cubes) {
-            for (auto & z : y) {
-                for (auto & cube : z) {
-                    auto p = cube.toPoints();
+            for (auto & x : y) {
+                for (auto & cube : x) {
+                    auto p = cube.toPoints(offset);
                     points.insert(points.end(), p.begin(), p.end());
                 }
             }
         }
+
         return points;
+    }
+};
+
+
+struct Chunk {
+    glm::vec3 pos;
+    std::vector<SubChunk> subchunks;
+    bool enabled = true;
+
+    typedef std::shared_ptr<Chunk> Ptr;
+    typedef std::shared_ptr<const Chunk> ConstPtr;
+
+    Chunk(void) : Chunk({0, 0, 0}) { }
+
+    Chunk(const glm::vec3 & pos) : pos(pos) {
+        subchunks.emplace_back();
+    }
+
+    Chunk(const glm::vec3 & pos, int n_sub) : pos(pos) {
+        while (subchunks.size() < n_sub)
+            subchunks.emplace_back();
+    }
+
+    void set(int x, int y, int z, const BlockStyle::Ptr & style) {
+        auto & cube = get(x, y, z);
+        cube.style = style;
+        cube.enabled = true;
+    }
+
+    Cube & get(int x, int y, int z) {
+        x = x - (int)pos.x;
+        z = z - (int)pos.z;
+        int sub = y / SubChunk::N;
+        y = y % SubChunk::N;
+
+        if (sub < 0)
+            throw std::out_of_range("Cube access y is too low");
+        if (x < 0 || x >= SubChunk::N)
+            throw std::out_of_range("Cube access x is out of range");
+        if (z < 0 || z >= SubChunk::N)
+            throw std::out_of_range("Cube access z is out of range");
+
+        while (subchunks.size() <= sub)
+            subchunks.emplace_back();
+
+        return subchunks[sub].get(x, y, z);
+    }
+
+    std::vector<Vertex> toPoints(void) {
+        std::vector<Vertex> points;
+        if (!enabled)
+            return points;
+
+        for (int i = 0; i < subchunks.size(); i++) {
+            auto & subchunk = subchunks[i];
+            auto offset = pos + glm::vec3(0, i * SubChunk::N, 0);
+            auto p = subchunk.toPoints(offset);
+            points.insert(points.begin(), p.begin(), p.end());
+        }
+
+        return points;
+    }
+};
+
+struct ChunkManager {
+    std::map<std::pair<int, int>, Chunk::Ptr> chunks;
+
+    Chunk::Ptr & get(int x, int y, int z) {
+        
     }
 };
 
@@ -215,6 +315,7 @@ class Game : public GameBase {
     Texture::Ptr devTexture;
     Model::Ptr model;
     Chunk::Ptr chunk;
+    std::vector<BlockStyle::Ptr> styles;
 
     int step = 8;
 
