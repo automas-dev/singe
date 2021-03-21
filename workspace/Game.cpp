@@ -71,22 +71,19 @@ bool Game::onCreate() {
         }
     }
 
-    auto style = std::make_shared<BlockStyle>();
-    Cube cube ({0, 0, 0}, style);
-
-    chunk = std::make_shared<Chunk>(glm::vec3(0, 0, 0), 5);
-    for (int x = 0; x < SubChunk::N; x++) {
-        for (int z = 0; z < SubChunk::N; z++) {
-            auto height = 1 + glm::simplex(glm::vec2(x * 0.05, z * 0.05)) * 4;
-            SPDLOG_DEBUG("Height {}", height);
+    chunks = std::make_shared<ChunkManager>();
+    float s = 0.02;
+    for (int x = 0; x < 100; x++) {
+        for (int z = 0; z < 100; z++) {
+            auto height = 10 + glm::simplex(glm::vec2(x * s, z * s)) * 4;
             for (int y = 0; y < height; y++) {
-                chunk->set(x, y, z, styles[x * 8 + z]);
+                chunks->set(x, y, z, styles[(x * 8 + z) % styles.size()]);
             }
         }
     }
+    SPDLOG_DEBUG("To the model");
     model = std::make_shared<Model>();
-    //bool res = model->loadFromPoints(cube.toPoints({0, 0, 0}));
-    bool res = model->loadFromPoints(chunk->toPoints());
+    bool res = model->loadFromPoints(chunks->toPoints());
     if (!res)
         return false;
 
@@ -115,23 +112,6 @@ void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
     GameBase::onMouseUp(e);
-
-    if (e.button == sf::Mouse::Left) {
-        if (step > 1)
-            step -= 1;
-    }
-    else
-        step += 1;
-
-    for (int x = 0; x < SubChunk::N; x++) {
-        for (int y = 0; y < SubChunk::N * chunk->subchunks.size(); y++) {
-            for (int z = 0; z < SubChunk::N; z++) {
-                chunk->get(x, y, z).enabled = x % step == 0 && z % step == 0 && y % step == 0;
-            }
-        }
-    }
-    model = std::make_shared<Model>();
-    model->loadFromPoints(chunk->toPoints());
 }
 
 void Game::onResized(const sf::Event::SizeEvent & e) {

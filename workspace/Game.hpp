@@ -303,8 +303,32 @@ struct Chunk {
 struct ChunkManager {
     std::map<std::pair<int, int>, Chunk::Ptr> chunks;
 
+    typedef std::shared_ptr<ChunkManager> Ptr;
+    typedef std::shared_ptr<const ChunkManager> ConstPtr;
+
+    void set(int x, int y, int z, const BlockStyle::Ptr & style) {
+        get(x, y, z)->set(x, y, z, style);
+    }
+
     Chunk::Ptr & get(int x, int y, int z) {
-        
+        x = x / SubChunk::N;
+        z = z / SubChunk::N;
+        auto pair = std::make_pair(x, z);
+        if (chunks.count(pair) == 0) {
+            glm::vec3 pos(x * SubChunk::N, 0, z * SubChunk::N);
+            chunks[pair] = std::make_shared<Chunk>(pos);
+        }
+        return chunks[pair];
+    }
+
+    std::vector<Vertex> toPoints(void) {
+        std::vector<Vertex> points;
+        for (auto & e : chunks) {
+            auto & chunk = e.second;
+            auto p = chunk->toPoints();
+            points.insert(points.end(), p.begin(), p.end());
+        }
+        return points;
     }
 };
 
@@ -314,10 +338,8 @@ class Game : public GameBase {
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
     Model::Ptr model;
-    Chunk::Ptr chunk;
+    ChunkManager::Ptr chunks;
     std::vector<BlockStyle::Ptr> styles;
-
-    int step = 8;
 
 public:
     Game(const sf::String & resPath);
