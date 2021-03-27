@@ -121,6 +121,8 @@ void Game::onResized(const sf::Event::SizeEvent & e) {
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
+
+    chunks->update(delta);
 }
 
 void Game::onDraw() const {

@@ -32,6 +32,7 @@ set(S3E_HEADERS
     include/s3e/Texture.hpp
     include/s3e/Util.hpp
     include/s3e/VBO.hpp
+    include/s3e/Voxel.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/include/config.h
 )
 
@@ -49,6 +50,7 @@ set(S3E_SOURCES
     src/Texture.cpp
     src/Util.cpp
     src/VBO.cpp
+    src/Voxel.cpp
 )
 
 add_library(s3e STATIC
@@ -84,7 +86,8 @@ PUBLIC
 )
 
 add_subdirectory(workspace)
-# add_subdirectory(demo)
+add_subdirectory(demo)
+add_subdirectory(benchmarking)
 
 #export(TARGETS s3e NAMESPACE Tom::
 #    FILE ${CMAKE_CURRENT_BINARY_DIR}/s3e-config.cmake)

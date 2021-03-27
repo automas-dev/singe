@@ -13,5 +13,6 @@
 #include "s3e/Texture.hpp"
 #include "s3e/Util.hpp"
 #include "s3e/VBO.hpp"
+#include "s3e/Voxel.hpp"
 #include "config.h"
 
