@@ -154,7 +154,6 @@ namespace Tom::s3e {
         SPDLOG_DEBUG("mouse grab set to {}", grab);
         this->grab = grab;
 
-        window->setMouseCursorGrabbed(grab);
         window->setMouseCursorVisible(!grab);
 
         if (grab) {
