@@ -1,12 +1,51 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15...3.20)
 
-project(sfml-s3e VERSION 0.3.6 LANGUAGES CXX)
+project(Tom
+    VERSION 0.3.6
+    DESCRIPTION "My implementation of C++ support classes and functions for 3D rendering using OpenGL and SFML."
+    LANGUAGES CXX)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+# Set the default build type if non is specified
+set(default_build_type "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to '${default_build_type}' since none was specified.")
+    set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+        STRING "Choose the type of build." FORCE)
 
-configure_file(cmake/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+    # Set possible values of build type for cmake-gui
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+        "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
+# Only if this is the top level project (not included with add_subdirectory)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    # Use -std=c++xx instead of -std=g++xx
+    set(CMAKE_CXX_EXTENSIONS OFF)
+
+    # Support folders in IDEs
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+    # Testing only available for top level projects. It calls enable_testing
+    # which must be in the main CMakeLists.
+    include(CTest)
+
+    # Generate documentation using Doxygen
+    find_package(Doxygen)
+    if(Doxygen_FOUND)
+        add_subdirectory(docs)
+    else()
+        message(STATUS "Doxygen not found, not building docs")
+    endif()
+endif()
+
+# Use for platform independent install dirs, despite being called GNU
+include(GNUInstallDirs)
+
+# Create config.h with project version numbers
+configure_File(cmake/config.h.in include/config.h)
+include_directories(PRIVATE ${CMAKE_BINARY_DIR}/include)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
@@ -15,102 +54,35 @@ find_package(GLM REQUIRED)
 find_package(fmt REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
-set(S3E_HEADERS 
-    include/s3e.hpp
-    include/default_font.h
-    include/s3e/Camera.hpp
-    include/s3e/FPSDisplay.hpp
-    include/s3e/FrameBuffer.hpp
-    include/s3e/GameBase.hpp
-    include/s3e/Keymap.hpp
-    include/s3e/log.hpp
-    include/s3e/Material.hpp
-    include/s3e/Menu.hpp
-    include/s3e/Model.hpp
-    include/s3e/ResourceManager.hpp
-    include/s3e/Shader.hpp
-    include/s3e/Texture.hpp
-    include/s3e/Util.hpp
-    include/s3e/VBO.hpp
-    include/s3e/Voxel.hpp
-    ${CMAKE_CURRENT_BINARY_DIR}/include/config.h
-)
-
-set(S3E_SOURCES
-    src/Camera.cpp
-    src/FPSDisplay.cpp
-    src/FrameBuffer.cpp
-    src/GameBase.cpp
-    src/Keymap.cpp
-    src/Material.cpp
-    src/Menu.cpp
-    src/Model.cpp
-    src/ResourceManager.cpp
-    src/Shader.cpp
-    src/Texture.cpp
-    src/Util.cpp
-    src/VBO.cpp
-    src/Voxel.cpp
-)
-
-add_library(s3e STATIC
-    ${S3E_SOURCES}
-    ${S3E_HEADERS}
-)
-
-add_library(Tom::s3e ALIAS s3e)
-
-set_property(TARGET s3e PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_compile_features(s3e PRIVATE cxx_std_17)
-
-target_include_directories(s3e
-PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-    ${GLM_INCLUDE_DIRS}
-)
-
-target_link_libraries(s3e
-PRIVATE
-    fmt::fmt
-    spdlog::spdlog
-PUBLIC
-    sfml-window 
-    sfml-graphics 
-    sfml-system
-    OpenGL::OpenGL 
-    OpenGL::GLU
-    GLEW::GLEW
-    spdlog::spdlog
-)
+add_subdirectory(src)
 
 add_subdirectory(workspace)
 add_subdirectory(demo)
 add_subdirectory(benchmarking)
 
-#export(TARGETS s3e NAMESPACE Tom::
-#    FILE ${CMAKE_CURRENT_BINARY_DIR}/s3e-config.cmake)
+# Create Targets file
+install(EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
-install(TARGETS s3e DESTINATION lib EXPORT s3e-config PUBLIC_HEADER DESTINATION include)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
-#install(EXPORT s3e-config DESTINATION include/c NAMESPACE Tom::)
-export(PACKAGE s3e)
+# Generate ConfigVersion file
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion)
 
-# Packaging support
-set(CPACK_PACKAGE_VENDOR "Thomas Harrison")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An awesome 3d lib")
-set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
-# set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENCE")
-# set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+# Copy the Config file to the build dir
+configure_file(cmake/ProjectConfig.cmake ${PROJECT_NAME}Config.cmake COPYONLY)
 
-set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
-set(CPACK_SOURCE_IGNORE_FILES
-    /.git
-    /.vscode
-    /.*build.*
-)
+# Add Config and ConfigVersion files to install
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
-include(CPack)
+# Add tests
+#if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
+#    add_subdirectory(tests)
+#endif()
