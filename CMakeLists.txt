@@ -53,6 +53,9 @@ find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
 find_package(fmt REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(Bullet REQUIRED)
+
+include_directories(${BULLET_INCLUDE_DIR})
 
 add_subdirectory(src)
 

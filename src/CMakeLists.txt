@@ -12,6 +12,7 @@ add_library(${TARGET} ${SOURCE_LIST} ${HEADER_LIST})
 target_include_directories(${TARGET}
 PRIVATE
     ${GLM_INCLUDE_DIRS}
+    ${BULLET_INCLUDE_DIR}
 PUBLIC
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
@@ -30,7 +31,8 @@ PUBLIC
     OpenGL::OpenGL 
     OpenGL::GLU
     GLEW::GLEW
-    spdlog::spdlog)
+    spdlog::spdlog
+    ${BULLET_LIBRARIES})
 
 # Check for Inter Procedural Optimization (IPO)
 include(CheckIPOSupported)
