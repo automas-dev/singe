@@ -2,10 +2,43 @@
 set(TARGET s3e)
 
 # Find with GLOB if CMake version is at least 3.12, otherwise use set
-file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/include/*.hpp")
-#set(HEADER_LIST "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/foo.hpp")
+#file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/include/*.hpp")
+set(HEADER_LIST
+    Camera.hpp
+    FPSDisplay.hpp
+    FrameBuffer.hpp
+    GameBase.hpp
+    Keymap.hpp
+    log.hpp
+    Material.hpp
+    Menu.hpp
+    Model.hpp
+    Physics.hpp
+    ResourceManager.hpp
+    Shader.hpp
+    Texture.hpp
+    Util.hpp
+    VBO.hpp
+    Voxel.hpp)
+list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${TARGET}/")
 
-file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp")
+#file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp")
+set(SOURCE_LIST
+    Camera.cpp
+    FPSDisplay.cpp
+    FrameBuffer.cpp
+    GameBase.cpp
+    Keymap.cpp
+    Material.cpp
+    Menu.cpp
+    Model.cpp
+    ResourceManager.cpp
+    Shader.cpp
+    Texture.cpp
+    Util.cpp
+    VBO.cpp
+    Voxel.cpp)
+list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/")
 
 add_library(${TARGET} ${SOURCE_LIST} ${HEADER_LIST})
 
