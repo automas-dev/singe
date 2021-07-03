@@ -7,9 +7,8 @@ add_executable(workspace
 
 target_compile_features(workspace PRIVATE cxx_std_17)
 
-target_link_libraries(workspace
-PRIVATE
+target_link_libraries(workspace 
+PRIVATE 
     Tom::s3e
     OpenGL::GLU
 )
-

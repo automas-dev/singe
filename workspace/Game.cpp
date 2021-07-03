@@ -1,7 +1,9 @@
-#include "Game.hpp"
+#include <spdlog/spdlog.h>
+
 #include <exception>
 #include <glm/gtc/noise.hpp>
-#include <spdlog/spdlog.h>
+
+#include "Game.hpp"
 
 
 static void getGlError() {
@@ -11,20 +13,20 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) { }
+Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
-Game::~Game() { }
+Game::~Game() {}
 
-void GLAPIENTRY MessageCallback( GLenum source,
-                                 GLenum type,
-                                 GLuint id,
-                                 GLenum severity,
-                                 GLsizei length,
-                                 const GLchar *message,
-                                 const void *userParam ) {
+void GLAPIENTRY MessageCallback(GLenum source,
+                                GLenum type,
+                                GLuint id,
+                                GLenum severity,
+                                GLsizei length,
+                                const GLchar * message,
+                                const void * userParam) {
     SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-                 ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-                 type, severity, message );
+                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+                 severity, message);
 }
 
 bool Game::onCreate() {
@@ -60,31 +62,27 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    for (int x = 0; x < SubChunk::N; x++) {
-        for (int z = 0; z < SubChunk::N; z++) {
-            float u1 = x / (float)SubChunk::N;
-            float u2 = (x + 1) / (float)SubChunk::N;
-            float v1 = z / (float)SubChunk::N;
-            float v2 = (z + 1) / (float)SubChunk::N;
-            UV uv(u1, v1, u2, v2);
-            styles.push_back(std::make_shared<BlockStyle>(uv, uv, uv, uv, uv, uv));
-        }
-    }
+    physics = std::make_unique<Physics>();
+    physics->loadObjects();
 
-    chunks = std::make_shared<ChunkManager>();
-    float s = 0.02;
-    for (int x = 0; x < 100; x++) {
-        for (int z = 0; z < 100; z++) {
-            auto height = 10 + glm::simplex(glm::vec2(x * s, z * s)) * 4;
-            for (int y = 0; y < height; y++) {
-                chunks->set(x, y, z, styles[(x * 8 + z) % styles.size()]);
-            }
-        }
-    }
-    SPDLOG_DEBUG("To the model");
-    model = std::make_shared<Model>();
-    bool res = model->loadFromPoints(chunks->toPoints());
+    std::vector<Vertex> floorPoints {
+        Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
+        Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
+        Vertex({50, 50, -50}, {0, 1, 0}, {1, 1}),
+
+        Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
+        Vertex({-50, 50, 50}, {0, 1, 0}, {0, 0}),
+        Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
+    };
+
+    floorModel = std::make_shared<Model>();
+    bool res = floorModel->loadFromPoints(floorPoints);
     if (!res)
+        return false;
+    // floorModel->move({0, -6, 0});
+
+    objectModel = resManager.loadModel("model/sphere.obj");
+    if (!objectModel)
         return false;
 
     SetMouseGrab(true);
@@ -92,10 +90,15 @@ bool Game::onCreate() {
     return true;
 }
 
-void Game::onDestroy() { }
+void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
+
+    if (e.code == sf::Keyboard::Space) {
+        physics->removeObjects();
+        physics->loadObjects();
+    }
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
@@ -122,7 +125,18 @@ void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
 
-    chunks->update(delta);
+    if (!menu->isVisible()) {
+        physics->update(delta);
+        // physics->printObjectsLocations();
+
+        //btTransform trans;
+        //physics->getTransform(1, trans);
+        //objectModel->setPosition({trans.getOrigin().getX(),
+        //                          trans.getOrigin().getY(),
+        //                          trans.getOrigin().getZ()});
+
+        // camera->setPosition(objectModel->getPosition() + glm::vec3(-3, 2, -1));
+    }
 }
 
 void Game::onDraw() const {
@@ -139,20 +153,20 @@ void Game::onDraw() const {
     shader->bind();
     devTexture->bind();
     shader->setMat4("mvp", vp);
-    shader->setMat4("model", model->modelMatrix());
     {
-        model->draw();
+        // shader->setMat4("model", floorModel->modelMatrix());
+        btTransform trans;
+        physics->getTransform(0, trans);
+        glm::mat4 model;
+        trans.getOpenGLMatrix(&model[0][0]);
+        shader->setMat4("model", model);
+        floorModel->draw();
 
-        glBegin(GL_POINTS);
-        {
-            glVertex3d(0, 0, 0);
-            glVertex3d(1, 0, 0);
-            glVertex3d(0, 1, 0);
-            glVertex3d(0, 0, 1);
-            glVertex3d(-0.5, 0, 0);
-            //glVertex3d(0, 0, -0.5);
-        }
-        glEnd();
+        // shader->setMat4("model", objectModel->modelMatrix());
+        physics->getTransform(1, trans);
+        trans.getOpenGLMatrix(&model[0][0]);
+        shader->setMat4("model", model);
+        objectModel->draw();
     }
     shader->unbind();
     devTexture->unbind();
@@ -162,4 +176,3 @@ void Game::onDraw() const {
     window->draw(*fps);
     window->popGLStates();
 }
-
