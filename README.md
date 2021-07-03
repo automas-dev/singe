@@ -17,6 +17,12 @@ resources built-in, and having sensible defaults.
 1. Fast setup
 2. No external resources
 3. Provide basic functionality
+    - Window and Events
+    - Resource loading
+    - Physics
+    - Shading
+    - Camera Controls
+    - Menu System
 4. Provide access to underlying objects for finer control
 5. Sensible Defaults
 
