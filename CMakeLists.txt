@@ -61,6 +61,7 @@ add_subdirectory(src)
 
 add_subdirectory(workspace)
 add_subdirectory(demo)
+add_subdirectory(voxeldemo)
 add_subdirectory(physicsdemo)
 add_subdirectory(benchmarking)
 
