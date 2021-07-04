@@ -30,6 +30,9 @@ namespace Tom::s3e {
 
     std::string shaderSource(const std::string & path);
 
+    extern const std ::string defaultVertexShaderSource;
+    extern const std ::string defaultFragmentShaderSource;
+
     class Shader {
         GLuint program;
 
@@ -66,6 +69,8 @@ namespace Tom::s3e {
         void setMat2(const std::string & name, const glm::mat2 & value) const;
         void setMat3(const std::string & name, const glm::mat3 & value) const;
         void setMat4(const std::string & name, const glm::mat4 & value) const;
+
+        static Shader::Ptr defaultShader(void);
     };
 };
 

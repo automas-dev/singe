@@ -105,7 +105,6 @@ struct ChunkManager {
 
 class Game : public GameBase {
     DefaultResourceManager resManager;
-    Shader::Ptr shader;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
     Model::Ptr model;

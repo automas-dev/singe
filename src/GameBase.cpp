@@ -53,6 +53,8 @@ namespace Tom::s3e {
         menu = std::make_shared<Menu>(uiFont, title);
         menu->setPosition(300, 300);
 
+        defaultShader = Shader::defaultShader();
+
         SPDLOG_DEBUG("calling onCreate()");
         bool res = onCreate();
         if (!res)

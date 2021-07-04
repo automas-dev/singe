@@ -51,10 +51,6 @@ bool Game::onCreate() {
     camera->rotate({0, 110});
     camera->setFov(70);
 
-    shader = resManager.loadShader("shader/shader.vert", "shader/shader.frag");
-    if (!shader)
-        return false;
-
     devTexture = resManager.loadTexture("devTexture", "img/uv.png");
     if (!devTexture)
         return false;
@@ -136,10 +132,10 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
 
-    shader->bind();
+    defaultShader->bind();
     devTexture->bind();
-    shader->setMat4("mvp", vp);
-    shader->setMat4("model", model->modelMatrix());
+    defaultShader->setMat4("mvp", vp);
+    defaultShader->setMat4("model", model->modelMatrix());
     {
         model->draw();
 
@@ -154,7 +150,7 @@ void Game::onDraw() const {
         }
         glEnd();
     }
-    shader->unbind();
+    defaultShader->unbind();
     devTexture->unbind();
 
 

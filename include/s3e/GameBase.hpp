@@ -9,6 +9,7 @@
 #include <vector>
 #include "Camera.hpp"
 #include "Menu.hpp"
+#include "Shader.hpp"
 
 namespace Tom::s3e {
 
@@ -32,6 +33,7 @@ namespace Tom::s3e {
         Camera::Ptr camera;
         Menu::Ptr menu;
         sf::Font uiFont;
+        Shader::Ptr defaultShader;
 
     public:
 

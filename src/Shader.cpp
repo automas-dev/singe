@@ -245,3 +245,43 @@ namespace Tom::s3e {
     }
 };
 
+namespace Tom::s3e {
+    const std ::string defaultVertexShaderSource = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNorm;
+layout (location = 2) in vec2 aTex;
+out vec3 FragPos;
+out vec3 FragNorm;
+out vec2 FragTex;
+uniform mat4 mvp;
+uniform mat4 model;
+void main() {
+    gl_Position = mvp * model * vec4(aPos, 1.0);
+    FragPos = vec3(model * vec4(aPos, 1.0));
+    FragNorm = aNorm;
+    FragTex = aTex;
+})";
+
+    const std ::string defaultFragmentShaderSource = R"(
+#version 330 core
+out vec4 FragColor;
+uniform sampler2D gTexture;
+in vec3 FragPos;
+in vec3 FragNorm;
+in vec2 FragTex;
+void main() {
+    FragColor = texture(gTexture, FragTex);
+    //FragColor = vec4(1, 0, 0, 1);
+})";
+
+    Shader::Ptr Shader::defaultShader() {
+        auto shader = std::make_shared<Shader>();
+        if (shader) {
+            shader->loadFromSource(defaultVertexShaderSource,
+                                   defaultFragmentShaderSource);
+        }
+        return shader;
+    }
+
+}
