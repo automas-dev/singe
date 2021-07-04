@@ -1,14 +1,23 @@
 #include "s3e/FrameBuffer.hpp"
+
 #include "s3e/log.hpp"
 
 namespace Tom::s3e {
-    FrameBufferTexture::FrameBufferTexture() : FrameBufferTexture(GL_COLOR_ATTACHMENT0, {
-        0, 0
-    }) { }
+    FrameBufferTexture::FrameBufferTexture()
+        : FrameBufferTexture(GL_COLOR_ATTACHMENT0, {0, 0}) {}
 
-    FrameBufferTexture::FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal, GLenum format, GLenum type,
-                                           GLint magFilter, GLint minFilter, GLint wrap, GLsizei samples) : Texture(size, internal, format, type, magFilter,
-                                                       minFilter, wrap, false, samples), attachment(attachment) { }
+    FrameBufferTexture::FrameBufferTexture(GLuint attachment,
+                                           sf::Vector2u size,
+                                           GLint internal,
+                                           GLenum format,
+                                           GLenum type,
+                                           GLint magFilter,
+                                           GLint minFilter,
+                                           GLint wrap,
+                                           GLsizei samples)
+        : Texture(
+            size, internal, format, type, magFilter, minFilter, wrap, false, samples),
+          attachment(attachment) {}
 
     FrameBufferTexture::~FrameBufferTexture() {
         Texture::~Texture();
@@ -24,17 +33,23 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    FrameBuffer::FrameBuffer(sf::Vector2u size, std::vector<FrameBufferAttachment> attachments, bool depthBuffer,
-                             GLsizei samples) : size(size), rboDepth(0), samples(samples), resolved(nullptr) {
+    FrameBuffer::FrameBuffer(sf::Vector2u size,
+                             std::vector<FrameBufferAttachment> attachments,
+                             bool depthBuffer,
+                             GLsizei samples)
+        : size(size), rboDepth(0), samples(samples), resolved(nullptr) {
         glGenFramebuffers(1, &fboId);
 
         bind();
 
         for (auto & a : attachments) {
-            auto texture = std::make_shared<FrameBufferTexture>(a.attachment, size, a.internal, a.format, a.type, GL_NEAREST,
-                           GL_NEAREST, GL_CLAMP, samples);
-            GLenum textarget = (samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, a.attachment, textarget, texture->getTextureId(), 0);
+            auto texture = std::make_shared<FrameBufferTexture>(
+                a.attachment, size, a.internal, a.format, a.type, GL_NEAREST,
+                GL_NEAREST, GL_CLAMP, samples);
+            GLenum textarget =
+                (samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, a.attachment, textarget,
+                                   texture->getTextureId(), 0);
             textures.push_back(texture);
         }
 
@@ -43,11 +58,14 @@ namespace Tom::s3e {
             glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
 
             if (samples > 0)
-                glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
+                glRenderbufferStorageMultisample(
+                    GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
             else
-                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                                      size.x, size.y);
 
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                      GL_RENDERBUFFER, rboDepth);
         }
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -64,7 +82,8 @@ namespace Tom::s3e {
         unbind();
 
         if (samples > 0)
-            resolved = std::make_shared<FrameBuffer>(size, attachments, depthBuffer, 0);
+            resolved =
+                std::make_shared<FrameBuffer>(size, attachments, depthBuffer, 0);
     }
 
     FrameBuffer::~FrameBuffer() {
@@ -89,9 +108,11 @@ namespace Tom::s3e {
         if (rboDepth > 0) {
             glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
             if (samples > 0)
-                glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
+                glRenderbufferStorageMultisample(
+                    GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT, size.x, size.y);
             else
-                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, size.x, size.y);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+                                      size.x, size.y);
         }
 
         if (resolved)
@@ -119,17 +140,20 @@ namespace Tom::s3e {
                 if (a != GL_DEPTH_ATTACHMENT && a != GL_STENCIL_ATTACHMENT) {
                     glReadBuffer(a);
                     glDrawBuffer(a);
-                    glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
+                    glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x,
+                                      size.y, bitfield, GL_NEAREST);
                 }
             }
         }
         else
-            glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y, bitfield, GL_NEAREST);
+            glBlitFramebuffer(0, 0, size.x, size.y, 0, 0, size.x, size.y,
+                              bitfield, GL_NEAREST);
     }
 
     FrameBuffer::Ptr & FrameBuffer::getResovled() {
         if (resolved)
-            blit(resolved->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+            blit(resolved->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+                                        | GL_STENCIL_BUFFER_BIT);
         return resolved;
     }
 
@@ -141,4 +165,3 @@ namespace Tom::s3e {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }
-

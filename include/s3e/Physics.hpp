@@ -44,7 +44,8 @@ namespace Tom::s3e {
                 btTransform groundTransform;
                 groundTransform.setIdentity();
                 groundTransform.setOrigin(btVector3(0, -56, 0));
-                groundTransform.setRotation(btQuaternion(btVector3(1, 0, 0), 3.14 * 0.03));
+                groundTransform.setRotation(
+                    btQuaternion(btVector3(1, 0, 0), 3.14 * 0.03));
 
                 btScalar mass(0.);
 

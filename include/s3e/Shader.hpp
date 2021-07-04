@@ -1,8 +1,9 @@
 #pragma once
 
-#include <SFML/Window.hpp>
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 #include <stdexcept>
@@ -13,8 +14,8 @@
 
 namespace Tom::s3e {
 
-    void draw_color_array_legacy(const float *vertices,
-                                 const float *colors,
+    void draw_color_array_legacy(const float * vertices,
+                                 const float * colors,
                                  size_t n,
                                  GLenum mode);
 
@@ -73,4 +74,3 @@ namespace Tom::s3e {
         static Shader::Ptr defaultShader(void);
     };
 };
-

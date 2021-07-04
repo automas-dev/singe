@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <memory>
 
 namespace Tom::s3e {
@@ -28,4 +28,3 @@ namespace Tom::s3e {
         void update(const sf::Time & delta);
     };
 }
-

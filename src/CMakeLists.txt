@@ -1,8 +1,9 @@
 
 set(TARGET s3e)
 
-# Find with GLOB if CMake version is at least 3.12, otherwise use set
-#file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/include/*.hpp")
+#Find with GLOB if CMake version is at least 3.12, otherwise use set
+#file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS \
+      "${${PROJECT_NAME}_SOURCE_DIR}/include/*.hpp")
 set(HEADER_LIST
     Camera.hpp
     FPSDisplay.hpp
@@ -22,7 +23,8 @@ set(HEADER_LIST
     Voxel.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${TARGET}/")
 
-#file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp")
+#file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS \
+      "${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp")
 set(SOURCE_LIST
     Camera.cpp
     FPSDisplay.cpp
@@ -67,27 +69,29 @@ PUBLIC
     spdlog::spdlog
     ${BULLET_LIBRARIES})
 
-# Check for Inter Procedural Optimization (IPO)
+#Check for Inter Procedural Optimization(IPO)
 include(CheckIPOSupported)
 check_ipo_supported(RESULT result)
 if(result)
     set_target_properties(${TARGET} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
-# Add ALIAS target for use in add_subdirectory or build directory
-add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
+#Add ALIAS target for use in add_subdirectory or build directory
+add_library(${
+    PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
 
-# IDE support, show headers in a folder
+#IDE support, show headers in a folder
 source_group(TREE "${PROJECT_SOURCE_DIR}/include"
     PREFIX "Header Files"
     FILES ${HEADER_LIST})
 
-# Export targets so build dir can be used by other projects
+#Export targets so build dir can be used by other projects
 export(TARGETS ${TARGET}
-    NAMESPACE ${PROJECT_NAME}::
+    NAMESPACE ${
+    PROJECT_NAME}::
     FILE ${PROJECT_NAME}Targets.cmake)
 
-# Add target to Project Targets for install
+#Add target to Project Targets for install
 install(TARGETS ${TARGET}
     EXPORT ${PROJECT_NAME}Targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -96,7 +100,7 @@ install(TARGETS ${TARGET}
 
 ## Include the headers in install
 #install(DIRECTORY
-#    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
-#    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-#    # ../include/
-#    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+#$ < BUILD_INTERFACE : ${${PROJECT_NAME } _SOURCE_DIR } / include>
+#$ < INSTALL_INTERFACE : ${CMAKE_INSTALL_INCLUDEDIR }>
+# #../ include /
+#DESTINATION ${CMAKE_INSTALL_INCLUDEDIR })

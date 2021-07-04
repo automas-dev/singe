@@ -1,13 +1,16 @@
 #include "s3e/Model.hpp"
+
 #include <map>
+
 #include "s3e/Util.hpp"
 #include "s3e/VBO.hpp"
 #include "s3e/log.hpp"
 
 namespace Tom::s3e {
-    Mesh::Mesh() : VBO() { }
+    Mesh::Mesh() : VBO() {}
 
-    Mesh::Mesh(const std::string & name, const Material::ConstPtr & material) : name(name), material(material), VBO() { }
+    Mesh::Mesh(const std::string & name, const Material::ConstPtr & material)
+        : name(name), material(material), VBO() {}
 
     Mesh::~Mesh() {
         VBO::~VBO();
@@ -27,9 +30,10 @@ namespace Tom::s3e {
         return path;
     }
 
-    Model::Model() : pos(0), rot(0), size(1), materials(std::make_shared<MaterialLibrary>()) { }
+    Model::Model()
+        : pos(0), rot(0), size(1), materials(std::make_shared<MaterialLibrary>()) {}
 
-    Model::~Model() { }
+    Model::~Model() {}
 
     bool Model::loadFromPath(const std::string & objPath) {
 
@@ -62,9 +66,10 @@ namespace Tom::s3e {
 
         std::string mtllib;
         std::vector<std::unique_ptr<ObjMesh>> meshs;
-        std::unique_ptr<ObjMesh> mesh (nullptr);
+        std::unique_ptr<ObjMesh> mesh(nullptr);
 
-#define PARSE_ERROR(TAG) SPDLOG_ERROR("could not parse {} tag while loading mtl file {}", (TAG), path)
+#define PARSE_ERROR(TAG) \
+    SPDLOG_ERROR("could not parse {} tag while loading mtl file {}", (TAG), path)
 
         for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
 
@@ -99,7 +104,8 @@ namespace Tom::s3e {
             }
             else if (strStartsWithStr("v ", line)) {
                 glm::vec3 v;
-                int nRead = sscanf(line.substr(2).c_str(), "%f %f %f", &v.x, &v.y, &v.z);
+                int nRead =
+                    sscanf(line.substr(2).c_str(), "%f %f %f", &v.x, &v.y, &v.z);
                 if (nRead < 3) {
                     PARSE_ERROR("v");
                     return false;
@@ -117,7 +123,8 @@ namespace Tom::s3e {
             }
             else if (strStartsWithStr("vn ", line)) {
                 glm::vec3 vn;
-                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &vn.x, &vn.y, &vn.z);
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &vn.x,
+                                   &vn.y, &vn.z);
                 if (nRead < 3) {
                     PARSE_ERROR("vn");
                     return false;
@@ -126,10 +133,10 @@ namespace Tom::s3e {
             }
             else if (strStartsWithChar('f', line)) {
                 Face f;
-                int nRead = sscanf(line.substr(2).c_str(), "%lu/%lu/%lu %lu/%lu/%lu %lu/%lu/%lu",
-                                   &f.p[0].v, &f.p[0].t, &f.p[0].n,
-                                   &f.p[1].v, &f.p[1].t, &f.p[1].n,
-                                   &f.p[2].v, &f.p[2].t, &f.p[2].n);
+                int nRead = sscanf(
+                    line.substr(2).c_str(), "%lu/%lu/%lu %lu/%lu/%lu %lu/%lu/%lu",
+                    &f.p[0].v, &f.p[0].t, &f.p[0].n, &f.p[1].v, &f.p[1].t,
+                    &f.p[1].n, &f.p[2].v, &f.p[2].t, &f.p[2].n);
                 if (nRead < 9) {
                     PARSE_ERROR("f");
                     return false;
@@ -163,31 +170,36 @@ namespace Tom::s3e {
             for (auto & face : mesh->af) {
                 for (int i = 0; i < 3; i++) {
                     if (face.p[i].v > av.size()) {
-                        SPDLOG_ERROR("failed to load mesh {} vertex index {} is out of bounds {}", mesh->name, face.p[i].v, av.size());
+                        SPDLOG_ERROR(
+                            "failed to load mesh {} vertex index {} is out of bounds {}",
+                            mesh->name, face.p[i].v, av.size());
                         return false;
                     }
                     else if (face.p[i].n > avn.size()) {
-                        SPDLOG_ERROR("failed to load mesh {} normal index {} is out of bounds {}", mesh->name, face.p[i].n, avn.size());
+                        SPDLOG_ERROR(
+                            "failed to load mesh {} normal index {} is out of bounds {}",
+                            mesh->name, face.p[i].n, avn.size());
                         return false;
                     }
                     else if (face.p[i].t > avt.size()) {
-                        SPDLOG_ERROR("failed to load mesh {} texture coordinate index {} is out of bounds {}", mesh->name, face.p[i].t,
-                                     avt.size());
+                        SPDLOG_ERROR(
+                            "failed to load mesh {} texture coordinate index {} is out of bounds {}",
+                            mesh->name, face.p[i].t, avt.size());
                         return false;
                     }
                     else {
-                        points.push_back({
-                            av[face.p[i].v - 1],
-                            avn[face.p[i].n - 1],
-                            avt[face.p[i].t - 1]
-                        });
+                        points.push_back({av[face.p[i].v - 1], avn[face.p[i].n - 1],
+                                          avt[face.p[i].t - 1]});
                     }
                 }
             }
 
-            auto model = std::make_shared<Mesh>(mesh->name, materials->getMaterial(mesh->usemtl));
+            auto model = std::make_shared<Mesh>(
+                mesh->name, materials->getMaterial(mesh->usemtl));
             if (!model->loadFromPoints(points)) {
-                SPDLOG_ERROR("failed in call to Mesh::loadPoints while loading Model {}", path);
+                SPDLOG_ERROR(
+                    "failed in call to Mesh::loadPoints while loading Model {}",
+                    path);
                 return false;
             }
             models.push_back(model);
@@ -201,7 +213,8 @@ namespace Tom::s3e {
         return loadFromPoints(points, material);
     }
 
-    bool Model::loadFromPoints(const std::vector<Vertex> & points, Material::Ptr & material) {
+    bool Model::loadFromPoints(const std::vector<Vertex> & points,
+                               Material::Ptr & material) {
         materials->addMaterial(material);
 
         auto mesh = std::make_shared<Mesh>("mesh", material);
@@ -258,7 +271,8 @@ namespace Tom::s3e {
     Material::ConstPtr Model::getMaterial(const std::string & name) const {
         auto material = materials->getMaterial(name);
         if (!material)
-            SPDLOG_ERROR("failed in call to MaterialLibrary::getMaterial(name={})", name);
+            SPDLOG_ERROR(
+                "failed in call to MaterialLibrary::getMaterial(name={})", name);
         return material;
     }
 
@@ -281,4 +295,3 @@ namespace Tom::s3e {
         // TODO unbind textures
     }
 }
-

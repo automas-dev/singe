@@ -1,8 +1,9 @@
 #pragma once
 
-#include <SFML/Window.hpp>
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 
@@ -13,10 +14,7 @@ namespace Tom::s3e {
      */
     class Camera {
     public:
-        enum ProjectionMode {
-            Perspective,
-            Orthographic
-        };
+        enum ProjectionMode { Perspective, Orthographic };
 
     private:
         sf::Vector2u screenSize;
@@ -153,4 +151,3 @@ namespace Tom::s3e {
         glm::mat4 viewMatrix(void);
     };
 }
-

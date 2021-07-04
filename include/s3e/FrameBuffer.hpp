@@ -1,10 +1,12 @@
 #pragma once
 
-#include <SFML/Window.hpp>
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 #include <memory>
 #include <vector>
+
 #include "Texture.hpp"
 
 namespace Tom::s3e {
@@ -14,6 +16,7 @@ namespace Tom::s3e {
      */
     class FrameBufferTexture : public Texture {
         GLuint attachment;
+
     public:
         /**
          * A shared pointer that manages a FrameBufferTexture.
@@ -33,9 +36,11 @@ namespace Tom::s3e {
         /**
          * Construct a new FrameBufferTexture and generate a 2d texture.
          *
-         * @param attachment the frame buffer attachment like GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
+         * @param attachment the frame buffer attachment like
+         * GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
          * @param size the image size in pixels
-         * @param internal the internal format like GL_RGBA16F, GL_RGBA, GL_DEPTH_COMPONENT, etc.
+         * @param internal the internal format like GL_RGBA16F, GL_RGBA,
+         * GL_DEPTH_COMPONENT, etc.
          * @param format the format of pixel data
          * @param type the data type of pixel data
          * @param magFilter the magnification filter (default GL_NEAREST)
@@ -44,8 +49,14 @@ namespace Tom::s3e {
          * @param samples the number of samples to use, 0 to disable
          *                multisampling
          */
-        FrameBufferTexture(GLuint attachment, sf::Vector2u size, GLint internal = GL_RGBA, GLenum format = GL_RGBA,
-                           GLenum type = GL_FLOAT, GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_CLAMP,
+        FrameBufferTexture(GLuint attachment,
+                           sf::Vector2u size,
+                           GLint internal = GL_RGBA,
+                           GLenum format = GL_RGBA,
+                           GLenum type = GL_FLOAT,
+                           GLint magFilter = GL_NEAREST,
+                           GLint minFilter = GL_NEAREST,
+                           GLint wrap = GL_CLAMP,
                            GLsizei samples = 0);
 
         /**
@@ -74,8 +85,14 @@ namespace Tom::s3e {
         GLenum format = GL_RGBA;
         GLenum type = GL_FLOAT;
 
-        FrameBufferAttachment(GLenum attachment, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT)
-            : attachment(attachment), internal(internal), format(format), type(type) { }
+        FrameBufferAttachment(GLenum attachment,
+                              GLint internal = GL_RGBA,
+                              GLenum format = GL_RGBA,
+                              GLenum type = GL_FLOAT)
+            : attachment(attachment),
+              internal(internal),
+              format(format),
+              type(type) {}
     };
 
     /**
@@ -110,7 +127,9 @@ namespace Tom::s3e {
          * @param samples the number of samples to use, 0 to disable
          *                multisampling
          */
-        FrameBuffer(sf::Vector2u size, std::vector<FrameBufferAttachment> attachments, bool depthBuffer = true,
+        FrameBuffer(sf::Vector2u size,
+                    std::vector<FrameBufferAttachment> attachments,
+                    bool depthBuffer = true,
                     GLsizei samples = 0);
 
         /**
@@ -192,4 +211,3 @@ namespace Tom::s3e {
         void unbind(void);
     };
 }
-

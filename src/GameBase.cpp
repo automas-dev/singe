@@ -1,24 +1,39 @@
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #define GLEW_STATIC
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
+
+#include "default_font.h"
 #include "s3e/GameBase.hpp"
 #include "s3e/log.hpp"
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
-#include "default_font.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace Tom::s3e {
 
-    GameBase::GameBase() : grab(false), mouseSensitivity(0.2, 0.2), moveSpeed(5), camera(nullptr), menu(nullptr) { }
+    GameBase::GameBase()
+        : grab(false),
+          mouseSensitivity(0.2, 0.2),
+          moveSpeed(5),
+          camera(nullptr),
+          menu(nullptr) {}
 
-    GameBase::~GameBase() { }
+    GameBase::~GameBase() {}
 
-    bool GameBase::Create(const std::string & title, unsigned int width, unsigned int height, bool fullscreen) {
+    bool GameBase::Create(const std::string & title,
+                          unsigned int width,
+                          unsigned int height,
+                          bool fullscreen) {
 
-        SPDLOG_INFO("creating game title = \"{}\" width = {} height = {} fullscreen = {}", title, width, height, fullscreen);
+        SPDLOG_INFO(
+            "creating game title = \"{}\" width = {} height = {} fullscreen = {}",
+            title,
+            width,
+            height,
+            fullscreen);
 
         sf::ContextSettings settings;
         settings.depthBits = 24;
@@ -27,10 +42,10 @@ namespace Tom::s3e {
         settings.minorVersion = 0;
 
         window = std::make_shared<sf::RenderWindow>(
-                     sf::VideoMode(width, height),
-                     title,
-                     sf::Style::Default | (fullscreen ? sf::Style::Fullscreen : 0),
-                     settings);
+            sf::VideoMode(width, height),
+            title,
+            sf::Style::Default | (fullscreen ? sf::Style::Fullscreen : 0),
+            settings);
 
         window->setVerticalSyncEnabled(true);
         window->setFramerateLimit(60);
@@ -90,13 +105,17 @@ namespace Tom::s3e {
                         onMouseScroll(event.mouseWheelScroll);
                         break;
                     case sf::Event::Resized: {
-                            SPDLOG_DEBUG("window resized to {} x {}", event.size.width, event.size.height);
-                            sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                            window->setView(sf::View(visibleArea));
-                            glViewport(0, 0, event.size.width, event.size.height);
-                            onResized(event.size);
-                        }
-                        break;
+                        SPDLOG_DEBUG("window resized to {} x {}",
+                                     event.size.width,
+                                     event.size.height);
+                        sf::FloatRect visibleArea(0,
+                                                  0,
+                                                  event.size.width,
+                                                  event.size.height);
+                        window->setView(sf::View(visibleArea));
+                        glViewport(0, 0, event.size.width, event.size.height);
+                        onResized(event.size);
+                    } break;
                     case sf::Event::Closed:
                         Stop();
                         break;
@@ -108,22 +127,25 @@ namespace Tom::s3e {
             sf::Time delta = clock.restart();
 
             if (grab) {
-                sf::Vector2i center (window->getSize().x / 2, window->getSize().y / 2);
+                sf::Vector2i center(window->getSize().x / 2,
+                                    window->getSize().y / 2);
                 sf::Vector2i mouse = sf::Mouse::getPosition(*window);
-                sf::Vector2f mouseDelta (mouse.x - center.x, mouse.y - center.y);
+                sf::Vector2f mouseDelta(mouse.x - center.x, mouse.y - center.y);
                 sf::Mouse::setPosition(center, *window);
 
-                int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D) - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-                int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E) - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
-                int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S) - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+                int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D)
+                        - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+                int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E)
+                        - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+                int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S)
+                        - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 
-                camera->rotate({ mouseDelta.y * mouseSensitivity.y, mouseDelta.x * mouseSensitivity.x });
+                camera->rotate({mouseDelta.y * mouseSensitivity.y,
+                                mouseDelta.x * mouseSensitivity.x});
 
-                camera->moveDolly({
-                    x * delta.asSeconds() * moveSpeed,
-                    y * delta.asSeconds() * moveSpeed,
-                    z * delta.asSeconds() * moveSpeed
-                });
+                camera->moveDolly({x * delta.asSeconds() * moveSpeed,
+                                   y * delta.asSeconds() * moveSpeed,
+                                   z * delta.asSeconds() * moveSpeed});
             }
 
             onUpdate(delta);
@@ -160,7 +182,7 @@ namespace Tom::s3e {
 
         if (grab) {
             auto size = window->getSize();
-            sf::Vector2i center (size.x / 2, size.y / 2);
+            sf::Vector2i center(size.x / 2, size.y / 2);
             sf::Mouse::setPosition(center, *window);
         }
     }
@@ -186,7 +208,7 @@ namespace Tom::s3e {
         }
     }
 
-    void GameBase::onKeyReleased(const sf::Event::KeyEvent & event) { }
+    void GameBase::onKeyReleased(const sf::Event::KeyEvent & event) {}
 
     void GameBase::onMouseMove(const sf::Event::MouseMoveEvent & event) {
         if (menu)
@@ -203,10 +225,9 @@ namespace Tom::s3e {
             menu->onMouseUp(event);
     }
 
-    void GameBase::onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) { }
+    void GameBase::onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) {}
 
     void GameBase::onResized(const sf::Event::SizeEvent & event) {
-        camera->setScreenSize({ event.width, event.height });
+        camera->setScreenSize({event.width, event.height});
     }
 }
-

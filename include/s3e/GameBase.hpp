@@ -1,12 +1,14 @@
 #pragma once
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
+
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
+
 #include "Camera.hpp"
 #include "Menu.hpp"
 #include "Shader.hpp"
@@ -36,7 +38,6 @@ namespace Tom::s3e {
         Shader::Ptr defaultShader;
 
     public:
-
         /**
          * Construct a new GameBase.
          */
@@ -106,7 +107,6 @@ namespace Tom::s3e {
         void SetMoveSpeed(float speed);
 
     protected:
-
         /**
          * Load and initialize any resources Used by the game. This method is
          * called in Start() after the window is created. The return from this
@@ -184,4 +184,3 @@ namespace Tom::s3e {
         virtual void onResized(const sf::Event::SizeEvent & event);
     };
 }
-

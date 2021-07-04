@@ -1,7 +1,8 @@
 #include "s3e/FPSDisplay.hpp"
+
 #include <spdlog/fmt/fmt.h>
 
-const sf::Color light (200, 200, 200);
+const sf::Color light(200, 200, 200);
 
 namespace Tom::s3e {
     FPSDisplay::FPSDisplay() : frames(0), time(0.0f), rate(0.1f) {
@@ -12,7 +13,7 @@ namespace Tom::s3e {
         setPosition(10, 10);
     }
 
-    FPSDisplay::~FPSDisplay() { }
+    FPSDisplay::~FPSDisplay() {}
 
     float FPSDisplay::getFPS() {
         return fps;
@@ -31,11 +32,10 @@ namespace Tom::s3e {
         time += delta.asSeconds();
 
         if (time > rate) {
-            fps = (float) frames / time;
+            fps = (float)frames / time;
             updateLabel();
             frames = 0;
             time = 0.0f;
         }
     }
 }
-

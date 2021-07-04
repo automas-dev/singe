@@ -1,11 +1,11 @@
 #pragma once
 
 #include <SFML/Window.hpp>
-#include <memory>
-#include <unordered_map>
 #include <array>
-#include <vector>
+#include <memory>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace Tom::s3e {
 
@@ -15,12 +15,12 @@ namespace Tom::s3e {
     // TODO: Allow read / modify mappings
     // TODO: Handle key combinations (eg. H+C)
     // TODO: Handle key chords (eg. C-K C-D)
-   
+
     /**
      * Manage keyboard events and keyboard mapping through actions.
      */
     class Keymap {
-        
+
         std::array<bool, sf::Keyboard::KeyCount> states;
         std::array<bool, sf::Keyboard::KeyCount> last_states;
         std::unordered_map<std::string, sf::Keyboard::Key> actions;
@@ -60,4 +60,3 @@ namespace Tom::s3e {
         bool isActionJustReleased(const std::string & key);
     };
 }
-

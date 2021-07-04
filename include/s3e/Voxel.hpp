@@ -1,9 +1,10 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <array>
-#include <vector>
+#include <glm/glm.hpp>
 #include <memory>
+#include <vector>
+
 #include "s3e/VBO.hpp"
 
 namespace Tom::s3e {
@@ -59,7 +60,12 @@ namespace Tom::s3e {
 
         BlockStyle(void);
 
-        BlockStyle(const UV & north,  const UV & south, const UV & east, const UV & west, const UV & bottom, const UV & top);
+        BlockStyle(const UV & north,
+                   const UV & south,
+                   const UV & east,
+                   const UV & west,
+                   const UV & bottom,
+                   const UV & top);
 
         BlockStyle(const BlockStyle & other) = default;
 
@@ -73,14 +79,7 @@ namespace Tom::s3e {
         bool enabled = false;
         BlockStyle::Ptr style;
 
-        enum Face {
-            West = 0,
-            East,
-            Bottom,
-            Top,
-            South,
-            North
-        };
+        enum Face { West = 0, East, Bottom, Top, South, North };
 
         Cube(void);
 
@@ -138,4 +137,3 @@ namespace Tom::s3e {
         std::vector<Vertex> toPoints(void);
     };
 };
-

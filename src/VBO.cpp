@@ -1,4 +1,5 @@
 #include "s3e/VBO.hpp"
+
 #include "s3e/log.hpp"
 
 namespace Tom::s3e {
@@ -20,20 +21,23 @@ namespace Tom::s3e {
         return loadFromPoints(&points[0], points.size());
     }
 
-    bool VBO::loadFromPoints(const Vertex *points, size_t n) {
+    bool VBO::loadFromPoints(const Vertex * points, size_t n) {
         nPoints = n;
 
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*nPoints, points, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points,
+                     GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              (void *)(3 * sizeof(float)));
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6 * sizeof(float)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              (void *)(6 * sizeof(float)));
 
         glBindVertexArray(0);
         glDisableVertexAttribArray(0);
@@ -49,4 +53,3 @@ namespace Tom::s3e {
         glBindVertexArray(0);
     }
 };
-

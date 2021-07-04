@@ -1,13 +1,19 @@
 #include "s3e/Camera.hpp"
+
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "s3e/Util.hpp"
 #include "s3e/log.hpp"
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace Tom::s3e {
 
-    Camera::Camera(): rotation(0, 0), position(0, 0, 0), projectionMode(Perspective), fov(45.0f) { }
+    Camera::Camera()
+        : rotation(0, 0),
+          position(0, 0, 0),
+          projectionMode(Perspective),
+          fov(45.0f) {}
 
-    Camera::~Camera() { }
+    Camera::~Camera() {}
 
     void Camera::setFov(float fov) {
         this->fov = fov;
@@ -74,11 +80,10 @@ namespace Tom::s3e {
     }
 
     glm::mat4 Camera::viewMatrix() {
-        glm::mat4 m (1);
+        glm::mat4 m(1);
         m = glm::rotate(m, -glm::radians(rotation.x), glm::vec3(1, 0, 0));
         m = glm::rotate(m, -glm::radians(rotation.y), glm::vec3(0, 1, 0));
         m = glm::translate(m, -position);
         return m;
     }
 }
-

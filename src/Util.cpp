@@ -1,11 +1,13 @@
 #include "s3e/Util.hpp"
-#include <cstring>
+
+#include <fmt/format.h>
+
 #include <cctype>
-#include <glm/gtx/transform.hpp>
+#include <cstring>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <fmt/format.h>
+#include <glm/gtx/transform.hpp>
 
 template<typename OStream>
 OStream & operator<<(OStream & os, const glm::vec2 & vec) {
@@ -48,7 +50,7 @@ namespace Tom::s3e {
 
     glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
         glm::mat4 mpos = glm::translate(glm::mat4(1), pos);
-        glm::quat qrot (rot);
+        glm::quat qrot(rot);
         glm::mat4 mrot = glm::toMat4(qrot);
         glm::mat4 msize = glm::scale(glm::mat4(1), scale);
         return mpos * mrot * msize;
@@ -59,7 +61,8 @@ namespace Tom::s3e {
 
     static int seekChar(std::ifstream & fin, char find) {
         char c;
-        while (fin >> std::noskipws >> c && c != find);
+        while (fin >> std::noskipws >> c && c != find)
+            ;
         return c;
     }
 
@@ -71,7 +74,7 @@ namespace Tom::s3e {
         return end - begin;
     }
 
-    Parser::Parser() { }
+    Parser::Parser() {}
 
     Parser::Parser(const std::string & path) {
         open(path);

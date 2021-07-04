@@ -1,16 +1,17 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <fmt/ostream.h>
+
 #include <SFML/OpenGL.hpp>
 #include <cmath>
-#include <glm/glm.hpp>
 #include <fstream>
-#include <string>
-#include <stdexcept>
+#include <glm/glm.hpp>
 #include <memory>
-#include <cmath>
+#include <stdexcept>
+#include <string>
+
 #include "s3e/log.hpp"
-#include <fmt/ostream.h>
 
 template<typename OStream>
 OStream & operator<<(OStream & os, const glm::vec2 & vec);
@@ -37,7 +38,7 @@ namespace Tom::s3e {
         return angle * 180.0 / pi;
     }
 
-    template <typename T = float>
+    template<typename T = float>
     constexpr void bound(T & val, T min, T max) {
         if (val < min)
             val = min;
@@ -45,7 +46,9 @@ namespace Tom::s3e {
             val = max;
     }
 
-    glm::mat4 matFromVecs(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale = glm::vec3(1));
+    glm::mat4 matFromVecs(glm::vec3 pos,
+                          glm::vec3 rot,
+                          glm::vec3 scale = glm::vec3(1));
 
     bool strStartsWithChar(char pre, const std::string & str);
 

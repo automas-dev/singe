@@ -1,9 +1,10 @@
 #pragma once
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
+
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 #include <memory>
 
 namespace Tom::s3e {
@@ -30,8 +31,14 @@ namespace Tom::s3e {
         typedef std::shared_ptr<const Texture> ConstPtr;
 
         Texture(void);
-        Texture(sf::Vector2u size, GLint internal = GL_RGBA, GLenum format = GL_RGBA, GLenum type = GL_FLOAT,
-                GLint magFilter = GL_NEAREST, GLint minFilter = GL_NEAREST, GLint wrap = GL_REPEAT, bool mipmaps = true,
+        Texture(sf::Vector2u size,
+                GLint internal = GL_RGBA,
+                GLenum format = GL_RGBA,
+                GLenum type = GL_FLOAT,
+                GLint magFilter = GL_NEAREST,
+                GLint minFilter = GL_NEAREST,
+                GLint wrap = GL_REPEAT,
+                bool mipmaps = true,
                 GLsizei samples = 0);
         virtual ~Texture();
 
@@ -52,4 +59,3 @@ namespace Tom::s3e {
         void unbind(void);
     };
 }
-

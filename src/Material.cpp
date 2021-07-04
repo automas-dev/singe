@@ -1,21 +1,30 @@
 #include "s3e/Material.hpp"
+
 #include "s3e/Util.hpp"
 #include "s3e/log.hpp"
 
 namespace Tom::s3e {
 
-    Material::Material() : Material("default") { }
+    Material::Material() : Material("default") {}
 
-    Material::Material(const std::string & name) : ambient(0.8), diffuse(0.8), specular(0.8), specularExponent(500),
-        alpha(1), name(name) { }
+    Material::Material(const std::string & name)
+        : ambient(0.8),
+          diffuse(0.8),
+          specular(0.8),
+          specularExponent(500),
+          alpha(1),
+          name(name) {}
 
-    Material::~Material() { }
+    Material::~Material() {}
 
     void Material::print(std::ostream & os) const {
         os << "Material " << this->name << ":" << std::endl;
-        os << "Ambient: " << this->ambient[0] << " " << this->ambient[1]  << " " << this->ambient[2] << std::endl;
-        os << "Diffuse: " << this->diffuse[0] << " " << this->diffuse[1]  << " " << this->diffuse[2] << std::endl;
-        os << "Specular: " << this->specular[0] << " " << this->specular[1]  << " " << this->specular[2] << std::endl;
+        os << "Ambient: " << this->ambient[0] << " " << this->ambient[1] << " "
+           << this->ambient[2] << std::endl;
+        os << "Diffuse: " << this->diffuse[0] << " " << this->diffuse[1] << " "
+           << this->diffuse[2] << std::endl;
+        os << "Specular: " << this->specular[0] << " " << this->specular[1]
+           << " " << this->specular[2] << std::endl;
         os << "Specular Exponent: " << this->specularExponent << std::endl;
         os << "Alpha: " << this->alpha << std::endl;
     }
@@ -34,9 +43,9 @@ namespace Tom::s3e {
 
 namespace Tom::s3e {
 
-    MaterialLibrary::MaterialLibrary() { }
+    MaterialLibrary::MaterialLibrary() {}
 
-    MaterialLibrary::~MaterialLibrary() { }
+    MaterialLibrary::~MaterialLibrary() {}
 
     bool MaterialLibrary::loadFromPath(const std::string & mtlPath) {
         path = mtlPath;
@@ -49,7 +58,8 @@ namespace Tom::s3e {
 
         Material::Ptr curr;
 
-#define PARSE_ERROR(TAG) SPDLOG_ERROR("could not parse {} tag while loading mtl file {}", (TAG), path)
+#define PARSE_ERROR(TAG) \
+    SPDLOG_ERROR("could not parse {} tag while loading mtl file {}", (TAG), path)
 
         // TODO: Return line number from Parser
         for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
@@ -83,7 +93,8 @@ namespace Tom::s3e {
             }
             else if (strStartsWithStr("Ka", line)) {
                 glm::vec3 ambient;
-                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &ambient.x, &ambient.y, &ambient.z);
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f",
+                                   &ambient.x, &ambient.y, &ambient.z);
                 if (nRead < 3) {
                     PARSE_ERROR("Ka");
                     return false;
@@ -93,7 +104,8 @@ namespace Tom::s3e {
             }
             else if (strStartsWithStr("Kd", line)) {
                 glm::vec3 diffuse;
-                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &diffuse.x, &diffuse.y, &diffuse.z);
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f",
+                                   &diffuse.x, &diffuse.y, &diffuse.z);
                 if (nRead < 3) {
                     PARSE_ERROR("Kd");
                     return false;
@@ -103,7 +115,8 @@ namespace Tom::s3e {
             }
             else if (strStartsWithStr("Ks", line)) {
                 glm::vec3 specular;
-                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f", &specular.x, &specular.y, &specular.z);
+                int nRead = sscanf(line.substr(3).c_str(), "%f %f %f",
+                                   &specular.x, &specular.y, &specular.z);
                 if (nRead < 3) {
                     PARSE_ERROR("Ks");
                     return false;
@@ -141,7 +154,9 @@ namespace Tom::s3e {
 
     Material::ConstPtr MaterialLibrary::getMaterial(int index) const {
         if (index < 0 || index >= size()) {
-            SPDLOG_ERROR("MaterialLibrary does not contain a Material at index {} size is {}", index, size());
+            SPDLOG_ERROR(
+                "MaterialLibrary does not contain a Material at index {} size is {}",
+                index, size());
             return nullptr;
         }
         else
@@ -157,4 +172,3 @@ namespace Tom::s3e {
         return nullptr;
     }
 }
-

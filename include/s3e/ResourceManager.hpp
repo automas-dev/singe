@@ -1,13 +1,14 @@
 #pragma once
 
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
+
+#include "Model.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include "Model.hpp"
 
 namespace Tom::s3e {
 
@@ -116,7 +117,8 @@ namespace Tom::s3e {
          *
          * @return a shared_ptr to a Texture
          */
-        Texture::Ptr loadTexture(const std::string & name, const std::string & path);
+        Texture::Ptr loadTexture(const std::string & name,
+                                 const std::string & path);
 
         /**
          * Load a Shader using `vertexPath` and `fragmentPath`.
@@ -126,7 +128,8 @@ namespace Tom::s3e {
          *
          * @return a shard_ptr to a Shader
          */
-        Shader::Ptr loadShader(const std::string & vertexPath, const std::string & fragmentPath);
+        Shader::Ptr loadShader(const std::string & vertexPath,
+                               const std::string & fragmentPath);
 
         /**
          * Load a Model from `path`.
@@ -138,4 +141,3 @@ namespace Tom::s3e {
         Model::Ptr loadModel(const std::string & path);
     };
 }
-

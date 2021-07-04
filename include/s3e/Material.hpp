@@ -1,12 +1,14 @@
 #pragma once
 
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
-#include <string>
-#include <memory>
-#include <vector>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "s3e/Shader.hpp"
 
 namespace Tom::s3e {
@@ -188,4 +190,3 @@ namespace Tom::s3e {
         Material::ConstPtr getMaterial(const std::string & name) const;
     };
 }
-

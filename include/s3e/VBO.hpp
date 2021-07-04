@@ -1,11 +1,12 @@
 #pragma once
 
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
+#include <cstddef>
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
-#include <cstddef>
 
 namespace Tom::s3e {
 
@@ -16,7 +17,8 @@ namespace Tom::s3e {
 
         Vertex(void) {}
 
-        Vertex(glm::vec3 pos, glm::vec3 norm, glm::vec2 uv) : pos(pos), norm(norm), uv(uv) { }
+        Vertex(glm::vec3 pos, glm::vec3 norm, glm::vec2 uv)
+            : pos(pos), norm(norm), uv(uv) {}
 
         Vertex(const Vertex & other) {
             pos = other.pos;
@@ -81,9 +83,8 @@ namespace Tom::s3e {
 
         bool loadFromPoints(const std::vector<Vertex> & points);
 
-        bool loadFromPoints(const Vertex *points, size_t n);
+        bool loadFromPoints(const Vertex * points, size_t n);
 
         void draw(void) const;
     };
 }
-

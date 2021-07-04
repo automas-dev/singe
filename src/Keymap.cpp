@@ -6,7 +6,7 @@ namespace Tom::s3e {
         last_states = states;
     }
 
-    Keymap::~Keymap() { }
+    Keymap::~Keymap() {}
 
     bool Keymap::isKeyValid(sf::Keyboard::Key key) {
         return key != sf::Keyboard::Unknown;
@@ -74,4 +74,3 @@ namespace Tom::s3e {
         return kv != actions.end() && isKeyJustReleased(kv->second);
     }
 }
-

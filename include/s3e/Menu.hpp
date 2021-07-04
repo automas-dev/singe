@@ -2,9 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <functional>
-#include <string>
 #include <list>
 #include <memory>
+#include <string>
 
 namespace Tom::s3e {
 
@@ -104,7 +104,8 @@ namespace Tom::s3e {
         bool isVisible(void);
 
         // TODO: Document addMenuItem once it's fate is decided
-        bool addMenuItem(const std::string & text, std::function<void(void)> callback);
+        bool addMenuItem(const std::string & text,
+                         std::function<void(void)> callback);
 
         /**
          * Override for sf::Drawable::draw. If the menu is visible, this method
@@ -141,4 +142,3 @@ namespace Tom::s3e {
         void onMouseUp(sf::Event::MouseButtonEvent e);
     };
 }
-

@@ -1,12 +1,14 @@
 #pragma once
 
 #include <GL/glew.h>
+
 #include <SFML/OpenGL.hpp>
-#include <string>
-#include <memory>
 #include <glm/glm.hpp>
-#include "s3e/VBO.hpp"
+#include <memory>
+#include <string>
+
 #include "s3e/Material.hpp"
+#include "s3e/VBO.hpp"
 
 namespace Tom::s3e {
 
@@ -110,7 +112,8 @@ namespace Tom::s3e {
          * @param points the points for the mesh
          * @param material the material to use
          */
-        bool loadFromPoints(const std::vector<Vertex> & points, Material::Ptr & material);
+        bool loadFromPoints(const std::vector<Vertex> & points,
+                            Material::Ptr & material);
 
         /**
          * Move the Model by adding pos to the position.
@@ -205,4 +208,3 @@ namespace Tom::s3e {
         void draw(const MaterialShader::Ptr & shader) const;
     };
 };
-

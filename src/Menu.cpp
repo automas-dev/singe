@@ -1,21 +1,23 @@
 #include "s3e/Menu.hpp"
+
 #include "s3e/log.hpp"
 
-const sf::Color light (200, 200, 200);
-const sf::Color dark (10, 10, 10);
+const sf::Color light(200, 200, 200);
+const sf::Color dark(10, 10, 10);
 
 namespace Tom::s3e {
 
-    MenuItem::MenuItem() { }
+    MenuItem::MenuItem() {}
 
-    MenuItem::~MenuItem() { }
+    MenuItem::~MenuItem() {}
 
     void MenuItem::setCallback(std::function<void(void)> callback) {
         this->callback = callback;
     }
 
     void MenuItem::onClick() const {
-        SPDLOG_INFO("MenuItem {} was clicked, calling callback", std::string(getString()));
+        SPDLOG_INFO("MenuItem {} was clicked, calling callback",
+                    std::string(getString()));
         callback();
     }
 
@@ -27,7 +29,7 @@ namespace Tom::s3e {
 
 namespace Tom::s3e {
 
-    Menu::Menu() { }
+    Menu::Menu() {}
 
     Menu::Menu(const sf::Font & font) : font(font) {
         title.setFont(this->font);
@@ -39,7 +41,7 @@ namespace Tom::s3e {
         this->title.setCharacterSize(48);
     }
 
-    Menu::~Menu() { }
+    Menu::~Menu() {}
 
     void Menu::setFont(const sf::Font & font) {
         this->font = font;
@@ -67,7 +69,8 @@ namespace Tom::s3e {
         return visible;
     }
 
-    bool Menu::addMenuItem(const std::string & text, std::function<void(void)> callback) {
+    bool Menu::addMenuItem(const std::string & text,
+                           std::function<void(void)> callback) {
         auto menuItem = std::make_shared<MenuItem>();
 
         menuItem->setCallback(callback);
@@ -75,14 +78,16 @@ namespace Tom::s3e {
         menuItem->setString(text);
         menuItem->setCharacterSize(24);
         menuItem->setFillColor(light);
-        menuItem->setOrigin(menuItem->getLocalBounds().left, menuItem->getLocalBounds().top);
+        menuItem->setOrigin(menuItem->getLocalBounds().left,
+                            menuItem->getLocalBounds().top);
 
         if (items.empty()) {
             menuItem->setPosition(0, title.getGlobalBounds().height * 2);
         }
         else {
             auto & item = items.back();
-            menuItem->setPosition(0, item->getGlobalBounds().top + item->getCharacterSize() * 1.5);
+            menuItem->setPosition(
+                0, item->getGlobalBounds().top + item->getCharacterSize() * 1.5);
         }
 
         items.push_back(menuItem);
@@ -96,7 +101,7 @@ namespace Tom::s3e {
         states.transform *= getTransform();
 
         auto size = sf::Vector2f(target.getSize().x, target.getSize().y);
-        sf::RectangleShape background (size);
+        sf::RectangleShape background(size);
         background.setFillColor(sf::Color(0, 0, 0, 100));
 
         target.draw(background);
@@ -150,4 +155,3 @@ namespace Tom::s3e {
         }
     }
 }
-

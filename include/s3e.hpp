@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config.h"
 #include "s3e/Camera.hpp"
 #include "s3e/FPSDisplay.hpp"
 #include "s3e/FrameBuffer.hpp"
@@ -15,5 +16,3 @@
 #include "s3e/Util.hpp"
 #include "s3e/VBO.hpp"
 #include "s3e/Voxel.hpp"
-#include "config.h"
-

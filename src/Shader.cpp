@@ -1,12 +1,14 @@
 #include "s3e/Shader.hpp"
+
 #include <fstream>
-#include "s3e/log.hpp"
+
 #include "s3e/Util.hpp"
+#include "s3e/log.hpp"
 
 namespace Tom::s3e {
 
-    void draw_color_array_legacy(const float *vertices,
-                                 const float *colors,
+    void draw_color_array_legacy(const float * vertices,
+                                 const float * colors,
                                  size_t n,
                                  GLenum mode) {
 
@@ -118,7 +120,7 @@ namespace Tom::s3e {
                                 const std::string & shaderSource) {
 
         GLuint shader = glCreateShader(shaderType);
-        const GLchar *src = shaderSource.c_str();
+        const GLchar * src = shaderSource.c_str();
 
         glShaderSource(shader, 1, &src, NULL);
         glCompileShader(shader);
@@ -126,7 +128,7 @@ namespace Tom::s3e {
         return shader;
     }
 
-    Shader::Shader() : program(0) { }
+    Shader::Shader() : program(0) {}
 
     Shader::~Shader() {
         if (program > 0)
@@ -135,18 +137,21 @@ namespace Tom::s3e {
 
     bool Shader::loadFromPath(const std::string & vertexPath,
                               const std::string & fragmentPath) {
-        SPDLOG_DEBUG("loading Shader from paths vertex = \"{}\" fragment = \"{}\"", vertexPath, fragmentPath);
+        SPDLOG_DEBUG("loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
+                     vertexPath, fragmentPath);
 
         std::string vertexSource = shaderSource(vertexPath);
         std::string fragmentSource = shaderSource(fragmentPath);
 
         if (vertexSource.empty()) {
-            SPDLOG_ERROR("vertex shader source could not be loaded from path {}", vertexPath);
+            SPDLOG_ERROR("vertex shader source could not be loaded from path {}",
+                         vertexPath);
             return false;
         }
 
         if (fragmentSource.empty()) {
-            SPDLOG_ERROR("fragment shader source could not be loaded from path {}", fragmentPath);
+            SPDLOG_ERROR("fragment shader source could not be loaded from path {}",
+                         fragmentPath);
             return false;
         }
 
@@ -158,14 +163,16 @@ namespace Tom::s3e {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
-            SPDLOG_ERROR("failed to compile vertex shader {}: {}", vShader, compileError(vShader));
+            SPDLOG_ERROR("failed to compile vertex shader {}: {}", vShader,
+                         compileError(vShader));
             glDeleteShader(vShader);
             return false;
         }
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
-            SPDLOG_ERROR("failed to compile fragment shader {}: {}", fShader, compileError(fShader));
+            SPDLOG_ERROR("failed to compile fragment shader {}: {}", fShader,
+                         compileError(fShader));
             glDeleteShader(vShader);
             glDeleteShader(fShader);
             return false;
@@ -183,13 +190,15 @@ namespace Tom::s3e {
         glDeleteShader(fShader);
 
         if (!linkSuccess(program)) {
-            SPDLOG_ERROR("failed to link shader program {}: {}", program, linkError(program));
+            SPDLOG_ERROR("failed to link shader program {}: {}", program,
+                         linkError(program));
             glDeleteProgram(program);
             return false;
         }
 
-        SPDLOG_DEBUG("shader was successfully compiled and linked as program = {} with vertex shader = {} fragment shader = {}",
-                     program, vShader, fShader);
+        SPDLOG_DEBUG(
+            "shader was successfully compiled and linked as program = {} with vertex shader = {} fragment shader = {}",
+            program, vShader, fShader);
         return true;
     }
 
@@ -213,7 +222,7 @@ namespace Tom::s3e {
         glUniform1i(uniformLocation(name), value);
     }
     void Shader::setUInt(const std::string & name, unsigned int value) const {
-        glUniform1ui(uniformLocation(name),  value);
+        glUniform1ui(uniformLocation(name), value);
     }
 
     void Shader::setFloat(const std::string & name, float value) const {
