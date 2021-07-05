@@ -23,7 +23,6 @@ class Game : public GameBase {
     Model::Ptr floorModel;
     Model::Ptr objectModel;
     std::unique_ptr<Physics> physics;
-    bool isSimRunning = false;
 
 public:
     Game(const sf::String & resPath);

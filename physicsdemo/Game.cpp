@@ -1,7 +1,9 @@
-#include "Game.hpp"
+#include <spdlog/spdlog.h>
+
 #include <exception>
 #include <glm/gtc/noise.hpp>
-#include <spdlog/spdlog.h>
+
+#include "Game.hpp"
 
 
 static void getGlError() {
@@ -11,20 +13,20 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) { }
+Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
-Game::~Game() { }
+Game::~Game() {}
 
-void GLAPIENTRY MessageCallback( GLenum source,
-                                 GLenum type,
-                                 GLuint id,
-                                 GLenum severity,
-                                 GLsizei length,
-                                 const GLchar *message,
-                                 const void *userParam ) {
+void GLAPIENTRY MessageCallback(GLenum source,
+                                GLenum type,
+                                GLuint id,
+                                GLenum severity,
+                                GLsizei length,
+                                const GLchar * message,
+                                const void * userParam) {
     SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-                 ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-                 type, severity, message );
+                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+                 severity, message);
 }
 
 bool Game::onCreate() {
@@ -57,44 +59,36 @@ bool Game::onCreate() {
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
     physics = std::make_unique<Physics>();
-    physics->loadObjects();
+    // physics->loadObjects();
 
-    std::vector<Vertex> floorPoints {
-        Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
-        Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
-        Vertex({50, 50, -50}, {0, 1, 0}, {1, 1}),
-
-        Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
-        Vertex({-50, 50, 50}, {0, 1, 0}, {0, 0}),
-        Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
-    };
-
-    floorModel = std::make_shared<Model>();
-    bool res = floorModel->loadFromPoints(floorPoints);
-    if (!res)
+    floorModel = resManager.loadModel("model/ground.obj");
+    if (!floorModel)
         return false;
-    //floorModel->move({0, -6, 0});
+    // auto *mesh = new btTriangleIndexVertexArray(/* TODO */);
+    // btCollisionShape *collisionShape = new btBvhTriangleMeshShape(mesh, false);
+    btCollisionShape * collisionShape = new btStaticPlaneShape({0, 1, 0}, 0);
+    physics->makeRigidBody(collisionShape, 0, 1);
+
 
     objectModel = resManager.loadModel("model/sphere.obj");
     if (!objectModel)
         return false;
+    collisionShape = new btSphereShape(2);
+    physics->makeRigidBody(collisionShape, 1, 1);
 
     SetMouseGrab(true);
     getGlError();
     return true;
 }
 
-void Game::onDestroy() { }
+void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
 
     if (e.code == sf::Keyboard::Space) {
-        isSimRunning = !isSimRunning;
-        if (isSimRunning) {
-            physics->removeObjects();
-            physics->loadObjects();
-        }
+        physics->removeObjects();
+        physics->loadObjects();
     }
 }
 
@@ -123,17 +117,9 @@ void Game::onUpdate(const sf::Time & delta) {
     fps->update(delta);
 
     physics->update(delta);
-    //physics->printObjectsLocations();
+    // physics->printObjectsLocations();
 
-    if (isSimRunning) {
-        btTransform trans;
-        physics->getTransform(1, trans);
-        objectModel->setPosition({trans.getOrigin().getX(),
-                trans.getOrigin().getY(),
-                trans.getOrigin().getZ()});
-
-        //camera->setPosition(objectModel->getPosition() + glm::vec3(-3, 2, -1));
-    }
+    // camera->setPosition(objectModel->getPosition() + glm::vec3(-3, 2, -1));
 }
 
 void Game::onDraw() const {
@@ -151,7 +137,7 @@ void Game::onDraw() const {
     devTexture->bind();
     defaultShader->setMat4("mvp", vp);
     {
-        //shader->setMat4("model", floorModel->modelMatrix());
+        // shader->setMat4("model", floorModel->modelMatrix());
         btTransform trans;
         physics->getTransform(0, trans);
         glm::mat4 model;
@@ -159,7 +145,7 @@ void Game::onDraw() const {
         defaultShader->setMat4("model", model);
         floorModel->draw();
 
-        //shader->setMat4("model", objectModel->modelMatrix());
+        // shader->setMat4("model", objectModel->modelMatrix());
         physics->getTransform(1, trans);
         trans.getOpenGLMatrix(&model[0][0]);
         defaultShader->setMat4("model", model);
@@ -173,4 +159,3 @@ void Game::onDraw() const {
     window->draw(*fps);
     window->popGLStates();
 }
-
