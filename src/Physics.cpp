@@ -93,7 +93,7 @@ namespace Tom::s3e {
         }
     }
 
-    void Physics::update(const sf::Time & delta, int maxSubSteps = 10) {
+    void Physics::update(const sf::Time & delta, int maxSubSteps) {
         dynamicsWorld->stepSimulation(delta.asSeconds(), maxSubSteps);
     }
 
@@ -106,6 +106,14 @@ namespace Tom::s3e {
         else {
             trans = obj->getWorldTransform();
         }
+    }
+
+    btDiscreteDynamicsWorld * Physics::getWorld() {
+        return dynamicsWorld;
+    }
+
+    btCollisionObjectArray & Physics::getCollisionObjectArray() {
+        return dynamicsWorld->getCollisionObjectArray();
     }
 
     void Physics::printObjectsLocations() {
@@ -136,5 +144,4 @@ namespace Tom::s3e {
             delete shape;
         }
     }
-};
 }

@@ -34,6 +34,10 @@ namespace Tom::s3e {
 
         void getTransform(int i, btTransform & trans);
 
+        btDiscreteDynamicsWorld * getWorld();
+
+        btCollisionObjectArray & getCollisionObjectArray();
+
         void printObjectsLocations();
 
         void removeObjects();
