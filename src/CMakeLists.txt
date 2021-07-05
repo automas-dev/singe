@@ -2,8 +2,7 @@
 set(TARGET s3e)
 
 #Find with GLOB if CMake version is at least 3.12, otherwise use set
-#file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS \
-      "${${PROJECT_NAME}_SOURCE_DIR}/include/*.hpp")
+#file(GLOB_RECURSE HEADER_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/include/*.hpp")
 set(HEADER_LIST
     Camera.hpp
     FPSDisplay.hpp
@@ -23,8 +22,7 @@ set(HEADER_LIST
     Voxel.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${TARGET}/")
 
-#file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS \
-      "${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp")
+#file(GLOB_RECURSE SOURCE_LIST CONFIGURE_DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp")
 set(SOURCE_LIST
     Camera.cpp
     FPSDisplay.cpp
@@ -34,6 +32,7 @@ set(SOURCE_LIST
     Material.cpp
     Menu.cpp
     Model.cpp
+    Physics.cpp
     ResourceManager.cpp
     Shader.cpp
     Texture.cpp
@@ -45,10 +44,10 @@ list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/")
 add_library(${TARGET} ${SOURCE_LIST} ${HEADER_LIST})
 
 target_include_directories(${TARGET}
-PRIVATE
+    PRIVATE
     ${GLM_INCLUDE_DIRS}
     ${BULLET_INCLUDE_DIR}
-PUBLIC
+    PUBLIC
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
@@ -56,10 +55,10 @@ PUBLIC
 target_compile_features(${TARGET} PUBLIC cxx_std_17)
 
 target_link_libraries(${TARGET}
-PRIVATE
+    PRIVATE
     fmt::fmt
     spdlog::spdlog
-PUBLIC
+    PUBLIC
     sfml-window 
     sfml-graphics 
     sfml-system
@@ -77,8 +76,7 @@ if(result)
 endif()
 
 #Add ALIAS target for use in add_subdirectory or build directory
-add_library(${
-    PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
+add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
 
 #IDE support, show headers in a folder
 source_group(TREE "${PROJECT_SOURCE_DIR}/include"
@@ -87,8 +85,7 @@ source_group(TREE "${PROJECT_SOURCE_DIR}/include"
 
 #Export targets so build dir can be used by other projects
 export(TARGETS ${TARGET}
-    NAMESPACE ${
-    PROJECT_NAME}::
+    NAMESPACE ${PROJECT_NAME}::
     FILE ${PROJECT_NAME}Targets.cmake)
 
 #Add target to Project Targets for install
