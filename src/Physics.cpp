@@ -82,12 +82,12 @@ namespace Tom::s3e {
         {
             btCollisionShape * colShape = new btSphereShape(btScalar(1.));
 
-            btRigidBody * body = makeRigidBody(colShape, 0, 1);
+            btRigidBody * body = makeRigidBody(colShape, 1, 1);
 
             /// Create Dynamic Objects
             btTransform startTransform;
             startTransform.setIdentity();
-            startTransform.setOrigin(btVector3(2, 10, 0));
+            startTransform.setOrigin(btVector3(2, 0, 0));
             body->getMotionState()->setWorldTransform(startTransform);
             body->setLinearVelocity(btVector3(0, 0, 0));
         }
