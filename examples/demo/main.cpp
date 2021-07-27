@@ -6,8 +6,8 @@ int main() {
     spdlog::set_level(spdlog::level::trace);
     spdlog::set_level(spdlog::level::debug);
     try {
-        Game game("../../workspace/res/");
-        if (game.Create("Workspace"))
+        Game game("../../examples/demo/res/");
+        if (game.Create("Demo"))
             game.Start();
     }
     catch (std::runtime_error & e) {

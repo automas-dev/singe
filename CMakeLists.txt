@@ -61,10 +61,10 @@ include_directories(${BULLET_INCLUDE_DIR})
 add_subdirectory(src)
 
 add_subdirectory(workspace)
-add_subdirectory(demo)
-add_subdirectory(voxeldemo)
-add_subdirectory(physicsdemo)
-add_subdirectory(benchmarking)
+add_subdirectory(examples/demo)
+add_subdirectory(examples/noise_benchmark)
+add_subdirectory(examples/physics)
+add_subdirectory(examples/voxel)
 
 # Create Targets file
 install(EXPORT ${PROJECT_NAME}Targets

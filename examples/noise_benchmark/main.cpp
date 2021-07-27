@@ -2,8 +2,7 @@
 
 #include <glm/gtc/noise.hpp>
 #include <s3e.hpp>
-
-#include "Game.hpp"
+using namespace Tom::s3e;
 
 static void BM_Perlin(benchmark::State & state) {
     int x = 0;
