@@ -1,9 +1,9 @@
+#include "Game.hpp"
+
 #include <spdlog/spdlog.h>
 
 #include <exception>
 #include <glm/gtc/noise.hpp>
-
-#include "Game.hpp"
 
 
 static void getGlError() {
@@ -125,9 +125,9 @@ void Game::onUpdate(const sf::Time & delta) {
         physics->update(delta);
         // physics->printObjectsLocations();
 
-        //btTransform trans;
-        //physics->getTransform(1, trans);
-        //objectModel->setPosition({trans.getOrigin().getX(),
+        // btTransform trans;
+        // physics->getTransform(1, trans);
+        // objectModel->setPosition({trans.getOrigin().getX(),
         //                          trans.getOrigin().getY(),
         //                          trans.getOrigin().getZ()});
 

@@ -1,9 +1,9 @@
+#include "Game.hpp"
+
 #include <spdlog/spdlog.h>
 
 #include <exception>
 #include <glm/gtc/noise.hpp>
-
-#include "Game.hpp"
 
 
 static void getGlError() {

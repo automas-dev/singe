@@ -1,11 +1,12 @@
 #include <s3e/Support/log.hpp>
+
 #include "Game.hpp"
 
 int main() {
     spdlog::set_level(spdlog::level::trace);
     spdlog::set_level(spdlog::level::debug);
     try {
-        Game game ("../../workspace/res/");
+        Game game("../../workspace/res/");
         if (game.Create("Workspace"))
             game.Start();
     }

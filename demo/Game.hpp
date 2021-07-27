@@ -1,13 +1,14 @@
 #pragma once
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
+
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
-#include <vector>
 #include <s3e.hpp>
+#include <vector>
 using namespace Tom::s3e;
 
 struct Light {
@@ -20,11 +21,7 @@ struct Light {
     glm::vec3 position;
     glm::vec3 direction;
 
-    enum Type {
-        DIRECTIONAL = 0,
-        POINT,
-        SPOT
-    };
+    enum Type { DIRECTIONAL = 0, POINT, SPOT };
     Type type;
 
     // Point
@@ -116,5 +113,6 @@ public:
 private:
     void tick(void);
     void drawPass(const MaterialShader::Ptr & shader) const;
-    void drawModel(const Model::ConstPtr & model, const MaterialShader::Ptr & shader) const;
+    void drawModel(const Model::ConstPtr & model,
+                   const MaterialShader::Ptr & shader) const;
 };

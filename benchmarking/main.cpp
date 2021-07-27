@@ -1,6 +1,8 @@
 #include <benchmark/benchmark.h>
-#include <s3e.hpp>
+
 #include <glm/gtc/noise.hpp>
+#include <s3e.hpp>
+
 #include "Game.hpp"
 
 static void BM_Perlin(benchmark::State & state) {
@@ -61,7 +63,7 @@ static void BM_SubChunkToPoints(benchmark::State & state) {
 BENCHMARK(BM_SubChunkToPoints);
 
 static void BM_ChunkToPoints(benchmark::State & state) {
-    Chunk chunk ({0, 0, 0}, 10);
+    Chunk chunk({0, 0, 0}, 10);
     for (int x = 0; x < SubChunk::N; x++) {
         for (int y = 0; y < SubChunk::N * chunk.subchunks.size(); y++) {
             for (int z = 0; z < SubChunk::N; z++) {
@@ -76,4 +78,3 @@ static void BM_ChunkToPoints(benchmark::State & state) {
 BENCHMARK(BM_ChunkToPoints);
 
 BENCHMARK_MAIN();
-

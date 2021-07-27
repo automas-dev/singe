@@ -1,19 +1,20 @@
 #pragma once
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
+
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
+#include <algorithm>
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
-#include <memory>
-#include <vector>
 #include <map>
-#include <algorithm>
-#include <thread>
+#include <memory>
 #include <mutex>
 #include <random>
 #include <s3e.hpp>
+#include <thread>
+#include <vector>
 using namespace Tom::s3e;
 
 class Game : public GameBase {

@@ -2,8 +2,8 @@
 
 #include <SFML/System.hpp>
 
-#include "btBulletDynamicsCommon.h"
 #include "Support/log.hpp"
+#include "btBulletDynamicsCommon.h"
 
 namespace Tom::s3e {
     class Physics {

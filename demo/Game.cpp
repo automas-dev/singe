@@ -1,4 +1,5 @@
 #include "Game.hpp"
+
 #include <spdlog/spdlog.h>
 
 static std::vector<glm::vec3> genGridVerts(int steps = 10) {
@@ -71,20 +72,20 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) { }
+Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
-Game::~Game() { }
+Game::~Game() {}
 
-void GLAPIENTRY MessageCallback( GLenum source,
-                                 GLenum type,
-                                 GLuint id,
-                                 GLenum severity,
-                                 GLsizei length,
-                                 const GLchar *message,
-                                 const void *userParam ) {
+void GLAPIENTRY MessageCallback(GLenum source,
+                                GLenum type,
+                                GLuint id,
+                                GLenum severity,
+                                GLsizei length,
+                                const GLchar * message,
+                                const void * userParam) {
     SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-                 ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-                 type, severity, message );
+                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+                 severity, message);
 }
 
 bool Game::onCreate() {
@@ -118,7 +119,8 @@ bool Game::onCreate() {
     camera->rotate({30, -70});
     camera->setFov(80);
 
-    defaultShader = resManager.loadShader("shader/default.vs", "shader/default.fs");
+    defaultShader =
+        resManager.loadShader("shader/default.vs", "shader/default.fs");
     if (!defaultShader) {
         throw std::runtime_error("Failed to load default shader");
     }
@@ -135,8 +137,9 @@ bool Game::onCreate() {
     }
 
     lightingShader = std::make_shared<MaterialShader>();
-    if (!lightingShader->loadFromPath(resManager.resourceAt("shader/lighting.vert"),
-                                      resManager.resourceAt("shader/lighting.frag"))) {
+    if (!lightingShader->loadFromPath(
+            resManager.resourceAt("shader/lighting.vert"),
+            resManager.resourceAt("shader/lighting.frag"))) {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
@@ -164,7 +167,8 @@ bool Game::onCreate() {
     }
     hallModel->move({0, 0, -4});
 
-    texture = resManager.loadTexture("dev_texture_gray", "img/dev_texture_gray.png");
+    texture =
+        resManager.loadTexture("dev_texture_gray", "img/dev_texture_gray.png");
     if (!texture) {
         throw std::runtime_error("Failed to load dev texture");
     }
@@ -182,45 +186,47 @@ bool Game::onCreate() {
         .quadratic = 0.032,
     };
 
-    light1 = {
-        .index = 1,
-        .ambient = {0.1, 0.1, 0.1},
-        .diffuse = {0.8, 0.8, 0.8},
-        .specular = {1, 1, 1},
-        .position = {0, 0, 0},
-        .direction = {-1, -2, -3},
-        .type = Light::SPOT,
-        .constant = 1.0,
-        .linear = 0.09,
-        .quadratic = 0.032,
-        .cutOff = glm::cos(glm::radians(12.5f)),
-        .outerCutOff = glm::cos(glm::radians(15.0f))
-    };
+    light1 = {.index = 1,
+              .ambient = {0.1, 0.1, 0.1},
+              .diffuse = {0.8, 0.8, 0.8},
+              .specular = {1, 1, 1},
+              .position = {0, 0, 0},
+              .direction = {-1, -2, -3},
+              .type = Light::SPOT,
+              .constant = 1.0,
+              .linear = 0.09,
+              .quadratic = 0.032,
+              .cutOff = glm::cos(glm::radians(12.5f)),
+              .outerCutOff = glm::cos(glm::radians(15.0f))};
 
-    light2 = {
-        .index = 2,
-        .ambient = {0.1, 0.1, 0.1},
-        .diffuse = {2.0, 2.0, 2.0},
-        .specular = {3.0, 3.0, 3.0},
-        .position = {0, 1, -9},
-        .direction = {0, 0, -1},
-        .type = Light::SPOT,
-        .constant = 1.0,
-        .linear = 0.09,
-        .quadratic = 0.032,
-        .cutOff = glm::cos(glm::radians(12.5f)),
-        .outerCutOff = glm::cos(glm::radians(15.0f))
-    };
+    light2 = {.index = 2,
+              .ambient = {0.1, 0.1, 0.1},
+              .diffuse = {2.0, 2.0, 2.0},
+              .specular = {3.0, 3.0, 3.0},
+              .position = {0, 1, -9},
+              .direction = {0, 0, -1},
+              .type = Light::SPOT,
+              .constant = 1.0,
+              .linear = 0.09,
+              .quadratic = 0.032,
+              .cutOff = glm::cos(glm::radians(12.5f)),
+              .outerCutOff = glm::cos(glm::radians(15.0f))};
 
-    fbuff = std::make_shared<FrameBuffer>(window->getSize(), std::vector<FrameBufferAttachment> {
-        FrameBufferAttachment(GL_COLOR_ATTACHMENT0),
-    }, true, 8);
+    fbuff = std::make_shared<FrameBuffer>(
+        window->getSize(),
+        std::vector<FrameBufferAttachment> {
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT0),
+        },
+        true, 8);
 
-    gbuffMulti = std::make_shared<FrameBuffer>(window->getSize(), std::vector<FrameBufferAttachment> {
-        FrameBufferAttachment(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT),
-        FrameBufferAttachment(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT),
-        FrameBufferAttachment(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT),
-    }, true, 8);
+    gbuffMulti = std::make_shared<FrameBuffer>(
+        window->getSize(),
+        std::vector<FrameBufferAttachment> {
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT0, GL_RGBA16F, GL_RGBA, GL_FLOAT),
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT1, GL_RGBA16F, GL_RGBA, GL_FLOAT),
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT2, GL_RGBA, GL_RGBA, GL_FLOAT),
+        },
+        true, 8);
 
     SetMouseGrab(true);
 
@@ -228,7 +234,7 @@ bool Game::onCreate() {
     return true;
 }
 
-void Game::onDestroy() { }
+void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     switch (e.code) {
@@ -292,7 +298,7 @@ void Game::onUpdate(const sf::Time & delta) {
 
 void Game::tick() {
     sphereModel->setPosition({glm::cos(time) * 3, 2, glm::sin(time) * 3});
-    //cubeModel->setRotation({time, time / 3, time / 7});
+    // cubeModel->setRotation({time, time / 3, time / 7});
 
     light0.position = sphereModel->getPosition();
     light1.position = sphereModel->getPosition();
@@ -324,7 +330,7 @@ void Game::onDraw() const {
         gbuffMulti->unbind();
     }
 
-    std::shared_ptr<FrameBuffer> gbuff (nullptr);
+    std::shared_ptr<FrameBuffer> gbuff(nullptr);
     if (gbuffMulti->isMultisampled())
         gbuff = gbuffMulti->getResovled();
     else
@@ -367,7 +373,7 @@ void Game::onDraw() const {
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
-    std::shared_ptr<FrameBuffer> fbuffTmp (nullptr);
+    std::shared_ptr<FrameBuffer> fbuffTmp(nullptr);
     if (fbuff->isMultisampled())
         fbuffTmp = fbuff->getResovled();
     else
@@ -425,7 +431,7 @@ void Game::onDraw() const {
 
     defaultShader->unbind();
 
-    //getGlError();
+    // getGlError();
 
     window->pushGLStates();
     window->draw(*fps);
@@ -438,7 +444,8 @@ void Game::drawPass(const MaterialShader::Ptr & shader) const {
     drawModel(hallModel, shader);
 }
 
-void Game::drawModel(const Model::ConstPtr & model, const MaterialShader::Ptr & shader) const {
+void Game::drawModel(const Model::ConstPtr & model,
+                     const MaterialShader::Ptr & shader) const {
     shader->setMat4("model", model->modelMatrix());
     model->draw(shader);
 }

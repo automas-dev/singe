@@ -1,7 +1,9 @@
 #include "Game.hpp"
+
+#include <spdlog/spdlog.h>
+
 #include <exception>
 #include <glm/gtc/noise.hpp>
-#include <spdlog/spdlog.h>
 
 
 static void getGlError() {
@@ -11,20 +13,20 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) { }
+Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
-Game::~Game() { }
+Game::~Game() {}
 
-void GLAPIENTRY MessageCallback( GLenum source,
-                                 GLenum type,
-                                 GLuint id,
-                                 GLenum severity,
-                                 GLsizei length,
-                                 const GLchar *message,
-                                 const void *userParam ) {
+void GLAPIENTRY MessageCallback(GLenum source,
+                                GLenum type,
+                                GLuint id,
+                                GLenum severity,
+                                GLsizei length,
+                                const GLchar * message,
+                                const void * userParam) {
     SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-                 ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-                 type, severity, message );
+                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
+                 severity, message);
 }
 
 bool Game::onCreate() {
@@ -88,7 +90,7 @@ bool Game::onCreate() {
     return true;
 }
 
-void Game::onDestroy() { }
+void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
@@ -146,7 +148,7 @@ void Game::onDraw() const {
             glVertex3d(0, 1, 0);
             glVertex3d(0, 0, 1);
             glVertex3d(-0.5, 0, 0);
-            //glVertex3d(0, 0, -0.5);
+            // glVertex3d(0, 0, -0.5);
         }
         glEnd();
     }
@@ -158,4 +160,3 @@ void Game::onDraw() const {
     window->draw(*fps);
     window->popGLStates();
 }
-

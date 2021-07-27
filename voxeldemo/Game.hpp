@@ -1,19 +1,20 @@
 #pragma once
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
 #include <GL/glew.h>
+
+#include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
+#include <algorithm>
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
-#include <memory>
-#include <vector>
 #include <map>
-#include <algorithm>
-#include <thread>
+#include <memory>
 #include <mutex>
 #include <random>
 #include <s3e.hpp>
+#include <thread>
+#include <vector>
 using namespace Tom::s3e;
 
 struct ChunkGenerator {
@@ -24,9 +25,10 @@ struct ChunkGenerator {
     typedef std::shared_ptr<ChunkGenerator> Ptr;
     typedef std::shared_ptr<const ChunkGenerator> ConstPtr;
 
-    ChunkGenerator(void) : ChunkGenerator(std::rand()) { }
+    ChunkGenerator(void) : ChunkGenerator(std::rand()) {}
 
-    ChunkGenerator(int seed) : seed(seed), scale(0.05), style(std::make_shared<BlockStyle>()) { }
+    ChunkGenerator(int seed)
+        : seed(seed), scale(0.05), style(std::make_shared<BlockStyle>()) {}
 
     Chunk::Ptr loadChunk(int x, int z) {
         auto chunk = std::make_shared<Chunk>(glm::vec3(x, 0, z));
@@ -53,12 +55,11 @@ struct ChunkLoader {
     typedef std::shared_ptr<ChunkLoader> Ptr;
     typedef std::shared_ptr<const ChunkLoader> ConstPtr;
 
-    ChunkLoader(void) : t(&ChunkLoader::run, this) { }
+    ChunkLoader(void) : t(&ChunkLoader::run, this) {}
 
-    ChunkLoader(const ChunkGenerator::Ptr & gen) : gen(gen) { }
+    ChunkLoader(const ChunkGenerator::Ptr & gen) : gen(gen) {}
 
-    void run(void) {
-    }
+    void run(void) {}
 
     void load(int x, int z) {
         auto pair = std::make_pair(x, z);
@@ -88,9 +89,7 @@ struct ChunkManager {
         return chunks[pair];
     }
 
-    void update(const sf::Time & delta) {
-
-    }
+    void update(const sf::Time & delta) {}
 
     std::vector<Vertex> toPoints(void) {
         std::vector<Vertex> points;
