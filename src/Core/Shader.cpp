@@ -1,9 +1,9 @@
-#include "s3e/Shader.hpp"
+#include "s3e/Core/Shader.hpp"
 
 #include <fstream>
 
-#include "s3e/Util.hpp"
-#include "s3e/log.hpp"
+#include "s3e/Support/Util.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
 

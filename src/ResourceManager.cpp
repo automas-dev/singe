@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "s3e/log.hpp"
+#include "s3e/Support/log.hpp"
 namespace fs = std::filesystem;
 
 namespace Tom::s3e {

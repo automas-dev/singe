@@ -1,10 +1,10 @@
-#include "s3e/Model.hpp"
+#include "s3e/Core/Model.hpp"
 
 #include <map>
 
-#include "s3e/Util.hpp"
-#include "s3e/VBO.hpp"
-#include "s3e/log.hpp"
+#include "s3e/Support/Util.hpp"
+#include "s3e/Core/VBO.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
     Mesh::Mesh() : VBO() {}

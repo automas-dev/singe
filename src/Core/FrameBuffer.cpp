@@ -1,6 +1,6 @@
-#include "s3e/FrameBuffer.hpp"
+#include "s3e/Core/FrameBuffer.hpp"
 
-#include "s3e/log.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
     FrameBufferTexture::FrameBufferTexture()

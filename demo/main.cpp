@@ -1,4 +1,4 @@
-#include <s3e/log.hpp>
+#include <s3e/Support/log.hpp>
 #include "Game.hpp"
 
 int main() {

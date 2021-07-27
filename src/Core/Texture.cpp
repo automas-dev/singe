@@ -1,8 +1,8 @@
-#include "s3e/Texture.hpp"
+#include "s3e/Core/Texture.hpp"
 
 #include <SFML/Graphics/Image.hpp>
 
-#include "s3e/log.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
 

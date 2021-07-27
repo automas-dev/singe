@@ -1,4 +1,4 @@
-#include "s3e/Keymap.hpp"
+#include "s3e/Support/Keymap.hpp"
 
 namespace Tom::s3e {
     Keymap::Keymap() {

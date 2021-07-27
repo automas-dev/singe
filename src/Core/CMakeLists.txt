@@ -1,0 +1,40 @@
+
+set(TARGET Core)
+
+set(HEADER_LIST
+    Camera.hpp
+    FrameBuffer.hpp
+    GameBase.hpp
+    Material.hpp
+    Menu.hpp
+    Model.hpp
+    Shader.hpp
+    Texture.hpp
+    VBO.hpp)
+list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
+
+set(SOURCE_LIST
+    Camera.cpp
+    FrameBuffer.cpp
+    GameBase.cpp
+    Material.cpp
+    Menu.cpp
+    Model.cpp
+    Shader.cpp
+    Texture.cpp
+    VBO.cpp)
+list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
+
+library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
+
+target_link_libraries(${TARGET}
+    PRIVATE
+    Support
+    fmt::fmt
+    spdlog::spdlog
+    sfml-window 
+    sfml-graphics 
+    sfml-system
+    OpenGL::OpenGL 
+    OpenGL::GLU
+    GLEW::GLEW)

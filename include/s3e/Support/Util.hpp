@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <fmt/ostream.h>
 
 #include <SFML/OpenGL.hpp>
@@ -11,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "s3e/log.hpp"
+#include "log.hpp"
 
 template<typename OStream>
 OStream & operator<<(OStream & os, const glm::vec2 & vec);

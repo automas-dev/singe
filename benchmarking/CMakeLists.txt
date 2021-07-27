@@ -11,8 +11,6 @@ target_compile_features(benchmarking PRIVATE cxx_std_17)
 
 target_link_libraries(benchmarking
 PRIVATE
+    spdlog::spdlog
     Tom::s3e
-    OpenGL::GLU
-    benchmark
-)
-
+    benchmark)

@@ -9,6 +9,6 @@ target_compile_features(workspace PRIVATE cxx_std_17)
 
 target_link_libraries(workspace 
 PRIVATE 
+    spdlog::spdlog
     Tom::s3e
-    OpenGL::GLU
 )

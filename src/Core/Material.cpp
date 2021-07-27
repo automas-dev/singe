@@ -1,7 +1,7 @@
-#include "s3e/Material.hpp"
+#include "s3e/Core/Material.hpp"
 
-#include "s3e/Util.hpp"
-#include "s3e/log.hpp"
+#include "s3e/Support/Util.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
 

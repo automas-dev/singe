@@ -1,6 +1,6 @@
-#include "s3e/VBO.hpp"
+#include "s3e/Core/VBO.hpp"
 
-#include "s3e/log.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
     VBO::VBO() : vao(0), vbo(0), nPoints(0) {

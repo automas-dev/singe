@@ -1,6 +1,6 @@
-#include "s3e/Menu.hpp"
+#include "s3e/Core/Menu.hpp"
 
-#include "s3e/log.hpp"
+#include "s3e/Support/log.hpp"
 
 const sf::Color light(200, 200, 200);
 const sf::Color dark(10, 10, 10);

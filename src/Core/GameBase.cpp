@@ -7,8 +7,8 @@
 #include <glm/glm.hpp>
 
 #include "default_font.h"
-#include "s3e/GameBase.hpp"
-#include "s3e/log.hpp"
+#include "s3e/Core/GameBase.hpp"
+#include "s3e/Support/log.hpp"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 

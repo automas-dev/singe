@@ -7,8 +7,8 @@
 #include <memory>
 #include <string>
 
-#include "s3e/Material.hpp"
-#include "s3e/VBO.hpp"
+#include "Material.hpp"
+#include "VBO.hpp"
 
 namespace Tom::s3e {
 

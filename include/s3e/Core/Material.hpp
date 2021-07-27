@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "s3e/Shader.hpp"
+#include "Shader.hpp"
 
 namespace Tom::s3e {
 
