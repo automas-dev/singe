@@ -38,7 +38,7 @@ namespace Tom::s3e {
             auto delta = clock.restart();
 
             if (!paused) {
-                update(delta);
+                step(delta);
             }
 
             auto soFar = clock.getElapsedTime();
@@ -95,36 +95,7 @@ namespace Tom::s3e {
         return body;
     }
 
-    void Physics::loadObjects() {
-        {
-            btCollisionShape * groundShape = new btBoxShape(
-                btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-
-            btRigidBody * body = makeRigidBody(groundShape, 0, 1);
-
-            btTransform groundTransform;
-            groundTransform.setIdentity();
-            groundTransform.setOrigin(btVector3(0, -56, 0));
-            groundTransform.setRotation(
-                btQuaternion(btVector3(1, 0, 0), 3.14 * 0.03));
-            body->getMotionState()->setWorldTransform(groundTransform);
-        }
-
-        {
-            btCollisionShape * colShape = new btSphereShape(btScalar(1.));
-
-            btRigidBody * body = makeRigidBody(colShape, 1, 1);
-
-            /// Create Dynamic Objects
-            btTransform startTransform;
-            startTransform.setIdentity();
-            startTransform.setOrigin(btVector3(2, 0, 0));
-            body->getMotionState()->setWorldTransform(startTransform);
-            body->setLinearVelocity(btVector3(0, 0, 0));
-        }
-    }
-
-    void Physics::update(const sf::Time & delta, int maxSubSteps) {
+    void Physics::step(const sf::Time & delta, int maxSubSteps) {
         std::scoped_lock lk(m);
         dynamicsWorld->stepSimulation(delta.asSeconds(), maxSubSteps);
     }
@@ -141,25 +112,9 @@ namespace Tom::s3e {
         }
     }
 
-    btDiscreteDynamicsWorld * Physics::getWorld() const {
-        return dynamicsWorld;
-    }
-
     btCollisionObjectArray & Physics::getCollisionObjectArray() const {
         std::scoped_lock lk(m);
         return dynamicsWorld->getCollisionObjectArray();
-    }
-
-    void Physics::printObjectsLocations() const {
-        std::scoped_lock lk(m);
-        for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
-            btTransform trans;
-            getTransform(j, trans);
-            SPDLOG_INFO("world pos object {} = {},{},{}", j,
-                        float(trans.getOrigin().getX()),
-                        float(trans.getOrigin().getY()),
-                        float(trans.getOrigin().getZ()));
-        }
     }
 
     void Physics::removeObjects() {

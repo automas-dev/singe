@@ -59,7 +59,7 @@ bool Game::onCreate() {
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
     physics = std::make_unique<Physics>();
-    physics->loadObjects();
+    loadObjects();
     physics->setRunState(true);
 
     std::vector<Vertex> floorPoints {
@@ -87,6 +87,34 @@ bool Game::onCreate() {
     return true;
 }
 
+void Game::loadObjects() {
+    {
+        btCollisionShape * groundShape =
+            new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+
+        btRigidBody * body = physics->makeRigidBody(groundShape, 0, 1);
+
+        btTransform groundTransform;
+        groundTransform.setIdentity();
+        groundTransform.setOrigin(btVector3(0, -56, 0));
+        groundTransform.setRotation(btQuaternion(btVector3(1, 0, 0), 3.14 * 0.03));
+        body->getMotionState()->setWorldTransform(groundTransform);
+    }
+
+    {
+        btCollisionShape * colShape = new btSphereShape(btScalar(1.));
+
+        btRigidBody * body = physics->makeRigidBody(colShape, 1, 1);
+
+        /// Create Dynamic Objects
+        btTransform startTransform;
+        startTransform.setIdentity();
+        startTransform.setOrigin(btVector3(2, 0, 0));
+        body->getMotionState()->setWorldTransform(startTransform);
+        body->setLinearVelocity(btVector3(0, 0, 0));
+    }
+}
+
 void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
@@ -94,8 +122,9 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
 
     if (e.code == sf::Keyboard::Space) {
         physics->removeObjects();
-        physics->loadObjects();
-    } else if (e.code == sf::Keyboard::Escape) {
+        loadObjects();
+    }
+    else if (e.code == sf::Keyboard::Escape) {
         physics->setRunState(!menu->isVisible());
     }
 }
@@ -123,19 +152,6 @@ void Game::onResized(const sf::Event::SizeEvent & e) {
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
-
-    if (!menu->isVisible()) {
-        // physics->update(delta);
-        // physics->printObjectsLocations();
-
-        // btTransform trans;
-        // physics->getTransform(1, trans);
-        // objectModel->setPosition({trans.getOrigin().getX(),
-        //                          trans.getOrigin().getY(),
-        //                          trans.getOrigin().getZ()});
-
-        // camera->setPosition(objectModel->getPosition() + glm::vec3(-3, 2, -1));
-    }
 }
 
 void Game::onDraw() const {

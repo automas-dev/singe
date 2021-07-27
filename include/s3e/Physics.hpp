@@ -42,17 +42,11 @@ namespace Tom::s3e {
                                     btScalar mass = 0,
                                     btScalar friction = 0);
 
-        void loadObjects();
-
-        void update(const sf::Time & delta, int maxSubSteps = 10);
+        void step(const sf::Time & delta, int maxSubSteps = 10);
 
         void getTransform(int i, btTransform & trans) const;
 
-        btDiscreteDynamicsWorld * getWorld() const;
-
         btCollisionObjectArray & getCollisionObjectArray() const;
-
-        void printObjectsLocations() const;
 
         void removeObjects();
     };

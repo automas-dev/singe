@@ -25,6 +25,8 @@ class Game : public GameBase {
     Model::Ptr objectModel;
     std::unique_ptr<Physics> physics;
 
+    void loadObjects();
+
 public:
     Game(const sf::String & resPath);
     virtual ~Game();

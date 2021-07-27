@@ -116,7 +116,7 @@ void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
 
-    physics->update(delta);
+    physics->step(delta);
     // physics->printObjectsLocations();
 
     // camera->setPosition(objectModel->getPosition() + glm::vec3(-3, 2, -1));
