@@ -109,7 +109,7 @@ struct ChunkLoader {
 
     void load(int x, int z) {
         std::scoped_lock lk(loadedMutex);
-        taskQueue.push([&, x, z]() {
+        taskQueue.add([&, x, z]() {
             auto chunk = gen->loadChunk(x, z);
             std::scoped_lock lk(loadedMutex);
             loaded.push(chunk);

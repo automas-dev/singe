@@ -74,7 +74,7 @@ public:
         stop();
     }
 
-    void push(std::function<void()> task) {
+    void add(std::function<void()> task) {
         std::unique_lock lk(m);
         taskQueue.push(task);
         lk.unlock();
