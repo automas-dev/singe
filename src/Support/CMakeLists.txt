@@ -4,7 +4,8 @@ set(TARGET Support)
 set(HEADER_LIST
     Keymap.hpp
     log.hpp
-    Util.hpp)
+    Util.hpp
+    dispatch.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
 
 set(SOURCE_LIST

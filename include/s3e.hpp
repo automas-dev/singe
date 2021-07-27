@@ -16,3 +16,4 @@
 #include "s3e/Support/Util.hpp"
 #include "s3e/Core/VBO.hpp"
 #include "s3e/Voxel.hpp"
+#include "s3e/Support/dispatch.hpp"
