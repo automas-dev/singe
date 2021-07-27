@@ -11,85 +11,151 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <queue>
 #include <random>
 #include <s3e.hpp>
 #include <thread>
 #include <vector>
 using namespace Tom::s3e;
 
+#include <chrono>
+using namespace std::chrono_literals;
+
 struct ChunkGenerator {
     int seed;
     float scale;
-    BlockStyle::Ptr style;
+    std::vector<BlockStyle::Ptr> styles;
 
     typedef std::shared_ptr<ChunkGenerator> Ptr;
     typedef std::shared_ptr<const ChunkGenerator> ConstPtr;
 
     ChunkGenerator(void) : ChunkGenerator(std::rand()) {}
 
-    ChunkGenerator(int seed)
-        : seed(seed), scale(0.05), style(std::make_shared<BlockStyle>()) {}
+    UV uvFor(int u, int v) {
+        float u1 = u / (float)SubChunk::N;
+        float u2 = (u + 1) / (float)SubChunk::N;
+        float v1 = v / (float)SubChunk::N;
+        float v2 = (v + 1) / (float)SubChunk::N;
+        return UV(u1, v1, u2, v2);
+    }
 
-    Chunk::Ptr loadChunk(int x, int z) {
-        auto chunk = std::make_shared<Chunk>(glm::vec3(x, 0, z));
-        for (int i = x; i < x + SubChunk::N; i++) {
-            for (int j = z; j < z + SubChunk::N; j++) {
-                auto height = glm::simplex(glm::vec3(x * scale, seed, z * scale));
-                height = 10 + height * 256;
-                for (int y = 0; y < height; y++) {
-                    chunk->set(i, y, j, style);
+    ChunkGenerator(int seed) : seed(seed), scale(0.05) {
+        for (int y = 0; y < SubChunk::N; y++) {
+            for (int x = 0; x < SubChunk::N; x++) {
+                for (int z = 0; z < SubChunk::N; z++) {
+                    auto top = uvFor(x, z);
+                    auto side1 = uvFor(x, y);
+                    auto side2 = uvFor(y, z);
+                    styles.push_back(std::make_shared<BlockStyle>(
+                        side1, side1, side2, side2, top, top));
                 }
             }
         }
+    }
+
+    Chunk::Ptr loadChunk(int pos_x, int pos_z) {
+        auto chunk = std::make_shared<Chunk>(glm::vec3(pos_x, 0, pos_z));
+        float s = 0.02;
+        for (int local_x = 0; local_x < SubChunk::N; local_x++) {
+            for (int local_z = 0; local_z < SubChunk::N; local_z++) {
+                int x = pos_x + local_x;
+                int z = pos_z + local_z;
+                auto height = 10 + glm::simplex(glm::vec2(x * s, z * s)) * 4;
+                for (int y = 0; y < height; y++) {
+                    auto style_index = y * SubChunk::N * SubChunk::N;
+                    style_index += local_x * SubChunk::N;
+                    style_index += local_z;
+                    style_index %= styles.size();
+                    chunk->set(x, y, z, styles[style_index]);
+                }
+            }
+        }
+        std::this_thread::sleep_for(1s);
         return chunk;
     }
 };
 
 struct ChunkLoader {
-    std::thread t;
+    DispatchQueue taskQueue;
     ChunkGenerator::Ptr gen;
-    std::list<std::pair<int, int>> loadQueue;
-    std::list<Chunk::Ptr> loaded;
-    std::mutex queueMutex;
+    std::queue<Chunk::Ptr> loaded;
+    std::mutex loadedMutex;
 
     typedef std::shared_ptr<ChunkLoader> Ptr;
     typedef std::shared_ptr<const ChunkLoader> ConstPtr;
 
-    ChunkLoader(void) : t(&ChunkLoader::run, this) {}
+    ChunkLoader(const ChunkGenerator::Ptr & gen)
+        : taskQueue(DispatchQueue::Concurrent), gen(gen) {}
 
-    ChunkLoader(const ChunkGenerator::Ptr & gen) : gen(gen) {}
+    bool hasNext() {
+        std::scoped_lock lk(loadedMutex);
+        return !loaded.empty();
+    }
 
-    void run(void) {}
+    Chunk::Ptr next() {
+        std::scoped_lock lk(loadedMutex);
+        auto front = loaded.front();
+        loaded.pop();
+        return front;
+    }
+
+    void stop() {
+        taskQueue.stop();
+    }
+
+    void join() {
+        taskQueue.join();
+    }
 
     void load(int x, int z) {
-        auto pair = std::make_pair(x, z);
-        std::scoped_lock lock(queueMutex);
-        loadQueue.push_back(pair);
+        std::scoped_lock lk(loadedMutex);
+        taskQueue.push([&, x, z]() {
+            auto chunk = gen->loadChunk(x, z);
+            std::scoped_lock lk(loadedMutex);
+            loaded.push(chunk);
+        });
     }
 };
 
 struct ChunkManager {
     std::map<std::pair<int, int>, Chunk::Ptr> chunks;
+    ChunkLoader loader;
 
     typedef std::shared_ptr<ChunkManager> Ptr;
     typedef std::shared_ptr<const ChunkManager> ConstPtr;
 
-    void set(int x, int y, int z, const BlockStyle::Ptr & style) {
-        get(x, y, z)->set(x, y, z, style);
+    ChunkManager() : ChunkManager(std::make_shared<ChunkGenerator>()) {}
+
+    ChunkManager(ChunkGenerator::Ptr gen) : loader(gen) {}
+
+    virtual ~ChunkManager() {
+        loader.stop();
     }
 
-    Chunk::Ptr & get(int x, int y, int z) {
-        x = x / SubChunk::N;
-        z = z / SubChunk::N;
-        auto pair = std::make_pair(x, z);
-        if (chunks.count(pair) == 0) {
-            glm::vec3 pos(x * SubChunk::N, 0, z * SubChunk::N);
-            chunks[pair] = std::make_shared<Chunk>(pos);
+    // void set(int x, int y, int z, const BlockStyle::Ptr & style) {
+    //     get(x, y, z)->set(x, y, z, style);
+    // }
+
+    // Chunk::Ptr & get(int x, int y, int z) {
+    //     x = x / SubChunk::N;
+    //     z = z / SubChunk::N;
+    //     auto pair = std::make_pair(x, z);
+    //     if (chunks.count(pair) == 0) {
+    //         // loader.load(x, z);
+    //         glm::vec3 pos(x * SubChunk::N, 0, z * SubChunk::N);
+    //         chunks[pair] = std::make_shared<Chunk>(pos);
+    //     }
+    //     return chunks[pair];
+    // }
+
+    void update(const sf::Time & delta) {
+        if (loader.hasNext()) {
+            auto chunk = loader.next();
+            chunks[std::make_pair<int, int>(chunk->pos.x, chunk->pos.z)] = chunk;
+            SPDLOG_DEBUG("Got a chunk {}, {} in update", chunk->pos.x,
+                         chunk->pos.z);
         }
-        return chunks[pair];
     }
-
-    void update(const sf::Time & delta) {}
 
     std::vector<Vertex> toPoints(void) {
         std::vector<Vertex> points;
@@ -106,7 +172,7 @@ class Game : public GameBase {
     DefaultResourceManager resManager;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
-    Model::Ptr model;
+    VBO::Ptr model;
     ChunkManager::Ptr chunks;
     std::vector<BlockStyle::Ptr> styles;
 

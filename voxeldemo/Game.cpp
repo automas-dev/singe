@@ -49,7 +49,7 @@ bool Game::onCreate() {
     });
 
     // Initialize camera to look at origin
-    camera->move({-3, 2, -1});
+    camera->move({-3, 22, -1});
     camera->rotate({0, 110});
     camera->setFov(70);
 
@@ -58,32 +58,11 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    for (int x = 0; x < SubChunk::N; x++) {
-        for (int z = 0; z < SubChunk::N; z++) {
-            float u1 = x / (float)SubChunk::N;
-            float u2 = (x + 1) / (float)SubChunk::N;
-            float v1 = z / (float)SubChunk::N;
-            float v2 = (z + 1) / (float)SubChunk::N;
-            UV uv(u1, v1, u2, v2);
-            styles.push_back(std::make_shared<BlockStyle>(uv, uv, uv, uv, uv, uv));
-        }
-    }
-
     chunks = std::make_shared<ChunkManager>();
-    float s = 0.02;
-    for (int x = 0; x < 100; x++) {
-        for (int z = 0; z < 100; z++) {
-            auto height = 10 + glm::simplex(glm::vec2(x * s, z * s)) * 4;
-            for (int y = 0; y < height; y++) {
-                chunks->set(x, y, z, styles[(x * 8 + z) % styles.size()]);
-            }
-        }
-    }
-    SPDLOG_DEBUG("To the model");
-    model = std::make_shared<Model>();
-    bool res = model->loadFromPoints(chunks->toPoints());
-    if (!res)
-        return false;
+    for (int x = 0; x < 5; x++)
+        for (int z = 0; z < 5; z++)
+            chunks->loader.load(x * SubChunk::N, z * SubChunk::N);
+    model = std::make_shared<VBO>();
 
     SetMouseGrab(true);
     getGlError();
@@ -120,7 +99,16 @@ void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
 
-    chunks->update(delta);
+    if (chunks->loader.hasNext()) {
+        while (chunks->loader.hasNext()) {
+            auto chunk = chunks->loader.next();
+            SPDLOG_DEBUG("Got a chunk {}, {} in update", chunk->pos.x,
+                         chunk->pos.z);
+            auto key = std::make_pair<int, int>(chunk->pos.x, chunk->pos.z);
+            chunks->chunks[key] = chunk;
+        }
+        model->loadFromPoints(chunks->toPoints());
+    }
 }
 
 void Game::onDraw() const {
@@ -137,7 +125,8 @@ void Game::onDraw() const {
     defaultShader->bind();
     devTexture->bind();
     defaultShader->setMat4("mvp", vp);
-    defaultShader->setMat4("model", model->modelMatrix());
+    // defaultShader->setMat4("model", model->modelMatrix());
+    defaultShader->setMat4("model", glm::mat4(1));
     {
         model->draw();
 
