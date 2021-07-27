@@ -1,12 +1,24 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include <atomic>
+#include <mutex>
+#include <thread>
 
 #include "Support/log.hpp"
 #include "btBulletDynamicsCommon.h"
 
 namespace Tom::s3e {
     class Physics {
+        std::thread t;
+        mutable std::mutex m;
+        std::atomic<bool> running;
+        std::atomic<bool> paused;
+        sf::Clock clock;
+        float updateInterval;
+
+        void worker();
+
     public:
         btDefaultCollisionConfiguration * collisionConfiguration;
         btCollisionDispatcher * dispatcher;
@@ -16,11 +28,13 @@ namespace Tom::s3e {
         btAlignedObjectArray<btCollisionShape *> collisionShapes;
 
     public:
-        Physics(void);
+        Physics(float updateInterval = 1. / 60);
 
         virtual ~Physics();
 
-        void doThing();
+        bool getRunState() const;
+
+        void setRunState(bool run);
 
         void addRigidBody(btRigidBody * body);
 
@@ -32,13 +46,13 @@ namespace Tom::s3e {
 
         void update(const sf::Time & delta, int maxSubSteps = 10);
 
-        void getTransform(int i, btTransform & trans);
+        void getTransform(int i, btTransform & trans) const;
 
-        btDiscreteDynamicsWorld * getWorld();
+        btDiscreteDynamicsWorld * getWorld() const;
 
-        btCollisionObjectArray & getCollisionObjectArray();
+        btCollisionObjectArray & getCollisionObjectArray() const;
 
-        void printObjectsLocations();
+        void printObjectsLocations() const;
 
         void removeObjects();
     };

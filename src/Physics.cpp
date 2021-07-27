@@ -1,7 +1,9 @@
 #include "s3e/Physics.hpp"
 
+#include <chrono>
+
 namespace Tom::s3e {
-    Physics::Physics() {
+    Physics::Physics(float updateInterval) : updateInterval(updateInterval) {
         collisionConfiguration = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfiguration);
         overlappingPairCache = new btDbvtBroadphase();
@@ -10,10 +12,17 @@ namespace Tom::s3e {
             dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
         dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+        running = true;
+        paused = true;
+        t = std::thread(&Physics::worker, this);
     }
 
     Physics::~Physics() {
+        running = false;
         removeObjects();
+
+        t.join();
 
         delete dynamicsWorld;
         delete solver;
@@ -22,11 +31,33 @@ namespace Tom::s3e {
         delete collisionConfiguration;
     }
 
-    void Physics::doThing() {
-        for (int i = 0; i < 150; i++) {
-            update(sf::seconds(1.f / 60.f));
-            printObjectsLocations();
+    void Physics::worker() {
+        SPDLOG_DEBUG("Physics worker starting");
+        clock.restart();
+        while (running) {
+            auto delta = clock.restart();
+
+            if (!paused) {
+                update(delta);
+            }
+
+            auto soFar = clock.getElapsedTime();
+
+            float sleep = updateInterval - soFar.asSeconds();
+            if (sleep > 0) {
+                std::chrono::duration<float> duration(sleep);
+                std::this_thread::sleep_for(duration);
+            }
         }
+        SPDLOG_DEBUG("Physics worker ending");
+    }
+
+    bool Physics::getRunState() const {
+        return !paused;
+    }
+
+    void Physics::setRunState(bool run) {
+        paused = !run;
     }
 
     void Physics::addRigidBody(btRigidBody * body) {
@@ -94,10 +125,12 @@ namespace Tom::s3e {
     }
 
     void Physics::update(const sf::Time & delta, int maxSubSteps) {
+        std::scoped_lock lk(m);
         dynamicsWorld->stepSimulation(delta.asSeconds(), maxSubSteps);
     }
 
-    void Physics::getTransform(int i, btTransform & trans) {
+    void Physics::getTransform(int i, btTransform & trans) const {
+        std::scoped_lock lk(m);
         btCollisionObject * obj = dynamicsWorld->getCollisionObjectArray()[i];
         btRigidBody * body = btRigidBody::upcast(obj);
         if (body && body->getMotionState()) {
@@ -108,15 +141,17 @@ namespace Tom::s3e {
         }
     }
 
-    btDiscreteDynamicsWorld * Physics::getWorld() {
+    btDiscreteDynamicsWorld * Physics::getWorld() const {
         return dynamicsWorld;
     }
 
-    btCollisionObjectArray & Physics::getCollisionObjectArray() {
+    btCollisionObjectArray & Physics::getCollisionObjectArray() const {
+        std::scoped_lock lk(m);
         return dynamicsWorld->getCollisionObjectArray();
     }
 
-    void Physics::printObjectsLocations() {
+    void Physics::printObjectsLocations() const {
+        std::scoped_lock lk(m);
         for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
             btTransform trans;
             getTransform(j, trans);
@@ -128,6 +163,7 @@ namespace Tom::s3e {
     }
 
     void Physics::removeObjects() {
+        std::scoped_lock lk(m);
         for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
             btCollisionObject * obj = dynamicsWorld->getCollisionObjectArray()[i];
             btRigidBody * body = btRigidBody::upcast(obj);

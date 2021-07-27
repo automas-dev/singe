@@ -60,6 +60,7 @@ bool Game::onCreate() {
 
     physics = std::make_unique<Physics>();
     physics->loadObjects();
+    physics->setRunState(true);
 
     std::vector<Vertex> floorPoints {
         Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
@@ -94,6 +95,8 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     if (e.code == sf::Keyboard::Space) {
         physics->removeObjects();
         physics->loadObjects();
+    } else if (e.code == sf::Keyboard::Escape) {
+        physics->setRunState(!menu->isVisible());
     }
 }
 
@@ -122,7 +125,7 @@ void Game::onUpdate(const sf::Time & delta) {
     fps->update(delta);
 
     if (!menu->isVisible()) {
-        physics->update(delta);
+        // physics->update(delta);
         // physics->printObjectsLocations();
 
         // btTransform trans;
