@@ -1,7 +1,5 @@
 #pragma once
 
-#include <fmt/core.h>
-
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -10,6 +8,8 @@
 #include <queue>
 #include <thread>
 #include <vector>
+
+#include "log.hpp"
 
 using namespace std::chrono_literals;
 
@@ -27,7 +27,7 @@ private:
     std::queue<Fn> taskQueue;
 
     void worker(size_t id) {
-        fmt::print("Worker {} starting\n", id);
+        SPDLOG_DEBUG("Worker {} starting", id);
         while (running) {
             std::unique_lock lk(m);
             cv.wait(lk, [&]() {
@@ -39,15 +39,10 @@ private:
 
             auto task = taskQueue.front();
             taskQueue.pop();
-            fmt::print("Worker {} starting task\n", id);
             lk.unlock();
-
             task();
-
-            lk.lock();
-            fmt::print("Worker {} finished task\n", id);
         }
-        fmt::print("Worker {} ending\n", id);
+        SPDLOG_DEBUG("Worker {} ending", id);
     }
 
 public:
