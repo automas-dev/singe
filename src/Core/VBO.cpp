@@ -3,7 +3,11 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
-    VBO::VBO() : vao(0), vbo(0), nPoints(0) {
+    VBO::VBO(bool dynamic)
+        : usage(dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW),
+          vao(0),
+          vbo(0),
+          nPoints(0) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
         glGenBuffers(1, &vbo);
@@ -27,8 +31,7 @@ namespace Tom::s3e {
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points,
-                     GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points, usage);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);

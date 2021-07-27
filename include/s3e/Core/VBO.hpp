@@ -72,13 +72,14 @@ namespace Tom::s3e {
     class VBO {
         GLuint vao;
         GLuint vbo;
+        GLenum usage;
         size_t nPoints;
 
     public:
         typedef std::shared_ptr<VBO> Ptr;
         typedef std::shared_ptr<const VBO> ConstPtr;
 
-        VBO(void);
+        VBO(bool dynamic = false);
         virtual ~VBO();
 
         bool loadFromPoints(const std::vector<Vertex> & points);
