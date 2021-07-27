@@ -47,6 +47,7 @@ include_directories(PRIVATE ${CMAKE_BINARY_DIR}/include)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+find_package(Threads REQUIRED)
 find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)

@@ -9,7 +9,9 @@ target_compile_features(voxeldemo PRIVATE cxx_std_17)
 
 target_link_libraries(voxeldemo
 PRIVATE
+    fmt::fmt
     spdlog::spdlog
+    Threads::Threads
     Tom::s3e
 )
 
