@@ -2,11 +2,16 @@
 
 #include "Game.hpp"
 
+static Logger logSupport("Support");
+
 int main() {
+    logSupport.warning("Support here 1");
     spdlog::set_level(spdlog::level::trace);
     spdlog::set_level(spdlog::level::debug);
+    logSupport.warning("Support here 2");
     try {
         Game game("../../workspace/res/");
+    logSupport.warning("Support here 3");
         if (game.Create("Workspace"))
             game.Start();
     }

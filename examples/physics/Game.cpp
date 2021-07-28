@@ -81,6 +81,35 @@ bool Game::onCreate() {
     return true;
 }
 
+void Game::loadObjects() {
+    {
+        btCollisionShape * groundShape =
+            new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+
+        btRigidBody * body = physics->makeRigidBody(groundShape, 0, 1);
+
+        btTransform groundTransform;
+        groundTransform.setIdentity();
+        groundTransform.setOrigin(btVector3(0, -56, 0));
+        groundTransform.setRotation(btQuaternion(btVector3(1, 0, 0), 3.14 * 0.03));
+        body->getMotionState()->setWorldTransform(groundTransform);
+    }
+
+    {
+        btCollisionShape * colShape = new btSphereShape(btScalar(1.));
+
+        btRigidBody * body = physics->makeRigidBody(colShape, 1, 1);
+
+        /// Create Dynamic Objects
+        btTransform startTransform;
+        startTransform.setIdentity();
+        startTransform.setOrigin(btVector3(2, 0, 0));
+        body->getMotionState()->setWorldTransform(startTransform);
+        body->setLinearVelocity(btVector3(0, 0, 0));
+    }
+}
+
+
 void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
@@ -88,7 +117,7 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
 
     if (e.code == sf::Keyboard::Space) {
         physics->removeObjects();
-        physics->loadObjects();
+        loadObjects();
     }
 }
 

@@ -6,6 +6,7 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <algorithm>
+#include <dispatch.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
 #include <map>

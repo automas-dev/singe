@@ -15,5 +15,4 @@
 #include "s3e/ResourceManager.hpp"
 #include "s3e/Support/Keymap.hpp"
 #include "s3e/Support/Util.hpp"
-#include "s3e/Support/dispatch.hpp"
 #include "s3e/Voxel.hpp"

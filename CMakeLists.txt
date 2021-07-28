@@ -58,6 +58,8 @@ find_package(Bullet REQUIRED)
 
 include_directories(${BULLET_INCLUDE_DIR})
 
+add_subdirectory(DispatchQueue)
+
 add_subdirectory(src)
 
 add_subdirectory(workspace)
