@@ -15,9 +15,22 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-namespace Tom::s3e {
+namespace Tom::s3e::Logging {
     class Logger {
+    public:
+        enum Level {
+            Trace,
+            Debug,
+            Info,
+            Warning,
+            Error,
+            Critical,
+            Fatal,
+        };
+
+    private:
         std::shared_ptr<spdlog::logger> logger;
+        Level level;
 
     public:
         template<typename FormatString>
@@ -55,9 +68,37 @@ namespace Tom::s3e {
         }
 
         template<typename FormatString, typename... Args>
-        void fatal(const FormatString & fmt, Args &&... args) {
+        [[noreturn]] void fatal(const FormatString & fmt, Args &&... args) noexcept {
             logger->critical(fmt, std::forward<Args>(args)...);
             std::terminate();
         }
+
+        void setLevel(Level level) {
+            this->level = level;
+            switch (level) {
+                case Trace:
+                    logger->set_level(spdlog::level::trace);
+                    break;
+                case Debug:
+                    logger->set_level(spdlog::level::debug);
+                    break;
+                case Info:
+                    logger->set_level(spdlog::level::info);
+                    break;
+                case Warning:
+                    logger->set_level(spdlog::level::warn);
+                    break;
+                case Error:
+                    logger->set_level(spdlog::level::err);
+                    break;
+                case Critical:
+                case Fatal:
+                    logger->set_level(spdlog::level::critical);
+                    break;
+            }
+        }
     };
+
+    extern Logger * Core;
+    extern Logger * Support;
 }

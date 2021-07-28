@@ -8,6 +8,7 @@ namespace Tom::s3e {
           vao(0),
           vbo(0),
           nPoints(0) {
+        
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
         glGenBuffers(1, &vbo);
@@ -27,6 +28,8 @@ namespace Tom::s3e {
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        Logging::Core->debug("VBO Created dynamic={} vao={} vbo={}", dynamic, vao, vbo);
     }
 
     VBO::~VBO() {
@@ -41,6 +44,7 @@ namespace Tom::s3e {
     }
 
     bool VBO::loadFromPoints(const Vertex * points, size_t n) {
+        Logging::Core->debug("VBO {} for VAO {} loading {} points", vbo, vao, n);
         nPoints = n;
 
         glBindVertexArray(vao);
