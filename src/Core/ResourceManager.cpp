@@ -6,22 +6,22 @@
 namespace fs = std::filesystem;
 
 namespace Tom::s3e {
-    ResourceManager::ResourceManager() : ResourceManager("./") {}
+    ResourceManagerBase::ResourceManagerBase() : ResourceManagerBase("./") {}
 
-    ResourceManager::ResourceManager(const std::string & path)
+    ResourceManagerBase::ResourceManagerBase(const std::string & path)
         : rootPath(path) {}
 
-    ResourceManager::~ResourceManager() {}
+    ResourceManagerBase::~ResourceManagerBase() {}
 
-    void ResourceManager::setResourcePath(const std::string & path) {
+    void ResourceManagerBase::setResourcePath(const std::string & path) {
         rootPath = path;
     }
 
-    const std::string & ResourceManager::getResourcePath() {
+    const std::string & ResourceManagerBase::getResourcePath() {
         return rootPath;
     }
 
-    std::string ResourceManager::resourceAt(const std::string & path) const {
+    std::string ResourceManagerBase::resourceAt(const std::string & path) const {
         fs::path base(path);
         if (base.is_absolute())
             return path;
@@ -31,14 +31,14 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    Texture::Ptr DefaultResourceManager::loadTexture(const std::string & name) {
+    Texture::Ptr ResourceManager::loadTexture(const std::string & name) {
         if (textures.count(name) > 0)
             return textures[name];
         else
             return nullptr;
     }
 
-    Texture::Ptr DefaultResourceManager::loadTexture(const std::string & name,
+    Texture::Ptr ResourceManager::loadTexture(const std::string & name,
                                                      const std::string & path) {
         auto relPath = resourceAt(path);
         auto newTex = std::make_shared<Texture>();
@@ -52,7 +52,7 @@ namespace Tom::s3e {
         return newTex;
     }
 
-    Shader::Ptr DefaultResourceManager::loadShader(const std::string & vertexPath,
+    Shader::Ptr ResourceManager::loadShader(const std::string & vertexPath,
                                                    const std::string & fragmentPath) {
         auto relVertexPath = resourceAt(vertexPath);
         auto relFragmentPath = resourceAt(fragmentPath);
@@ -66,7 +66,7 @@ namespace Tom::s3e {
         return shader;
     }
 
-    Model::Ptr DefaultResourceManager::loadModel(const std::string & path) {
+    Model::Ptr ResourceManager::loadModel(const std::string & path) {
         auto relPath = resourceAt(path);
         auto model = std::make_shared<Model>();
         if (!model->loadFromPath(relPath)) {

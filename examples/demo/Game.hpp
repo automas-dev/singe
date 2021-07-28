@@ -56,7 +56,7 @@ class Game : public GameBase {
     std::vector<glm::vec3> gridVerts;
     std::vector<glm::vec3> gridCols;
 
-    DefaultResourceManager resManager;
+    ResourceManager resManager;
 
     sf::Font font;
 

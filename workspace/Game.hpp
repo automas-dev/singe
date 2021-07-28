@@ -18,7 +18,7 @@
 using namespace Tom::s3e;
 
 class Game : public GameBase {
-    DefaultResourceManager resManager;
+    ResourceManager resManager;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
     Model::Ptr floorModel;

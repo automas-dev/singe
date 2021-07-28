@@ -16,39 +16,39 @@ namespace Tom::s3e {
      * Manages resources and provides paths to resources based on a root
      * directory.
      */
-    class ResourceManager {
+    class ResourceManagerBase {
     private:
         std::string rootPath;
 
     public:
         /**
-         * A shared pointer that manages a ResourceManager.
+         * A shared pointer that manages a ResourceManagerBase.
          */
-        typedef std::shared_ptr<ResourceManager> Ptr;
+        typedef std::shared_ptr<ResourceManagerBase> Ptr;
 
         /**
-         * A shared pointer that manages a const ResourceManager.
+         * A shared pointer that manages a const ResourceManagerBase.
          */
-        typedef std::shared_ptr<const ResourceManager> ConstPtr;
+        typedef std::shared_ptr<const ResourceManagerBase> ConstPtr;
 
         /**
-         * Construct a ResourceManager with the current working directory as the
+         * Construct a ResourceManagerBase with the current working directory as the
          * resource root path.
          */
-        ResourceManager(void);
+        ResourceManagerBase(void);
 
         /**
-         * Construct a ResourceManager with `path` as the resource root path.
+         * Construct a ResourceManagerBase with `path` as the resource root path.
          *
          * @param path the root directory for resource paths
          */
-        ResourceManager(const std::string & path);
+        ResourceManagerBase(const std::string & path);
 
         /**
-         * Destruct the ResourceManager. If the user overrides ResourceManager,
+         * Destruct the ResourceManagerBase. If the user overrides ResourceManagerBase,
          * all stored resources should be freed.
          */
-        virtual ~ResourceManager();
+        virtual ~ResourceManagerBase();
 
         /**
          * Set the resource root path.
@@ -78,25 +78,25 @@ namespace Tom::s3e {
     };
 
     /**
-     * An implementation of ResourceManager that has methods for loading
+     * An implementation of ResourceManagerBase that has methods for loading
      * Texture, Model and Shader resources.
      */
-    class DefaultResourceManager : public ResourceManager {
+    class ResourceManager : public ResourceManagerBase {
     private:
         std::unordered_map<std::string, Texture::Ptr> textures;
 
     public:
         /**
-         * A shared pointer that manages a DefaultResourceManager.
+         * A shared pointer that manages a ResourceManager.
          */
-        typedef std::shared_ptr<DefaultResourceManager> Ptr;
+        typedef std::shared_ptr<ResourceManager> Ptr;
 
         /**
-         * A shared pointer that manages a const DefaultResourceManager.
+         * A shared pointer that manages a const ResourceManager.
          */
-        typedef std::shared_ptr<const DefaultResourceManager> ConstPtr;
+        typedef std::shared_ptr<const ResourceManager> ConstPtr;
 
-        using ResourceManager::ResourceManager;
+        using ResourceManagerBase::ResourceManagerBase;
 
         /**
          * Load a Texture from it's given name when first loaded.

@@ -170,7 +170,7 @@ struct ChunkManager {
 };
 
 class Game : public GameBase {
-    DefaultResourceManager resManager;
+    ResourceManager resManager;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
     VBO::Ptr model;
