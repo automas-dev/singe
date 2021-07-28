@@ -21,14 +21,7 @@ namespace Tom::s3e {
         std::string rootPath;
 
     public:
-        /**
-         * A shared pointer that manages a ResourceManagerBase.
-         */
         typedef std::shared_ptr<ResourceManagerBase> Ptr;
-
-        /**
-         * A shared pointer that manages a const ResourceManagerBase.
-         */
         typedef std::shared_ptr<const ResourceManagerBase> ConstPtr;
 
         /**
@@ -86,14 +79,7 @@ namespace Tom::s3e {
         std::unordered_map<std::string, Texture::Ptr> textures;
 
     public:
-        /**
-         * A shared pointer that manages a ResourceManager.
-         */
         typedef std::shared_ptr<ResourceManager> Ptr;
-
-        /**
-         * A shared pointer that manages a const ResourceManager.
-         */
         typedef std::shared_ptr<const ResourceManager> ConstPtr;
 
         using ResourceManagerBase::ResourceManagerBase;
@@ -101,24 +87,11 @@ namespace Tom::s3e {
         /**
          * Load a Texture from it's given name when first loaded.
          *
-         * @param name the name of the Texture
-         *
-         * @return a shared_ptr to a Texture
-         */
-        Texture::Ptr loadTexture(const std::string & name);
-
-        /**
-         * Load a texture from `path` and cache it using `name` as it's key.
-         * If you later call loadTexture with the same name, the cached Texture
-         * will be returned.
-         *
-         * @param name the name of the Texture
          * @param path the path to the Texture files
          *
          * @return a shared_ptr to a Texture
          */
-        Texture::Ptr loadTexture(const std::string & name,
-                                 const std::string & path);
+        Texture::Ptr loadTexture(const std::string & path);
 
         /**
          * Load a Shader using `vertexPath` and `fragmentPath`.

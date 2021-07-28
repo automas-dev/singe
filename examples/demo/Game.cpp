@@ -167,8 +167,7 @@ bool Game::onCreate() {
     }
     hallModel->move({0, 0, -4});
 
-    texture =
-        resManager.loadTexture("dev_texture_gray", "img/dev_texture_gray.png");
+    texture = resManager.loadTexture("img/dev_texture_gray.png");
     if (!texture) {
         throw std::runtime_error("Failed to load dev texture");
     }

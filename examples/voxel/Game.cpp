@@ -53,7 +53,7 @@ bool Game::onCreate() {
     camera->rotate({0, 110});
     camera->setFov(70);
 
-    devTexture = resManager.loadTexture("devTexture", "img/uv.png");
+    devTexture = resManager.loadTexture("img/uv.png");
     if (!devTexture)
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);

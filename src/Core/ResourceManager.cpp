@@ -31,15 +31,10 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    Texture::Ptr ResourceManager::loadTexture(const std::string & name) {
-        if (textures.count(name) > 0)
-            return textures[name];
-        else
-            return nullptr;
-    }
+    Texture::Ptr ResourceManager::loadTexture(const std::string & path) {
+        if (textures.count(path) > 0)
+            return textures[path];
 
-    Texture::Ptr ResourceManager::loadTexture(const std::string & name,
-                                                     const std::string & path) {
         auto relPath = resourceAt(path);
         auto newTex = std::make_shared<Texture>();
         if (!newTex->loadFromPath(relPath)) {
@@ -48,7 +43,7 @@ namespace Tom::s3e {
             return nullptr;
         }
         else
-            textures[name] = newTex;
+            textures[path] = newTex;
         return newTex;
     }
 
