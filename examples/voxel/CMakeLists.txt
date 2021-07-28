@@ -1,5 +1,5 @@
 
-set(TARGET example_voxel)
+set(TARGET voxel)
 add_executable(${TARGET}
     main.cpp
     Game.hpp

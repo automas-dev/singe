@@ -1,5 +1,5 @@
 
-set(TARGET example_physics)
+set(TARGET physics)
 add_executable(${TARGET} 
     main.cpp
     Game.hpp
