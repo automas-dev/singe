@@ -25,7 +25,6 @@ namespace Tom::s3e::Logging {
             Warning,
             Error,
             Critical,
-            Fatal,
         };
 
     private:
@@ -63,12 +62,8 @@ namespace Tom::s3e::Logging {
         }
 
         template<typename FormatString, typename... Args>
-        void critical(const FormatString & fmt, Args &&... args) {
-            logger->critical(fmt, std::forward<Args>(args)...);
-        }
-
-        template<typename FormatString, typename... Args>
-        [[noreturn]] void fatal(const FormatString & fmt, Args &&... args) noexcept {
+        [[noreturn]] void critical(const FormatString & fmt,
+                                   Args &&... args) noexcept {
             logger->critical(fmt, std::forward<Args>(args)...);
             std::terminate();
         }
@@ -92,7 +87,6 @@ namespace Tom::s3e::Logging {
                     logger->set_level(spdlog::level::err);
                     break;
                 case Critical:
-                case Fatal:
                     logger->set_level(spdlog::level::critical);
                     break;
             }
