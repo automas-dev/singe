@@ -1,4 +1,4 @@
-#include "s3e/Graphics/Voxel.hpp"
+#include "s3e/Core/Voxel.hpp"
 
 #include <exception>
 #include <glm/gtx/normal.hpp>

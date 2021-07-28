@@ -6,7 +6,8 @@ set(HEADER_LIST
     FPSDisplay.hpp
     GameBase.hpp
     Physics.hpp
-    ResourceManager.hpp)
+    ResourceManager.hpp
+    Voxel.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
 
 set(SOURCE_LIST
@@ -14,7 +15,8 @@ set(SOURCE_LIST
     FPSDisplay.cpp
     GameBase.cpp
     Physics.cpp
-    ResourceManager.cpp)
+    ResourceManager.cpp
+    Voxel.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
 
 library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
