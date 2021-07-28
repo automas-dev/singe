@@ -28,8 +28,8 @@ namespace Tom::s3e {
                           unsigned int height,
                           bool fullscreen) {
 
-        SPDLOG_INFO(
-            "creating game title = \"{}\" width = {} height = {} fullscreen = {}",
+        Logging::Core->info(
+            "creating game title=\"{}\" width={} height={} fullscreen={}",
             title,
             width,
             height,
@@ -52,11 +52,11 @@ namespace Tom::s3e {
         window->setActive();
         window->setKeyRepeatEnabled(false);
 
-        SPDLOG_DEBUG("initializing GLEW");
+        Logging::Core->debug("initializing GLEW");
         // glewExperimental = true;
         GLenum err = glewInit();
         if (err != GLEW_OK) {
-            SPDLOG_CRITICAL("glewInit failed: {}", glewGetErrorString(err));
+            Logging::Core->error("glewInit failed: {}", glewGetErrorString(err));
             return false;
         }
 
@@ -70,15 +70,15 @@ namespace Tom::s3e {
 
         defaultShader = Shader::defaultShader();
 
-        SPDLOG_DEBUG("calling onCreate()");
+        Logging::Core->debug("calling onCreate()");
         bool res = onCreate();
         if (!res)
-            SPDLOG_ERROR("User overridden onCreate returned false");
+            Logging::Core->error("User overridden onCreate returned false");
         return res;
     }
 
     void GameBase::Start(void) {
-        SPDLOG_INFO("starting main game loop");
+        Logging::Core->info("starting main game loop");
 
         sf::Clock clock;
 
@@ -105,9 +105,9 @@ namespace Tom::s3e {
                         onMouseScroll(event.mouseWheelScroll);
                         break;
                     case sf::Event::Resized: {
-                        SPDLOG_DEBUG("window resized to {} x {}",
-                                     event.size.width,
-                                     event.size.height);
+                        Logging::Core->debug("window resized to {} x {}",
+                                             event.size.width,
+                                             event.size.height);
                         sf::FloatRect visibleArea(0,
                                                   0,
                                                   event.size.width,
@@ -164,18 +164,18 @@ namespace Tom::s3e {
     }
 
     void GameBase::Stop(void) {
-        SPDLOG_INFO("stopping main game loop");
+        Logging::Core->info("stopping main game loop");
         window->close();
     }
 
     void GameBase::Fail(int status) noexcept {
-        SPDLOG_CRITICAL("a failure occurred, status={}, exiting!", status);
+        Logging::Core->error("a failure occurred, status={}, exiting!", status);
         window->close();
         exit(status);
     }
 
     void GameBase::SetMouseGrab(bool grab) {
-        SPDLOG_DEBUG("mouse grab set to {}", grab);
+        Logging::Core->debug("mouse grab set to {}", grab);
         this->grab = grab;
 
         window->setMouseCursorVisible(!grab);

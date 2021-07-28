@@ -74,7 +74,7 @@ namespace Tom::s3e {
     std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
         if (!t) {
-            SPDLOG_ERROR("shaderSource(path={}) failed to open file", path);
+            Logging::Core->error("shaderSource path={} failed to open file", path);
             return std::string();
         }
 
@@ -137,21 +137,24 @@ namespace Tom::s3e {
 
     bool Shader::loadFromPath(const std::string & vertexPath,
                               const std::string & fragmentPath) {
-        SPDLOG_DEBUG("loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
-                     vertexPath, fragmentPath);
+        Logging::Core->debug(
+            "loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
+            vertexPath, fragmentPath);
 
         std::string vertexSource = shaderSource(vertexPath);
         std::string fragmentSource = shaderSource(fragmentPath);
 
         if (vertexSource.empty()) {
-            SPDLOG_ERROR("vertex shader source could not be loaded from path {}",
-                         vertexPath);
+            Logging::Core->error(
+                "vertex shader source could not be loaded from path {}",
+                vertexPath);
             return false;
         }
 
         if (fragmentSource.empty()) {
-            SPDLOG_ERROR("fragment shader source could not be loaded from path {}",
-                         fragmentPath);
+            Logging::Core->error(
+                "fragment shader source could not be loaded from path {}",
+                fragmentPath);
             return false;
         }
 
@@ -163,16 +166,16 @@ namespace Tom::s3e {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
-            SPDLOG_ERROR("failed to compile vertex shader {}: {}", vShader,
-                         compileError(vShader));
+            Logging::Core->error("failed to compile vertex shader {}: {}",
+                                 vShader, compileError(vShader));
             glDeleteShader(vShader);
             return false;
         }
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
-            SPDLOG_ERROR("failed to compile fragment shader {}: {}", fShader,
-                         compileError(fShader));
+            Logging::Core->error("failed to compile fragment shader {}: {}",
+                                 fShader, compileError(fShader));
             glDeleteShader(vShader);
             glDeleteShader(fShader);
             return false;
@@ -190,15 +193,13 @@ namespace Tom::s3e {
         glDeleteShader(fShader);
 
         if (!linkSuccess(program)) {
-            SPDLOG_ERROR("failed to link shader program {}: {}", program,
-                         linkError(program));
+            Logging::Core->error("failed to link shader program {}: {}",
+                                 program, linkError(program));
             glDeleteProgram(program);
             return false;
         }
 
-        SPDLOG_DEBUG(
-            "shader was successfully compiled and linked as program = {} with vertex shader = {} fragment shader = {}",
-            program, vShader, fShader);
+        Logging::Core->debug("Shader created program={}", program);
         return true;
     }
 

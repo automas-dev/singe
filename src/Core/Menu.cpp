@@ -16,8 +16,8 @@ namespace Tom::s3e {
     }
 
     void MenuItem::onClick() const {
-        SPDLOG_INFO("MenuItem {} was clicked, calling callback",
-                    std::string(getString()));
+        Logging::Core->info("MenuItem {} was clicked, calling callback",
+                            std::string(getString()));
         callback();
     }
 
@@ -56,12 +56,12 @@ namespace Tom::s3e {
     }
 
     void Menu::show() {
-        SPDLOG_INFO("Menu is shown");
+        Logging::Core->info("Menu is shown");
         visible = true;
     }
 
     void Menu::hide() {
-        SPDLOG_INFO("Menu is hidden");
+        Logging::Core->info("Menu is hidden");
         visible = false;
     }
 

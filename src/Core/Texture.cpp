@@ -7,8 +7,8 @@
 namespace Tom::s3e {
 
     void Texture::realloc() {
-        SPDLOG_DEBUG(
-            "updating opengl texture {} to size {} x {} intermal = {} format = {} type = {} magFilter = {} minFilter = {} wrap = {} mipmaps = {}",
+        Logging::Core->debug(
+            "updating texture {} to size {}x{} intermal={} format={} type={} magFilter={} minFilter={} wrap={} mipmaps={}",
             textureId, size.x, size.y, internal, format, type, magFilter,
             minFilter, wrap, mipmaps);
 
@@ -59,25 +59,25 @@ namespace Tom::s3e {
         target = (samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
 
         glGenTextures(1, &textureId);
-        SPDLOG_DEBUG("generated opengl texture: {} samples = {}", textureId,
-                     samples);
+        Logging::Core->debug("generated opengl texture: {} samples = {}",
+                             textureId, samples);
         if (size.x > 0 && size.y > 0)
             realloc();
     }
 
     Texture::~Texture() {
         if (textureId > 0) {
-            SPDLOG_DEBUG("deleting opengl texture: {}", textureId);
+            Logging::Core->debug("deleting opengl texture: {}", textureId);
             glDeleteTextures(1, &textureId);
         }
     }
 
     bool Texture::loadFromPath(const std::string & path) {
-        SPDLOG_DEBUG("loading texture from path: {}", path);
+        Logging::Core->debug("loading texture from path: {}", path);
 
         image = std::make_unique<sf::Image>();
         if (!image->loadFromFile(path)) {
-            SPDLOG_WARN("Texture failed to open file {}", path);
+            Logging::Core->warning("Texture failed to open file {}", path);
             return false;
         }
 
