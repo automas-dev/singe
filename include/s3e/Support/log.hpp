@@ -32,6 +32,9 @@ namespace Tom::s3e::Logging {
         Level level;
 
     public:
+        typedef std::shared_ptr<Logger> Ptr;
+        typedef std::shared_ptr<const Logger> ConstPtr;
+
         template<typename FormatString>
         Logger(const FormatString & subsystem)
             : logger(spdlog::stdout_color_mt(subsystem)) {}
@@ -93,6 +96,7 @@ namespace Tom::s3e::Logging {
         }
     };
 
-    extern Logger * Core;
-    extern Logger * Support;
+    extern Logger::Ptr Graphics;
+    extern Logger::Ptr Core;
+    extern Logger::Ptr Support;
 }
