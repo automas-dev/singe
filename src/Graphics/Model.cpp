@@ -42,7 +42,7 @@ namespace Tom::s3e {
 
         Parser p;
         if (!p.open(path)) {
-            Logging::Core->warning("Parser failed to open file {}", path);
+            Logging::Graphics->warning("Parser failed to open file {}", path);
             return false;
         }
 
@@ -69,7 +69,7 @@ namespace Tom::s3e {
         std::unique_ptr<ObjMesh> mesh(nullptr);
 
 #define PARSE_ERROR(TAG)                                                     \
-    Logging::Core->error("could not parse {} tag while loading mtl file {}", \
+    Logging::Graphics->error("could not parse {} tag while loading mtl file {}", \
                          (TAG), path)
 
         for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
@@ -153,7 +153,7 @@ namespace Tom::s3e {
 
 #undef PARSE_ERROR
 
-        Logging::Core->debug("Loaded {} meshes", meshs.size());
+        Logging::Graphics->debug("Loaded {} meshes", meshs.size());
 
         std::string mtlPath = parent + mtllib;
 
@@ -161,7 +161,7 @@ namespace Tom::s3e {
             materials->name = mtllib;
         }
         else {
-            Logging::Core->error("failed to load material {}", mtllib);
+            Logging::Graphics->error("failed to load material {}", mtllib);
             return false;
         }
 
@@ -171,19 +171,19 @@ namespace Tom::s3e {
             for (auto & face : mesh->af) {
                 for (int i = 0; i < 3; i++) {
                     if (face.p[i].v > av.size()) {
-                        Logging::Core->error(
+                        Logging::Graphics->error(
                             "failed to load mesh {} vertex index {} is out of bounds {}",
                             mesh->name, face.p[i].v, av.size());
                         return false;
                     }
                     else if (face.p[i].n > avn.size()) {
-                        Logging::Core->error(
+                        Logging::Graphics->error(
                             "failed to load mesh {} normal index {} is out of bounds {}",
                             mesh->name, face.p[i].n, avn.size());
                         return false;
                     }
                     else if (face.p[i].t > avt.size()) {
-                        Logging::Core->error(
+                        Logging::Graphics->error(
                             "failed to load mesh {} texture coordinate index {} is out of bounds {}",
                             mesh->name, face.p[i].t, avt.size());
                         return false;
@@ -198,7 +198,7 @@ namespace Tom::s3e {
             auto model = std::make_shared<Mesh>(
                 mesh->name, materials->getMaterial(mesh->usemtl));
             if (!model->loadFromPoints(points)) {
-                Logging::Core->error(
+                Logging::Graphics->error(
                     "failed in call to Mesh::loadPoints while loading Model {}",
                     path);
                 return false;
@@ -220,7 +220,7 @@ namespace Tom::s3e {
 
         auto mesh = std::make_shared<Mesh>("mesh", material);
         if (!mesh->loadFromPoints(points)) {
-            Logging::Core->error("failed in call to Mesh::loadFromPoints()");
+            Logging::Graphics->error("failed in call to Mesh::loadFromPoints()");
             return false;
         }
 
@@ -272,7 +272,7 @@ namespace Tom::s3e {
     Material::ConstPtr Model::getMaterial(const std::string & name) const {
         auto material = materials->getMaterial(name);
         if (!material)
-            Logging::Core->error(
+            Logging::Graphics->error(
                 "failed in call to MaterialLibrary::getMaterial(name={})", name);
         return material;
     }

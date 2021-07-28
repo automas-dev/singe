@@ -43,7 +43,7 @@ namespace Tom::s3e {
         auto relPath = resourceAt(path);
         auto newTex = std::make_shared<Texture>();
         if (!newTex->loadFromPath(relPath)) {
-            SPDLOG_ERROR("failed in call to Texture::loadFromPath(path={})",
+            Logging::Core->error("failed in call to Texture::loadFromPath(path={})",
                          relPath);
             return nullptr;
         }
@@ -58,7 +58,7 @@ namespace Tom::s3e {
         auto relFragmentPath = resourceAt(fragmentPath);
         auto shader = std::make_shared<Shader>();
         if (!shader->loadFromPath(relVertexPath, relFragmentPath)) {
-            SPDLOG_ERROR(
+            Logging::Core->error(
                 "failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})",
                 relVertexPath, relFragmentPath);
             return nullptr;
@@ -70,7 +70,7 @@ namespace Tom::s3e {
         auto relPath = resourceAt(path);
         auto model = std::make_shared<Model>();
         if (!model->loadFromPath(relPath)) {
-            SPDLOG_ERROR("failed in call to Model::loadFromPath(path={})", relPath);
+            Logging::Core->error("failed in call to Model::loadFromPath(path={})", relPath);
             return nullptr;
         }
         return model;

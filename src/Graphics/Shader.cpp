@@ -74,7 +74,7 @@ namespace Tom::s3e {
     std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
         if (!t) {
-            Logging::Core->error("shaderSource path={} failed to open file", path);
+            Logging::Graphics->error("shaderSource path={} failed to open file", path);
             return std::string();
         }
 
@@ -137,7 +137,7 @@ namespace Tom::s3e {
 
     bool Shader::loadFromPath(const std::string & vertexPath,
                               const std::string & fragmentPath) {
-        Logging::Core->debug(
+        Logging::Graphics->debug(
             "loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
             vertexPath, fragmentPath);
 
@@ -145,14 +145,14 @@ namespace Tom::s3e {
         std::string fragmentSource = shaderSource(fragmentPath);
 
         if (vertexSource.empty()) {
-            Logging::Core->error(
+            Logging::Graphics->error(
                 "vertex shader source could not be loaded from path {}",
                 vertexPath);
             return false;
         }
 
         if (fragmentSource.empty()) {
-            Logging::Core->error(
+            Logging::Graphics->error(
                 "fragment shader source could not be loaded from path {}",
                 fragmentPath);
             return false;
@@ -166,7 +166,7 @@ namespace Tom::s3e {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
-            Logging::Core->error("failed to compile vertex shader {}: {}",
+            Logging::Graphics->error("failed to compile vertex shader {}: {}",
                                  vShader, compileError(vShader));
             glDeleteShader(vShader);
             return false;
@@ -174,7 +174,7 @@ namespace Tom::s3e {
 
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
-            Logging::Core->error("failed to compile fragment shader {}: {}",
+            Logging::Graphics->error("failed to compile fragment shader {}: {}",
                                  fShader, compileError(fShader));
             glDeleteShader(vShader);
             glDeleteShader(fShader);
@@ -193,13 +193,13 @@ namespace Tom::s3e {
         glDeleteShader(fShader);
 
         if (!linkSuccess(program)) {
-            Logging::Core->error("failed to link shader program {}: {}",
+            Logging::Graphics->error("failed to link shader program {}: {}",
                                  program, linkError(program));
             glDeleteProgram(program);
             return false;
         }
 
-        Logging::Core->debug("Shader created program={}", program);
+        Logging::Graphics->debug("Shader created program={}", program);
         return true;
     }
 

@@ -32,7 +32,7 @@ namespace Tom::s3e {
     }
 
     void Physics::worker() {
-        SPDLOG_DEBUG("Physics worker starting");
+        Logging::Core->debug("Physics worker starting");
         clock.restart();
         while (running) {
             auto delta = clock.restart();
@@ -49,7 +49,7 @@ namespace Tom::s3e {
                 std::this_thread::sleep_for(duration);
             }
         }
-        SPDLOG_DEBUG("Physics worker ending");
+        Logging::Core->debug("Physics worker ending");
     }
 
     bool Physics::getRunState() const {

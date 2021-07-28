@@ -52,14 +52,14 @@ namespace Tom::s3e {
 
         Parser p;
         if (!p.open(path)) {
-            Logging::Core->warning("Parser failed to open file {}", path);
+            Logging::Graphics->warning("Parser failed to open file {}", path);
             return false;
         }
 
         Material::Ptr curr;
 
 #define PARSE_ERROR(TAG)                                                     \
-    Logging::Core->error("could not parse {} tag while loading mtl file {}", \
+    Logging::Graphics->error("could not parse {} tag while loading mtl file {}", \
                          (TAG), path)
 
         // TODO: Return line number from Parser
@@ -155,7 +155,7 @@ namespace Tom::s3e {
 
     Material::ConstPtr MaterialLibrary::getMaterial(int index) const {
         if (index < 0 || index >= size()) {
-            Logging::Core->error(
+            Logging::Graphics->error(
                 "MaterialLibrary does not contain a Material at index {} size is {}",
                 index, size());
             return nullptr;
@@ -169,7 +169,7 @@ namespace Tom::s3e {
             if (material->name == name)
                 return material;
         }
-        Logging::Core->error(
+        Logging::Graphics->error(
             "MaterialLibrary does not contain a Material named {}", name);
         return nullptr;
     }

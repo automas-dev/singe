@@ -69,7 +69,7 @@ namespace Tom::s3e {
         }
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            Logging::Core->error("FrameBuffer is not complete");
+            Logging::Graphics->error("FrameBuffer is not complete");
 
         std::vector<GLuint> buffers;
         for (int i = 0; i < count(); i++) {
