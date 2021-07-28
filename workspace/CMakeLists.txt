@@ -11,5 +11,5 @@ target_link_libraries(workspace
 PRIVATE 
     Threads::Threads
     spdlog::spdlog
-    Tom::s3e
+    Core
 )

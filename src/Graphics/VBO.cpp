@@ -1,4 +1,4 @@
-#include "s3e/Core/VBO.hpp"
+#include "s3e/Graphics/VBO.hpp"
 
 #include "s3e/Support/log.hpp"
 

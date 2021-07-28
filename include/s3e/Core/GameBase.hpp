@@ -10,8 +10,8 @@
 #include <vector>
 
 #include "Camera.hpp"
-#include "Menu.hpp"
-#include "Shader.hpp"
+#include "s3e/Graphics/Menu.hpp"
+#include "s3e/Graphics/Shader.hpp"
 
 namespace Tom::s3e {
 

@@ -5,7 +5,7 @@
 #include <mutex>
 #include <thread>
 
-#include "Support/log.hpp"
+#include "s3e/Support/log.hpp"
 #include "btBulletDynamicsCommon.h"
 
 namespace Tom::s3e {

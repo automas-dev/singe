@@ -1,4 +1,4 @@
-#include "s3e/FPSDisplay.hpp"
+#include "s3e/Core/FPSDisplay.hpp"
 
 #include <spdlog/fmt/fmt.h>
 

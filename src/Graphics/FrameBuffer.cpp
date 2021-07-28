@@ -1,4 +1,4 @@
-#include "s3e/Core/FrameBuffer.hpp"
+#include "s3e/Graphics/FrameBuffer.hpp"
 
 #include "s3e/Support/log.hpp"
 

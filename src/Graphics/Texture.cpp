@@ -1,4 +1,4 @@
-#include "s3e/Core/Texture.hpp"
+#include "s3e/Graphics/Texture.hpp"
 
 #include <SFML/Graphics/Image.hpp>
 

@@ -1,4 +1,4 @@
-#include "s3e/Core/Shader.hpp"
+#include "s3e/Graphics/Shader.hpp"
 
 #include <fstream>
 

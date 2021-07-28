@@ -13,6 +13,6 @@ PRIVATE
     fmt::fmt
     spdlog::spdlog
     Threads::Threads
-    Tom::s3e
+    Core
 )
 

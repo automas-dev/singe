@@ -1,4 +1,4 @@
-#include "s3e/Core/Material.hpp"
+#include "s3e/Graphics/Material.hpp"
 
 #include "s3e/Support/Util.hpp"
 #include "s3e/Support/log.hpp"

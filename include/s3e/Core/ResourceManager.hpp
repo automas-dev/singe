@@ -6,9 +6,9 @@
 #include <string>
 #include <unordered_map>
 
-#include "Core/Model.hpp"
-#include "Core/Shader.hpp"
-#include "Core/Texture.hpp"
+#include "s3e/Graphics/Model.hpp"
+#include "s3e/Graphics/Shader.hpp"
+#include "s3e/Graphics/Texture.hpp"
 
 namespace Tom::s3e {
 

@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "Core/VBO.hpp"
+#include "VBO.hpp"
 
 namespace Tom::s3e {
 

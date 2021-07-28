@@ -1,26 +1,33 @@
 
-set(TARGET Core)
+set(TARGET Graphics)
 
 set(HEADER_LIST
-    Camera.hpp
-    FPSDisplay.hpp
-    GameBase.hpp
-    Physics.hpp
-    ResourceManager.hpp)
+    FrameBuffer.hpp
+    Material.hpp
+    Menu.hpp
+    Model.hpp
+    Shader.hpp
+    Texture.hpp
+    VBO.hpp
+    Voxel.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
 
 set(SOURCE_LIST
-    Camera.cpp
-    FPSDisplay.cpp
-    GameBase.cpp
-    Physics.cpp
-    ResourceManager.cpp)
+    FrameBuffer.cpp
+    Material.cpp
+    Menu.cpp
+    Model.cpp
+    Shader.cpp
+    Texture.cpp
+    VBO.cpp
+    Voxel.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
 
 library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
 
 target_link_libraries(${TARGET}
     PRIVATE
+    Support
     fmt::fmt
     spdlog::spdlog
     sfml-window 
@@ -28,9 +35,4 @@ target_link_libraries(${TARGET}
     sfml-system
     OpenGL::OpenGL 
     OpenGL::GLU
-    GLEW::GLEW
-    ${BULLET_LIBRARIES}
-    Support
-    PUBLIC
-    DispatchQueue
-    Graphics)
+    GLEW::GLEW)

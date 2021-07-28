@@ -1,4 +1,4 @@
-#include "s3e/ResourceManager.hpp"
+#include "s3e/Core/ResourceManager.hpp"
 
 #include <filesystem>
 

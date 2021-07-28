@@ -96,7 +96,7 @@ namespace Tom::s3e::Logging {
         }
     };
 
+    extern Logger::Ptr Support;
     extern Logger::Ptr Graphics;
     extern Logger::Ptr Core;
-    extern Logger::Ptr Support;
 }
