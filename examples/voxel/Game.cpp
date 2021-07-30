@@ -62,7 +62,7 @@ bool Game::onCreate() {
     for (int x = 0; x < 5; x++)
         for (int z = 0; z < 5; z++)
             chunks->loader.load(x * SubChunk::N, z * SubChunk::N);
-    model = std::make_shared<VBO>();
+    model = std::make_shared<VBO>(VBO::Dynamic);
 
     SetMouseGrab(true);
     getGlError();

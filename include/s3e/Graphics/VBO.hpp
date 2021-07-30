@@ -56,6 +56,14 @@ namespace Tom::s3e {
     };
 
     class VBO {
+    public:
+        enum Usage {
+            Static = GL_STATIC_DRAW,
+            Stream = GL_STREAM_DRAW,
+            Dynamic = GL_DYNAMIC_DRAW,
+        };
+
+    private:
         GLuint vao;
         GLuint vbo;
         GLenum usage;
@@ -65,7 +73,7 @@ namespace Tom::s3e {
         typedef std::shared_ptr<VBO> Ptr;
         typedef std::shared_ptr<const VBO> ConstPtr;
 
-        VBO(bool dynamic = false);
+        VBO(Usage usage = Usage::Static);
         virtual ~VBO();
 
         bool loadFromPoints(const std::vector<Vertex> & points);

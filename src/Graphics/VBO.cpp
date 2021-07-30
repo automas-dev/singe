@@ -3,11 +3,7 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
-    VBO::VBO(bool dynamic)
-        : usage(dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW),
-          vao(0),
-          vbo(0),
-          nPoints(0) {
+    VBO::VBO(VBO::Usage usage) : usage(usage), vao(0), vbo(0), nPoints(0) {
 
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -29,8 +25,8 @@ namespace Tom::s3e {
         glDisableVertexAttribArray(2);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        Logging::Graphics->debug("VBO Created dynamic={} vao={} vbo={}", dynamic,
-                             vao, vbo);
+        Logging::Graphics->debug("VBO Created usage={} vao={} vbo={}", usage,
+                                 vao, vbo);
     }
 
     VBO::~VBO() {
@@ -45,7 +41,8 @@ namespace Tom::s3e {
     }
 
     bool VBO::loadFromPoints(const Vertex * points, size_t n) {
-        Logging::Graphics->debug("VBO loading points n={} vao={} vbo={}", n, vao, vbo);
+        Logging::Graphics->debug("VBO loading points n={} vao={} vbo={}", n,
+                                 vao, vbo);
         nPoints = n;
 
         glBindVertexArray(vao);
