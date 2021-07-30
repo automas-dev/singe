@@ -45,6 +45,8 @@ namespace Tom::s3e {
 
         Quad & operator=(const Quad & other) = default;
 
+        Quad & operator=(Quad && other) = default;
+
         void setTexCoord(const TexCoord & coord);
 
         std::vector<Vertex> toPoints(const glm::vec3 & offset);
@@ -75,6 +77,8 @@ namespace Tom::s3e {
         BlockStyle(BlockStyle && other) = default;
 
         BlockStyle & operator=(const BlockStyle & other) = default;
+
+        BlockStyle & operator=(BlockStyle && other) = default;
     };
 
     struct Cube {
@@ -93,6 +97,8 @@ namespace Tom::s3e {
         Cube(Cube && other) = default;
 
         Cube & operator=(const Cube & other) = default;
+
+        Cube & operator=(Cube && other) = default;
 
         std::vector<Vertex> toPoints(const glm::vec3 & offset);
     };
@@ -113,6 +119,8 @@ namespace Tom::s3e {
         SubChunk(SubChunk && other) = default;
 
         SubChunk & operator=(const SubChunk & other) = default;
+
+        SubChunk & operator=(SubChunk && other) = default;
 
         Cube & get(int x, int y, int z);
 
