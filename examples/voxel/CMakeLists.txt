@@ -4,6 +4,8 @@ add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
+    Voxel.hpp
+    Voxel.cpp
 )
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)

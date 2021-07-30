@@ -22,6 +22,8 @@ using namespace Tom::s3e;
 #include <chrono>
 using namespace std::chrono_literals;
 
+#include "Voxel.hpp"
+
 struct ChunkGenerator {
     int seed;
     float scale;
