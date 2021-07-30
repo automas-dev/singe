@@ -5,15 +5,16 @@
 #include <stdexcept>
 
 namespace Tom::s3e {
-    UV::UV() : UV(0, 0, 1, 1) {}
+    TexCoord::TexCoord() : TexCoord(0, 0, 1, 1) {}
 
-    UV::UV(const glm::vec4 & vec) : UV(vec[0], vec[1], vec[2], vec[3]) {}
+    TexCoord::TexCoord(const glm::vec4 & vec)
+        : TexCoord(vec[0], vec[1], vec[2], vec[3]) {}
 
-    UV::UV(float u1, float v1, float u2, float v2)
-        : u1(std::min(u1, u2)),
-          u2(std::max(u1, u2)),
-          v1(std::min(v1, v2)),
-          v2(std::max(v1, v2)) {}
+    TexCoord::TexCoord(const UV & uv1, const UV & uv2) : uv1(uv2), uv2(uv2) {}
+
+    TexCoord::TexCoord(float u1, float v1, float u2, float v2)
+        : TexCoord({std::min(u1, u2), std::max(u1, u2)},
+                   {std::min(v1, v2), std::max(v1, v2)}) {}
 };
 
 namespace Tom::s3e {
@@ -28,11 +29,11 @@ namespace Tom::s3e {
 
     Quad::Quad(const std::array<Vertex, 4> p) : points(p) {}
 
-    void Quad::setUV(const UV & uv) {
-        points[0].uv = {uv.u1, uv.v1};
-        points[1].uv = {uv.u1, uv.v2};
-        points[2].uv = {uv.u2, uv.v2};
-        points[3].uv = {uv.u2, uv.v1};
+    void Quad::setTexCoord(const TexCoord & coord) {
+        points[0].uv = {coord.uv1[0], coord.uv1[1]};
+        points[1].uv = {coord.uv1[0], coord.uv2[1]};
+        points[2].uv = {coord.uv2[0], coord.uv2[1]};
+        points[3].uv = {coord.uv2[0], coord.uv2[1]};
     }
 
     std::vector<Vertex> Quad::toPoints(const glm::vec3 & offset) {
@@ -55,12 +56,12 @@ namespace Tom::s3e {
 namespace Tom::s3e {
     BlockStyle::BlockStyle() {}
 
-    BlockStyle::BlockStyle(const UV & north,
-                           const UV & south,
-                           const UV & east,
-                           const UV & west,
-                           const UV & bottom,
-                           const UV & top)
+    BlockStyle::BlockStyle(const TexCoord & north,
+                           const TexCoord & south,
+                           const TexCoord & east,
+                           const TexCoord & west,
+                           const TexCoord & bottom,
+                           const TexCoord & top)
         : north(north),
           south(south),
           east(east),
@@ -92,12 +93,12 @@ namespace Tom::s3e {
     }
 
     std::vector<Vertex> Cube::toPoints(const glm::vec3 & offset) {
-        faces[West].setUV(style->west);
-        faces[East].setUV(style->east);
-        faces[Bottom].setUV(style->bottom);
-        faces[Top].setUV(style->top);
-        faces[South].setUV(style->south);
-        faces[North].setUV(style->north);
+        faces[West].setTexCoord(style->west);
+        faces[East].setTexCoord(style->east);
+        faces[Bottom].setTexCoord(style->bottom);
+        faces[Top].setTexCoord(style->top);
+        faces[South].setTexCoord(style->south);
+        faces[North].setTexCoord(style->north);
 
         std::vector<Vertex> cloud;
         if (!enabled)

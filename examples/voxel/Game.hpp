@@ -32,12 +32,12 @@ struct ChunkGenerator {
 
     ChunkGenerator(void) : ChunkGenerator(std::rand()) {}
 
-    UV uvFor(int u, int v) {
+    TexCoord uvFor(int u, int v) {
         float u1 = u / (float)SubChunk::N;
         float u2 = (u + 1) / (float)SubChunk::N;
         float v1 = v / (float)SubChunk::N;
         float v2 = (v + 1) / (float)SubChunk::N;
-        return UV(u1, v1, u2, v2);
+        return TexCoord(u1, v1, u2, v2);
     }
 
     ChunkGenerator(int seed) : seed(seed), scale(0.05) {

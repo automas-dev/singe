@@ -9,21 +9,24 @@
 
 namespace Tom::s3e {
 
-    struct UV {
-        float u1, u2;
-        float v1, v2;
+    using UV = glm::vec2;
 
-        UV(void);
+    struct TexCoord {
+        UV uv1, uv2;
 
-        UV(const glm::vec4 & vec);
+        TexCoord(void);
 
-        UV(float u1, float v1, float u2, float v2);
+        TexCoord(const glm::vec4 & vec);
 
-        UV(const UV & other) = default;
+        TexCoord(const UV & uv1, const UV & uv2);
 
-        UV(UV && other) = default;
+        TexCoord(float u1, float v1, float u2, float v2);
 
-        UV & operator=(const UV & other) = default;
+        TexCoord(const TexCoord & other) = default;
+
+        TexCoord(TexCoord && other) = default;
+
+        TexCoord & operator=(const TexCoord & other) = default;
     };
 
     struct Quad {
@@ -42,30 +45,30 @@ namespace Tom::s3e {
 
         Quad & operator=(const Quad & other) = default;
 
-        void setUV(const UV & uv);
+        void setTexCoord(const TexCoord & coord);
 
         std::vector<Vertex> toPoints(const glm::vec3 & offset);
     };
 
     struct BlockStyle {
-        UV north;
-        UV south;
-        UV east;
-        UV west;
-        UV bottom;
-        UV top;
+        TexCoord north;
+        TexCoord south;
+        TexCoord east;
+        TexCoord west;
+        TexCoord bottom;
+        TexCoord top;
 
         typedef std::shared_ptr<BlockStyle> Ptr;
         typedef std::shared_ptr<const BlockStyle> ConstPtr;
 
         BlockStyle(void);
 
-        BlockStyle(const UV & north,
-                   const UV & south,
-                   const UV & east,
-                   const UV & west,
-                   const UV & bottom,
-                   const UV & top);
+        BlockStyle(const TexCoord & north,
+                   const TexCoord & south,
+                   const TexCoord & east,
+                   const TexCoord & west,
+                   const TexCoord & bottom,
+                   const TexCoord & top);
 
         BlockStyle(const BlockStyle & other) = default;
 
