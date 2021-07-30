@@ -20,27 +20,13 @@ namespace Tom::s3e {
         Vertex(glm::vec3 pos, glm::vec3 norm, glm::vec2 uv)
             : pos(pos), norm(norm), uv(uv) {}
 
-        Vertex(const Vertex & other) {
-            pos = other.pos;
-            norm = other.norm;
-            uv = other.uv;
-        }
+        Vertex(const Vertex & other) = default;
 
-        Vertex(Vertex && other) {
-            std::swap(pos, other.pos);
-            std::swap(norm, other.norm);
-            std::swap(uv, other.uv);
-        }
+        Vertex(Vertex && other) = default;
 
-        Vertex & operator=(const Vertex & other) {
-            if (this == &other)
-                return *this;
+        Vertex & operator=(const Vertex & other) = default;
 
-            pos = other.pos;
-            norm = other.norm;
-            uv = other.uv;
-            return *this;
-        }
+        Vertex & operator=(Vertex && other) = default;
 
         Vertex operator+(const Vertex & other) const {
             return Vertex(pos + other.pos, norm + other.norm, uv + other.uv);
