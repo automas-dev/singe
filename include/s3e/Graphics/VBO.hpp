@@ -57,6 +57,16 @@ namespace Tom::s3e {
 
     class VBO {
     public:
+        enum Mode {
+            Lines = GL_LINES,
+            LineStrip = GL_LINE_STRIP,
+            LineLoop = GL_LINE_LOOP,
+
+            Triangles = GL_TRIANGLES,
+            TriangleStrip = GL_TRIANGLE_STRIP,
+            TriangleFan = GL_TRIANGLE_FAN,
+        };
+
         enum Usage {
             Static = GL_STATIC_DRAW,
             Stream = GL_STREAM_DRAW,
@@ -66,20 +76,29 @@ namespace Tom::s3e {
     private:
         GLuint vao;
         GLuint vbo;
-        GLenum usage;
+        Mode mode;
+        Usage usage;
         size_t nPoints;
 
     public:
         typedef std::shared_ptr<VBO> Ptr;
         typedef std::shared_ptr<const VBO> ConstPtr;
 
-        VBO(Usage usage = Usage::Static);
+        VBO(Mode mode = Mode::Triangles, Usage usage = Usage::Static);
         virtual ~VBO();
+
+        Mode getMode();
+
+        void setMode(Mode mode);
+
+        Usage getUsage();
+
+        void setUsage(Usage usage);
 
         bool loadFromPoints(const std::vector<Vertex> & points);
 
         bool loadFromPoints(const Vertex * points, size_t n);
 
-        void draw(void) const;
+        void draw() const;
     };
 }

@@ -3,7 +3,8 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
-    VBO::VBO(VBO::Usage usage) : usage(usage), vao(0), vbo(0), nPoints(0) {
+    VBO::VBO(VBO::Mode mode, VBO::Usage usage)
+        : mode(mode), usage(usage), vao(0), vbo(0), nPoints(0) {
 
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -36,6 +37,22 @@ namespace Tom::s3e {
         }
     }
 
+    VBO::Mode VBO::getMode() {
+        return mode;
+    }
+
+    void VBO::setMode(VBO::Mode mode) {
+        this->mode = mode;
+    }
+
+    VBO::Usage VBO::getUsage() {
+        return usage;
+    }
+
+    void VBO::setUsage(VBO::Usage usage) {
+        this->usage = usage;
+    }
+
     bool VBO::loadFromPoints(const std::vector<Vertex> & points) {
         return loadFromPoints(&points[0], points.size());
     }
@@ -57,7 +74,7 @@ namespace Tom::s3e {
 
     void VBO::draw() const {
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, nPoints);
+        glDrawArrays(mode, 0, nPoints);
         glBindVertexArray(0);
     }
 };
