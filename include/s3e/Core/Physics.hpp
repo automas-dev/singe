@@ -114,9 +114,21 @@ namespace Tom::s3e {
          */
         ThreadedPhysics(float updateInterval = 1. / 60);
 
+        /**
+         * If the physics thread is still running, terminate it.
+         */
         virtual ~ThreadedPhysics();
 
+        /**
+         * Stop the physics thread, returns immediately.
+         */
         void stop();
+
+        /**
+         * After calling stop(), call join() to wait for the physics thread to
+         * finish.
+         */
+        void join();
 
         /**
          * Check if the Physics are being paused or running.
@@ -132,8 +144,14 @@ namespace Tom::s3e {
          */
         void setRunState(bool run);
 
+        /**
+         * Lock the physics thread for access / modification from another thread.
+         */
         void lock();
 
+        /**
+         * Unlock the physics thread.
+         */
         void unlock();
     };
 }

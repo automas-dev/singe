@@ -106,8 +106,13 @@ namespace Tom::s3e {
           lk(m, std::defer_lock),
           t(&ThreadedPhysics::worker, this) {}
 
-    ThreadedPhysics::~ThreadedPhysics() {
+    ThreadedPhysics::~ThreadedPhysics() {}
+
+    void ThreadedPhysics::stop() {
         running = false;
+    }
+
+    void ThreadedPhysics::join() {
         t.join();
     }
 

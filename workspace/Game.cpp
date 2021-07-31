@@ -58,7 +58,7 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    physics = std::make_unique<Physics>();
+    physics = std::make_unique<ThreadedPhysics>(1. / 60);
     loadObjects();
     physics->setRunState(true);
 
@@ -115,14 +115,19 @@ void Game::loadObjects() {
     }
 }
 
-void Game::onDestroy() {}
+void Game::onDestroy() {
+    physics->stop();
+    physics->join();
+}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
 
     if (e.code == sf::Keyboard::Space) {
+        physics->lock();
         physics->removeObjects();
         loadObjects();
+        physics->unlock();
     }
     else if (e.code == sf::Keyboard::Escape) {
         physics->setRunState(!menu->isVisible());
@@ -169,6 +174,8 @@ void Game::onDraw() const {
     devTexture->bind();
     defaultShader->setMat4("mvp", vp);
     {
+        physics->lock();
+
         // shader->setMat4("model", floorModel->modelMatrix());
         btTransform trans;
         physics->getTransform(0, trans);
@@ -182,6 +189,8 @@ void Game::onDraw() const {
         trans.getOpenGLMatrix(&model[0][0]);
         defaultShader->setMat4("model", model);
         objectModel->draw();
+
+        physics->unlock();
     }
     defaultShader->unbind();
     devTexture->unbind();
