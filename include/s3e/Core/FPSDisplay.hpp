@@ -6,25 +6,56 @@
 
 namespace Tom::s3e {
 
+    /**
+     * An SFML Text that shows calculates and shows the frame rate
+     */
     class FPSDisplay : public sf::Text {
         int frames;
         float time;
         float fps;
         float rate;
 
-        void updateLabel(void);
+        /**
+         * Update the sf::Text object with the latest fps value.
+         */
+        void updateLabel();
 
     public:
         typedef std::shared_ptr<FPSDisplay> Ptr;
         typedef std::shared_ptr<const FPSDisplay> ConstPtr;
 
-        FPSDisplay(void);
+        /**
+         * Create a new FPSDisplay.
+         */
+        FPSDisplay();
+
+        /**
+         * Destructor for FPSDisplay.
+         */
         virtual ~FPSDisplay();
 
-        float getFPS(void);
+        /**
+         * Return the lates fps.
+         *
+         * @return the lates fps
+         */
+        float getFPS();
 
+        /**
+         * Set the update rate for the text display.
+         *
+         * @param delta the time between updates
+         */
         void setRate(float delta);
 
+        /**
+         * Update and refresh display.
+         *
+         * This method increments the frame count by one and uses delta as the
+         * total time for that frame
+         *
+         * @param delta the delta time
+         */
         void update(const sf::Time & delta);
     };
 }
