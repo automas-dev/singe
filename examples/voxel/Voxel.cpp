@@ -10,11 +10,11 @@ namespace Tom::s3e {
     TexCoord::TexCoord(const glm::vec4 & vec)
         : TexCoord(vec[0], vec[1], vec[2], vec[3]) {}
 
-    TexCoord::TexCoord(const UV & uv1, const UV & uv2) : uv1(uv2), uv2(uv2) {}
+    TexCoord::TexCoord(const UV & uv1, const UV & uv2) : uv1(uv1), uv2(uv2) {}
 
     TexCoord::TexCoord(float u1, float v1, float u2, float v2)
-        : TexCoord({std::min(u1, u2), std::max(u1, u2)},
-                   {std::min(v1, v2), std::max(v1, v2)}) {}
+        : TexCoord({std::min(u1, u2), std::min(v1, v2)},
+                   {std::max(u1, u2), std::max(v1, v2)}) {}
 };
 
 namespace Tom::s3e {
@@ -33,7 +33,7 @@ namespace Tom::s3e {
         points[0].uv = {coord.uv1[0], coord.uv1[1]};
         points[1].uv = {coord.uv1[0], coord.uv2[1]};
         points[2].uv = {coord.uv2[0], coord.uv2[1]};
-        points[3].uv = {coord.uv2[0], coord.uv2[1]};
+        points[3].uv = {coord.uv2[0], coord.uv1[1]};
     }
 
     std::vector<Vertex> Quad::toPoints(const glm::vec3 & offset) {
