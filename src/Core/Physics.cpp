@@ -3,61 +3,24 @@
 #include <chrono>
 
 namespace Tom::s3e {
-    Physics::Physics(float updateInterval) : updateInterval(updateInterval) {
-        collisionConfiguration = new btDefaultCollisionConfiguration();
-        dispatcher = new btCollisionDispatcher(collisionConfiguration);
-        overlappingPairCache = new btDbvtBroadphase();
-        solver = new btSequentialImpulseConstraintSolver;
-        dynamicsWorld = new btDiscreteDynamicsWorld(
-            dispatcher, overlappingPairCache, solver, collisionConfiguration);
-
+    Physics::Physics()
+        : collisionConfiguration(new btDefaultCollisionConfiguration()),
+          dispatcher(new btCollisionDispatcher(collisionConfiguration)),
+          overlappingPairCache(new btDbvtBroadphase()),
+          solver(new btSequentialImpulseConstraintSolver()),
+          dynamicsWorld(new btDiscreteDynamicsWorld(
+              dispatcher, overlappingPairCache, solver, collisionConfiguration)) {
         dynamicsWorld->setGravity(btVector3(0, -10, 0));
-
-        running = true;
-        paused = true;
-        t = std::thread(&Physics::worker, this);
     }
 
     Physics::~Physics() {
-        running = false;
         removeObjects();
-
-        t.join();
 
         delete dynamicsWorld;
         delete solver;
         delete overlappingPairCache;
         delete dispatcher;
         delete collisionConfiguration;
-    }
-
-    void Physics::worker() {
-        Logging::Core->debug("Physics worker starting");
-        clock.restart();
-        while (running) {
-            auto delta = clock.restart();
-
-            if (!paused) {
-                step(delta);
-            }
-
-            auto soFar = clock.getElapsedTime();
-
-            float sleep = updateInterval - soFar.asSeconds();
-            if (sleep > 0) {
-                std::chrono::duration<float> duration(sleep);
-                std::this_thread::sleep_for(duration);
-            }
-        }
-        Logging::Core->debug("Physics worker ending");
-    }
-
-    bool Physics::getRunState() const {
-        return !paused;
-    }
-
-    void Physics::setRunState(bool run) {
-        paused = !run;
     }
 
     void Physics::addRigidBody(btRigidBody * body) {
@@ -96,12 +59,10 @@ namespace Tom::s3e {
     }
 
     void Physics::step(const sf::Time & delta, int maxSubSteps) {
-        std::scoped_lock lk(m);
         dynamicsWorld->stepSimulation(delta.asSeconds(), maxSubSteps);
     }
 
     void Physics::getTransform(int i, btTransform & trans) const {
-        std::scoped_lock lk(m);
         btCollisionObject * obj = dynamicsWorld->getCollisionObjectArray()[i];
         btRigidBody * body = btRigidBody::upcast(obj);
         if (body && body->getMotionState()) {
@@ -113,12 +74,10 @@ namespace Tom::s3e {
     }
 
     btCollisionObjectArray & Physics::getCollisionObjectArray() const {
-        std::scoped_lock lk(m);
         return dynamicsWorld->getCollisionObjectArray();
     }
 
     void Physics::removeObjects() {
-        std::scoped_lock lk(m);
         for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
             btCollisionObject * obj = dynamicsWorld->getCollisionObjectArray()[i];
             btRigidBody * body = btRigidBody::upcast(obj);
@@ -136,3 +95,59 @@ namespace Tom::s3e {
         }
     }
 }
+
+namespace Tom::s3e {
+
+    ThreadedPhysics::ThreadedPhysics(float updateInterval)
+        : Physics(),
+          updateInterval(updateInterval),
+          running(true),
+          paused(true),
+          lk(m, std::defer_lock),
+          t(&ThreadedPhysics::worker, this) {}
+
+    ThreadedPhysics::~ThreadedPhysics() {
+        running = false;
+        t.join();
+    }
+
+    void ThreadedPhysics::worker() {
+        Logging::Core->debug("ThreadedPhysics worker starting");
+        clock.restart();
+        while (running) {
+            lk.lock();
+            auto delta = clock.restart();
+
+            if (!paused) {
+                step(delta);
+            }
+
+            auto soFar = clock.getElapsedTime();
+            lk.unlock();
+
+            float sleep = updateInterval - soFar.asSeconds();
+            if (sleep > 0) {
+                std::chrono::duration<float> duration(sleep);
+                std::this_thread::sleep_for(duration);
+            }
+        }
+        Logging::Core->debug("ThreadedPhysics worker ending");
+    }
+
+    bool ThreadedPhysics::getRunState() const {
+        return !paused;
+    }
+
+    void ThreadedPhysics::setRunState(bool run) {
+        paused = !run;
+        Logging::Core->debug("ThreadedPhysics run state set to {}", run);
+    }
+
+    void ThreadedPhysics::lock() {
+        lk.lock();
+    }
+
+    void ThreadedPhysics::unlock() {
+        lk.unlock();
+    }
+};

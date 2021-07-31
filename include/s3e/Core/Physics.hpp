@@ -12,22 +12,8 @@ namespace Tom::s3e {
 
     /**
      * Simulate physics and perform collision detection.
-     *
-     * This class processes physics and collisions on a seprate thread.
      */
     class Physics {
-        std::thread t;
-        mutable std::mutex m;
-        std::atomic<bool> running;
-        std::atomic<bool> paused;
-        sf::Clock clock;
-        float updateInterval;
-
-        /**
-         * The thread worker.
-         */
-        void worker();
-
     public:
         btDefaultCollisionConfiguration * collisionConfiguration;
         btCollisionDispatcher * dispatcher;
@@ -39,29 +25,13 @@ namespace Tom::s3e {
     public:
         /**
          * Create a new Physics object and specify the update interval.
-         *
-         * @param updateInterval the time in seconds between each update.
          */
-        Physics(float updateInterval = 1. / 60);
+        Physics();
 
         /**
          * Stop the thread and release resources from the world.
          */
         virtual ~Physics();
-
-        /**
-         * Check if the Physics are being paused or running.
-         *
-         * @return are updates being processed
-         */
-        bool getRunState() const;
-
-        /**
-         * Set the run state, true is running and false is paused.
-         *
-         * @param run the run state
-         */
-        void setRunState(bool run);
 
         /**
          * Add a rigid body to the world.
@@ -114,5 +84,56 @@ namespace Tom::s3e {
          * Remove all objects from the world.
          */
         void removeObjects();
+    };
+
+    /**
+     * Physics subclass that performs updates on another thread.
+     *
+     * Note: this class inits in the paused state. To start processing, call
+     * setRunState(bool).
+     */
+    class ThreadedPhysics : public Physics {
+        std::thread t;
+        mutable std::mutex m;
+        std::unique_lock<std::mutex> lk;
+        std::atomic<bool> running;
+        std::atomic<bool> paused;
+        sf::Clock clock;
+        float updateInterval;
+
+        /**
+         * The thread worker.
+         */
+        void worker();
+
+    public:
+        /**
+         * Create a new Physics object and specify the update interval.
+         *
+         * @param updateInterval the time in seconds between each update.
+         */
+        ThreadedPhysics(float updateInterval = 1. / 60);
+
+        virtual ~ThreadedPhysics();
+
+        void stop();
+
+        /**
+         * Check if the Physics are being paused or running.
+         *
+         * @return are updates being processed
+         */
+        bool getRunState() const;
+
+        /**
+         * Set the run state, true is running and false is paused.
+         *
+         * @param run the run state
+         */
+        void setRunState(bool run);
+
+        void lock();
+
+        void unlock();
     };
 }
