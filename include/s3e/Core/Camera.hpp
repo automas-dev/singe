@@ -93,6 +93,13 @@ namespace Tom::s3e {
         void setProjection(ProjectionMode mode);
 
         /**
+         * Rotate by adding delta to the rotation.
+         *
+         * @param delta the delta rotation
+         */
+        void rotate(const glm::vec3 & delta);
+
+        /**
          * Move the camera using the current rotation as the forward vector.
          *
          * @param delta the delta position
@@ -101,7 +108,7 @@ namespace Tom::s3e {
 
         /**
          * Get the view matrix
-         * 
+         *
          * @return the view matrix
          */
         glm::mat4 toMatrix() const;

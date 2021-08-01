@@ -1,5 +1,6 @@
 #include "s3e/Core/Camera.hpp"
 
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "s3e/Support/Util.hpp"
@@ -29,6 +30,13 @@ namespace Tom::s3e {
 
     void Camera::setProjection(Camera::ProjectionMode mode) {
         projectionMode = mode;
+    }
+
+    void Camera::rotate(const glm::vec3 & delta) {
+        Transform3d::rotate(delta);
+        auto rotation = getRotation();
+        rotation.x = glm::clamp(rotation.x, -89.0f, 89.0f);
+        setRotation(rotation);
     }
 
     void Camera::moveDolly(glm::vec3 delta) {
