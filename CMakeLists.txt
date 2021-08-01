@@ -25,9 +25,11 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Support folders in IDEs
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+    add_subdirectory(googletest EXCLUDE_FROM_ALL)
     # Testing only available for top level projects. It calls enable_testing
     # which must be in the main CMakeLists.
     include(CTest)
+    include_directories(${googletest_SOURCE_DIR}/include ${googletest_SOURCE_DIR})
 
     # Generate documentation using Doxygen
     find_package(Doxygen)
@@ -58,10 +60,10 @@ find_package(Bullet REQUIRED)
 
 include_directories(${BULLET_INCLUDE_DIR})
 
-add_subdirectory(DispatchQueue)
+add_subdirectory(DispatchQueue EXCLUDE_FROM_ALL)
 
 add_subdirectory(src)
-add_subdirectory(tests EXCLUDE_FROM_ALL)
+add_subdirectory(tests)
 
 add_subdirectory(workspace)
 add_subdirectory(examples)
