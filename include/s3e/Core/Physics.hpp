@@ -29,7 +29,7 @@ namespace Tom::s3e {
         Physics();
 
         /**
-         * Stop the thread and release resources from the world.
+         * Release world and other resources.
          */
         virtual ~Physics();
 
