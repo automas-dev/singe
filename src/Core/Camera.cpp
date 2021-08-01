@@ -42,8 +42,8 @@ namespace Tom::s3e {
     void Camera::moveDolly(glm::vec3 delta) {
         float yRot = glm::radians(getRotation().y);
 
-        float dz = -delta.x * std::sin(yRot) + delta.z * std::cos(yRot);
-        float dx = -delta.x * -std::cos(yRot) + delta.z * std::sin(yRot);
+        float dz = delta.x * std::sin(yRot) + delta.z * std::cos(yRot);
+        float dx = delta.x * std::cos(yRot) - delta.z * std::sin(yRot);
 
         float dy = delta.y;
 
