@@ -331,7 +331,7 @@ void Game::onDraw() const {
 
     std::shared_ptr<FrameBuffer> gbuff(nullptr);
     if (gbuffMulti->isMultisampled())
-        gbuff = gbuffMulti->getResovled();
+        gbuff = gbuffMulti->getResolved();
     else
         gbuff = gbuffMulti;
 
@@ -374,7 +374,7 @@ void Game::onDraw() const {
 
     std::shared_ptr<FrameBuffer> fbuffTmp(nullptr);
     if (fbuff->isMultisampled())
-        fbuffTmp = fbuff->getResovled();
+        fbuffTmp = fbuff->getResolved();
     else
         fbuffTmp = fbuff;
 

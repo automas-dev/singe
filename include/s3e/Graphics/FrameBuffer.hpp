@@ -161,7 +161,7 @@ namespace Tom::s3e {
 
         /**
          * Does the FrameBuffer support multisampling. If so, you need to use
-         * the FrameBuffer from getResovled() for any sampleing.
+         * the FrameBuffer from getResolved() for any sampleing.
          */
         bool isMultisampled(void);
 
@@ -196,7 +196,7 @@ namespace Tom::s3e {
          *
          * @returns the resolved FrameBuffer
          */
-        FrameBuffer::Ptr & getResovled(void);
+        FrameBuffer::Ptr & getResolved(void);
 
         /**
          * Bind the FrameBuffer. All draw calls after this will be sent to the

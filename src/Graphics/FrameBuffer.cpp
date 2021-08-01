@@ -150,7 +150,7 @@ namespace Tom::s3e {
                               bitfield, GL_NEAREST);
     }
 
-    FrameBuffer::Ptr & FrameBuffer::getResovled() {
+    FrameBuffer::Ptr & FrameBuffer::getResolved() {
         if (resolved)
             blit(resolved->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
                                         | GL_STENCIL_BUFFER_BIT);
