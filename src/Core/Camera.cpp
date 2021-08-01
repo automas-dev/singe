@@ -23,7 +23,7 @@ namespace Tom::s3e {
         return fov;
     }
 
-    void Camera::setScreenSize(sf::Vector2u screen) {
+    void Camera::setScreenSize(const sf::Vector2u & screen) {
         this->screenSize = screen;
     }
 
@@ -42,7 +42,7 @@ namespace Tom::s3e {
         setRotation(rotation);
     }
 
-    void Camera::moveDolly(glm::vec3 delta) {
+    void Camera::moveDolly(const glm::vec3 & delta) {
         float yRot = getRotation().y;
 
         float dz = delta.x * std::sin(yRot) + delta.z * std::cos(yRot);

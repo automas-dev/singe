@@ -28,9 +28,7 @@ namespace Tom::s3e {
 
     private:
         sf::Vector2u screenSize;
-
         ProjectionMode projectionMode;
-
         float fov;
 
     public:
@@ -47,7 +45,7 @@ namespace Tom::s3e {
         /**
          * Construct a new Camera with position (0, 0, 0) and rotation (0, 0)
          */
-        Camera(void);
+        Camera();
 
         /**
          * Destruct the camera.
@@ -59,7 +57,7 @@ namespace Tom::s3e {
          *
          * @return the current FOV
          */
-        float getFov(void);
+        float getFov();
 
         /**
          * Set the Field of View (FOV).
@@ -74,7 +72,7 @@ namespace Tom::s3e {
          *
          * @param screen the screen size in pixels
          */
-        void setScreenSize(sf::Vector2u screen);
+        void setScreenSize(const sf::Vector2u & screen);
 
         /**
          * Get the current projection mode. Orthographic or Perspective.
@@ -82,7 +80,7 @@ namespace Tom::s3e {
          *
          * @returns the current perspective mode
          */
-        ProjectionMode getProjection(void);
+        ProjectionMode getProjection();
 
         /**
          * Set the projection mode. Orthographic or Perspective.
@@ -104,7 +102,7 @@ namespace Tom::s3e {
          *
          * @param delta the delta position
          */
-        void moveDolly(glm::vec3 delta);
+        void moveDolly(const glm::vec3 & delta);
 
         /**
          * Get the view matrix
