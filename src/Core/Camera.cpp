@@ -42,6 +42,14 @@ namespace Tom::s3e {
         move(glm::vec3(dx, dy, dz));
     }
 
+    glm::mat4 Camera::toMatrix() const {
+        glm::mat4 m(1);
+        m = glm::rotate(m, glm::radians(getRotation().x), glm::vec3(1, 0, 0));
+        m = glm::rotate(m, glm::radians(getRotation().y), glm::vec3(0, 1, 0));
+        m = glm::translate(m, -getPosition());
+        return m;
+    }
+
     glm::mat4 Camera::projMatrix() {
         float r = (float)screenSize.x / (float)screenSize.y;
         if (projectionMode == Perspective)

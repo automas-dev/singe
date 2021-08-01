@@ -9,6 +9,7 @@
 
 #include "Material.hpp"
 #include "VBO.hpp"
+#include "s3e/Support/Transform3d.hpp"
 
 namespace Tom::s3e {
 
@@ -59,11 +60,7 @@ namespace Tom::s3e {
     /**
      * A Wavefront OBJ .obj model file.
      */
-    class Model {
-        glm::vec3 pos;
-        glm::vec3 rot;
-        glm::vec3 size;
-
+    class Model : public Transform3d {
         std::vector<Mesh::Ptr> models;
         std::string path;
 
@@ -114,77 +111,6 @@ namespace Tom::s3e {
          */
         bool loadFromPoints(const std::vector<Vertex> & points,
                             Material::Ptr & material);
-
-        /**
-         * Move the Model by adding pos to the position.
-         *
-         * @param pos the delta position
-         */
-        void move(glm::vec3 pos);
-
-        /**
-         * Rotate the Model by adding rot to the rotation.
-         *
-         * @param rot the delta rotation
-         */
-        void rotate(glm::vec3 rot);
-
-        /**
-         * Scale the Model by multiplying the scale by scale.
-         *
-         * @param scale the delta scale
-         */
-        void scale(glm::vec3 scale);
-
-        /**
-         * Get the current position.
-         *
-         * @return the current position
-         */
-        const glm::vec3 & getPosition(void) const;
-
-        /**
-         * Set the Model position.
-         *
-         * @param pos the new position
-         */
-        void setPosition(glm::vec3 pos);
-
-        /**
-         * Get the current rotation.
-         *
-         * @return the current rotation
-         */
-        const glm::vec3 & getRotation(void) const;
-
-        /**
-         * Set the Model rotation.
-         *
-         * @param rot the new rotation
-         */
-        void setRotation(glm::vec3 rot);
-
-        /**
-         * Get the current scale.
-         *
-         * @return the current scale
-         */
-        const glm::vec3 & getScale(void) const;
-
-        /**
-         * Set the Model scale.
-         *
-         * @param scale the new scale
-         */
-        void setScale(glm::vec3 scale);
-
-        /**
-         * Get the model matrix. This is generated from position, rotation and
-         * scale.
-         *
-         * @return the model matrix
-         */
-        glm::mat4 modelMatrix() const;
 
         /**
          * Get a Material by name or nullptr if none exist.

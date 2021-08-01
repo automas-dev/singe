@@ -31,7 +31,7 @@ namespace Tom::s3e {
     }
 
     Model::Model()
-        : pos(0), rot(0), size(1), materials(std::make_shared<MaterialLibrary>()) {}
+        : Transform3d(), materials(std::make_shared<MaterialLibrary>()) {}
 
     Model::~Model() {}
 
@@ -68,9 +68,9 @@ namespace Tom::s3e {
         std::vector<std::unique_ptr<ObjMesh>> meshs;
         std::unique_ptr<ObjMesh> mesh(nullptr);
 
-#define PARSE_ERROR(TAG)                                                     \
-    Logging::Graphics->error("could not parse {} tag while loading mtl file {}", \
-                         (TAG), path)
+#define PARSE_ERROR(TAG)      \
+    Logging::Graphics->error( \
+        "could not parse {} tag while loading mtl file {}", (TAG), path)
 
         for (std::string line = p.readLine(); !p.eof(); line = p.readLine()) {
 
@@ -226,47 +226,6 @@ namespace Tom::s3e {
 
         models.push_back(mesh);
         return true;
-    }
-
-    void Model::move(glm::vec3 pos) {
-        this->pos += pos;
-    }
-
-    void Model::rotate(glm::vec3 rot) {
-        this->rot += rot;
-    }
-
-    void Model::scale(glm::vec3 scale) {
-        this->size *= scale;
-    }
-
-    const glm::vec3 & Model::getPosition() const {
-        return pos;
-    }
-
-    void Model::setPosition(glm::vec3 pos) {
-        this->pos = pos;
-    }
-
-    const glm::vec3 & Model::getRotation() const {
-        return rot;
-    }
-
-    void Model::setRotation(glm::vec3 rot) {
-        this->rot = rot;
-    }
-
-    const glm::vec3 & Model::getScale() const {
-        return size;
-    }
-
-    void Model::setScale(glm::vec3 scale) {
-        this->size = scale;
-    }
-
-
-    glm::mat4 Model::modelMatrix() const {
-        return matFromVecs(pos, rot, size);
     }
 
     Material::ConstPtr Model::getMaterial(const std::string & name) const {

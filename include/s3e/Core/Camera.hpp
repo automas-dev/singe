@@ -100,6 +100,13 @@ namespace Tom::s3e {
         void moveDolly(glm::vec3 delta);
 
         /**
+         * Get the view matrix
+         * 
+         * @return the view matrix
+         */
+        glm::mat4 toMatrix() const;
+
+        /**
          * Get the projection matrix. This is generated from screen size and
          * the current field of view.
          *

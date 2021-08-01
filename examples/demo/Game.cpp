@@ -445,6 +445,6 @@ void Game::drawPass(const MaterialShader::Ptr & shader) const {
 
 void Game::drawModel(const Model::ConstPtr & model,
                      const MaterialShader::Ptr & shader) const {
-    shader->setMat4("model", model->modelMatrix());
+    shader->setMat4("model", model->toMatrix());
     model->draw(shader);
 }
