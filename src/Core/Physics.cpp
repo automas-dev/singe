@@ -103,24 +103,27 @@ namespace Tom::s3e {
           updateInterval(updateInterval),
           running(true),
           paused(true),
-          lk(m, std::defer_lock),
-          t(&ThreadedPhysics::worker, this) {}
+          lk(m, std::defer_lock) {
+        t = std::thread(&ThreadedPhysics::worker, this);
+    }
 
     ThreadedPhysics::~ThreadedPhysics() {}
 
     void ThreadedPhysics::stop() {
+        Logging::Core->debug("ThreadedPhysics stop");
         running = false;
     }
 
     void ThreadedPhysics::join() {
+        Logging::Core->debug("ThreadedPhysics join");
         t.join();
     }
 
     void ThreadedPhysics::worker() {
-        Logging::Core->debug("ThreadedPhysics worker starting");
+        Logging::Core->debug("ThreadedPhysics worker starting {}", running);
         clock.restart();
         while (running) {
-            lk.lock();
+            std::unique_lock lk(m);
             auto delta = clock.restart();
 
             if (!paused) {
