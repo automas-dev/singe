@@ -27,7 +27,7 @@ namespace Tom::s3e {
      */
     class GameBase {
         bool grab;
-        sf::Vector2f mouseSensitivity;
+        glm::vec2 mouseSensitivity;
         float moveSpeed;
 
     protected:
@@ -97,7 +97,7 @@ namespace Tom::s3e {
          *
          * @param sensitivity the new mouse sensitivity
          */
-        void SetMouseSensitivity(sf::Vector2f sensitivity);
+        void SetMouseSensitivity(const glm::vec2 & sensitivity);
 
         /**
          * Set the move speed for the camera.

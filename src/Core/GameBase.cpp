@@ -127,12 +127,6 @@ namespace Tom::s3e {
             sf::Time delta = clock.restart();
 
             if (grab) {
-                sf::Vector2i center(window->getSize().x / 2,
-                                    window->getSize().y / 2);
-                sf::Vector2i mouse = sf::Mouse::getPosition(*window);
-                sf::Vector2f mouseDelta(mouse.x - center.x, mouse.y - center.y);
-                sf::Mouse::setPosition(center, *window);
-
                 int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D)
                         - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
                 int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E)
@@ -140,8 +134,17 @@ namespace Tom::s3e {
                 int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S)
                         - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 
-                camera->rotate({mouseDelta.y * mouseSensitivity.y,
-                                mouseDelta.x * mouseSensitivity.x, 0});
+                sf::Vector2i center(window->getSize().x / 2,
+                                    window->getSize().y / 2);
+                sf::Vector2i mouse = sf::Mouse::getPosition(*window);
+                sf::Mouse::setPosition(center, *window);
+
+                glm::vec2 mouseDelta(mouse.x - center.x, mouse.y - center.y);
+                mouseDelta *= mouseSensitivity;
+                glm::vec3 rotation(glm::radians(mouseDelta.y),
+                                   glm::radians(mouseDelta.x),
+                                   0);
+                camera->rotate(rotation);
 
                 camera->moveDolly({x * delta.asSeconds() * moveSpeed,
                                    y * delta.asSeconds() * moveSpeed,
@@ -187,7 +190,7 @@ namespace Tom::s3e {
         }
     }
 
-    void GameBase::SetMouseSensitivity(sf::Vector2f sensitivity) {
+    void GameBase::SetMouseSensitivity(const glm::vec2 & sensitivity) {
         mouseSensitivity = sensitivity;
     }
 
