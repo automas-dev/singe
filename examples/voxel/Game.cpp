@@ -50,7 +50,7 @@ bool Game::onCreate() {
 
     // Initialize camera to look at origin
     camera->move({-3, 22, -1});
-    camera->rotate({0, 110});
+    camera->rotate({0, 110, 0});
     camera->setFov(70);
 
     devTexture = resManager.loadTexture("img/uv.png");
@@ -120,7 +120,7 @@ void Game::onDraw() const {
     glDepthFunc(GL_LEQUAL);
     glPointSize(10);
 
-    glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
+    glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
     defaultShader->bind();
     devTexture->bind();

@@ -141,7 +141,7 @@ namespace Tom::s3e {
                         - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 
                 camera->rotate({mouseDelta.y * mouseSensitivity.y,
-                                mouseDelta.x * mouseSensitivity.x});
+                                mouseDelta.x * mouseSensitivity.x, 0});
 
                 camera->moveDolly({x * delta.asSeconds() * moveSpeed,
                                    y * delta.asSeconds() * moveSpeed,

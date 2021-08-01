@@ -4,12 +4,14 @@ set(TARGET Support)
 set(HEADER_LIST
     Keymap.hpp
     log.hpp
+    Transform3d.hpp
     Util.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
 
 set(SOURCE_LIST
     Keymap.cpp
     log.cpp
+    Transform3d.cpp
     Util.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
 

@@ -116,7 +116,7 @@ bool Game::onCreate() {
     });
 
     camera->move({3, 2, 1});
-    camera->rotate({30, -70});
+    camera->rotate({30, -70, 0});
     camera->setFov(80);
 
     defaultShader =
@@ -311,7 +311,7 @@ void Game::onDraw() const {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
+    glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
     geometryShader->bind();
     if (true) {

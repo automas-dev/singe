@@ -7,19 +7,27 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+#include "s3e/Support/Transform3d.hpp"
+
 namespace Tom::s3e {
 
     /**
      * First person camera used to generate the projection and view matrices.
      */
-    class Camera {
+    class Camera : public Transform3d {
     public:
-        enum ProjectionMode { Perspective, Orthographic };
+        /**
+         * Projection mode for projectino matrix.
+         */
+        enum ProjectionMode {
+            /// Perspective projection using fov
+            Perspective,
+            /// Orthographic projection
+            Orthographic,
+        };
 
     private:
         sf::Vector2u screenSize;
-        glm::vec2 rotation;
-        glm::vec3 position;
 
         ProjectionMode projectionMode;
 
@@ -85,49 +93,6 @@ namespace Tom::s3e {
         void setProjection(ProjectionMode mode);
 
         /**
-         * Get the current rotation in degrees.
-         *
-         * @returns the current rotation
-         */
-        const glm::vec2 & getRotation() const;
-
-        /**
-         * Set the rotation in degrees.
-         *
-         * @param rot the new rotation
-         */
-        void setRotation(glm::vec2 rot);
-
-        /**
-         * Rotate on the x an y axis in degrees.
-         * `delta` is added to the current rotation.
-         *
-         * @param delta the delta rotation
-         */
-        void rotate(glm::vec2 delta);
-
-        /**
-         * Get the current position.
-         *
-         * @return the current position
-         */
-        const glm::vec3 & getPosition() const;
-
-        /**
-         * Set the position.
-         *
-         * @param pos the new position
-         */
-        void setPosition(glm::vec3 pos);
-
-        /**
-         * Move the camera. `delta` is added to the current position.
-         *
-         * @param delta the delta position
-         */
-        void move(glm::vec3 delta);
-
-        /**
          * Move the camera using the current rotation as the forward vector.
          *
          * @param delta the delta position
@@ -141,13 +106,5 @@ namespace Tom::s3e {
          * @return the projection matrix
          */
         glm::mat4 projMatrix(void);
-
-        /**
-         * Get the view matrix. This is generated from the current position and
-         * rotation.
-         *
-         * @return the view matrix
-         */
-        glm::mat4 viewMatrix(void);
     };
 }
