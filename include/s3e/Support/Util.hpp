@@ -27,24 +27,6 @@ OStream & operator<<(OStream & os, const glm::mat4 & mat);
 
 namespace Tom::s3e {
 
-    const double pi = std::acos(-1);
-
-    inline float toRadians(float angle) {
-        return angle * pi / 180.0;
-    }
-
-    inline float toDegrees(float angle) {
-        return angle * 180.0 / pi;
-    }
-
-    template<typename T = float>
-    constexpr void bound(T & val, T min, T max) {
-        if (val < min)
-            val = min;
-        else if (val > max)
-            val = max;
-    }
-
     glm::mat4 matFromVecs(glm::vec3 pos,
                           glm::vec3 rot,
                           glm::vec3 scale = glm::vec3(1));
