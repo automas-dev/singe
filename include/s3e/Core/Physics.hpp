@@ -2,6 +2,7 @@
 
 #include <SFML/System.hpp>
 #include <atomic>
+#include <memory>
 #include <mutex>
 #include <thread>
 
@@ -13,7 +14,7 @@ namespace Tom::s3e {
     /**
      * Simulate physics and perform collision detection.
      */
-    class Physics {
+    class Physics : public std::enable_shared_from_this<Physics> {
     public:
         btDefaultCollisionConfiguration * collisionConfiguration;
         btCollisionDispatcher * dispatcher;
@@ -23,6 +24,9 @@ namespace Tom::s3e {
         btAlignedObjectArray<btCollisionShape *> collisionShapes;
 
     public:
+        typedef std::shared_ptr<Physics> Ptr;
+        typedef std::shared_ptr<const Physics> ConstPtr;
+
         /**
          * Create a new Physics object and specify the update interval.
          */
@@ -107,6 +111,9 @@ namespace Tom::s3e {
         void worker();
 
     public:
+        typedef std::shared_ptr<Physics> Ptr;
+        typedef std::shared_ptr<const Physics> ConstPtr;
+
         /**
          * Create a new Physics object and specify the update interval.
          *

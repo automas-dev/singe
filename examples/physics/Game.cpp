@@ -58,7 +58,7 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    physics = std::make_unique<Physics>();
+    physics = std::make_shared<Physics>();
     // physics->loadObjects();
 
     floorModel = resManager.loadModel("model/ground.obj");

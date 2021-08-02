@@ -58,7 +58,7 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    physics = std::make_unique<ThreadedPhysics>(1. / 60);
+    physics = std::make_shared<ThreadedPhysics>(1. / 60);
     loadObjects();
     physics->setRunState(true);
 

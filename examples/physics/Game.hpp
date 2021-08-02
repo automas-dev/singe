@@ -23,7 +23,7 @@ class Game : public GameBase {
     Texture::Ptr devTexture;
     Model::Ptr floorModel;
     Model::Ptr objectModel;
-    std::unique_ptr<Physics> physics;
+    Physics::Ptr physics;
 
     void loadObjects();
 
