@@ -149,7 +149,6 @@ namespace Tom::s3e {
             // TODO: Handle sign / unsigned read / store overflow
 
             if (strStartsWithStr("o", line)) {
-                Logging::ModelLoader->trace("Got object {}", line.substr(2));
                 auto mesh = loadMesh(line.substr(2));
                 if (!mesh)
                     return nullptr;

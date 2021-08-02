@@ -123,7 +123,7 @@ namespace Tom::s3e {
 
     void Mesh::appendPoints(const std::vector<Vertex> & points) {
         this->points.insert(this->points.end(), points.begin(), points.end());
-        Logging::Graphics->trace("Mesh appending {} points, size is {}",
+        Logging::Graphics->debug("Mesh appending {} points, size is {}",
                                  points.size(), this->points.size());
     }
 
