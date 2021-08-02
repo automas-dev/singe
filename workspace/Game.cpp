@@ -73,9 +73,7 @@ bool Game::onCreate() {
     };
 
     floorModel = std::make_shared<Model>();
-    bool res = floorModel->loadFromPoints(floorPoints);
-    if (!res)
-        return false;
+    floorModel->loadFromPoints(floorPoints);
     // floorModel->move({0, -6, 0});
 
     objectModel = resManager.loadModel("model/sphere.obj");

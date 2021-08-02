@@ -53,23 +53,18 @@ namespace Tom::s3e {
         this->usage = usage;
     }
 
-    bool VBO::loadFromPoints(const std::vector<Vertex> & points) {
-        return loadFromPoints(&points[0], points.size());
-    }
-
-    bool VBO::loadFromPoints(const Vertex * points, size_t n) {
-        Logging::Graphics->debug("VBO loading points n={} vao={} vbo={}", n,
-                                 vao, vbo);
-        nPoints = n;
+    void VBO::loadFromPoints(const std::vector<Vertex> & points) {
+        Logging::Graphics->debug("VBO loading {} points vao={} vbo={}",
+                                 points.size(), vao, vbo);
+        nPoints = points.size();
 
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points, usage);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points.data(), usage);
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        return true;
     }
 
     void VBO::draw() const {

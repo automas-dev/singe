@@ -1,9 +1,10 @@
 #include "s3e/Core/ResourceManager.hpp"
 
 #include <filesystem>
-
-#include "s3e/Support/log.hpp"
 namespace fs = std::filesystem;
+
+#include "s3e/Core/ModelLoader.hpp"
+#include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
     ResourceManagerBase::ResourceManagerBase() : ResourceManagerBase("./") {}
@@ -39,7 +40,7 @@ namespace Tom::s3e {
         auto newTex = std::make_shared<Texture>();
         if (!newTex->loadFromPath(relPath)) {
             Logging::Core->error("failed in call to Texture::loadFromPath(path={})",
-                         relPath);
+                                 relPath);
             return nullptr;
         }
         else
@@ -48,7 +49,7 @@ namespace Tom::s3e {
     }
 
     Shader::Ptr ResourceManager::loadShader(const std::string & vertexPath,
-                                                   const std::string & fragmentPath) {
+                                            const std::string & fragmentPath) {
         auto relVertexPath = resourceAt(vertexPath);
         auto relFragmentPath = resourceAt(fragmentPath);
         auto shader = std::make_shared<Shader>();
@@ -63,9 +64,11 @@ namespace Tom::s3e {
 
     Model::Ptr ResourceManager::loadModel(const std::string & path) {
         auto relPath = resourceAt(path);
-        auto model = std::make_shared<Model>();
-        if (!model->loadFromPath(relPath)) {
-            Logging::Core->error("failed in call to Model::loadFromPath(path={})", relPath);
+        ModelLoader loader;
+        auto model = loader.loadModel(relPath);
+        if (!model) {
+            Logging::Core->error(
+                "failed in call to ModelLoader::loadModel(path={})", relPath);
             return nullptr;
         }
         return model;

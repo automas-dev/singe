@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+#include "s3e/Support/log.hpp"
+
 namespace Tom::s3e {
 
     struct Vertex {
@@ -142,7 +144,7 @@ namespace Tom::s3e {
          *
          * @param points the data to send to the buffer
          */
-        bool loadFromPoints(const std::vector<Vertex> & points);
+        void loadFromPoints(const std::vector<Vertex> & points);
 
         /**
          * Load buffer with data from points.
@@ -150,11 +152,69 @@ namespace Tom::s3e {
          * @param points the data to send to the buffer
          * @param n the numebr of points
          */
-        bool loadFromPoints(const Vertex * points, size_t n);
+        void loadFromPoints(const Vertex * points, size_t n);
 
         /**
          * Bind the vao, then draw, then unbind the vao.
          */
         void draw() const;
+    };
+
+    struct Mesh : VBO {
+        std::vector<Vertex> points;
+
+        using VBO::Mode;
+        using VBO::Usage;
+
+        typedef std::shared_ptr<Mesh> Ptr;
+        typedef std::shared_ptr<const Mesh> ConstPtr;
+
+        using VBO::VBO;
+        virtual ~Mesh() {}
+
+        using VBO::getMode;
+        using VBO::setMode;
+        using VBO::getUsage;
+        using VBO::setUsage;
+        using VBO::draw;
+
+        /**
+         * Store points for future use.
+         *
+         * @param points the points to store
+         */
+        void loadFromPoints(const std::vector<Vertex> & points) {
+            this->points = points;
+            send();
+        }
+
+        /**
+         * Load buffer with data from points.
+         *
+         * @param points the data to send to the buffer
+         */
+        void loadFromPoints(std::vector<Vertex> && points) {
+            this->points = std::move(points);
+            send();
+        }
+
+        /**
+         * Append points to this mesh.
+         * 
+         * Note: this method does not call send().
+         * 
+         * @param points the points to append
+         */
+        void appendPoints(const std::vector<Vertex> & points) {
+            this->points.insert(this->points.end(), points.begin(), points.end());
+            Logging::Graphics->trace("Mesh appending {} points, size is {}", points.size(), this->points.size());
+        }
+
+        /**
+         * Send points to the OpenGL buffer.
+         */
+        void send() {
+            VBO::loadFromPoints(points);
+        }
     };
 }

@@ -116,7 +116,7 @@ bool Game::onCreate() {
     });
 
     camera->move({3, 2, 1});
-    camera->rotate({30, -70, 0});
+    camera->rotate({0, -1, 0});
     camera->setFov(80);
 
     defaultShader =
@@ -291,7 +291,6 @@ void Game::onUpdate(const sf::Time & delta) {
         tickTimer.restart();
         tick();
         auto tickTime = tickTimer.getElapsedTime();
-        SPDLOG_TRACE("tick took {} mss", tickTime.asMilliseconds());
     }
 }
 
@@ -437,14 +436,14 @@ void Game::onDraw() const {
     window->popGLStates();
 }
 
-void Game::drawPass(const MaterialShader::Ptr & shader) const {
+void Game::drawPass(const Shader::Ptr & shader) const {
     drawModel(sphereModel, shader);
     drawModel(cubeModel, shader);
     drawModel(hallModel, shader);
 }
 
 void Game::drawModel(const Model::ConstPtr & model,
-                     const MaterialShader::Ptr & shader) const {
+                     const Shader::Ptr & shader) const {
     shader->setMat4("model", model->toMatrix());
-    model->draw(shader);
+    model->draw();
 }

@@ -58,8 +58,9 @@ namespace Tom::s3e {
 
         std::string readLine();
 
-
         void rewind();
+
+        void rewind(int n);
 
         static Ptr create(const std::string & path);
     };

@@ -5,6 +5,7 @@ set(HEADER_LIST
     Camera.hpp
     FPSDisplay.hpp
     GameBase.hpp
+    ModelLoader.hpp
     Physics.hpp
     ResourceManager.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
@@ -13,6 +14,7 @@ set(SOURCE_LIST
     Camera.cpp
     FPSDisplay.cpp
     GameBase.cpp
+    ModelLoader.cpp
     Physics.cpp
     ResourceManager.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")

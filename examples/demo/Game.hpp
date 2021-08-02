@@ -112,7 +112,7 @@ public:
 
 private:
     void tick(void);
-    void drawPass(const MaterialShader::Ptr & shader) const;
+    void drawPass(const Shader::Ptr & shader) const;
     void drawModel(const Model::ConstPtr & model,
-                   const MaterialShader::Ptr & shader) const;
+                   const Shader::Ptr & shader) const;
 };

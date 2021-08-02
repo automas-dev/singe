@@ -127,6 +127,11 @@ namespace Tom::s3e {
         fin.seekg(0);
     }
 
+    void Parser::rewind(int n) {
+        fin.clear();
+        fin.seekg(-n, std::ios::cur);
+    }
+
     Parser::Ptr Parser::create(const std::string & path) {
         auto parser = std::make_shared<Parser>(path);
         return parser;
