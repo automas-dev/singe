@@ -8,8 +8,6 @@
 #include <memory>
 #include <vector>
 
-#include "s3e/Support/log.hpp"
-
 namespace Tom::s3e {
 
     struct Vertex {
@@ -17,10 +15,9 @@ namespace Tom::s3e {
         glm::vec3 norm;
         glm::vec2 uv;
 
-        Vertex(void) : pos(0), norm(0), uv(0) {}
+        Vertex();
 
-        Vertex(glm::vec3 pos, glm::vec3 norm, glm::vec2 uv)
-            : pos(pos), norm(norm), uv(uv) {}
+        Vertex(const glm::vec3 & pos, const glm::vec3 & norm, const glm::vec2 & uv);
 
         Vertex(const Vertex & other) = default;
 
@@ -30,31 +27,15 @@ namespace Tom::s3e {
 
         Vertex & operator=(Vertex && other) = default;
 
-        Vertex operator+(const Vertex & other) const {
-            return Vertex(pos + other.pos, norm + other.norm, uv + other.uv);
-        }
+        Vertex operator+(const Vertex & other) const;
 
-        Vertex operator+(const glm::vec3 & offset) const {
-            return Vertex(pos + offset, norm, uv);
-        }
+        Vertex operator+(const glm::vec3 & offset) const;
 
-        Vertex operator-(const Vertex & other) const {
-            return Vertex(pos - other.pos, norm - other.norm, uv - other.uv);
-        }
+        Vertex operator-(const Vertex & other) const;
 
-        Vertex & operator+=(const Vertex & other) {
-            pos += other.pos;
-            norm += other.norm;
-            uv += other.uv;
-            return *this;
-        }
+        Vertex & operator+=(const Vertex & other);
 
-        Vertex & operator-=(const Vertex & other) {
-            pos -= other.pos;
-            norm -= other.norm;
-            uv -= other.uv;
-            return *this;
-        }
+        Vertex & operator-=(const Vertex & other);
     };
 
     /**
@@ -160,6 +141,9 @@ namespace Tom::s3e {
         void draw() const;
     };
 
+    /**
+     * Derived class of VBO which keeps a CPU side copy of points.
+     */
     struct Mesh : VBO {
         std::vector<Vertex> points;
 
@@ -170,7 +154,7 @@ namespace Tom::s3e {
         typedef std::shared_ptr<const Mesh> ConstPtr;
 
         using VBO::VBO;
-        virtual ~Mesh() {}
+        virtual ~Mesh();
 
         using VBO::getMode;
         using VBO::setMode;
@@ -183,38 +167,27 @@ namespace Tom::s3e {
          *
          * @param points the points to store
          */
-        void loadFromPoints(const std::vector<Vertex> & points) {
-            this->points = points;
-            send();
-        }
+        void loadFromPoints(const std::vector<Vertex> & points);
 
         /**
          * Load buffer with data from points.
          *
          * @param points the data to send to the buffer
          */
-        void loadFromPoints(std::vector<Vertex> && points) {
-            this->points = std::move(points);
-            send();
-        }
+        void loadFromPoints(std::vector<Vertex> && points);
 
         /**
          * Append points to this mesh.
-         * 
+         *
          * Note: this method does not call send().
-         * 
+         *
          * @param points the points to append
          */
-        void appendPoints(const std::vector<Vertex> & points) {
-            this->points.insert(this->points.end(), points.begin(), points.end());
-            Logging::Graphics->trace("Mesh appending {} points, size is {}", points.size(), this->points.size());
-        }
+        void appendPoints(const std::vector<Vertex> & points);
 
         /**
          * Send points to the OpenGL buffer.
          */
-        void send() {
-            VBO::loadFromPoints(points);
-        }
+        void send();
     };
 }

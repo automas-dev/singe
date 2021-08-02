@@ -3,6 +3,39 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
+    Vertex::Vertex() : pos(0), norm(0), uv(0) {}
+
+    Vertex::Vertex(const glm::vec3 & pos, const glm::vec3 & norm, const glm::vec2 & uv)
+        : pos(pos), norm(norm), uv(uv) {}
+
+    Vertex Vertex::operator+(const Vertex & other) const {
+        return Vertex(pos + other.pos, norm + other.norm, uv + other.uv);
+    }
+
+    Vertex Vertex::operator+(const glm::vec3 & offset) const {
+        return Vertex(pos + offset, norm, uv);
+    }
+
+    Vertex Vertex::operator-(const Vertex & other) const {
+        return Vertex(pos - other.pos, norm - other.norm, uv - other.uv);
+    }
+
+    Vertex & Vertex::operator+=(const Vertex & other) {
+        pos += other.pos;
+        norm += other.norm;
+        uv += other.uv;
+        return *this;
+    }
+
+    Vertex & Vertex::operator-=(const Vertex & other) {
+        pos -= other.pos;
+        norm -= other.norm;
+        uv -= other.uv;
+        return *this;
+    }
+};
+
+namespace Tom::s3e {
     VBO::VBO(VBO::Mode mode, VBO::Usage usage)
         : mode(mode), usage(usage), vao(0), vbo(0), nPoints(0) {
 
@@ -61,7 +94,8 @@ namespace Tom::s3e {
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points.data(), usage);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nPoints, points.data(),
+                     usage);
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -71,5 +105,29 @@ namespace Tom::s3e {
         glBindVertexArray(vao);
         glDrawArrays(mode, 0, nPoints);
         glBindVertexArray(0);
+    }
+};
+
+namespace Tom::s3e {
+    Mesh::~Mesh() {}
+
+    void Mesh::loadFromPoints(const std::vector<Vertex> & points) {
+        this->points = points;
+        send();
+    }
+
+    void Mesh::loadFromPoints(std::vector<Vertex> && points) {
+        this->points = std::move(points);
+        send();
+    }
+
+    void Mesh::appendPoints(const std::vector<Vertex> & points) {
+        this->points.insert(this->points.end(), points.begin(), points.end());
+        Logging::Graphics->trace("Mesh appending {} points, size is {}",
+                                 points.size(), this->points.size());
+    }
+
+    void Mesh::send() {
+        VBO::loadFromPoints(points);
     }
 };
