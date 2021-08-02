@@ -7,7 +7,6 @@
 #include <memory>
 #include <string>
 
-#include "Material.hpp"
 #include "VBO.hpp"
 #include "s3e/Support/Transform3d.hpp"
 

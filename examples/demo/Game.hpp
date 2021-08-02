@@ -64,9 +64,9 @@ class Game : public GameBase {
 
     Shader::Ptr defaultShader;
     Shader::Ptr debugShader;
-    MaterialShader::Ptr geometryShader;
-    MaterialShader::Ptr lightingShader;
-    MaterialShader::Ptr monoShader;
+    Shader::Ptr geometryShader;
+    Shader::Ptr lightingShader;
+    Shader::Ptr monoShader;
 
     Texture::Ptr texture;
 

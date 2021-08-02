@@ -125,9 +125,8 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load default shader");
     }
 
-    geometryShader = std::make_shared<MaterialShader>();
-    if (!geometryShader->loadFromPath(resManager.resourceAt("shader/geom.vert"),
-                                      resManager.resourceAt("shader/geom.frag"))) {
+    geometryShader = resManager.loadShader("shader/geom.vert", "shader/geom.frag");
+    if (!geometryShader) {
         throw std::runtime_error("Failed to load texture shader");
     }
 
@@ -136,16 +135,14 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load debug shader");
     }
 
-    lightingShader = std::make_shared<MaterialShader>();
-    if (!lightingShader->loadFromPath(
-            resManager.resourceAt("shader/lighting.vert"),
-            resManager.resourceAt("shader/lighting.frag"))) {
+    lightingShader =
+        resManager.loadShader("shader/lighting.vert", "shader/lighting.frag");
+    if (!lightingShader) {
         throw std::runtime_error("Failed to load lighting shader");
     }
 
-    monoShader = std::make_shared<MaterialShader>();
-    if (!monoShader->loadFromPath(resManager.resourceAt("shader/mono.vs"),
-                                  resManager.resourceAt("shader/mono.fs"))) {
+    monoShader = resManager.loadShader("shader/mono.vs", "shader/mono.fs");
+    if (!monoShader) {
         throw std::runtime_error("Failed to load mono shader");
     }
 
