@@ -12,8 +12,8 @@ namespace Tom::s3e {
         std::function<void(void)> callback;
 
     public:
-        typedef std::shared_ptr<MenuItem> Ptr;
-        typedef std::shared_ptr<const MenuItem> ConstPtr;
+        using Ptr = std::shared_ptr<MenuItem>;
+        using ConstPtr = std::shared_ptr<const MenuItem>;
 
         MenuItem(void);
         virtual ~MenuItem();
@@ -39,12 +39,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a Menu.
          */
-        typedef std::shared_ptr<Menu> Ptr;
+        using Ptr = std::shared_ptr<Menu>;
 
         /**
          * A shared pointer that manages a const Menu.
          */
-        typedef std::shared_ptr<const Menu> ConstPtr;
+        using ConstPtr = std::shared_ptr<const Menu>;
 
         /**
          * Construct a Menu.

@@ -21,12 +21,12 @@ namespace Tom::s3e {
         std::string rootPath;
 
     public:
-        typedef std::shared_ptr<ResourceManagerBase> Ptr;
-        typedef std::shared_ptr<const ResourceManagerBase> ConstPtr;
+        using Ptr = std::shared_ptr<ResourceManagerBase>;
+        using ConstPtr = std::shared_ptr<const ResourceManagerBase>;
 
         /**
-         * Construct a ResourceManagerBase with the current working directory as the
-         * resource root path.
+         * Construct a ResourceManagerBase with the current working directory as
+         * the resource root path.
          */
         ResourceManagerBase(void);
 
@@ -38,8 +38,8 @@ namespace Tom::s3e {
         ResourceManagerBase(const std::string & path);
 
         /**
-         * Destruct the ResourceManagerBase. If the user overrides ResourceManagerBase,
-         * all stored resources should be freed.
+         * Destruct the ResourceManagerBase. If the user overrides
+         * ResourceManagerBase, all stored resources should be freed.
          */
         virtual ~ResourceManagerBase();
 
@@ -79,8 +79,8 @@ namespace Tom::s3e {
         std::unordered_map<std::string, Texture::Ptr> textures;
 
     public:
-        typedef std::shared_ptr<ResourceManager> Ptr;
-        typedef std::shared_ptr<const ResourceManager> ConstPtr;
+        using Ptr = std::shared_ptr<ResourceManager>;
+        using ConstPtr = std::shared_ptr<const ResourceManager>;
 
         using ResourceManagerBase::ResourceManagerBase;
 

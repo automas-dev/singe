@@ -32,8 +32,8 @@ namespace Tom::s3e::Logging {
         Level level;
 
     public:
-        typedef std::shared_ptr<Logger> Ptr;
-        typedef std::shared_ptr<const Logger> ConstPtr;
+        using Ptr = std::shared_ptr<Logger>;
+        using ConstPtr = std::shared_ptr<const Logger>;
 
         template<typename FormatString>
         Logger(const FormatString & subsystem)

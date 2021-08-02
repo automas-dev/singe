@@ -18,8 +18,8 @@ namespace Tom::s3e {
      */
     class Model : public Mesh, public Transform3d {
     public:
-        typedef std::shared_ptr<Model> Ptr;
-        typedef std::shared_ptr<const Model> ConstPtr;
+        using Ptr = std::shared_ptr<Model>;
+        using ConstPtr = std::shared_ptr<const Model>;
 
         using Mesh::Mesh;
 

@@ -52,12 +52,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a Material.
          */
-        typedef std::shared_ptr<Material> Ptr;
+        using Ptr = std::shared_ptr<Material>;
 
         /**
          * A shared pointer that manages a const Material.
          */
-        typedef std::shared_ptr<const Material> ConstPtr;
+        using ConstPtr = std::shared_ptr<const Material>;
 
         /**
          * Construct a new Material with ambient, diffuse and specular set to
@@ -95,12 +95,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a MaterialShader.
          */
-        typedef std::shared_ptr<MaterialShader> Ptr;
+        using Ptr = std::shared_ptr<MaterialShader>;
 
         /**
          * A shared pointer that manages a const MaterialShader.
          */
-        typedef std::shared_ptr<const MaterialShader> ConstPtr;
+        using ConstPtr = std::shared_ptr<const MaterialShader>;
 
         /**
          * Inherit the constructors from Shader.
@@ -126,12 +126,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a MaterialLibrary.
          */
-        typedef std::shared_ptr<MaterialLibrary> Ptr;
+        using Ptr = std::shared_ptr<MaterialLibrary>;
 
         /**
          * A shared pointer that manages a const MaterialLibrary.
          */
-        typedef std::shared_ptr<const MaterialLibrary> ConstPtr;
+        using ConstPtr = std::shared_ptr<const MaterialLibrary>;
 
         /**
          * The name from the .mtl file.

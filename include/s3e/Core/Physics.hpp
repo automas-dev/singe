@@ -24,8 +24,8 @@ namespace Tom::s3e {
         btAlignedObjectArray<btCollisionShape *> collisionShapes;
 
     public:
-        typedef std::shared_ptr<Physics> Ptr;
-        typedef std::shared_ptr<const Physics> ConstPtr;
+        using Ptr = std::shared_ptr<Physics>;
+        using ConstPtr = std::shared_ptr<const Physics>;
 
         /**
          * Create a new Physics object and specify the update interval.
@@ -111,8 +111,8 @@ namespace Tom::s3e {
         void worker();
 
     public:
-        typedef std::shared_ptr<Physics> Ptr;
-        typedef std::shared_ptr<const Physics> ConstPtr;
+        using Ptr = std::shared_ptr<ThreadedPhysics>;
+        using ConstPtr = std::shared_ptr<const ThreadedPhysics>;
 
         /**
          * Create a new Physics object and specify the update interval.

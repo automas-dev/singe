@@ -21,12 +21,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a FrameBufferTexture.
          */
-        typedef std::shared_ptr<FrameBufferTexture> Ptr;
+        using Ptr = std::shared_ptr<FrameBufferTexture>;
 
         /**
          * A shared pointer that manages a const FrameBufferTexture.
          */
-        typedef std::shared_ptr<const FrameBufferTexture> ConstPtr;
+        using ConstPtr = std::shared_ptr<const FrameBufferTexture>;
 
         /**
          * Construct a new empty FrameBufferTexture.
@@ -111,12 +111,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a FrameBuffer.
          */
-        typedef std::shared_ptr<FrameBuffer> Ptr;
+        using Ptr = std::shared_ptr<FrameBuffer>;
 
         /**
          * A shared pointer that manages a const FrameBuffer.
          */
-        typedef std::shared_ptr<const FrameBuffer> ConstPtr;
+        using ConstPtr = std::shared_ptr<const FrameBuffer>;
 
         /**
          * Construct a new FrameBuffer with the given size.

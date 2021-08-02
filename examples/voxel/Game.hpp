@@ -29,8 +29,8 @@ struct ChunkGenerator {
     float scale;
     std::vector<BlockStyle::Ptr> styles;
 
-    typedef std::shared_ptr<ChunkGenerator> Ptr;
-    typedef std::shared_ptr<const ChunkGenerator> ConstPtr;
+    using Ptr = std::shared_ptr<ChunkGenerator>;
+    using ConstPtr = std::shared_ptr<const ChunkGenerator>;
 
     ChunkGenerator(void) : ChunkGenerator(std::rand()) {}
 
@@ -84,8 +84,8 @@ struct ChunkLoader {
     std::queue<Chunk::Ptr> loaded;
     std::mutex loadedMutex;
 
-    typedef std::shared_ptr<ChunkLoader> Ptr;
-    typedef std::shared_ptr<const ChunkLoader> ConstPtr;
+    using Ptr = std::shared_ptr<ChunkLoader>;
+    using ConstPtr = std::shared_ptr<const ChunkLoader>;
 
     ChunkLoader(const ChunkGenerator::Ptr & gen)
         : taskQueue(DispatchQueue::Concurrent), gen(gen) {}
@@ -124,8 +124,8 @@ struct ChunkManager {
     std::map<std::pair<int, int>, Chunk::Ptr> chunks;
     ChunkLoader loader;
 
-    typedef std::shared_ptr<ChunkManager> Ptr;
-    typedef std::shared_ptr<const ChunkManager> ConstPtr;
+    using Ptr = std::shared_ptr<ChunkManager>;
+    using ConstPtr = std::shared_ptr<const ChunkManager>;
 
     ChunkManager() : ChunkManager(std::make_shared<ChunkGenerator>()) {}
 

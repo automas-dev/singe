@@ -35,12 +35,12 @@ namespace Tom::s3e {
         /**
          * A shared pointer that manages a Camera.
          */
-        typedef std::shared_ptr<Camera> Ptr;
+        using Ptr = std::shared_ptr<Camera>;
 
         /**
          * A shared pointer that manages a const Camera.
          */
-        typedef std::shared_ptr<const Camera> ConstPtr;
+        using ConstPtr = std::shared_ptr<const Camera>;
 
         /**
          * Construct a new Camera with position (0, 0, 0) and rotation (0, 0)

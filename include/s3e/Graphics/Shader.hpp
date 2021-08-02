@@ -38,8 +38,8 @@ namespace Tom::s3e {
         GLuint program;
 
     public:
-        typedef std::shared_ptr<Shader> Ptr;
-        typedef std::shared_ptr<const Shader> ConstPtr;
+        using Ptr = std::shared_ptr<Shader>;
+        using ConstPtr = std::shared_ptr<const Shader>;
 
         Shader(void);
         virtual ~Shader();

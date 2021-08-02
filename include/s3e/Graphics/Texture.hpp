@@ -27,8 +27,8 @@ namespace Tom::s3e {
         void realloc();
 
     public:
-        typedef std::shared_ptr<Texture> Ptr;
-        typedef std::shared_ptr<const Texture> ConstPtr;
+        using Ptr = std::shared_ptr<Texture>;
+        using ConstPtr = std::shared_ptr<const Texture>;
 
         Texture(void);
         Texture(sf::Vector2u size,

@@ -39,8 +39,8 @@ namespace Tom::s3e {
         std::ifstream fin;
 
     public:
-        typedef std::shared_ptr<Parser> Ptr;
-        typedef std::shared_ptr<const Parser> ConstPtr;
+        using Ptr = std::shared_ptr<Parser>;
+        using ConstPtr = std::shared_ptr<const Parser>;
 
         Parser(void);
         Parser(const std::string & path);

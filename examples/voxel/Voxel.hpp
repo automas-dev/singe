@@ -60,8 +60,8 @@ namespace Tom::s3e {
         TexCoord bottom;
         TexCoord top;
 
-        typedef std::shared_ptr<BlockStyle> Ptr;
-        typedef std::shared_ptr<const BlockStyle> ConstPtr;
+        using Ptr = std::shared_ptr<BlockStyle>;
+        using ConstPtr = std::shared_ptr<const BlockStyle>;
 
         BlockStyle(void);
 
@@ -109,8 +109,8 @@ namespace Tom::s3e {
         std::array<std::array<std::array<Cube, N>, N>, N> cubes;
         bool enabled = true;
 
-        typedef std::shared_ptr<SubChunk> Ptr;
-        typedef std::shared_ptr<const SubChunk> ConstPtr;
+        using Ptr = std::shared_ptr<SubChunk>;
+        using ConstPtr = std::shared_ptr<const SubChunk>;
 
         SubChunk(void);
 
@@ -132,8 +132,8 @@ namespace Tom::s3e {
         std::vector<SubChunk> subchunks;
         bool enabled = true;
 
-        typedef std::shared_ptr<Chunk> Ptr;
-        typedef std::shared_ptr<const Chunk> ConstPtr;
+        using Ptr = std::shared_ptr<Chunk>;
+        using ConstPtr = std::shared_ptr<const Chunk>;
 
         Chunk(void);
 

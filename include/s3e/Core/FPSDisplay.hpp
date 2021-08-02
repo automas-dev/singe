@@ -21,8 +21,8 @@ namespace Tom::s3e {
         void updateLabel();
 
     public:
-        typedef std::shared_ptr<FPSDisplay> Ptr;
-        typedef std::shared_ptr<const FPSDisplay> ConstPtr;
+        using Ptr = std::shared_ptr<FPSDisplay>;
+        using ConstPtr = std::shared_ptr<const FPSDisplay>;
 
         /**
          * Create a new FPSDisplay.

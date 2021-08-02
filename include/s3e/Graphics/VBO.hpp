@@ -131,8 +131,8 @@ namespace Tom::s3e {
         size_t nPoints;
 
     public:
-        typedef std::shared_ptr<VBO> Ptr;
-        typedef std::shared_ptr<const VBO> ConstPtr;
+        using Ptr = std::shared_ptr<VBO>;
+        using ConstPtr = std::shared_ptr<const VBO>;
 
         /**
          * Create a new VBO with mode and usage.
@@ -205,8 +205,8 @@ namespace Tom::s3e {
         using VBO::Mode;
         using VBO::Usage;
 
-        typedef std::shared_ptr<Mesh> Ptr;
-        typedef std::shared_ptr<const Mesh> ConstPtr;
+        using Ptr = std::shared_ptr<Mesh>;
+        using ConstPtr = std::shared_ptr<const Mesh>;
 
         using VBO::VBO;
         virtual ~Mesh();
