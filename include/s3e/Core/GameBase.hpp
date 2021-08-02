@@ -31,10 +31,23 @@ namespace Tom::s3e {
         float moveSpeed;
 
     protected:
+        /// Pointer to the SFML RenderWindow object
         std::shared_ptr<sf::RenderWindow> window;
+        /**
+         * Pointer to the Camera object created by GameBase.
+         *
+         * This pointer may be replaced by a derived class but it must exist.
+         */
         Camera::Ptr camera;
+        /**
+         * Pointer to the Menu object created by GameBase.
+         *
+         * This pointer may be replaced or set to nullptr by a derived class.
+         */
         Menu::Ptr menu;
+        /// A font loaded from memory to act as the default font for GameBase.
         sf::Font uiFont;
+        /// Pointer to a shader that is bound before the call to onDraw().
         Shader::Ptr defaultShader;
 
     public:
