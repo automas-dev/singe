@@ -16,14 +16,16 @@ resources built-in, and having sensible defaults.
 
 1. Fast setup
 2. No external resources
+    - Default font loaded from library binary
+    - Default shader loaded from library binary
 3. Provide basic functionality
     - Window and Events
     - Resource loading
-    - Physics
-    - Shading
+    - Physics / Collision Detection
+    - Textures / Shading / FrameBuffer / VBO
     - Camera Controls
     - Menu System
-4. Provide access to underlying objects for finer control
+4. Provide access to underlying implementation for finer control
 5. Sensible Defaults
 
 
@@ -41,7 +43,6 @@ make
 
 ## Quickstart
 
-bash
 ```sh
 git submodule add https://gitlab.com/twh2898/sfml-s3e.git
 ```
@@ -87,6 +88,15 @@ int main() {
     return 0;
 }
 ```
+
+
+## Examples
+
+Example programs can be found in the [examples](examples) folder.
+
+- [demo](examples/demo)
+- [physics](examples/physics)
+- [voxel](examples/voxel)
 
 
 ## Demo
