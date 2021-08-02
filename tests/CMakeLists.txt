@@ -1,10 +1,11 @@
+set(TARGET tests)
 
-macro(test target)
-    add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/${target}.cpp)
-    target_link_libraries(${target} PRIVATE gtest gtest_main Core Graphics Support)
+set(SOURCE_LIST
+    test_vbo_vertex.cpp
+    test_vbo.cpp)
+list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/tests/")
 
-    add_test(NAME ${target} COMMAND ${target})
-endmacro()
+add_executable(${TARGET} ${SOURCE_LIST})
+target_link_libraries(${TARGET} PRIVATE gtest gtest_main Core Graphics Support)
 
-test(test_vbo_vertex)
-test(test_vbo)
+add_test(NAME ${TARGET} COMMAND ${TARGET})
