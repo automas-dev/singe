@@ -10,6 +10,9 @@
 
 namespace Tom::s3e {
 
+    /**
+     * Code for loading Wavefront OBJ model files.
+     */
     class ModelLoader {
         struct ObjMesh {
             std::string name;
