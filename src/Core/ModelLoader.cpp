@@ -56,11 +56,6 @@ namespace Tom::s3e {
             if (line.length() == 0 || strStartsWithChar('#', line))
                 continue;
 
-            if (strStartsWithStr("o", line)) {
-                p.rewind(line.size());
-                break;
-            }
-
             if (strStartsWithStr("usemtl", line)) {
                 ASSERT_LINE_SIZE(8, "usemtl");
                 mesh->usemtl = line.substr(7);
