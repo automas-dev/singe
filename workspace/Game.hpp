@@ -22,6 +22,7 @@ class Game : public GameBase {
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
     Scene::Ptr scene;
+    Scene::Ptr otherScene;
 
 public:
     Game(const sf::String & resPath);

@@ -71,6 +71,20 @@ bool Game::onCreate() {
 
     scene->children.push_back(objectScene);
 
+    otherScene = std::make_shared<Scene>("other");
+    scene->children.push_back(otherScene);
+
+    auto fountainScene = resManager.loadScene("model/fountain.obj");
+    auto uvTexture = resManager.loadTexture("img/UV Grid 1024.png");
+    fountainScene->models[0]->textures.push_back(uvTexture);
+    fountainScene->move({0, 0, 3});
+    otherScene->children.push_back(fountainScene);
+
+    auto humanScene = resManager.loadScene("model/Human.obj");
+    humanScene->models[0]->textures.push_back(uvTexture);
+    humanScene->move({3, 0, 0});;
+    otherScene->children.push_back(humanScene);
+
     SetMouseGrab(true);
     getGlError();
     return true;
@@ -107,7 +121,8 @@ void Game::onUpdate(const sf::Time & delta) {
     fps->update(delta);
 
     // scene->rotate(glm::quat(glm::vec3(0, 0.5 * delta.asSeconds(), 0)));
-    scene->children[0]->rotateEuler({delta.asSeconds(), 0.1, 0});
+    scene->children[0]->rotateEuler({delta.asSeconds(), delta.asSeconds() * 0.2, 0});
+    otherScene->rotateEuler({0, delta.asSeconds() * 0.1, 0});
 }
 
 void Game::onDraw() const {
