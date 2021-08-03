@@ -91,6 +91,7 @@ struct Scene : public Transform3d {
     using Ptr = shared_ptr<Scene>;
     using ConstPtr = shared_ptr<const Scene>;
 
+    string name;
     vector<ModelObject::Ptr> models;
     vector<Scene::Ptr> children;
 
@@ -104,6 +105,17 @@ struct Scene : public Transform3d {
         for (auto & child : children) {
             child->draw(shader, transform);
         }
+    }
+
+    static Scene::Ptr loadFromPoints(const vector<Vertex> & points) {
+        auto scene = make_shared<Scene>();
+        scene->name = "points";
+        auto model = make_shared<ModelObject>("points");
+        auto mesh = make_shared<Mesh>();
+        mesh->loadFromPoints(points);
+        model->mesh = mesh;
+        scene->models.push_back(model);
+        return scene;
     }
 
 #define PARSE_ERROR(TAG)                                                    \
@@ -199,6 +211,15 @@ struct Scene : public Transform3d {
 
         if (tmpModel)
             scene->models.push_back(tmpModel->toModel(av, avt, avn));
+
+        {
+            auto i = path.find_last_of('/');
+            if (i != std::string::npos) {
+                i++;
+                auto n = path.size() - 4 - i;
+                scene->name = path.substr(i, n);
+            }
+        }
 
         return scene;
     }

@@ -68,21 +68,25 @@ bool Game::onCreate() {
         Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
     };
 
-    floorModel = std::make_shared<Model>();
-    floorModel->loadFromPoints(floorPoints);
+    floorModel = Scene::loadFromPoints(floorPoints);
+    if (!floorModel)
+        return false;
     floorModel->move({0, -56, 0});
+    floorModel->rotate({1, 1, 1});
 
-    objectModel = resManager.loadModel("model/sphere.obj");
+    objectModel = Scene::loadFrom(resManager.resourceAt("model/sphere.obj"));
     if (!objectModel)
         return false;
+    objectModel->move({0, 2, 0});
 
     scene = Scene::loadFrom(resManager.resourceAt("model/cube_plane.obj"));
     if (!scene)
         return false;
-    // for (auto & mesh : scene->models) {
-    //     Logging::Core->debug("Scene has mesh with {} points",
-    //     mesh->mesh->points.size()); mesh->textures.push_back(devTexture);
-    // }
+
+    scene->children.push_back(floorModel);
+    scene->children.push_back(objectModel);
+    scene->move({0, 0, 1});
+    scene->rotate({0.1, 0, 0});
 
     SetMouseGrab(true);
     getGlError();
@@ -135,11 +139,11 @@ void Game::onDraw() const {
     devTexture->bind();
     defaultShader->setMat4("mvp", vp);
     {
-        defaultShader->setMat4("model", floorModel->toMatrix());
+        // defaultShader->setMat4("model", floorModel->toMatrix());
         // floorModel->draw();
 
-        defaultShader->setMat4("model", objectModel->toMatrix());
-        objectModel->draw();
+        // defaultShader->setMat4("model", objectModel->toMatrix());
+        // objectModel->draw();
 
         scene->draw(defaultShader);
     }

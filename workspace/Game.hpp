@@ -23,8 +23,8 @@ class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
-    Model::Ptr floorModel;
-    Model::Ptr objectModel;
+    Scene::Ptr floorModel;
+    Scene::Ptr objectModel;
     Scene::Ptr scene;
 
 public:
