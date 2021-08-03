@@ -33,6 +33,9 @@ namespace Tom::s3e {
          */
         virtual ~Model();
 
+        /**
+         * Bind textures and draw the mesh.
+         */
         void draw() const;
     };
 };
