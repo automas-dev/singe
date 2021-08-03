@@ -4,6 +4,7 @@ set(TARGET Support)
 set(HEADER_LIST
     Keymap.hpp
     log.hpp
+    Parser.hpp
     Transform3d.hpp
     Util.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")

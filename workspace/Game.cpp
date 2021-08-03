@@ -56,33 +56,41 @@ bool Game::onCreate() {
     if (!devTexture)
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
+    // auto devMaterial = std::make_shared<Material>();
+    // devMaterial->name = "devMaterial";
+    // devMaterial->texture = devTexture;
 
     auto objectScene = resManager.loadScene("model/sphere.obj");
     if (!objectScene)
         return false;
-    objectScene->models[0]->textures.push_back(devTexture);
+    // objectScene->models[0]->materials.push_back(devMaterial);
     objectScene->move({0, 2, 0});
 
     scene = resManager.loadScene("model/cube_plane.obj");
     if (!scene)
         return false;
-    scene->models[0]->textures.push_back(devTexture);
-    scene->models[1]->textures.push_back(devTexture);
+    // scene->models[0]->materials.push_back(devMaterial);
+    // scene->models[1]->materials.push_back(devMaterial);
 
     scene->children.push_back(objectScene);
 
     otherScene = std::make_shared<Scene>("other");
     scene->children.push_back(otherScene);
 
+    // auto uvTexture = resManager.loadTexture("img/UV Grid 1024.png");
+    // if (!uvTexture)
+    //     return false;
+    // auto uvMaterial = std::make_shared<Material>();
+    // uvMaterial->name = "uv";
+    // uvMaterial->texture = uvTexture;
+
     auto fountainScene = resManager.loadScene("model/fountain.obj");
-    auto uvTexture = resManager.loadTexture("img/UV Grid 1024.png");
-    fountainScene->models[0]->textures.push_back(uvTexture);
+    // fountainScene->models[0]->materials.push_back(uvMaterial);
     fountainScene->move({0, 0, 3});
     otherScene->children.push_back(fountainScene);
 
     auto humanScene = resManager.loadScene("model/Human.obj");
-    humanScene->models[0]->textures.push_back(uvTexture);
-    humanScene->move({3, 0, 0});;
+    humanScene->move({3, 0, 0});
     otherScene->children.push_back(humanScene);
 
     SetMouseGrab(true);

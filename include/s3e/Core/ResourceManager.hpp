@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -71,6 +72,11 @@ namespace Tom::s3e {
         std::string resourceAt(const std::string & path) const;
     };
 
+    struct MaterialLib {
+        std::string name;
+        std::map<std::string, Material::Ptr> materials;
+    };
+
     /**
      * An implementation of ResourceManagerBase that has methods for loading
      * Texture, Model and Shader resources.
@@ -78,6 +84,9 @@ namespace Tom::s3e {
     class ResourceManager : public ResourceManagerBase {
     private:
         std::unordered_map<std::string, Texture::Ptr> textures;
+
+        std::unique_ptr<MaterialLib> loadMaterials(const std::string & objPath,
+                                                   const std::string & name);
 
     public:
         using Ptr = std::shared_ptr<ResourceManager>;

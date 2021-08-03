@@ -12,9 +12,9 @@ namespace Tom::s3e {
     Model::~Model() {}
 
     void Model::draw() const {
-        for (int i = 0; i < textures.size(); i++) {
+        for (int i = 0; i < materials.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i);
-            textures[i]->bind();
+            materials[i]->bind();
         }
         Mesh::draw();
     }

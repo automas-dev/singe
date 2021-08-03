@@ -7,8 +7,10 @@ namespace fs = std::filesystem;
 #include <cstring>
 #include <fstream>
 #include <glm/glm.hpp>
+#include <map>
 #include <vector>
 
+#include "s3e/Support/Parser.hpp"
 #include "s3e/Support/log.hpp"
 
 #define PARSE_ERROR(TAG)                                                    \
@@ -77,6 +79,97 @@ namespace Tom::s3e {
         return shader;
     }
 
+    std::unique_ptr<MaterialLib> ResourceManager::loadMaterials(
+        const std::string & objPath, const std::string & name) {
+        auto mtllib = std::make_unique<MaterialLib>();
+        mtllib->name = name;
+
+        std::string mtlPath = objPath.substr(0, objPath.find_last_of('/') + 1);
+        mtlPath += name;
+        mtlPath = resourceAt(mtlPath);
+
+        WavefrontParser parser;
+        parser.open(mtlPath);
+
+        if (!parser.is_open()) {
+            Logging::Core->error("Failed to open material library {}", mtlPath);
+            return nullptr;
+        }
+
+        Material::Ptr material;
+
+        for (auto & token : parser.tokens()) {
+            switch (token.key[0]) {
+                case 'n':
+                    if (token.key == "newmtl") {
+                        if (material)
+                            mtllib->materials[material->name] = material;
+                        material = std::make_shared<Material>();
+                        material->name = token.value;
+                    }
+                    break;
+                case 'K':
+                    switch (token.key[1]) {
+                        case 'a': // Ka
+                        {
+                            auto parts = token.params();
+                            if (parts.size() != 3)
+                                return nullptr;
+                            material->ambient.x = std::stof(parts[0]);
+                            material->ambient.y = std::stof(parts[1]);
+                            material->ambient.z = std::stof(parts[2]);
+                        } break;
+                        case 'd': // Kd
+                        {
+                            auto parts = token.params();
+                            if (parts.size() != 3)
+                                return nullptr;
+                            material->diffuse.x = std::stof(parts[0]);
+                            material->diffuse.y = std::stof(parts[1]);
+                            material->diffuse.z = std::stof(parts[2]);
+                        } break;
+                        case 's': // Ks
+                        {
+                            auto parts = token.params();
+                            if (parts.size() != 3)
+                                return nullptr;
+                            material->specular.x = std::stof(parts[0]);
+                            material->specular.y = std::stof(parts[1]);
+                            material->specular.z = std::stof(parts[2]);
+                        } break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 'N':
+                    switch (token.key[1]) {
+                        case 'i': // Ni
+                            material->specExp = std::stof(token.value);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 'd':
+                    material->alpha = std::stof(token.value);
+                    break;
+                case 'm':
+                    if (token.key == "map_Kd") {
+                        material->texture = loadTexture(token.value);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (material) {
+            mtllib->materials[material->name] = material;
+        }
+
+        return mtllib;
+    }
+
     struct TempModel {
         struct Face {
             struct Point {
@@ -86,7 +179,7 @@ namespace Tom::s3e {
         };
 
         std::string name;
-        std::string mtl;
+        Material::Ptr material;
         std::vector<Face> af;
 
         TempModel(const std::string & name) : name(name) {}
@@ -95,6 +188,7 @@ namespace Tom::s3e {
                            const std::vector<glm::vec2> & avt,
                            const std::vector<glm::vec3> & avn) {
             auto model = std::make_shared<Model>(name);
+            model->materials.push_back(material);
             for (auto & face : af) {
                 for (auto & point : face.p) {
                     if (point.v > av.size() || point.n > avn.size()
@@ -132,7 +226,7 @@ namespace Tom::s3e {
 
         auto scene = std::make_shared<Scene>(sceneName);
         std::unique_ptr<TempModel> tmpModel;
-        std::string mtllib;
+        std::unique_ptr<MaterialLib> mtllib;
 
         std::vector<glm::vec3> av;
         std::vector<glm::vec2> avt;
@@ -191,12 +285,12 @@ namespace Tom::s3e {
                 case 'm': // mtllib
                     if (line.size() < 8)
                         PARSE_ERROR("mtllib")
-                    mtllib = line.substr(7);
+                    mtllib = loadMaterials(path, line.substr(7));
                     break;
                 case 'u': // usemtl
                     if (line.size() < 8)
                         PARSE_ERROR("usemtl")
-                    tmpModel->mtl = line.substr(7);
+                    tmpModel->material = mtllib->materials[line.substr(7)];
                     break;
                 default:
                     break;
