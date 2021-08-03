@@ -35,15 +35,19 @@ namespace Tom::s3e {
         projectionMode = mode;
     }
 
-    void Camera::rotate(const glm::vec3 & delta) {
-        Transform3d::rotate(delta);
-        auto rotation = getRotation();
-        rotation.x = glm::clamp(rotation.x, rotXMin, rotXMax);
+    void Camera::rotateEuler(const glm::vec3 & delta) {
+        pitch += delta.x;
+        yaw += delta.y;
+        pitch = glm::clamp(pitch, rotXMin, rotXMax);
+
+        glm::quat qPitch = glm::angleAxis(pitch, glm::vec3(1, 0, 0));
+        glm::quat qYaw = glm::angleAxis(yaw, glm::vec3(0, 1, 0));
+        glm::quat rotation = glm::normalize(qPitch * qYaw);
         setRotation(rotation);
     }
 
     void Camera::moveDolly(const glm::vec3 & delta) {
-        float yRot = getRotation().y;
+        float yRot = yaw;
 
         float dz = delta.x * std::sin(yRot) + delta.z * std::cos(yRot);
         float dx = delta.x * std::cos(yRot) - delta.z * std::sin(yRot);
@@ -54,11 +58,7 @@ namespace Tom::s3e {
     }
 
     glm::mat4 Camera::toMatrix() const {
-        glm::mat4 m(1);
-        m = glm::rotate(m, (getRotation().x), glm::vec3(1, 0, 0));
-        m = glm::rotate(m, (getRotation().y), glm::vec3(0, 1, 0));
-        m = glm::translate(m, -getPosition());
-        return m;
+        return glm::translate(glm::toMat4(getRotation()), -getPosition());
     }
 
     glm::mat4 Camera::projMatrix() {

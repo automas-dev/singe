@@ -30,6 +30,8 @@ namespace Tom::s3e {
         sf::Vector2u screenSize;
         ProjectionMode projectionMode;
         float fov;
+        float pitch;
+        float yaw;
 
     public:
         /**
@@ -91,11 +93,11 @@ namespace Tom::s3e {
         void setProjection(ProjectionMode mode);
 
         /**
-         * Rotate by adding delta to the rotation.
+         * Rotate by the euler delta.
          *
          * @param delta the delta rotation
          */
-        void rotate(const glm::vec3 & delta);
+        void rotateEuler(const glm::vec3 & delta);
 
         /**
          * Move the camera using the current rotation as the forward vector.

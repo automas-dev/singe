@@ -144,7 +144,8 @@ namespace Tom::s3e {
                 glm::vec3 rotation(glm::radians(mouseDelta.y),
                                    glm::radians(mouseDelta.x),
                                    0);
-                camera->rotate(rotation);
+                if (rotation.x != 0 || rotation.y != 0)
+                    camera->rotateEuler(rotation);
 
                 camera->moveDolly({x * delta.asSeconds() * moveSpeed,
                                    y * delta.asSeconds() * moveSpeed,

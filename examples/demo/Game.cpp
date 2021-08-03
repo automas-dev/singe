@@ -116,7 +116,7 @@ bool Game::onCreate() {
     });
 
     camera->move({3, 2, 1});
-    camera->rotate({0, -1, 0});
+    camera->rotateEuler({0, -1, 0});
     camera->setFov(80);
 
     defaultShader =

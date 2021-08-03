@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 namespace Tom::s3e {
     /**
@@ -9,7 +10,7 @@ namespace Tom::s3e {
      */
     class Transform3d {
         glm::vec3 m_position;
-        glm::vec3 m_rotation;
+        glm::quat m_rotation;
         glm::vec3 m_scale;
 
     public:
@@ -51,11 +52,18 @@ namespace Tom::s3e {
         void move(const glm::vec3 & delta);
 
         /**
-         * Rotate by adding delta to the rotation.
+         * Rotate by the euler delta.
          *
          * @param delta the delta rotation
          */
-        void rotate(const glm::vec3 & delta);
+        void rotateEuler(const glm::vec3 & delta);
+        
+        /**
+         * Rotate by adding delta.
+         *
+         * @param delta the delta rotation
+         */
+        void rotate(const glm::quat & delta);
 
         /**
          * Scale by multiplying the scale by scale.
@@ -79,18 +87,25 @@ namespace Tom::s3e {
         void setPosition(const glm::vec3 & position);
 
         /**
+         * Get the current rotation as a euler vector.
+         *
+         * @return the current rotation
+         */
+        glm::vec3 getRotationEuler() const;
+
+        /**
          * Get the current rotation.
          *
          * @return the current rotation
          */
-        const glm::vec3 & getRotation() const;
+        const glm::quat & getRotation() const;
 
         /**
          * Set the rotation.
          *
          * @param rotation the new rotation
          */
-        void setRotation(const glm::vec3 & rotation);
+        void setRotation(const glm::quat & rotation);
 
         /**
          * Get the current scale.

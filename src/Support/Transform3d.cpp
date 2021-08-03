@@ -4,7 +4,7 @@
 
 namespace Tom::s3e {
 
-    Transform3d::Transform3d() : m_position(0), m_rotation(0), m_scale(1) {}
+    Transform3d::Transform3d() : m_position(0), m_rotation(glm::vec3(0, 0, 0)), m_scale(1) {}
 
     Transform3d::~Transform3d() {}
 
@@ -12,8 +12,12 @@ namespace Tom::s3e {
         m_position += delta;
     }
 
-    void Transform3d::rotate(const glm::vec3 & delta) {
-        m_rotation += delta;
+    void Transform3d::rotateEuler(const glm::vec3 & delta) {
+        rotate(glm::quat(delta));
+    }
+
+    void Transform3d::rotate(const glm::quat & delta) {
+        m_rotation = delta * m_rotation;
     }
 
     void Transform3d::scale(const glm::vec3 & scale) {
@@ -28,11 +32,15 @@ namespace Tom::s3e {
         m_position = position;
     }
 
-    const glm::vec3 & Transform3d::getRotation() const {
+    glm::vec3 Transform3d::getRotationEuler() const {
+        return glm::eulerAngles(m_rotation);
+    }
+
+    const glm::quat & Transform3d::getRotation() const {
         return m_rotation;
     }
 
-    void Transform3d::setRotation(const glm::vec3 & rotation) {
+    void Transform3d::setRotation(const glm::quat & rotation) {
         m_rotation = rotation;
     }
 
@@ -45,6 +53,9 @@ namespace Tom::s3e {
     }
 
     glm::mat4 Transform3d::toMatrix() const {
-        return matFromVecs(m_position, m_rotation, m_scale);
+        auto translate = glm::translate(glm::mat4(1), m_position);
+        auto rotate = glm::toMat4(m_rotation);
+        auto scale = glm::scale(glm::mat4(1), m_scale);
+        return translate * rotate * scale;
     }
 };
