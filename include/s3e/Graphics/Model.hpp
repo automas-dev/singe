@@ -19,6 +19,13 @@ namespace Tom::s3e {
         std::vector<Material::Ptr> materials;
         std::string name;
 
+        /**
+         * Create a new Model with name and Mesh parameters.
+         *
+         * @param name the model name
+         * @param mode the Mesh draw mode
+         * @param usage the Mesh update usage
+         */
         Model(const std::string & name,
               Mode mode = Mode::Triangles,
               Usage usage = Usage::Static);
