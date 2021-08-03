@@ -5,7 +5,7 @@
 int main() {
     spdlog::set_level(spdlog::level::trace);
     try {
-        Game game("../../../examples/demo/res/");
+        Game game("../../../examples/res/");
         if (game.Create("Demo"))
             game.Start();
     }

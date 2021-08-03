@@ -6,7 +6,7 @@ int main() {
     spdlog::set_level(spdlog::level::trace);
     spdlog::set_level(spdlog::level::debug);
     try {
-        Game game("../../../examples/physics/res/");
+        Game game("../../../examples/res/");
         if (game.Create("Physics Example"))
             game.Start();
     }

@@ -5,7 +5,7 @@
 int main() {
     spdlog::set_level(spdlog::level::trace);
     try {
-        Game game("../../workspace/res/");
+        Game game("../../examples/res/");
         if (game.Create("Workspace"))
             game.Start();
     }
