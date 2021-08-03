@@ -15,4 +15,4 @@ namespace Tom::s3e {
             child->draw(shader, transform);
         }
     }
-};
+}

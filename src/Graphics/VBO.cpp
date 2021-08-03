@@ -33,7 +33,7 @@ namespace Tom::s3e {
         uv -= other.uv;
         return *this;
     }
-};
+}
 
 namespace Tom::s3e {
     VBO::VBO(VBO::Mode mode, VBO::Usage usage)
@@ -106,7 +106,7 @@ namespace Tom::s3e {
         glDrawArrays(mode, 0, nPoints);
         glBindVertexArray(0);
     }
-};
+}
 
 namespace Tom::s3e {
     Mesh::~Mesh() {}
@@ -130,4 +130,4 @@ namespace Tom::s3e {
     void Mesh::send() {
         VBO::loadFromPoints(points);
     }
-};
+}

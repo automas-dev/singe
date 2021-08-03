@@ -158,4 +158,4 @@ namespace Tom::s3e {
     void ThreadedPhysics::unlock() {
         lk.unlock();
     }
-};
+}

@@ -129,4 +129,4 @@ namespace Tom::s3e {
          */
         glm::mat4 toMatrix() const;
     };
-};
+}

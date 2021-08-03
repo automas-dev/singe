@@ -12,13 +12,13 @@ namespace Tom::s3e {
         }
         return parts;
     }
-};
+}
 
 namespace Tom::s3e {
     std::vector<std::string> WavefrontParser::Token::params() const {
         return splitString(value, ' ');
     }
-};
+}
 
 namespace Tom::s3e {
     void WavefrontParser::open(const std::string & path) {
@@ -52,4 +52,4 @@ namespace Tom::s3e {
 
         return tokenList;
     }
-};
+}

@@ -73,4 +73,4 @@ namespace Tom::s3e {
 
         static Shader::Ptr defaultShader(void);
     };
-};
+}

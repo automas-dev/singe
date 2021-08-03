@@ -136,4 +136,4 @@ namespace Tom::s3e {
         auto parser = std::make_shared<Parser>(path);
         return parser;
     }
-};
+}

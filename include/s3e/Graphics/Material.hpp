@@ -30,4 +30,4 @@ namespace Tom::s3e {
          */
         void bind() const;
     };
-};
+}

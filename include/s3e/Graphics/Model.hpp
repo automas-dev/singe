@@ -40,4 +40,4 @@ namespace Tom::s3e {
          */
         void draw() const;
     };
-};
+}

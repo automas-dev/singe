@@ -253,7 +253,7 @@ namespace Tom::s3e {
     void Shader::setMat4(const std::string & name, const glm::mat4 & value) const {
         glUniformMatrix4fv(uniformLocation(name), 1, GL_FALSE, &value[0][0]);
     }
-};
+}
 
 namespace Tom::s3e {
     const std ::string defaultVertexShaderSource = R"(

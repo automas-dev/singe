@@ -43,4 +43,4 @@ namespace Tom::s3e {
         void draw(const Shader::Ptr & shader,
                   glm::mat4 transform = glm::mat4(1)) const;
     };
-};
+}

@@ -14,4 +14,4 @@ namespace Tom::s3e {
         if (texture)
             texture->bind();
     }
-};
+}

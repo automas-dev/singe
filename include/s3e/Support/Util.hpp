@@ -64,4 +64,4 @@ namespace Tom::s3e {
 
         static Ptr create(const std::string & path);
     };
-};
+}

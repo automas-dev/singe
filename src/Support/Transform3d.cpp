@@ -58,4 +58,4 @@ namespace Tom::s3e {
         auto scale = glm::scale(glm::mat4(1), m_scale);
         return translate * rotate * scale;
     }
-};
+}
