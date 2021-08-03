@@ -3,6 +3,7 @@ add_executable(workspace
     main.cpp
     Game.hpp
     Game.cpp
+    Scene.hpp
 )
 
 target_compile_features(workspace PRIVATE cxx_std_17)
@@ -12,4 +13,5 @@ PRIVATE
     Threads::Threads
     spdlog::spdlog
     Core
+    Support
 )

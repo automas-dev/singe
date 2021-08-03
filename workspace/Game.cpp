@@ -58,10 +58,6 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    physics = std::make_shared<ThreadedPhysics>(1. / 60);
-    loadObjects();
-    physics->setRunState(true);
-
     std::vector<Vertex> floorPoints {
         Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
         Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
@@ -74,62 +70,29 @@ bool Game::onCreate() {
 
     floorModel = std::make_shared<Model>();
     floorModel->loadFromPoints(floorPoints);
-    // floorModel->move({0, -6, 0});
+    floorModel->move({0, -56, 0});
 
     objectModel = resManager.loadModel("model/sphere.obj");
     if (!objectModel)
         return false;
+
+    scene = Scene::loadFrom(resManager.resourceAt("model/cube_plane.obj"));
+    if (!scene)
+        return false;
+    // for (auto & mesh : scene->models) {
+    //     Logging::Core->debug("Scene has mesh with {} points",
+    //     mesh->mesh->points.size()); mesh->textures.push_back(devTexture);
+    // }
 
     SetMouseGrab(true);
     getGlError();
     return true;
 }
 
-void Game::loadObjects() {
-    {
-        btCollisionShape * groundShape =
-            new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-
-        btRigidBody * body = physics->makeRigidBody(groundShape, 0, 1);
-
-        btTransform groundTransform;
-        groundTransform.setIdentity();
-        groundTransform.setOrigin(btVector3(0, -56, 0));
-        groundTransform.setRotation(btQuaternion(btVector3(1, 0, 0), 3.14 * 0.03));
-        body->getMotionState()->setWorldTransform(groundTransform);
-    }
-
-    {
-        btCollisionShape * colShape = new btSphereShape(btScalar(1.));
-
-        btRigidBody * body = physics->makeRigidBody(colShape, 1, 1);
-
-        /// Create Dynamic Objects
-        btTransform startTransform;
-        startTransform.setIdentity();
-        startTransform.setOrigin(btVector3(2, 0, 0));
-        body->getMotionState()->setWorldTransform(startTransform);
-        body->setLinearVelocity(btVector3(0, 0, 0));
-    }
-}
-
-void Game::onDestroy() {
-    physics->stop();
-    physics->join();
-}
+void Game::onDestroy() {}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
-
-    if (e.code == sf::Keyboard::Space) {
-        physics->lock();
-        physics->removeObjects();
-        loadObjects();
-        physics->unlock();
-    }
-    else if (e.code == sf::Keyboard::Escape) {
-        physics->setRunState(!menu->isVisible());
-    }
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
@@ -172,23 +135,13 @@ void Game::onDraw() const {
     devTexture->bind();
     defaultShader->setMat4("mvp", vp);
     {
-        physics->lock();
+        defaultShader->setMat4("model", floorModel->toMatrix());
+        // floorModel->draw();
 
-        // shader->setMat4("model", floorModel->modelMatrix());
-        btTransform trans;
-        physics->getTransform(0, trans);
-        glm::mat4 model;
-        trans.getOpenGLMatrix(&model[0][0]);
-        defaultShader->setMat4("model", model);
-        floorModel->draw();
-
-        // shader->setMat4("model", objectModel->modelMatrix());
-        physics->getTransform(1, trans);
-        trans.getOpenGLMatrix(&model[0][0]);
-        defaultShader->setMat4("model", model);
+        defaultShader->setMat4("model", objectModel->toMatrix());
         objectModel->draw();
 
-        physics->unlock();
+        scene->draw(defaultShader);
     }
     defaultShader->unbind();
     devTexture->unbind();
