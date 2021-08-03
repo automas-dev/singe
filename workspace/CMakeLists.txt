@@ -4,6 +4,7 @@ add_executable(workspace
     Game.hpp
     Game.cpp
     Scene.hpp
+    Material.hpp
 )
 
 target_compile_features(workspace PRIVATE cxx_std_17)
