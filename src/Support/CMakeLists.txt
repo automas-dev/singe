@@ -12,6 +12,7 @@ list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${
 set(SOURCE_LIST
     Keymap.cpp
     log.cpp
+    Parser.cpp
     Transform3d.cpp
     Util.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
