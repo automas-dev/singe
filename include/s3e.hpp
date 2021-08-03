@@ -6,6 +6,7 @@
 #include "s3e/Core/GameBase.hpp"
 #include "s3e/Core/Physics.hpp"
 #include "s3e/Core/ResourceManager.hpp"
+#include "s3e/Core/Scene.hpp"
 #include "s3e/Graphics/FrameBuffer.hpp"
 #include "s3e/Graphics/Menu.hpp"
 #include "s3e/Graphics/Model.hpp"

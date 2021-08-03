@@ -5,18 +5,18 @@ set(HEADER_LIST
     Camera.hpp
     FPSDisplay.hpp
     GameBase.hpp
-    ModelLoader.hpp
     Physics.hpp
-    ResourceManager.hpp)
+    ResourceManager.hpp
+    Scene.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
 
 set(SOURCE_LIST
     Camera.cpp
     FPSDisplay.cpp
     GameBase.cpp
-    ModelLoader.cpp
     Physics.cpp
-    ResourceManager.cpp)
+    ResourceManager.cpp
+    Scene.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
 
 library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")

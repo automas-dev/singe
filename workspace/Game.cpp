@@ -58,33 +58,19 @@ bool Game::onCreate() {
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
-    std::vector<Vertex> floorPoints {
-        Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
-        Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
-        Vertex({50, 50, -50}, {0, 1, 0}, {1, 1}),
-
-        Vertex({-50, 50, -50}, {0, 1, 0}, {0, 1}),
-        Vertex({-50, 50, 50}, {0, 1, 0}, {0, 0}),
-        Vertex({50, 50, 50}, {0, 1, 0}, {1, 0}),
-    };
-
-    floorModel = Scene::loadFromPoints(floorPoints);
-    if (!floorModel)
+    auto objectScene = resManager.loadScene("model/sphere.obj");
+    if (!objectScene)
         return false;
-    floorModel->move({0, -56, 0});
-    floorModel->rotate({1, 1, 1});
+    objectScene->models[0]->textures.push_back(devTexture);
+    objectScene->move({0, 2, 0});
 
-    objectModel = Scene::loadFrom(resManager.resourceAt("model/sphere.obj"));
-    if (!objectModel)
-        return false;
-    objectModel->move({0, 2, 0});
-
-    scene = Scene::loadFrom(resManager.resourceAt("model/cube_plane.obj"));
+    scene = resManager.loadScene("model/cube_plane.obj");
     if (!scene)
         return false;
+    scene->models[0]->textures.push_back(devTexture);
+    scene->models[1]->textures.push_back(devTexture);
 
-    scene->children.push_back(floorModel);
-    scene->children.push_back(objectModel);
+    scene->children.push_back(objectScene);
     scene->move({0, 0, 1});
     scene->rotate({0.1, 0, 0});
 
@@ -131,25 +117,11 @@ void Game::onDraw() const {
     glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glPointSize(10);
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
-    defaultShader->bind();
-    devTexture->bind();
     defaultShader->setMat4("mvp", vp);
-    {
-        // defaultShader->setMat4("model", floorModel->toMatrix());
-        // floorModel->draw();
-
-        // defaultShader->setMat4("model", objectModel->toMatrix());
-        // objectModel->draw();
-
-        scene->draw(defaultShader);
-    }
-    defaultShader->unbind();
-    devTexture->unbind();
-
+    scene->draw(defaultShader);
 
     window->pushGLStates();
     window->draw(*fps);

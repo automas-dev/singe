@@ -146,23 +146,31 @@ bool Game::onCreate() {
         throw std::runtime_error("Failed to load mono shader");
     }
 
-    cubeModel = resManager.loadModel("model/cube_plane.obj");
+    cubeModel = resManager.loadScene("model/cube_plane.obj");
     if (!cubeModel) {
         throw std::runtime_error("Failed to load cube model");
     }
 
-    sphereModel = resManager.loadModel("model/sphere.obj");
+    sphereModel = resManager.loadScene("model/sphere.obj");
     if (!sphereModel) {
         throw std::runtime_error("Failed to load sphere model");
     }
     sphereModel->move({1, 2, 3});
     sphereModel->scale({0.1, 0.1, 0.1});
 
-    hallModel = resManager.loadModel("model/hall.obj");
+    hallModel = resManager.loadScene("model/hall.obj");
     if (!hallModel) {
         throw std::runtime_error("Failed to load hall model");
     }
     hallModel->move({0, 0, -4});
+
+    rootScene = std::make_shared<Scene>("root");
+    if (!rootScene)
+        return false;
+
+    rootScene->children.push_back(cubeModel);
+    rootScene->children.push_back(sphereModel);
+    rootScene->children.push_back(hallModel);
 
     texture = resManager.loadTexture("img/dev_texture_gray.png");
     if (!texture) {
@@ -319,7 +327,7 @@ void Game::onDraw() const {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         geometryShader->setMat4("mvp", vp);
 
-        drawPass(geometryShader);
+        rootScene->draw(geometryShader);
 
         texture->unbind();
         gbuffMulti->unbind();
@@ -431,16 +439,4 @@ void Game::onDraw() const {
     window->pushGLStates();
     window->draw(*fps);
     window->popGLStates();
-}
-
-void Game::drawPass(const Shader::Ptr & shader) const {
-    drawModel(sphereModel, shader);
-    drawModel(cubeModel, shader);
-    drawModel(hallModel, shader);
-}
-
-void Game::drawModel(const Model::ConstPtr & model,
-                     const Shader::Ptr & shader) const {
-    shader->setMat4("model", model->toMatrix());
-    model->draw();
 }

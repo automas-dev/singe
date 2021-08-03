@@ -3,8 +3,6 @@ add_executable(workspace
     main.cpp
     Game.hpp
     Game.cpp
-    Scene.hpp
-    Material.hpp
 )
 
 target_compile_features(workspace PRIVATE cxx_std_17)

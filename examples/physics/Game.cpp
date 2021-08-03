@@ -61,7 +61,7 @@ bool Game::onCreate() {
     physics = std::make_shared<Physics>();
     // physics->loadObjects();
 
-    floorModel = resManager.loadModel("model/ground.obj");
+    floorModel = resManager.loadScene("model/ground.obj");
     if (!floorModel)
         return false;
     // auto *mesh = new btTriangleIndexVertexArray(/* TODO */);
@@ -70,7 +70,7 @@ bool Game::onCreate() {
     physics->makeRigidBody(collisionShape, 0, 1);
 
 
-    objectModel = resManager.loadModel("model/sphere.obj");
+    objectModel = resManager.loadScene("model/sphere.obj");
     if (!objectModel)
         return false;
     collisionShape = new btSphereShape(2);
@@ -171,14 +171,12 @@ void Game::onDraw() const {
         physics->getTransform(0, trans);
         glm::mat4 model;
         trans.getOpenGLMatrix(&model[0][0]);
-        defaultShader->setMat4("model", model);
-        floorModel->draw();
+        floorModel->draw(defaultShader, model);
 
         // shader->setMat4("model", objectModel->modelMatrix());
         physics->getTransform(1, trans);
         trans.getOpenGLMatrix(&model[0][0]);
-        defaultShader->setMat4("model", model);
-        objectModel->draw();
+        objectModel->draw(defaultShader, model);
     }
     defaultShader->unbind();
     devTexture->unbind();

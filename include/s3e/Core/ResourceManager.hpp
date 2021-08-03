@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "s3e/Core/Scene.hpp"
 #include "s3e/Graphics/Model.hpp"
 #include "s3e/Graphics/Shader.hpp"
 #include "s3e/Graphics/Texture.hpp"
@@ -105,12 +106,12 @@ namespace Tom::s3e {
                                const std::string & fragmentPath);
 
         /**
-         * Load a Model from `path`.
+         * Load a Scene from `path`.
          *
          * @param path the path to the obj file
          *
-         * @return a shared_ptr to a Model
+         * @return a shared_ptr to a Scene
          */
-        Model::Ptr loadModel(const std::string & path);
+        Scene::Ptr loadScene(const std::string & path);
     };
 }

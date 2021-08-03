@@ -75,9 +75,10 @@ class Game : public GameBase {
     bool doDrawDebug = true;
     bool doBlitFbuff = true;
 
-    Model::Ptr cubeModel;
-    Model::Ptr sphereModel;
-    Model::Ptr hallModel;
+    Scene::Ptr cubeModel;
+    Scene::Ptr sphereModel;
+    Scene::Ptr hallModel;
+    Scene::Ptr rootScene;
 
     Light light0;
     Light light1;
@@ -112,7 +113,4 @@ public:
 
 private:
     void tick(void);
-    void drawPass(const Shader::Ptr & shader) const;
-    void drawModel(const Model::ConstPtr & model,
-                   const Shader::Ptr & shader) const;
 };

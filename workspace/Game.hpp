@@ -17,14 +17,10 @@
 #include <vector>
 using namespace Tom::s3e;
 
-#include "Scene.hpp"
-
 class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
     Texture::Ptr devTexture;
-    Scene::Ptr floorModel;
-    Scene::Ptr objectModel;
     Scene::Ptr scene;
 
 public:
