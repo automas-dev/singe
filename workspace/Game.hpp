@@ -20,7 +20,6 @@ using namespace Tom::s3e;
 class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
-    Texture::Ptr devTexture;
     Scene::Ptr scene;
     Scene::Ptr otherScene;
 

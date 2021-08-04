@@ -52,37 +52,24 @@ bool Game::onCreate() {
     camera->move({-3, 2, -1});
     camera->setFov(70);
 
-    devTexture = resManager.loadTexture("img/uv.png");
+    auto devTexture = resManager.loadTexture("img/uv.png");
     if (!devTexture)
         return false;
     devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
-    // auto devMaterial = std::make_shared<Material>();
-    // devMaterial->name = "devMaterial";
-    // devMaterial->texture = devTexture;
 
     auto objectScene = resManager.loadScene("model/sphere.obj");
     if (!objectScene)
         return false;
-    // objectScene->models[0]->materials.push_back(devMaterial);
     objectScene->move({0, 2, 0});
 
     scene = resManager.loadScene("model/cube_plane.obj");
     if (!scene)
         return false;
-    // scene->models[0]->materials.push_back(devMaterial);
-    // scene->models[1]->materials.push_back(devMaterial);
 
     scene->children.push_back(objectScene);
 
     otherScene = std::make_shared<Scene>("other");
     scene->children.push_back(otherScene);
-
-    // auto uvTexture = resManager.loadTexture("img/UV Grid 1024.png");
-    // if (!uvTexture)
-    //     return false;
-    // auto uvMaterial = std::make_shared<Material>();
-    // uvMaterial->name = "uv";
-    // uvMaterial->texture = uvTexture;
 
     auto fountainScene = resManager.loadScene("model/fountain.obj");
     if (!fountainScene)
