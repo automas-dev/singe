@@ -4,8 +4,6 @@
 namespace fs = std::filesystem;
 
 #include <array>
-#include <cstring>
-#include <fstream>
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
@@ -205,11 +203,14 @@ namespace Tom::s3e {
         }
     };
 
+
     Scene::Ptr ResourceManager::loadScene(const std::string & path) {
         auto relPath = resourceAt(path);
-        std::ifstream is(relPath);
 
-        if (!is.is_open()) {
+        WavefrontParser parser;
+        parser.open(relPath);
+
+        if (!parser.is_open()) {
             Logging::Core->warning("Failed to open file {}", relPath);
             return nullptr;
         }
@@ -235,62 +236,75 @@ namespace Tom::s3e {
         int nRead;
         std::string line;
         std::string str;
-        for (std::size_t line_no = 0; std::getline(is, line); line_no++) {
-            if (line.empty() || line[0] == '#')
-                continue;
-
-            switch (line[0]) {
+        for (auto & token : parser.tokens()) {
+            switch (token.key[0]) {
                 case 'o':
                     if (tmpModel)
                         scene->models.push_back(tmpModel->toModel(av, avt, avn));
-                    tmpModel = std::make_unique<TempModel>(line.substr(2));
+                    tmpModel = std::make_unique<TempModel>(token.value);
                     break;
                 case 'v':
-                    switch (line[1]) {
-                        case ' ': // v
-                            glm::vec3 v;
-                            str = line.substr(2);
-                            nRead = std::sscanf(str.c_str(), "%f %f %f", &v.x,
-                                                &v.y, &v.z);
-                            ASSERT_NREAD(3, 'v');
-                            av.push_back(v);
-                            break;
-                        case 't': // vt
-                            glm::vec2 vt;
-                            str = line.substr(3);
-                            nRead =
-                                std::sscanf(str.c_str(), "%f %f", &vt.x, &vt.y);
-                            ASSERT_NREAD(2, "vt");
-                            avt.push_back(vt);
-                            break;
-                        case 'n': // vn
-                            glm::vec3 vn;
-                            str = line.substr(3);
-                            nRead = std::sscanf(str.c_str(), "%f %f %f", &vn.x,
-                                                &vn.y, &vn.z);
-                            ASSERT_NREAD(3, "vn");
-                            avn.push_back(vn);
-                            break;
+                    if (token.key.size() == 1) // v
+                    {
+                        auto parts = token.params();
+                        if (parts.size() != 3)
+                            return nullptr;
+                        glm::vec3 v;
+                        v.x = std::stof(parts[0]);
+                        v.y = std::stof(parts[1]);
+                        v.z = std::stof(parts[2]);
+                        av.push_back(v);
+                    }
+                    else {
+                        switch (token.key[1]) {
+                            case 't': // vt
+                            {
+                                auto parts = token.params();
+                                if (parts.size() != 2)
+                                    return nullptr;
+                                glm::vec2 vt;
+                                vt.x = std::stof(parts[0]);
+                                vt.y = std::stof(parts[1]);
+                                avt.push_back(vt);
+                            } break;
+                            case 'n': // vn
+                            {
+                                auto parts = token.params();
+                                if (parts.size() != 3)
+                                    return nullptr;
+                                glm::vec3 vn;
+                                vn.x = std::stof(parts[0]);
+                                vn.y = std::stof(parts[1]);
+                                vn.z = std::stof(parts[2]);
+                                avn.push_back(vn);
+                            } break;
+                        }
                     }
                     break;
-                case 'f':
+                case 'f': {
+                    auto parts = token.params();
+                    if (parts.size() != 3)
+                        return nullptr;
                     TempModel::Face f;
-                    str = line.substr(2);
-                    nRead = std::sscanf(
-                        str.c_str(), "%lu/%lu/%lu %lu/%lu/%lu %lu/%lu/%lu",
-                        &f.p[0].v, &f.p[0].t, &f.p[0].n, &f.p[1].v, &f.p[1].t,
-                        &f.p[1].n, &f.p[2].v, &f.p[2].t, &f.p[2].n);
+                    for (int i = 0; i < 3; i++) {
+                        auto subparts = splitString(parts[i], '/');
+                        if (subparts.size() != 3)
+                            return nullptr;
+                        f.p[i].v = std::stoul(subparts[0]);
+                        f.p[i].t = std::stoul(subparts[1]);
+                        f.p[i].n = std::stoul(subparts[2]);
+                    }
                     tmpModel->af.push_back(f);
-                    break;
+                } break;
                 case 'm': // mtllib
-                    if (line.size() < 8)
-                        PARSE_ERROR("mtllib")
-                    mtllib = loadMaterials(path, line.substr(7));
+                    if (token.key != "mtllib")
+                        return nullptr;
+                    mtllib = loadMaterials(path, token.value);
                     break;
                 case 'u': // usemtl
-                    if (line.size() < 8)
-                        PARSE_ERROR("usemtl")
-                    tmpModel->material = mtllib->materials[line.substr(7)];
+                    if (token.key != "usemtl")
+                        return nullptr;
+                    tmpModel->material = mtllib->materials[token.value];
                     break;
                 default:
                     break;
