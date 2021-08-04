@@ -7,7 +7,7 @@ namespace Tom::s3e {
         std::vector<std::string> parts;
         std::stringstream ss(str);
         std::string part;
-        for (; std::getline(ss, part, ' ');) {
+        for (; std::getline(ss, part, delim);) {
             parts.push_back(part);
         }
         return parts;
