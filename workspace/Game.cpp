@@ -85,11 +85,15 @@ bool Game::onCreate() {
     // uvMaterial->texture = uvTexture;
 
     auto fountainScene = resManager.loadScene("model/fountain.obj");
+    if (!fountainScene)
+        return false;
     // fountainScene->models[0]->materials.push_back(uvMaterial);
     fountainScene->move({0, 0, 3});
     otherScene->children.push_back(fountainScene);
 
     auto humanScene = resManager.loadScene("model/Human.obj");
+    if (!humanScene)
+        return false;
     humanScene->move({3, 0, 0});
     otherScene->children.push_back(humanScene);
 
