@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "s3e/Graphics/Model.hpp"
+#include "s3e/Core/Model.hpp"
 #include "s3e/Graphics/Shader.hpp"
 #include "s3e/Support/Transform3d.hpp"
 

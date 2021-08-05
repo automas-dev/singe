@@ -5,6 +5,9 @@ set(HEADER_LIST
     Camera.hpp
     FPSDisplay.hpp
     GameBase.hpp
+    Material.hpp
+    Mesh.hpp
+    Model.hpp
     Physics.hpp
     ResourceManager.hpp
     Scene.hpp)
@@ -14,6 +17,9 @@ set(SOURCE_LIST
     Camera.cpp
     FPSDisplay.cpp
     GameBase.cpp
+    Material.cpp
+    Mesh.cpp
+    Model.cpp
     Physics.cpp
     ResourceManager.cpp
     Scene.cpp)

@@ -1,4 +1,4 @@
-#include "s3e/Graphics/Model.hpp"
+#include "s3e/Core/Model.hpp"
 
 #include "s3e/Graphics/VBO.hpp"
 #include "s3e/Support/Util.hpp"

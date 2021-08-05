@@ -3,8 +3,9 @@
 #include <memory>
 #include <string>
 
-#include "Material.hpp"
-#include "VBO.hpp"
+#include "s3e/Core/Material.hpp"
+#include "s3e/Core/Mesh.hpp"
+#include "s3e/Graphics/VBO.hpp"
 #include "s3e/Support/Transform3d.hpp"
 
 namespace Tom::s3e {

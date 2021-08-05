@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 
-#include "Texture.hpp"
+#include "s3e/Graphics/Texture.hpp"
 
 namespace Tom::s3e {
     /**
