@@ -5,64 +5,56 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
-
-    void Texture::realloc() {
-        Logging::Graphics->debug(
-            "updating texture {} to size {}x{} intermal={} format={} type={} magFilter={} minFilter={} wrap={} mipmaps={}",
-            textureId, size.x, size.y, internal, format, type, magFilter,
-            minFilter, wrap, mipmaps);
-
-        if (samples > 0) {
-            glBindTexture(target, textureId);
-            glTexImage2DMultisample(target, samples, internal, size.x, size.y,
-                                    GL_TRUE);
-        }
-        else {
-            glBindTexture(target, textureId);
-            glTexImage2D(target, 0, internal, size.x, size.y, 0, format, type,
-                         (image ? image->getPixelsPtr() : NULL));
-
-            glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
-            glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
-
-            glTexParameteri(target, GL_TEXTURE_WRAP_S, wrap);
-            glTexParameteri(target, GL_TEXTURE_WRAP_T, wrap);
-
-            if (mipmaps)
-                glGenerateMipmap(target);
-        }
-        glBindTexture(target, 0);
-    }
-
-    Texture::Texture() : Texture({0, 0}) {}
-
-    Texture::Texture(sf::Vector2u size,
-                     GLint internal,
-                     GLenum format,
-                     GLenum type,
+    Texture::Texture(const sf::Image & image,
                      GLint magFilter,
                      GLint minFilter,
                      GLint wrap,
-                     bool mipmaps,
-                     GLsizei samples)
+                     bool mipmaps)
+        : textureId(0),
+          size(image.getSize()),
+          internal(GL_RGBA),
+          format(GL_RGBA),
+          type(GL_UNSIGNED_BYTE),
+          samples(0),
+          target(GL_TEXTURE_2D),
+          minFilter(minFilter),
+          magFilter(magFilter),
+          wrap(wrap),
+          mipmaps(mipmaps) {
+
+        glGenTextures(1, &textureId);
+        Logging::Graphics->debug("generated opengl texture: {} samples = {}",
+                                 textureId, samples);
+
+        loadFrom(image);
+    }
+
+    Texture::Texture(const sf::Vector2u & size,
+                     GLint internal,
+                     GLenum format,
+                     GLenum type,
+                     GLsizei samples,
+                     GLint magFilter,
+                     GLint minFilter,
+                     GLint wrap,
+                     bool mipmaps)
         : textureId(0),
           size(size),
           internal(internal),
           format(format),
           type(type),
+          samples(samples),
+          target(samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D),
           minFilter(minFilter),
           magFilter(magFilter),
           wrap(wrap),
-          mipmaps(mipmaps),
-          samples(samples) {
-
-        target = (samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
+          mipmaps(mipmaps) {
 
         glGenTextures(1, &textureId);
         Logging::Graphics->debug("generated opengl texture: {} samples = {}",
-                             textureId, samples);
-        if (size.x > 0 && size.y > 0)
-            realloc();
+                                 textureId, samples);
+
+        resize(size);
     }
 
     Texture::~Texture() {
@@ -72,19 +64,20 @@ namespace Tom::s3e {
         }
     }
 
-    bool Texture::loadFromPath(const std::string & path) {
-        Logging::Graphics->debug("loading texture from path: {}", path);
+    void Texture::loadFrom(const sf::Image & image) {
+        bind();
+        glTexImage2D(target, 0, internal, size.x, size.y, 0, format, type,
+                     image.getPixelsPtr());
 
-        image = std::make_unique<sf::Image>();
-        if (!image->loadFromFile(path)) {
-            Logging::Graphics->warning("Texture failed to open file {}", path);
-            return false;
-        }
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
 
-        type = GL_UNSIGNED_BYTE;
-        setSize(image->getSize()); // Calls realloc
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, wrap);
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, wrap);
 
-        return true;
+        if (mipmaps)
+            glGenerateMipmap(target);
+        unbind();
     }
 
     GLuint Texture::getTextureId() const {
@@ -95,20 +88,26 @@ namespace Tom::s3e {
         return size;
     }
 
-    void Texture::setSize(sf::Vector2u newSize) {
-        size = newSize;
-        realloc();
-    }
+    void Texture::resize(const sf::Vector2u & size) {
+        this->size = size;
+        if (size.x > 0 && size.y > 0) {
+            bind();
+            if (samples > 0) {
+                glTexImage2DMultisample(target, samples, internal, size.x,
+                                        size.y, GL_TRUE);
+            }
+            else {
+                glTexImage2D(target, 0, internal, size.x, size.y, 0, format,
+                             type, NULL);
 
-    void Texture::setFilter(GLint magFilter, GLint minFilter) {
-        this->magFilter = magFilter;
-        this->minFilter = minFilter;
-        realloc();
-    }
+                glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
+                glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
 
-    void Texture::setWrap(GLint wrap) {
-        this->wrap = wrap;
-        realloc();
+                glTexParameteri(target, GL_TEXTURE_WRAP_S, wrap);
+                glTexParameteri(target, GL_TEXTURE_WRAP_T, wrap);
+            }
+            unbind();
+        }
     }
 
     void Texture::bind() {

@@ -101,7 +101,9 @@ namespace Tom::s3e {
          *
          * @return a shared_ptr to a Texture
          */
-        Texture::Ptr loadTexture(const std::string & path);
+        Texture::Ptr loadTexture(const std::string & path,
+                GLint magFilter = GL_LINEAR,
+                GLint minFilter = GL_LINEAR_MIPMAP_LINEAR);
 
         /**
          * Load a Shader using `vertexPath` and `fragmentPath`.

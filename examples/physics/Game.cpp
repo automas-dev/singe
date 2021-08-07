@@ -56,7 +56,6 @@ bool Game::onCreate() {
     devTexture = resManager.loadTexture("img/uv.png");
     if (!devTexture)
         return false;
-    devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
     physics = std::make_shared<Physics>();
     // physics->loadObjects();

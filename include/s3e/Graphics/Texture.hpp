@@ -9,53 +9,91 @@
 
 namespace Tom::s3e {
 
+    /**
+     * Manages a single OpenGL texture.
+     */
     class Texture {
         GLuint textureId;
         sf::Vector2u size;
         GLint internal;
         GLenum format;
         GLenum type;
+        GLsizei samples;
         GLenum target;
 
         GLint magFilter, minFilter;
         GLint wrap;
         bool mipmaps;
-        GLsizei samples;
-
-        std::unique_ptr<sf::Image> image;
-
-        void realloc();
 
     public:
         using Ptr = std::shared_ptr<Texture>;
         using ConstPtr = std::shared_ptr<const Texture>;
 
-        Texture(void);
-        Texture(sf::Vector2u size,
+        /**
+         * Create a texture from an image.
+         */
+        Texture(const sf::Image & image,
+                GLint magFilter = GL_LINEAR,
+                GLint minFilter = GL_LINEAR_MIPMAP_LINEAR,
+                GLint wrap = GL_REPEAT,
+                bool mipmaps = true);
+
+        /**
+         * Create an empty texture of the specified size.
+         *
+         * Note: if samples is > 0, the filter, wrap and mipmaps arguments are
+         * ignored.
+         */
+        Texture(const sf::Vector2u & size,
                 GLint internal = GL_RGBA,
                 GLenum format = GL_RGBA,
                 GLenum type = GL_FLOAT,
-                GLint magFilter = GL_NEAREST,
-                GLint minFilter = GL_NEAREST,
+                GLsizei samples = 0,
+                GLint magFilter = GL_LINEAR,
+                GLint minFilter = GL_LINEAR_MIPMAP_LINEAR,
                 GLint wrap = GL_REPEAT,
-                bool mipmaps = true,
-                GLsizei samples = 0);
+                bool mipmaps = true);
+
+        /// Free all opengl resources
         virtual ~Texture();
 
-        bool loadFromPath(const std::string & path);
+        /**
+         * Load the texture from an image, setting the size to match
+         * image.getSize().
+         *
+         * @param image the image to load from
+         */
+        void loadFrom(const sf::Image & image);
 
-        GLuint getTextureId(void) const;
+        /**
+         * Get the OpenGL texture id.
+         *
+         * @return the texture id
+         */
+        GLuint getTextureId() const;
 
-        const sf::Vector2u & getSize(void) const;
+        /**
+         * Get the texture size
+         *
+         * @return the texture size
+         */
+        const sf::Vector2u & getSize() const;
 
-        void setSize(sf::Vector2u newSize);
+        /**
+         * Resize the texture clearing all data.
+         *
+         * @param size the new texture size
+         */
+        void resize(const sf::Vector2u & size);
 
-        void setFilter(GLint magFilter, GLint minFilter);
+        /**
+         * Bind the texture.
+         */
+        void bind();
 
-        void setWrap(GLint wrap);
-
-        void bind(void);
-
-        void unbind(void);
+        /**
+         * Unbind the texture, effectively binding 0.
+         */
+        void unbind();
     };
 }

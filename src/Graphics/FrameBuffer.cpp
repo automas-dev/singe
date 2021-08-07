@@ -103,7 +103,7 @@ namespace Tom::s3e {
     void FrameBuffer::setSize(sf::Vector2u size) {
         this->size = size;
         for (auto & texture : textures) {
-            texture->setSize(size);
+            texture->resize(size);
         }
         if (rboDepth > 0) {
             glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);

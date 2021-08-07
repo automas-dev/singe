@@ -56,7 +56,6 @@ bool Game::onCreate() {
     devTexture = resManager.loadTexture("img/uv.png");
     if (!devTexture)
         return false;
-    devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
     chunks = std::make_shared<ChunkManager>();
     for (int x = 0; x < 5; x++)

@@ -47,19 +47,22 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    Texture::Ptr ResourceManager::loadTexture(const std::string & path) {
+    Texture::Ptr ResourceManager::loadTexture(const std::string & path,
+                                              GLint magFilter,
+                                              GLint minFilter) {
         if (textures.count(path) > 0)
             return textures[path];
 
         auto relPath = resourceAt(path);
-        auto newTex = std::make_shared<Texture>();
-        if (!newTex->loadFromPath(relPath)) {
+        sf::Image image;
+        if (!image.loadFromFile(relPath)) {
             Logging::Core->error("failed in call to Texture::loadFromPath(path={})",
                                  relPath);
             return nullptr;
         }
-        else
-            textures[path] = newTex;
+
+        auto newTex = std::make_shared<Texture>(image, magFilter, minFilter);
+        textures[path] = newTex;
         return newTex;
     }
 

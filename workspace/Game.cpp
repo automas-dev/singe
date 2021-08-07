@@ -53,10 +53,9 @@ bool Game::onCreate() {
     camera->move({-3, 2, -1});
     camera->setFov(70);
 
-    auto devTexture = resManager.loadTexture("img/uv.png");
+    auto devTexture = resManager.loadTexture("img/uv.png", GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
     if (!devTexture)
         return false;
-    devTexture->setFilter(GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
 
     auto objectScene = resManager.loadScene("model/sphere.obj");
     if (!objectScene)
