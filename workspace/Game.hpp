@@ -6,6 +6,7 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <algorithm>
+#include <dispatch.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
 #include <map>
@@ -22,6 +23,8 @@ class Game : public GameBase {
     FPSDisplay::Ptr fps;
     Scene::Ptr scene;
     Scene::Ptr otherScene;
+    LocalDispatchQueue localTaskQueue;
+    DispatchQueue taskQueue;
 
 public:
     Game(const sf::String & resPath);

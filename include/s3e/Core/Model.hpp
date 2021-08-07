@@ -27,9 +27,7 @@ namespace Tom::s3e {
          * @param mode the Mesh draw mode
          * @param usage the Mesh update usage
          */
-        Model(const std::string & name,
-              Mode mode = Mode::Triangles,
-              Usage usage = Usage::Static);
+        Model(const std::string & name);
 
         /**
          * Destruct the Model.

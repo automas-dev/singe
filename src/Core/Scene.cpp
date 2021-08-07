@@ -5,6 +5,15 @@
 namespace Tom::s3e {
     Scene::Scene(const std::string & name) : name(name) {}
 
+    void Scene::send() {
+        for (auto & model : models) {
+            model->send();
+        }
+        for (auto & scene : children) {
+            scene->send();
+        }
+    }
+
     void Scene::draw(const Shader::Ptr & shader, glm::mat4 transform) const {
         transform *= toMatrix();
         shader->setMat4("model", transform);

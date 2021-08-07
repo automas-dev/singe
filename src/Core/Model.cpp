@@ -6,8 +6,7 @@
 
 namespace Tom::s3e {
 
-    Model::Model(const std::string & name, Mode mode, Usage usage)
-        : Mesh(mode, usage), name(name) {}
+    Model::Model(const std::string & name) : Mesh(), name(name) {}
 
     Model::~Model() {}
 

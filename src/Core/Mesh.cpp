@@ -1,6 +1,10 @@
 #include "s3e/Core/Mesh.hpp"
 
+#include "s3e/Support/log.hpp"
+
 namespace Tom::s3e {
+    Mesh::Mesh() : vbo(nullptr) {}
+
     Mesh::~Mesh() {}
 
     void Mesh::loadFromPoints(const std::vector<Vertex> & points) {
@@ -18,6 +22,15 @@ namespace Tom::s3e {
     }
 
     void Mesh::send() {
-        VBO::loadFromPoints(points);
+        Logging::Core->debug("Mesh send");
+        if (!vbo) {
+            Logging::Core->debug("Creating VBO");
+            vbo = std::make_shared<VBO>();
+        }
+        vbo->loadFromPoints(points);
+    }
+
+    void Mesh::draw() const {
+        vbo->draw();
     }
 }

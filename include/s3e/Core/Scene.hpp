@@ -33,6 +33,12 @@ namespace Tom::s3e {
         Scene(const std::string & name);
 
         /**
+         * Create OpenGL buffers on first call and send vertices to the buffers
+         * on each call.
+         */
+        void send();
+
+        /**
          * Draw the scene.
          *
          * Sends the model matrix to shader at the uniform named "model".

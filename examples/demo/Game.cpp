@@ -171,6 +171,7 @@ bool Game::onCreate() {
     rootScene->children.push_back(cubeModel);
     rootScene->children.push_back(sphereModel);
     rootScene->children.push_back(hallModel);
+    rootScene->send();
 
     texture = resManager.loadTexture("img/dev_texture_gray.png");
     if (!texture) {

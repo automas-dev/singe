@@ -9,23 +9,15 @@ namespace Tom::s3e {
     /**
      * Derived class of VBO which keeps a CPU side copy of points.
      */
-    struct Mesh : VBO {
+    struct Mesh {
         std::vector<Vertex> points;
-
-        using VBO::Mode;
-        using VBO::Usage;
+        VBO::Ptr vbo;
 
         using Ptr = std::shared_ptr<Mesh>;
         using ConstPtr = std::shared_ptr<const Mesh>;
 
-        using VBO::VBO;
+        Mesh();
         virtual ~Mesh();
-
-        using VBO::getMode;
-        using VBO::setMode;
-        using VBO::getUsage;
-        using VBO::setUsage;
-        using VBO::draw;
 
         /**
          * Store points for future use.
@@ -54,5 +46,10 @@ namespace Tom::s3e {
          * Send points to the OpenGL buffer.
          */
         void send();
+
+        /**
+         * Call draw on vbo.
+         */
+        void draw() const;
     };
 }

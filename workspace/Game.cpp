@@ -13,7 +13,8 @@ static void getGlError() {
     }
 }
 
-Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
+Game::Game(const sf::String & resPath)
+    : GameBase(), resManager(resPath), taskQueue(DispatchQueue::Concurrent) {}
 
 Game::~Game() {}
 
@@ -71,12 +72,16 @@ bool Game::onCreate() {
     otherScene = std::make_shared<Scene>("other");
     scene->children.push_back(otherScene);
 
-    auto fountainScene = resManager.loadScene("model/fountain.obj");
-    if (!fountainScene)
-        return false;
-    // fountainScene->models[0]->materials.push_back(uvMaterial);
-    fountainScene->move({0, 0, 3});
-    otherScene->children.push_back(fountainScene);
+    taskQueue.add([&] {
+        auto fountainScene = resManager.loadScene("model/fountain.obj");
+        if (!fountainScene)
+            return;
+        fountainScene->move({0, 0, 3});
+        localTaskQueue.add([&, fountainScene] {
+            fountainScene->send();
+            otherScene->children.push_back(fountainScene);
+        });
+    });
 
     auto humanScene = resManager.loadScene("model/Human.obj");
     if (!humanScene)
@@ -84,12 +89,16 @@ bool Game::onCreate() {
     humanScene->move({3, 0, 0});
     otherScene->children.push_back(humanScene);
 
+    scene->send();
+
     SetMouseGrab(true);
     getGlError();
     return true;
 }
 
-void Game::onDestroy() {}
+void Game::onDestroy() {
+    taskQueue.stop();
+}
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
@@ -122,6 +131,8 @@ void Game::onUpdate(const sf::Time & delta) {
     // scene->rotate(glm::quat(glm::vec3(0, 0.5 * delta.asSeconds(), 0)));
     scene->children[0]->rotateEuler({delta.asSeconds(), delta.asSeconds() * 0.2, 0});
     otherScene->rotateEuler({0, delta.asSeconds() * 0.1, 0});
+
+    localTaskQueue.processAll();
 }
 
 void Game::onDraw() const {

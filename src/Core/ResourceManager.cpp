@@ -198,7 +198,6 @@ namespace Tom::s3e {
                                                avt[point.t - 1]);
                 }
             }
-            model->send();
             return model;
         }
     };
