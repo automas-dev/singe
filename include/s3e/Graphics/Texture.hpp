@@ -89,11 +89,11 @@ namespace Tom::s3e {
         /**
          * Bind the texture.
          */
-        void bind();
+        void bind() const;
 
         /**
          * Unbind the texture, effectively binding 0.
          */
-        void unbind();
+        void unbind() const;
     };
 }

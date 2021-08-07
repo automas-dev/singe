@@ -110,11 +110,11 @@ namespace Tom::s3e {
         }
     }
 
-    void Texture::bind() {
+    void Texture::bind() const {
         glBindTexture(target, textureId);
     }
 
-    void Texture::unbind() {
+    void Texture::unbind() const {
         glBindTexture(target, 0);
     }
 }
