@@ -148,11 +148,32 @@ namespace Tom::s3e {
         virtual ~VBO();
 
         /**
+         * Get the OpenGL vbo id.
+         *
+         * @return the vbo id
+         */
+        GLuint getVBO() const;
+
+        /**
+         * Get the OpenGL vao id.
+         *
+         * @return the vao id
+         */
+        GLuint getVAO() const;
+
+        /**
+         * Get the number of points.
+         *
+         * @return the number of points
+         */
+        size_t size() const;
+
+        /**
          * Get the OpenGL draw mode.
          *
          * @return the VBO::Mode
          */
-        Mode getMode();
+        Mode getMode() const;
 
         /**
          * Set the OpenGL draw mode.
@@ -166,7 +187,7 @@ namespace Tom::s3e {
          *
          * @return the VBO::Usage
          */
-        Usage getUsage();
+        Usage getUsage() const;
 
         /**
          * Set the OpenGL buffer usage.

@@ -70,7 +70,19 @@ namespace Tom::s3e {
         }
     }
 
-    VBO::Mode VBO::getMode() {
+    GLuint VBO::getVBO() const {
+        return vbo;
+    }
+
+    GLuint VBO::getVAO() const {
+        return vao;
+    }
+
+    size_t VBO::size() const {
+        return nPoints;
+    }
+
+    VBO::Mode VBO::getMode() const {
         return mode;
     }
 
@@ -78,7 +90,7 @@ namespace Tom::s3e {
         this->mode = mode;
     }
 
-    VBO::Usage VBO::getUsage() {
+    VBO::Usage VBO::getUsage() const {
         return usage;
     }
 
