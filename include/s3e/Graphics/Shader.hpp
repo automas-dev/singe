@@ -8,6 +8,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
@@ -39,18 +40,8 @@ namespace Tom::s3e {
          *
          * @return was the shader compiled successfully
          */
-        bool loadFromSource(const std::string & vertexSource,
-                            const std::string & fragmentSource);
-
-        /**
-         * Load and compile the shader from the source code.
-         *
-         * @param vertexSource the vertex shader source
-         * @param fragmentSource the fragment shader source
-         *
-         * @return was the shader compiled successfully
-         */
-        bool loadFromSource(const char * vertexSource, const char * fragmentSource);
+        bool loadFromSource(const std::string_view & vertexSource,
+                            const std::string_view & fragmentSource);
 
         /**
          * Load and compile the shader from the given paths.
@@ -60,8 +51,8 @@ namespace Tom::s3e {
          *
          * @return was the shader compiled successfully
          */
-        bool loadFromPath(const std::string & vertexPath,
-                          const std::string & fragmentPath);
+        bool loadFromPath(const std::string_view & vertexPath,
+                          const std::string_view & fragmentPath);
 
         /**
          * Get the OpenGL shader program id.
@@ -87,22 +78,167 @@ namespace Tom::s3e {
          *
          * @return the uniform location
          */
-        GLuint uniformLocation(const std::string & name) const;
+        GLuint uniformLocation(const std::string_view & name) const;
 
-        void setBool(const std::string & name, bool value) const;
+        /**
+         * Get the uniform location for name and set the value to integer 0 or 1.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setBool(const std::string_view & name, bool value) const;
 
-        void setInt(const std::string & name, int value) const;
-        void setUInt(const std::string & name, unsigned int value) const;
+        /**
+         * Set the value to integer 0 or 1.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setBool(GLuint location, bool value) const;
 
-        void setFloat(const std::string & name, float value) const;
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setInt(const std::string_view & name, int value) const;
 
-        void setVec2(const std::string & name, const glm::vec2 & value) const;
-        void setVec3(const std::string & name, const glm::vec3 & value) const;
-        void setVec4(const std::string & name, const glm::vec4 & value) const;
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setInt(GLuint location, int value) const;
 
-        void setMat2(const std::string & name, const glm::mat2 & value) const;
-        void setMat3(const std::string & name, const glm::mat3 & value) const;
-        void setMat4(const std::string & name, const glm::mat4 & value) const;
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setUInt(const std::string_view & name, unsigned int value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setUInt(GLuint location, unsigned int value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setFloat(const std::string_view & name, float value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setFloat(GLuint location, float value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setVec2(const std::string_view & name, const glm::vec2 & value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setVec2(GLuint location, const glm::vec2 & value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setVec3(const std::string_view & name, const glm::vec3 & value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setVec3(GLuint location, const glm::vec3 & value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setVec4(const std::string_view & name, const glm::vec4 & value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setVec4(GLuint location, const glm::vec4 & value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setMat2(const std::string_view & name, const glm::mat2 & value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setMat2(GLuint location, const glm::mat2 & value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setMat3(const std::string_view & name, const glm::mat3 & value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setMat3(GLuint location, const glm::mat3 & value) const;
+
+        /**
+         * Get the uniform location for name and set the value.
+         *
+         * @param name the uniform name
+         * @param value the value to set
+         */
+        void setMat4(const std::string_view & name, const glm::mat4 & value) const;
+
+        /**
+         * Set the value.
+         *
+         * @param location the uniform location
+         * @param value the value to set
+         */
+        void setMat4(GLuint location, const glm::mat4 & value) const;
 
         /**
          * Load the default shader from the internal source.
