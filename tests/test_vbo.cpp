@@ -54,4 +54,16 @@ namespace {
         vbo.setUsage(VBO::Dynamic);
         EXPECT_EQ(VBO::Dynamic, vbo.getUsage());
     }
+
+    TEST(VBO, loadFromPoints) {
+        Game game;
+        game.Create("");
+        VBO vbo;
+        vbo.loadFromPoints(std::vector<Vertex> {
+            {{0, 0, 0}, {0, 0, 0}, {0, 0}},
+            {{0, 0, 0}, {0, 0, 0}, {0, 0}},
+            {{0, 0, 0}, {0, 0, 0}, {0, 0}},
+        });
+        EXPECT_EQ(3, vbo.size());
+    }
 }
