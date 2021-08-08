@@ -23,6 +23,8 @@ namespace {
         Game game;
         game.Create("");
         VBO vbo;
+        EXPECT_GT(vbo.getVAO(), 0);
+        EXPECT_GT(vbo.getVBO(), 0);
         EXPECT_EQ(VBO::Triangles, vbo.getMode());
         EXPECT_EQ(VBO::Static, vbo.getUsage());
     }
