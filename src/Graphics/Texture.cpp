@@ -66,6 +66,13 @@ namespace Tom::s3e {
 
     void Texture::loadFrom(const sf::Image & image) {
         bind();
+
+        internal = GL_RGBA;
+        format = GL_RGBA;
+        type = GL_UNSIGNED_BYTE;
+        samples = 0;
+        target = GL_TEXTURE_2D;
+
         glTexImage2D(target, 0, internal, size.x, size.y, 0, format, type,
                      image.getPixelsPtr());
 
