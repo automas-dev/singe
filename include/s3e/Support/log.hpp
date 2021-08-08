@@ -16,14 +16,26 @@
 #include <spdlog/spdlog.h>
 
 namespace Tom::s3e::Logging {
+    /**
+     * Wrapper for a logging subsystem.
+     */
     class Logger {
     public:
+        /**
+         * The log message level.
+         */
         enum Level {
+            /// Used for development, should be removed before a release
             Trace,
+            /// What's happening in the program, useful for debugging
             Debug,
+            /// User events
             Info,
+            /// Something that can be recovered from
             Warning,
+            /// Something but cannot be recovered from
             Error,
+            /// Something that forces the program to crash
             Critical,
         };
 
@@ -35,6 +47,14 @@ namespace Tom::s3e::Logging {
         using Ptr = std::shared_ptr<Logger>;
         using ConstPtr = std::shared_ptr<const Logger>;
 
+        /**
+         * Create a new Logger with subsystem name and the default level.
+         *
+         * The default level is Debug if the compile configuration is Debug,
+         * otherwise it is Info.
+         *
+         * @param subsystem the name of the logging subsystem
+         */
         template<typename FormatString>
         Logger(const FormatString & subsystem)
             : Logger(subsystem,
@@ -46,6 +66,12 @@ namespace Tom::s3e::Logging {
             ) {
         }
 
+        /**
+         * Create a new Logger with subsystem name and the given level.
+         *
+         * @param subsystem the name of the logging subsystem
+         * @param level the logging level
+         */
         template<typename FormatString>
         Logger(const FormatString & subsystem, Level level)
             : logger(spdlog::stdout_color_mt(subsystem)) {
@@ -53,31 +79,68 @@ namespace Tom::s3e::Logging {
             setLevel(level);
         }
 
+        /**
+         * Log a Trace level message.
+         *
+         * @param fmt the format string
+         * @param args... the format arguments
+         */
         template<typename FormatString, typename... Args>
         void trace(const FormatString & fmt, Args &&... args) {
             logger->trace(fmt, std::forward<Args>(args)...);
         }
 
+        /**
+         * Log a Debug level message.
+         *
+         * @param fmt the format string
+         * @param args... the format arguments
+         */
         template<typename FormatString, typename... Args>
         void debug(const FormatString & fmt, Args &&... args) {
             logger->debug(fmt, std::forward<Args>(args)...);
         }
 
+        /**
+         * Log a Info level message.
+         *
+         * @param fmt the format string
+         * @param args... the format arguments
+         */
         template<typename FormatString, typename... Args>
         void info(const FormatString & fmt, Args &&... args) {
             logger->info(fmt, std::forward<Args>(args)...);
         }
 
+        /**
+         * Log a Warning level message.
+         *
+         * @param fmt the format string
+         * @param args... the format arguments
+         */
         template<typename FormatString, typename... Args>
         void warning(const FormatString & fmt, Args &&... args) {
             logger->warn(fmt, std::forward<Args>(args)...);
         }
 
+        /**
+         * Log a Error level message.
+         *
+         * @param fmt the format string
+         * @param args... the format arguments
+         */
         template<typename FormatString, typename... Args>
         void error(const FormatString & fmt, Args &&... args) {
             logger->error(fmt, std::forward<Args>(args)...);
         }
 
+        /**
+         * Log a Critical level message. This method calls std::terminate and
+         * should only be used to terminate the program.
+         *
+         * @param fmt the format string
+         * @param args... the format arguments
+         */
         template<typename FormatString, typename... Args>
         [[noreturn]] void critical(const FormatString & fmt,
                                    Args &&... args) noexcept {
@@ -85,10 +148,20 @@ namespace Tom::s3e::Logging {
             std::terminate();
         }
 
+        /**
+         * Get the current log level.
+         *
+         * @return the current log level
+         */
         Level getLevel() const {
             return level;
         }
 
+        /**
+         * Set the log level.
+         *
+         * @param level the new log level
+         */
         void setLevel(Level level) {
             this->level = level;
             switch (level) {
@@ -114,7 +187,10 @@ namespace Tom::s3e::Logging {
         }
     };
 
+    /// Logger for the Support target
     extern Logger::Ptr Support;
+    /// Logger for the Graphics target
     extern Logger::Ptr Graphics;
+    /// Logger for the Core target
     extern Logger::Ptr Core;
 }
