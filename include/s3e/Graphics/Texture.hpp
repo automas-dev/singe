@@ -31,6 +31,11 @@ namespace Tom::s3e {
 
         /**
          * Create a texture from an image.
+         *
+         * @param magFilter the magnification filter (default GL_NEAREST)
+         * @param minFilter the minification filter (default GL_NEAREST)
+         * @param wrap the wrap mode when drawing
+         * @param mipmaps should mipmaps be generated
          */
         Texture(const sf::Image & image,
                 GLint magFilter = GL_LINEAR,
@@ -43,6 +48,18 @@ namespace Tom::s3e {
          *
          * Note: if samples is > 0, the filter, wrap and mipmaps arguments are
          * ignored.
+         *
+         * @param size the image size in pixels
+         * @param internal the internal format like GL_RGBA16F, GL_RGBA,
+         *                 GL_DEPTH_COMPONENT, etc.
+         * @param format the format of pixel data
+         * @param type the data type of pixel data
+         * @param samples the number of samples to use, 0 to disable
+         *                multisampling
+         * @param magFilter the magnification filter (default GL_NEAREST)
+         * @param minFilter the minification filter (default GL_NEAREST)
+         * @param wrap the wrap mode when drawing
+         * @param mipmaps should mipmaps be generated
          */
         Texture(const sf::Vector2u & size,
                 GLint internal = GL_RGBA,
