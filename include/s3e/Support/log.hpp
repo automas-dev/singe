@@ -37,7 +37,21 @@ namespace Tom::s3e::Logging {
 
         template<typename FormatString>
         Logger(const FormatString & subsystem)
-            : logger(spdlog::stdout_color_mt(subsystem)) {}
+            : Logger(subsystem,
+#ifdef DEBUG
+                     Debug
+#else
+                     Info
+#endif
+            ) {
+        }
+
+        template<typename FormatString>
+        Logger(const FormatString & subsystem, Level level)
+            : logger(spdlog::stdout_color_mt(subsystem)) {
+
+            setLevel(level);
+        }
 
         template<typename FormatString, typename... Args>
         void trace(const FormatString & fmt, Args &&... args) {
@@ -69,6 +83,10 @@ namespace Tom::s3e::Logging {
                                    Args &&... args) noexcept {
             logger->critical(fmt, std::forward<Args>(args)...);
             std::terminate();
+        }
+
+        Level getLevel() const {
+            return level;
         }
 
         void setLevel(Level level) {
