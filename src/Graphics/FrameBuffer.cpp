@@ -17,7 +17,11 @@ namespace Tom::s3e {
                                            GLint wrap)
         : Texture(
             size, internal, format, type, samples, magFilter, minFilter, wrap, false),
-          attachment(attachment) {}
+          attachment(attachment) {
+
+        Logging::Graphics->debug("Created FrameBufferTexture {}: attachment={}",
+                                 getTextureId(), attachment);
+    }
 
     FrameBufferTexture::~FrameBufferTexture() {
         Texture::~Texture();
@@ -28,6 +32,8 @@ namespace Tom::s3e {
     }
 
     void FrameBufferTexture::setAttachment(GLuint attachment) {
+        Logging::Graphics->debug("Setting FrameBufferTexture {}: attachment={}",
+                                 getTextureId(), attachment);
         this->attachment = attachment;
     }
 }
@@ -38,7 +44,11 @@ namespace Tom::s3e {
                              bool depthBuffer,
                              GLsizei samples)
         : size(size), rboDepth(0), samples(samples), resolved(nullptr) {
+
         glGenFramebuffers(1, &fboId);
+        Logging::Graphics->debug(
+            "Created FrameBuffer {}: size={}x{} attachments={} depthBuffer={} samples={}",
+            fboId, size.x, size.y, attachments.size(), depthBuffer, samples);
 
         bind();
 
@@ -87,6 +97,8 @@ namespace Tom::s3e {
     }
 
     FrameBuffer::~FrameBuffer() {
+        Logging::Graphics->debug("Deleting FrameBuffer {}", fboId);
+
         glDeleteFramebuffers(1, &fboId);
         if (rboDepth > 0)
             glDeleteRenderbuffers(1, &rboDepth);
@@ -101,10 +113,13 @@ namespace Tom::s3e {
     }
 
     void FrameBuffer::setSize(const sf::Vector2u & size) {
+        Logging::Graphics->debug("FrameBuffer set size to {}x{}", size.x, size.y);
+
         this->size = size;
         for (auto & texture : textures) {
             texture->resize(size);
         }
+
         if (rboDepth > 0) {
             glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
             if (samples > 0)
