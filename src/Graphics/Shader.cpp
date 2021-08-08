@@ -139,11 +139,15 @@ namespace Tom::s3e {
         return loadFromSource(vertexSource, fragmentSource);
     }
 
-    void Shader::bind() {
+    GLuint Shader::getProgram() const {
+        return program;
+    }
+
+    void Shader::bind() const {
         glUseProgram(program);
     }
 
-    void Shader::unbind() {
+    void Shader::unbind() const {
         glUseProgram(0);
     }
 
@@ -223,9 +227,11 @@ void main() {
 
     Shader::Ptr Shader::defaultShader() {
         auto shader = std::make_shared<Shader>();
-        if (shader) {
-            shader->loadFromSource(defaultVertexShaderSource,
-                                   defaultFragmentShaderSource);
+        if (shader
+            && !shader->loadFromSource(defaultVertexShaderSource,
+                                       defaultFragmentShaderSource)) {
+            Logging::Graphics->error("Failed to compile the default shader");
+            return nullptr;
         }
         return shader;
     }
