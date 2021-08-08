@@ -93,15 +93,14 @@ namespace Tom::s3e {
         glDisableVertexAttribArray(2);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        Logging::Graphics->debug("VBO Created usage={} vao={} vbo={}", usage,
-                                 vao, vbo);
+        Logging::Graphics->debug("VBO Created mode={} usage={} vao={} vbo={}",
+                                 mode, usage, vao, vbo);
     }
 
     VBO::~VBO() {
-        if (vao > 0) {
-            glDeleteBuffers(1, &vbo);
-            glDeleteVertexArrays(1, &vao);
-        }
+        Logging::Graphics->debug("Deleting VBO vao={} vbo={}", vao, vbo);
+        glDeleteBuffers(1, &vbo);
+        glDeleteVertexArrays(1, &vao);
     }
 
     GLuint VBO::getVBO() const {
@@ -121,6 +120,8 @@ namespace Tom::s3e {
     }
 
     void VBO::setMode(VBO::Mode mode) {
+        Logging::Graphics->debug("Changing mode for VBO vao={} vbo={} to {}",
+                                 vao, vbo, mode);
         this->mode = mode;
     }
 
@@ -129,6 +130,8 @@ namespace Tom::s3e {
     }
 
     void VBO::setUsage(VBO::Usage usage) {
+        Logging::Graphics->debug("Changing usage for VBO vao={} vbo={} to {}",
+                                 vao, vbo, usage);
         this->usage = usage;
     }
 
