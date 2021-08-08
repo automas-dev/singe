@@ -52,15 +52,10 @@ namespace Tom::s3e {
         return std::string(errorLog.begin(), errorLog.end());
     }
 
-    static GLuint compileShader(GLuint shaderType,
-                                const std::string & shaderSource) {
-
+    static GLuint compileShader(GLuint shaderType, const char * shaderSource) {
         GLuint shader = glCreateShader(shaderType);
-        const GLchar * src = shaderSource.c_str();
-
-        glShaderSource(shader, 1, &src, NULL);
+        glShaderSource(shader, 1, &shaderSource, NULL);
         glCompileShader(shader);
-
         return shader;
     }
 
@@ -71,34 +66,13 @@ namespace Tom::s3e {
             glDeleteProgram(program);
     }
 
-    bool Shader::loadFromPath(const std::string & vertexPath,
-                              const std::string & fragmentPath) {
-        Logging::Graphics->debug(
-            "loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
-            vertexPath, fragmentPath);
-
-        std::string vertexSource = shaderSource(vertexPath);
-        std::string fragmentSource = shaderSource(fragmentPath);
-
-        if (vertexSource.empty()) {
-            Logging::Graphics->error(
-                "vertex shader source could not be loaded from path {}",
-                vertexPath);
-            return false;
-        }
-
-        if (fragmentSource.empty()) {
-            Logging::Graphics->error(
-                "fragment shader source could not be loaded from path {}",
-                fragmentPath);
-            return false;
-        }
-
-        return loadFromSource(vertexSource, fragmentSource);
-    }
-
     bool Shader::loadFromSource(const std::string & vertexSource,
                                 const std::string & fragmentSource) {
+        return loadFromSource(vertexSource.c_str(), fragmentSource.c_str());
+    }
+
+    bool Shader::loadFromSource(const char * vertexSource,
+                                const char * fragmentSource) {
 
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
@@ -137,6 +111,32 @@ namespace Tom::s3e {
 
         Logging::Graphics->debug("Shader created program={}", program);
         return true;
+    }
+
+    bool Shader::loadFromPath(const std::string & vertexPath,
+                              const std::string & fragmentPath) {
+        Logging::Graphics->debug(
+            "loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
+            vertexPath, fragmentPath);
+
+        std::string vertexSource = shaderSource(vertexPath);
+        std::string fragmentSource = shaderSource(fragmentPath);
+
+        if (vertexSource.empty()) {
+            Logging::Graphics->error(
+                "vertex shader source could not be loaded from path {}",
+                vertexPath);
+            return false;
+        }
+
+        if (fragmentSource.empty()) {
+            Logging::Graphics->error(
+                "fragment shader source could not be loaded from path {}",
+                fragmentPath);
+            return false;
+        }
+
+        return loadFromSource(vertexSource, fragmentSource);
     }
 
     void Shader::bind() {

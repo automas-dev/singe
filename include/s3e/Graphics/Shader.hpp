@@ -13,6 +13,9 @@
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
 
 namespace Tom::s3e {
+    /**
+     * Manages a single OpenGL shader.
+     */
     class Shader {
         GLuint program;
 
@@ -25,6 +28,8 @@ namespace Tom::s3e {
 
         bool loadFromSource(const std::string & vertexSource,
                             const std::string & fragmentSource);
+
+        bool loadFromSource(const char * vertexSource, const char * fragmentSource);
 
         bool loadFromPath(const std::string & vertexPath,
                           const std::string & fragmentPath);
