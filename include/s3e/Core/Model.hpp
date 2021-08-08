@@ -35,8 +35,13 @@ namespace Tom::s3e {
         virtual ~Model();
 
         /**
+         * Send the Mesh and any materials to the OpenGL context.
+         */
+        void send() override;
+
+        /**
          * Bind textures and draw the mesh.
          */
-        void draw() const;
+        void draw() const override;
     };
 }

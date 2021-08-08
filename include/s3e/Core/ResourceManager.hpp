@@ -7,8 +7,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "s3e/Core/Scene.hpp"
 #include "s3e/Core/Model.hpp"
+#include "s3e/Core/Scene.hpp"
 #include "s3e/Graphics/Shader.hpp"
 #include "s3e/Graphics/Texture.hpp"
 
@@ -30,7 +30,7 @@ namespace Tom::s3e {
          * Construct a ResourceManagerBase with the current working directory as
          * the resource root path.
          */
-        ResourceManagerBase(void);
+        ResourceManagerBase();
 
         /**
          * Construct a ResourceManagerBase with `path` as the resource root path.
@@ -57,7 +57,7 @@ namespace Tom::s3e {
          *
          * @return the current resource root directory
          */
-        const std::string & getResourcePath(void);
+        const std::string & getResourcePath();
 
         /**
          * Resolve the path to a resource. If `path` is relative, this
@@ -85,6 +85,15 @@ namespace Tom::s3e {
     private:
         std::unordered_map<std::string, Texture::Ptr> textures;
 
+        /**
+         * Load a Wavefront .mtl file with the given name from the same
+         * directory as the .obj file it is loading from.
+         *
+         * @param objPath path to the .obj file which is loading the material
+         * @param name the material library name
+         *
+         * @return a unique_ptr to the MaterialLibrary
+         */
         std::unique_ptr<MaterialLib> loadMaterials(const std::string & objPath,
                                                    const std::string & name);
 
@@ -97,16 +106,20 @@ namespace Tom::s3e {
         /**
          * Load a Texture from it's given name when first loaded.
          *
+         * Note: this must be called in the same thread as the OpenGL context.
+         *
          * @param path the path to the Texture files
          *
          * @return a shared_ptr to a Texture
          */
         Texture::Ptr loadTexture(const std::string & path,
-                GLint magFilter = GL_LINEAR,
-                GLint minFilter = GL_LINEAR_MIPMAP_LINEAR);
+                                 GLint magFilter = GL_LINEAR,
+                                 GLint minFilter = GL_LINEAR_MIPMAP_LINEAR);
 
         /**
          * Load a Shader using `vertexPath` and `fragmentPath`.
+         *
+         * Note: this must be called in the same thread as the OpenGL context.
          *
          * @param vertexPath the path to the vertex shader source
          * @param fragmentPath the path to the fragment shader source
@@ -118,6 +131,9 @@ namespace Tom::s3e {
 
         /**
          * Load a Scene from `path`.
+         *
+         * Note: the user needs to call send on the resulting Scene in the
+         * same thread as the OpenGL context.
          *
          * @param path the path to the obj file
          *

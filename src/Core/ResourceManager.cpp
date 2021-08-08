@@ -158,7 +158,7 @@ namespace Tom::s3e {
                     break;
                 case 'm':
                     if (token.key == "map_Kd") {
-                        material->texture = loadTexture(token.value);
+                        material->image.loadFromFile(resourceAt(token.value));
                     }
                     break;
                 default:

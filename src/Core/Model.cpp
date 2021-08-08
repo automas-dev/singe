@@ -10,6 +10,13 @@ namespace Tom::s3e {
 
     Model::~Model() {}
 
+    void Model::send() {
+        Mesh::send();
+        for (auto & material : materials) {
+            material->send();
+        }
+    }
+
     void Model::draw() const {
         for (int i = 0; i < materials.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i);

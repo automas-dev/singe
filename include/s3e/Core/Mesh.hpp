@@ -45,11 +45,11 @@ namespace Tom::s3e {
         /**
          * Send points to the OpenGL buffer.
          */
-        void send();
+        virtual void send();
 
         /**
          * Call draw on vbo.
          */
-        void draw() const;
+        virtual void draw() const;
     };
 }

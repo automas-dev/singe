@@ -10,6 +10,15 @@ namespace Tom::s3e {
           alpha(1.0),
           texture(nullptr) {}
 
+    void Material::send() {
+        if (!texture) {
+            texture = std::make_shared<Texture>(image);
+        }
+        else {
+            texture->loadFrom(image);
+        }
+    }
+
     void Material::bind() const {
         if (texture)
             texture->bind();
