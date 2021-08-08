@@ -23,8 +23,9 @@ namespace Tom::s3e {
           mipmaps(mipmaps) {
 
         glGenTextures(1, &textureId);
-        Logging::Graphics->debug("generated opengl texture: {} samples = {}",
-                                 textureId, samples);
+        Logging::Graphics->debug(
+            "Generated texture {}: size={}x{} minFilter={} magFilter={} wrap={} mipmaps={}",
+            textureId, size.x, size.y, minFilter, magFilter, wrap, mipmaps);
 
         loadFrom(image);
     }
@@ -51,20 +52,23 @@ namespace Tom::s3e {
           mipmaps(mipmaps) {
 
         glGenTextures(1, &textureId);
-        Logging::Graphics->debug("generated opengl texture: {} samples = {}",
-                                 textureId, samples);
+        Logging::Graphics->debug(
+            "Generated texture {}: size={}x{} internal={} format={} type={} samples={} target={} minFilter={} magFilter={} wrap={} mipmaps={}",
+            textureId, size.x, size.y, internal, format, type, samples, target,
+            minFilter, magFilter, wrap, mipmaps);
 
         resize(size);
     }
 
     Texture::~Texture() {
-        if (textureId > 0) {
-            Logging::Graphics->debug("deleting opengl texture: {}", textureId);
-            glDeleteTextures(1, &textureId);
-        }
+        Logging::Graphics->debug("Deleting texture: {}", textureId);
+        glDeleteTextures(1, &textureId);
     }
 
     void Texture::loadFrom(const sf::Image & image) {
+        Logging::Graphics->debug("Loading texture {} from image: size={}x{}",
+                                 textureId, image.getSize().x, image.getSize().y);
+
         bind();
 
         internal = GL_RGBA;
@@ -98,6 +102,9 @@ namespace Tom::s3e {
     void Texture::resize(const sf::Vector2u & size) {
         this->size = size;
         if (size.x > 0 && size.y > 0) {
+            Logging::Graphics->debug("Resizeing texture {}: size={}x{}",
+                                     textureId, size.x, size.y);
+
             bind();
             if (samples > 0) {
                 glTexImage2DMultisample(target, samples, internal, size.x,
