@@ -192,7 +192,7 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    const std ::string defaultVertexShaderSource = R"(
+    static const std ::string defaultVertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNorm;
@@ -209,7 +209,7 @@ void main() {
     FragTex = aTex;
 })";
 
-    const std ::string defaultFragmentShaderSource = R"(
+    static const std ::string defaultFragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
 uniform sampler2D gTexture;

@@ -13,9 +13,6 @@
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
 
 namespace Tom::s3e {
-    extern const std ::string defaultVertexShaderSource;
-    extern const std ::string defaultFragmentShaderSource;
-
     class Shader {
         GLuint program;
 
@@ -23,7 +20,7 @@ namespace Tom::s3e {
         using Ptr = std::shared_ptr<Shader>;
         using ConstPtr = std::shared_ptr<const Shader>;
 
-        Shader(void);
+        Shader();
         virtual ~Shader();
 
         bool loadFromSource(const std::string & vertexSource,
@@ -32,9 +29,9 @@ namespace Tom::s3e {
         bool loadFromPath(const std::string & vertexPath,
                           const std::string & fragmentPath);
 
-        void bind(void);
+        void bind();
 
-        void unbind(void);
+        void unbind();
 
         GLuint uniformLocation(const std::string & name) const;
 
@@ -53,6 +50,6 @@ namespace Tom::s3e {
         void setMat3(const std::string & name, const glm::mat3 & value) const;
         void setMat4(const std::string & name, const glm::mat4 & value) const;
 
-        static Shader::Ptr defaultShader(void);
+        static Shader::Ptr defaultShader();
     };
 }
