@@ -50,7 +50,8 @@ bool Game::onCreate() {
     });
 
     // Initialize camera to look at origin
-    camera->move({-3, 2, -1});
+    camera->move({5, 2, 5});
+    camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
     auto devTexture = resManager.loadTexture("img/uv.png", GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
