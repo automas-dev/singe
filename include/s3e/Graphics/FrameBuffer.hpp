@@ -54,10 +54,10 @@ namespace Tom::s3e {
                            GLint internal = GL_RGBA,
                            GLenum format = GL_RGBA,
                            GLenum type = GL_FLOAT,
+                           GLsizei samples = 0,
                            GLint magFilter = GL_NEAREST,
                            GLint minFilter = GL_NEAREST,
-                           GLint wrap = GL_CLAMP,
-                           GLsizei samples = 0);
+                           GLint wrap = GL_CLAMP);
 
         /**
          * Destruct the FrameBufferTexture.

@@ -11,12 +11,12 @@ namespace Tom::s3e {
                                            GLint internal,
                                            GLenum format,
                                            GLenum type,
+                                           GLsizei samples,
                                            GLint magFilter,
                                            GLint minFilter,
-                                           GLint wrap,
-                                           GLsizei samples)
+                                           GLint wrap)
         : Texture(
-            size, internal, format, type, magFilter, minFilter, wrap, false, samples),
+            size, internal, format, type, samples, magFilter, minFilter, wrap, false),
           attachment(attachment) {}
 
     FrameBufferTexture::~FrameBufferTexture() {
@@ -44,8 +44,8 @@ namespace Tom::s3e {
 
         for (auto & a : attachments) {
             auto texture = std::make_shared<FrameBufferTexture>(
-                a.attachment, size, a.internal, a.format, a.type, GL_NEAREST,
-                GL_NEAREST, GL_CLAMP, samples);
+                a.attachment, size, a.internal, a.format, a.type, samples,
+                GL_NEAREST, GL_NEAREST, GL_CLAMP);
             GLenum textarget =
                 (samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D);
             glFramebufferTexture2D(GL_FRAMEBUFFER, a.attachment, textarget,
