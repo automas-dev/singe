@@ -1,6 +1,7 @@
 set(TARGET tests)
 
 set(SOURCE_LIST
+    test_framebuffer.cpp
     test_shader.cpp
     test_texture.cpp
     test_vbo_vertex.cpp
