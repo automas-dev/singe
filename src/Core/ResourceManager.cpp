@@ -101,7 +101,7 @@ namespace Tom::s3e {
 
         Material::Ptr material;
 
-        for (auto & token : parser.tokens()) {
+        for (auto & token : parser) {
             switch (token.key[0]) {
                 case 'n':
                     if (token.key == "newmtl") {
@@ -239,7 +239,7 @@ namespace Tom::s3e {
         int nRead;
         std::string line;
         std::string str;
-        for (auto & token : parser.tokens()) {
+        for (auto & token : parser) {
             switch (token.key[0]) {
                 case 'o':
                     if (tmpModel)

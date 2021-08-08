@@ -11,15 +11,16 @@ namespace Tom::s3e {
 namespace Tom::s3e {
     WavefrontParser::WavefrontParser(std::istream & is) : is(is) {}
 
-    std::vector<WavefrontParser::Token> WavefrontParser::tokens() {
-        std::vector<Token> tokenList;
+    WavefrontParser::operator bool() const {
+        return is.operator bool();
+    }
 
+    void WavefrontParser::read(WavefrontParser::Token & token) {
         std::string line;
         for (; std::getline(is, line);) {
             if (line.empty() || line[0] == '#')
                 continue;
 
-            Token token;
             auto split = line.find_first_of(' ');
             if (split == std::string::npos) {
                 token.key = line;
@@ -28,10 +29,15 @@ namespace Tom::s3e {
                 token.key = line.substr(0, split);
                 token.value = line.substr(split + 1);
             }
-
-            tokenList.push_back(token);
+            break;
         }
+    }
 
-        return tokenList;
+    WavefrontParser::iterator WavefrontParser::begin() {
+        return iterator(this);
+    }
+
+    WavefrontParser::iterator WavefrontParser::end() {
+        return iterator();
     }
 }
