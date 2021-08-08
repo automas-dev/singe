@@ -5,6 +5,7 @@
 namespace fs = std::filesystem;
 
 #include <array>
+#include <fstream>
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
@@ -91,13 +92,12 @@ namespace Tom::s3e {
         mtlPath += name;
         mtlPath = resourceAt(mtlPath);
 
-        WavefrontParser parser;
-        parser.open(mtlPath);
-
-        if (!parser.is_open()) {
+        std::ifstream is(mtlPath);
+        if (!is.is_open()) {
             Logging::Core->error("Failed to open material library {}", mtlPath);
             return nullptr;
         }
+        WavefrontParser parser(is);
 
         Material::Ptr material;
 
@@ -211,13 +211,12 @@ namespace Tom::s3e {
     Scene::Ptr ResourceManager::loadScene(const std::string & path) {
         auto relPath = resourceAt(path);
 
-        WavefrontParser parser;
-        parser.open(relPath);
-
-        if (!parser.is_open()) {
+        std::ifstream is(relPath);
+        if (!is.is_open()) {
             Logging::Core->warning("Failed to open file {}", relPath);
             return nullptr;
         }
+        WavefrontParser parser(is);
 
         std::string sceneName;
         {

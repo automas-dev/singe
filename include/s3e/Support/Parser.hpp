@@ -1,6 +1,7 @@
 #pragma once
 
-#include <fstream>
+#include <istream>
+#include <iterator>
 #include <string>
 #include <vector>
 
@@ -28,22 +29,15 @@ namespace Tom::s3e {
         };
 
     private:
-        std::ifstream is;
+        std::istream & is;
 
     public:
         /**
-         * Open a file at path for parsing.
-         *
-         * @param path the file to open
+         * Create a new WavefrontParser that reads from is.
+         * 
+         * @param is the input stream to read from
          */
-        void open(const std::string & path);
-
-        /**
-         * Check if a file is currently open.
-         *
-         * @return is a file open
-         */
-        bool is_open() const;
+        WavefrontParser(std::istream & is);
 
         /**
          * Parse the open file and return all tokens.

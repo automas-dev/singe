@@ -9,13 +9,7 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    void WavefrontParser::open(const std::string & path) {
-        is.open(path);
-    }
-
-    bool WavefrontParser::is_open() const {
-        return is.is_open();
-    }
+    WavefrontParser::WavefrontParser(std::istream & is) : is(is) {}
 
     std::vector<WavefrontParser::Token> WavefrontParser::tokens() {
         std::vector<Token> tokenList;
