@@ -55,15 +55,20 @@ namespace Tom::s3e {
     static GLuint compileShader(GLuint shaderType,
                                 const std::string_view & shaderSource) {
         GLuint shader = glCreateShader(shaderType);
+        Logging::Graphics->debug("Compiling shader {}: type={}", shader,
+                                 shaderType);
         const char * source = shaderSource.data();
         glShaderSource(shader, 1, &source, NULL);
         glCompileShader(shader);
         return shader;
     }
 
-    Shader::Shader() : program(glCreateProgram()) {}
+    Shader::Shader() : program(glCreateProgram()) {
+        Logging::Graphics->debug("Created shader program {}", program);
+    }
 
     Shader::~Shader() {
+        Logging::Graphics->debug("Deleting shader program {}", program);
         glDeleteProgram(program);
     }
 
@@ -102,14 +107,15 @@ namespace Tom::s3e {
             return false;
         }
 
-        Logging::Graphics->debug("Shader created program={}", program);
+        Logging::Graphics->debug("Shader program {} was compiled and linked",
+                                 program);
         return true;
     }
 
     bool Shader::loadFromPath(const std::string_view & vertexPath,
                               const std::string_view & fragmentPath) {
         Logging::Graphics->debug(
-            "loading Shader from paths vertex = \"{}\" fragment = \"{}\"",
+            "loading Shader from paths vertex=\"{}\" fragment=\"{}\"",
             vertexPath, fragmentPath);
 
         std::string vertexSource = shaderSource(vertexPath);
@@ -239,17 +245,12 @@ namespace Tom::s3e {
     static const std ::string defaultVertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNorm;
 layout (location = 2) in vec2 aTex;
-out vec3 FragPos;
-out vec3 FragNorm;
 out vec2 FragTex;
 uniform mat4 mvp;
 uniform mat4 model;
 void main() {
     gl_Position = mvp * model * vec4(aPos, 1.0);
-    FragPos = vec3(model * vec4(aPos, 1.0));
-    FragNorm = aNorm;
     FragTex = aTex;
 })";
 
@@ -257,15 +258,13 @@ void main() {
 #version 330 core
 out vec4 FragColor;
 uniform sampler2D gTexture;
-in vec3 FragPos;
-in vec3 FragNorm;
 in vec2 FragTex;
 void main() {
     FragColor = texture(gTexture, FragTex);
-    //FragColor = vec4(1, 0, 0, 1);
 })";
 
     Shader::Ptr Shader::defaultShader() {
+        Logging::Graphics->debug("Loading the default shader");
         auto shader = std::make_shared<Shader>();
         if (shader
             && !shader->loadFromSource(defaultVertexShaderSource,
