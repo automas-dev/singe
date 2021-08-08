@@ -93,6 +93,10 @@ namespace Tom::s3e {
         Vertex & operator-=(const Vertex & other);
     };
 
+    void draw_array(const std::vector<Vertex> & vertices, GLenum mode);
+
+    void draw_quad(const glm::vec2 & pos, const glm::vec2 & size);
+
     /**
      * Manages a single vertex buffered object and vertex array object.
      */

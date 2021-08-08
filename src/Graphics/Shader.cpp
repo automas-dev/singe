@@ -6,75 +6,11 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
-
-    void draw_color_array_legacy(const float * vertices,
-                                 const float * colors,
-                                 size_t n,
-                                 GLenum mode) {
-
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, vertices);
-        glEnableClientState(GL_COLOR_ARRAY);
-        glColorPointer(3, GL_FLOAT, 0, colors);
-
-        glDrawArrays(mode, 0, n);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-    }
-
-    void draw_color_array(const std::vector<glm::vec3> & vertices,
-                          const std::vector<glm::vec3> & colors,
-                          GLenum mode) {
-
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, &vertices[0].x);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, &colors[0].x);
-
-        glDrawArrays(mode, 0, vertices.size());
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-    }
-
-    void draw_tex_array(const std::vector<glm::vec3> & vertices,
-                        const std::vector<glm::vec2> & uvs,
-                        GLenum mode) {
-
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, &vertices[0].x);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, &uvs[0].x);
-
-        glDrawArrays(mode, 0, vertices.size());
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-    }
-
-    void draw_quad(glm::vec2 pos, glm::vec2 size) {
-        std::vector<glm::vec3> vertices = {
-            {pos.x, pos.y, 0.0},
-            {pos.x + size.x, pos.y, 0.0},
-            {pos.x + size.x, pos.y + size.y, 0.0},
-            {pos.x, pos.y + size.y, 0.0},
-        };
-
-        std::vector<glm::vec2> tex = {
-            {0.0, 0.0},
-            {1.0, 0.0},
-            {1.0, 1.0},
-            {0.0, 1.0},
-        };
-
-        draw_tex_array(vertices, tex, GL_QUADS);
-    }
-
-    std::string shaderSource(const std::string & path) {
+    static std::string shaderSource(const std::string & path) {
         std::ifstream t(path);
         if (!t) {
-            Logging::Graphics->error("shaderSource path={} failed to open file", path);
+            Logging::Graphics->error("shaderSource path={} failed to open file",
+                                     path);
             return std::string();
         }
 
@@ -167,7 +103,7 @@ namespace Tom::s3e {
         GLuint vShader = compileShader(GL_VERTEX_SHADER, vertexSource);
         if (!compileSuccess(vShader)) {
             Logging::Graphics->error("failed to compile vertex shader {}: {}",
-                                 vShader, compileError(vShader));
+                                     vShader, compileError(vShader));
             glDeleteShader(vShader);
             return false;
         }
@@ -175,7 +111,7 @@ namespace Tom::s3e {
         GLuint fShader = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
         if (!compileSuccess(fShader)) {
             Logging::Graphics->error("failed to compile fragment shader {}: {}",
-                                 fShader, compileError(fShader));
+                                     fShader, compileError(fShader));
             glDeleteShader(vShader);
             glDeleteShader(fShader);
             return false;
@@ -194,7 +130,7 @@ namespace Tom::s3e {
 
         if (!linkSuccess(program)) {
             Logging::Graphics->error("failed to link shader program {}: {}",
-                                 program, linkError(program));
+                                     program, linkError(program));
             glDeleteProgram(program);
             return false;
         }

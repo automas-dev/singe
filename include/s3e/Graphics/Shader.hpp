@@ -13,24 +13,6 @@
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
 
 namespace Tom::s3e {
-
-    void draw_color_array_legacy(const float * vertices,
-                                 const float * colors,
-                                 size_t n,
-                                 GLenum mode);
-
-    void draw_color_array(const std::vector<glm::vec3> & vertices,
-                          const std::vector<glm::vec3> & colors,
-                          GLenum mode);
-
-    void draw_tex_array(const std::vector<glm::vec3> & vertices,
-                        const std::vector<glm::vec2> & uvs,
-                        GLenum mode);
-
-    void draw_quad(glm::vec2 pos, glm::vec2 size);
-
-    std::string shaderSource(const std::string & path);
-
     extern const std ::string defaultVertexShaderSource;
     extern const std ::string defaultFragmentShaderSource;
 
