@@ -187,8 +187,6 @@ namespace Tom::s3e::Logging {
         }
     };
 
-    /// Logger for the Support target
-    extern Logger::Ptr Support;
     /// Logger for the Graphics target
     extern Logger::Ptr Graphics;
     /// Logger for the Core target
