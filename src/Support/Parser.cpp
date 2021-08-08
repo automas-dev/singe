@@ -1,18 +1,6 @@
 #include "s3e/Support/Parser.hpp"
 
-#include <sstream>
-
-namespace Tom::s3e {
-    std::vector<std::string> splitString(const std::string & str, char delim) {
-        std::vector<std::string> parts;
-        std::stringstream ss(str);
-        std::string part;
-        for (; std::getline(ss, part, delim);) {
-            parts.push_back(part);
-        }
-        return parts;
-    }
-}
+#include "s3e/Support/Util.hpp"
 
 namespace Tom::s3e {
     std::vector<std::string> WavefrontParser::Token::params() const {

@@ -1,6 +1,7 @@
 #include "s3e/Core/ResourceManager.hpp"
 
 #include <filesystem>
+
 namespace fs = std::filesystem;
 
 #include <array>
@@ -9,6 +10,7 @@ namespace fs = std::filesystem;
 #include <vector>
 
 #include "s3e/Support/Parser.hpp"
+#include "s3e/Support/Util.hpp"
 #include "s3e/Support/log.hpp"
 
 #define PARSE_ERROR(TAG)                                                    \
