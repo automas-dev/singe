@@ -7,7 +7,7 @@ namespace Tom::s3e {
         : FrameBufferTexture(GL_COLOR_ATTACHMENT0, {0, 0}) {}
 
     FrameBufferTexture::FrameBufferTexture(GLuint attachment,
-                                           sf::Vector2u size,
+                                           const sf::Vector2u & size,
                                            GLint internal,
                                            GLenum format,
                                            GLenum type,
@@ -33,7 +33,7 @@ namespace Tom::s3e {
 }
 
 namespace Tom::s3e {
-    FrameBuffer::FrameBuffer(sf::Vector2u size,
+    FrameBuffer::FrameBuffer(const sf::Vector2u & size,
                              std::vector<FrameBufferAttachment> attachments,
                              bool depthBuffer,
                              GLsizei samples)
@@ -100,7 +100,7 @@ namespace Tom::s3e {
         return size;
     }
 
-    void FrameBuffer::setSize(sf::Vector2u size) {
+    void FrameBuffer::setSize(const sf::Vector2u & size) {
         this->size = size;
         for (auto & texture : textures) {
             texture->resize(size);
@@ -123,7 +123,7 @@ namespace Tom::s3e {
         return textures;
     }
 
-    bool FrameBuffer::isMultisampled() {
+    bool FrameBuffer::isMultisampled() const {
         return samples > 0;
     }
 
@@ -131,7 +131,7 @@ namespace Tom::s3e {
         return textures.size();
     }
 
-    void FrameBuffer::blit(GLint dest, GLbitfield bitfield) {
+    void FrameBuffer::blit(GLint dest, GLbitfield bitfield) const {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dest);
         if (count() > 1) {
@@ -150,18 +150,18 @@ namespace Tom::s3e {
                               bitfield, GL_NEAREST);
     }
 
-    FrameBuffer::Ptr & FrameBuffer::getResolved() {
+    const FrameBuffer::Ptr & FrameBuffer::getResolved() const {
         if (resolved)
             blit(resolved->getId(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
                                         | GL_STENCIL_BUFFER_BIT);
         return resolved;
     }
 
-    void FrameBuffer::bind() {
+    void FrameBuffer::bind() const {
         glBindFramebuffer(GL_FRAMEBUFFER, fboId);
     }
 
-    void FrameBuffer::unbind() {
+    void FrameBuffer::unbind() const {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }

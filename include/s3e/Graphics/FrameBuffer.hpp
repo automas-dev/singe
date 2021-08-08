@@ -18,39 +18,32 @@ namespace Tom::s3e {
         GLuint attachment;
 
     public:
-        /**
-         * A shared pointer that manages a FrameBufferTexture.
-         */
         using Ptr = std::shared_ptr<FrameBufferTexture>;
-
-        /**
-         * A shared pointer that manages a const FrameBufferTexture.
-         */
         using ConstPtr = std::shared_ptr<const FrameBufferTexture>;
 
         /**
          * Construct a new empty FrameBufferTexture.
          */
-        FrameBufferTexture(void);
+        FrameBufferTexture();
 
         /**
          * Construct a new FrameBufferTexture and generate a 2d texture.
          *
          * @param attachment the frame buffer attachment like
-         * GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
+         *                   GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, etc.
          * @param size the image size in pixels
          * @param internal the internal format like GL_RGBA16F, GL_RGBA,
-         * GL_DEPTH_COMPONENT, etc.
+         *                 GL_DEPTH_COMPONENT, etc.
          * @param format the format of pixel data
          * @param type the data type of pixel data
+         * @param samples the number of samples to use, 0 to disable
+         *                multisampling
          * @param magFilter the magnification filter (default GL_NEAREST)
          * @param minFilter the minification filter (default GL_NEAREST)
          * @param wrap the wrap mode when drawing
-         * @param samples the number of samples to use, 0 to disable
-         *                multisampling
          */
         FrameBufferTexture(GLuint attachment,
-                           sf::Vector2u size,
+                           const sf::Vector2u & size,
                            GLint internal = GL_RGBA,
                            GLenum format = GL_RGBA,
                            GLenum type = GL_FLOAT,
@@ -69,7 +62,7 @@ namespace Tom::s3e {
          *
          * @return the attachment GLenum
          */
-        GLuint getAttachment(void) const;
+        GLuint getAttachment() const;
 
         /**
          * Set the attachment GLenum used in glFramebufferTexture2D.
@@ -108,14 +101,7 @@ namespace Tom::s3e {
         std::shared_ptr<FrameBuffer> resolved;
 
     public:
-        /**
-         * A shared pointer that manages a FrameBuffer.
-         */
         using Ptr = std::shared_ptr<FrameBuffer>;
-
-        /**
-         * A shared pointer that manages a const FrameBuffer.
-         */
         using ConstPtr = std::shared_ptr<const FrameBuffer>;
 
         /**
@@ -127,7 +113,7 @@ namespace Tom::s3e {
          * @param samples the number of samples to use, 0 to disable
          *                multisampling
          */
-        FrameBuffer(sf::Vector2u size,
+        FrameBuffer(const sf::Vector2u & size,
                     std::vector<FrameBufferAttachment> attachments,
                     bool depthBuffer = true,
                     GLsizei samples = 0);
@@ -142,14 +128,14 @@ namespace Tom::s3e {
          *
          * @return the opengl id
          */
-        GLuint getId(void) const;
+        GLuint getId() const;
 
         /**
          * Get the current size in pixels.
          *
          * @return the current size
          */
-        const sf::Vector2u & getSize(void) const;
+        const sf::Vector2u & getSize() const;
 
         /**
          * Set the size in pixels. This will also resize each
@@ -157,13 +143,13 @@ namespace Tom::s3e {
          *
          * @param size the new size in pixels
          */
-        void setSize(sf::Vector2u size);
+        void setSize(const sf::Vector2u & size);
 
         /**
          * Does the FrameBuffer support multisampling. If so, you need to use
          * the FrameBuffer from getResolved() for any sampleing.
          */
-        bool isMultisampled(void);
+        bool isMultisampled() const;
 
         /**
          * Get the number of FrameBufferTexture textures in the FrameBuffer.
@@ -177,7 +163,7 @@ namespace Tom::s3e {
          *
          * @return the textures
          */
-        const std::vector<FrameBufferTexture::Ptr> & getTextures(void) const;
+        const std::vector<FrameBufferTexture::Ptr> & getTextures() const;
 
         /**
          * Call glBlitFramebuffer with the FrameBuffer as the source and dest
@@ -187,7 +173,7 @@ namespace Tom::s3e {
          * @param bitfield the buffers to copy (GL_COLOR_BUFFER_BIT,
          * GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT)
          */
-        void blit(GLint dest, GLbitfield bitfield = GL_COLOR_BUFFER_BIT);
+        void blit(GLint dest, GLbitfield bitfield = GL_COLOR_BUFFER_BIT) const;
 
         /**
          * Get the resolved FrameBuffer. If this FrameBuffer is multisampled,
@@ -196,18 +182,17 @@ namespace Tom::s3e {
          *
          * @returns the resolved FrameBuffer
          */
-        FrameBuffer::Ptr & getResolved(void);
+        const FrameBuffer::Ptr & getResolved() const;
 
         /**
          * Bind the FrameBuffer. All draw calls after this will be sent to the
          * FrameBuffer.
          */
-        void bind(void);
+        void bind() const;
 
         /**
-         * Bind the default frame buffer, effectively unbinding this
-         * FrameBuffer.
+         * Unbind this FrameBuffer, effectively binding the default FrameBuffer.
          */
-        void unbind(void);
+        void unbind() const;
     };
 }
