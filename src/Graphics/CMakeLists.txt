@@ -3,7 +3,6 @@ set(TARGET Graphics)
 
 set(HEADER_LIST
     FrameBuffer.hpp
-    Menu.hpp
     Shader.hpp
     Texture.hpp
     VBO.hpp)
@@ -11,7 +10,6 @@ list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${
 
 set(SOURCE_LIST
     FrameBuffer.cpp
-    Menu.cpp
     Shader.cpp
     Texture.cpp
     VBO.cpp)

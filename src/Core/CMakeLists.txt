@@ -6,6 +6,7 @@ set(HEADER_LIST
     FPSDisplay.hpp
     GameBase.hpp
     Material.hpp
+    Menu.hpp
     Mesh.hpp
     Model.hpp
     Physics.hpp
@@ -18,6 +19,7 @@ set(SOURCE_LIST
     FPSDisplay.cpp
     GameBase.cpp
     Material.cpp
+    Menu.cpp
     Mesh.cpp
     Model.cpp
     Physics.cpp

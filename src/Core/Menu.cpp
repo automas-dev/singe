@@ -1,4 +1,4 @@
-#include "s3e/Graphics/Menu.hpp"
+#include "s3e/Core/Menu.hpp"
 
 #include "s3e/Support/log.hpp"
 
