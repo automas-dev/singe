@@ -7,7 +7,7 @@ const sf::Color dark(10, 10, 10);
 
 namespace Tom::s3e {
 
-    MenuItem::MenuItem() {}
+    MenuItem::MenuItem(std::function<void()> callback) : callback(callback) {}
 
     MenuItem::~MenuItem() {}
 
@@ -17,11 +17,11 @@ namespace Tom::s3e {
 
     void MenuItem::onClick() const {
         Logging::Graphics->info("MenuItem {} was clicked, calling callback",
-                            std::string(getString()));
+                                std::string(getString()));
         callback();
     }
 
-    bool MenuItem::contains(sf::Vector2f point) const {
+    bool MenuItem::contains(const sf::Vector2f & point) const {
         auto tPoint = getTransform().getInverse().transformPoint(point);
         return getLocalBounds().contains(tPoint);
     }
@@ -29,7 +29,7 @@ namespace Tom::s3e {
 
 namespace Tom::s3e {
 
-    Menu::Menu() {}
+    Menu::Menu() : isMouseDown(false), visible(false) {}
 
     Menu::Menu(const sf::Font & font) : font(font) {
         title.setFont(this->font);
@@ -65,15 +65,14 @@ namespace Tom::s3e {
         visible = false;
     }
 
-    bool Menu::isVisible() {
+    bool Menu::isVisible() const {
         return visible;
     }
 
     bool Menu::addMenuItem(const std::string & text,
-                           std::function<void(void)> callback) {
-        auto menuItem = std::make_shared<MenuItem>();
+                           std::function<void()> callback) {
+        auto menuItem = std::make_shared<MenuItem>(callback);
 
-        menuItem->setCallback(callback);
         menuItem->setFont(this->font);
         menuItem->setString(text);
         menuItem->setCharacterSize(24);

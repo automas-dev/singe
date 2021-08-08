@@ -8,21 +8,47 @@
 
 namespace Tom::s3e {
 
+    /**
+     * A single item in a Menu. Currently this can be used as a label or a
+     * button.
+     */
     class MenuItem : public sf::Text {
-        std::function<void(void)> callback;
+        std::function<void()> callback;
 
     public:
         using Ptr = std::shared_ptr<MenuItem>;
         using ConstPtr = std::shared_ptr<const MenuItem>;
 
-        MenuItem(void);
+        /**
+         * Create a new MenuItem with a callback for click events.
+         *
+         * @param callback the callback for click events
+         */
+        MenuItem(std::function<void()> callback);
+
+        /// Destructor
         virtual ~MenuItem();
 
-        void setCallback(std::function<void(void)> callback);
+        /**
+         * Set the lambda to be called when onClick() is called.
+         *
+         * @param callback the calback for click events
+         */
+        void setCallback(std::function<void()> callback);
 
+        /**
+         * Handle a click event for this item by calling the callback lambda.
+         */
         void onClick() const;
 
-        bool contains(sf::Vector2f point) const;
+        /**
+         * Check if the bounds of this MenuItem contain a point.
+         *
+         * @param point the point to check
+         *
+         * @return is the point within the bounds of this
+         */
+        bool contains(const sf::Vector2f & point) const;
     };
 
     /**
@@ -32,24 +58,17 @@ namespace Tom::s3e {
         sf::Font font;
         sf::Text title;
         std::list<MenuItem::Ptr> items;
-        bool isMouseDown = false;
-        bool visible = false;
+        bool isMouseDown;
+        bool visible;
 
     public:
-        /**
-         * A shared pointer that manages a Menu.
-         */
         using Ptr = std::shared_ptr<Menu>;
-
-        /**
-         * A shared pointer that manages a const Menu.
-         */
         using ConstPtr = std::shared_ptr<const Menu>;
 
         /**
          * Construct a Menu.
          */
-        Menu(void);
+        Menu();
 
         /**
          * Construct a Menu and use `font` for the title and menu items.
@@ -89,23 +108,22 @@ namespace Tom::s3e {
         /**
          * Make the Menu visible and start accepting events.
          */
-        void show(void);
+        void show();
 
         /**
          * Hide the Menu and stop responding to events.
          */
-        void hide(void);
+        void hide();
 
         /**
          * Is the Menu currently visible.
          *
          * @return is the Menu visible
          */
-        bool isVisible(void);
+        bool isVisible() const;
 
-        // TODO: Document addMenuItem once it's fate is decided
-        bool addMenuItem(const std::string & text,
-                         std::function<void(void)> callback);
+        /// TODO: Document addMenuItem once it's fate is decided
+        bool addMenuItem(const std::string & text, std::function<void()> callback);
 
         /**
          * Override for sf::Drawable::draw. If the menu is visible, this method
