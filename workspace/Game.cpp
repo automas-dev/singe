@@ -54,7 +54,7 @@ bool Game::onCreate() {
         },
         true, 0);
 
-    gShader = resManager.loadShader("shader/geom.vert", "shader/geom copy.frag");
+    gShader = resManager.loadShader("shader/geom copy.frag");
     if (!gShader)
         return false;
 
