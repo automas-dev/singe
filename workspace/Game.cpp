@@ -2,17 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <exception>
-#include <glm/gtc/noise.hpp>
-
-
-static void getGlError() {
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        SPDLOG_ERROR("glGetError() returned {}", err);
-    }
-}
-
 Game::Game(const sf::String & resPath)
     : GameBase(), resManager(resPath), taskQueue(DispatchQueue::Concurrent) {}
 
@@ -36,9 +25,11 @@ bool Game::onCreate() {
     fps->setFont(uiFont);
     fps->setRate(0.1f);
 
+#ifdef DEBUG
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
+#endif
 
     // Add menu buttons
     menu->addMenuItem("Resume", [&]() {
@@ -49,50 +40,16 @@ bool Game::onCreate() {
         window->close();
     });
 
-    // Initialize camera to look at origin
     camera->move({5, 2, 5});
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
-    auto devTexture = resManager.loadTexture("img/uv.png", GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
-    if (!devTexture)
-        return false;
-
-    auto objectScene = resManager.loadScene("model/sphere.obj");
-    if (!objectScene)
-        return false;
-    objectScene->move({0, 2, 0});
-
-    scene = resManager.loadScene("model/cube_plane.obj");
+    scene = std::make_shared<Scene>("Root");
     if (!scene)
         return false;
-
-    scene->children.push_back(objectScene);
-
-    otherScene = std::make_shared<Scene>("other");
-    scene->children.push_back(otherScene);
-
-    taskQueue.add([&] {
-        auto fountainScene = resManager.loadScene("model/fountain.obj");
-        if (!fountainScene)
-            return;
-        fountainScene->move({0, 0, 3});
-        localTaskQueue.add([&, fountainScene] {
-            fountainScene->send();
-            otherScene->children.push_back(fountainScene);
-        });
-    });
-
-    auto humanScene = resManager.loadScene("model/Human.obj");
-    if (!humanScene)
-        return false;
-    humanScene->move({3, 0, 0});
-    otherScene->children.push_back(humanScene);
-
     scene->send();
 
     SetMouseGrab(true);
-    getGlError();
     return true;
 }
 
@@ -127,16 +84,10 @@ void Game::onResized(const sf::Event::SizeEvent & e) {
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
-
-    // scene->rotate(glm::quat(glm::vec3(0, 0.5 * delta.asSeconds(), 0)));
-    scene->children[0]->rotateEuler({delta.asSeconds(), delta.asSeconds() * 0.2, 0});
-    otherScene->rotateEuler({0, delta.asSeconds() * 0.1, 0});
-
     localTaskQueue.processAll();
 }
 
 void Game::onDraw() const {
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);

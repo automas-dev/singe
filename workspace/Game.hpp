@@ -21,10 +21,9 @@ using namespace Tom::s3e;
 class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
-    Scene::Ptr scene;
-    Scene::Ptr otherScene;
     LocalDispatchQueue localTaskQueue;
     DispatchQueue taskQueue;
+    Scene::Ptr scene;
 
 public:
     Game(const sf::String & resPath);
