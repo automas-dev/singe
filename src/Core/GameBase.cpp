@@ -72,8 +72,10 @@ namespace Tom::s3e {
 
         Logging::Core->debug("calling onCreate()");
         bool res = onCreate();
-        if (!res)
+        if (!res) {
             Logging::Core->error("User overridden onCreate returned false");
+            onDestroy();
+        }
         return res;
     }
 
