@@ -58,3 +58,39 @@ namespace Tom::s3e {
         buffer->unbind();
     }
 }
+
+namespace Tom::s3e {
+    LightingShader::LightingShader(const Shader::Ptr & shader)
+        : shader(shader), hdr(false) {}
+
+    LightingShader::~LightingShader() {}
+
+    void LightingShader::draw(const GeometryBuffer::ConstPtr & buff,
+                              const Camera::ConstPtr & camera) const {
+
+        shader->bind();
+        shader->setMat4("mvp", glm::mat4(1));
+        shader->setMat4("model", glm::mat4(1));
+        shader->setVec3("viewPos", camera->getPosition());
+        shader->setVec3("lightPos", {1, 2, 3});
+        shader->setBool("hdr", hdr);
+
+        auto & gTextures = buff->getTextures();
+        for (int i = 0; i < gTextures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            gTextures[i]->bind();
+        }
+        shader->setInt("gPosition", 0);
+        shader->setInt("gNormal", 1);
+        shader->setInt("gAlbedo", 2);
+        shader->setInt("gSpecular", 3);
+
+        draw_quad({-1, -1}, {2, 2});
+
+        for (int i = 0; i < gTextures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            gTextures[i]->unbind();
+        }
+        glActiveTexture(GL_TEXTURE0);
+    }
+}

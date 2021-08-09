@@ -27,6 +27,7 @@ class Game : public GameBase {
     DispatchQueue taskQueue;
     Scene::Ptr scene;
     GeometryBuffer::Ptr gBuff;
+    LightingShader::Ptr lightShader;
     int drawMode = 4;
 
 public:

@@ -46,6 +46,12 @@ bool Game::onCreate() {
 
     gBuff = std::make_shared<GeometryBuffer>(window->getSize());
 
+    auto lShader = resManager.loadShader("shader/light.frag");
+    if (!lShader)
+        return false;
+
+    lightShader = std::make_shared<LightingShader>(lShader);
+
     scene = std::make_shared<Scene>("Root");
 
     auto floorScene = resManager.loadScene("model/cube_plane.obj");
@@ -55,17 +61,25 @@ bool Game::onCreate() {
     scene->send();
 
     taskQueue.add([&] {
-        auto fountainScene = resManager.loadScene("model/fountain.obj");
-        if (!fountainScene)
+        // auto fountainScene = resManager.loadScene("model/fountain.obj");
+        // if (!fountainScene)
+        //     return;
+        // fountainScene->move({0, 0, 3});
+
+        auto sphereScene = resManager.loadScene("model/sphere.obj");
+        if (!sphereScene)
             return;
-        fountainScene->move({0, 0, 3});
+        sphereScene->scale({0.1, 0.1, 0.1});
+        sphereScene->move({1, 2, 3});
 
         auto cubeScene = resManager.loadScene("model/cube.obj");
         if (!cubeScene)
             return;
+        cubeScene->move({3, 0, 0});
 
         localTaskQueue.add([=] {
-            scene->children.push_back(fountainScene);
+            // scene->children.push_back(fountainScene);
+            scene->children.push_back(sphereScene);
             scene->children.push_back(cubeScene);
             scene->send();
         });
@@ -140,12 +154,10 @@ void Game::onDraw() const {
 
     gBuff->draw(scene, vp);
 
+    lightShader->draw(gBuff, camera);
+
     defaultShader->bind();
-    if (drawMode == 4) {
-        defaultShader->setMat4("mvp", vp);
-        scene->draw(defaultShader);
-    }
-    else {
+    if (false) {
         defaultShader->setMat4("mvp", glm::mat4(1));
         defaultShader->setMat4("model", glm::mat4(1));
         auto & texs = gBuff->getTextures();
