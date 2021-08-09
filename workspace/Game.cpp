@@ -44,19 +44,7 @@ bool Game::onCreate() {
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
-    gBuff = std::make_shared<FrameBuffer>(
-        window->getSize(),
-        std::vector<FrameBufferAttachment> {
-            FrameBufferAttachment(GL_COLOR_ATTACHMENT0, GL_RGB16F, GL_RGB, GL_FLOAT),
-            FrameBufferAttachment(GL_COLOR_ATTACHMENT1, GL_RGB16F, GL_RGB, GL_FLOAT),
-            FrameBufferAttachment(GL_COLOR_ATTACHMENT2, GL_RGB, GL_RGB, GL_FLOAT),
-            FrameBufferAttachment(GL_COLOR_ATTACHMENT3, GL_R16F, GL_RED, GL_FLOAT),
-        },
-        true, 0);
-
-    gShader = resManager.loadShader("shader/geom copy.frag");
-    if (!gShader)
-        return false;
+    gBuff = std::make_shared<GeometryBuffer>(window->getSize());
 
     scene = std::make_shared<Scene>("Root");
 
@@ -132,6 +120,7 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
     GameBase::onResized(e);
+    gBuff->setSize({e.width, e.height});
 }
 
 void Game::onUpdate(const sf::Time & delta) {
@@ -149,14 +138,7 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
-    gBuff->bind();
-    gShader->bind();
-    gShader->setMat4("mvp", vp);
-    {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        scene->draw(gShader);
-    }
-    gBuff->unbind();
+    gBuff->draw(scene, vp);
 
     defaultShader->bind();
     if (drawMode == 4) {
