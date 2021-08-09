@@ -243,11 +243,54 @@ namespace Tom::s3e {
         /**
          * Load the default shader from the internal source.
          *
-         * This shader takes a Vertex from VBO.hpp, two 4x4 matrices mvp and
-         * model, and a texture.
+         * This shader takes a Vertex from VBO.hpp,
+         *
+         * Uniforms:
+         * - mvp: mat4
+         * - model: mat4
          *
          * @return the default shader
          */
         static Shader::Ptr defaultShader();
+
+        /**
+         * Load a shader using the default vertex shader and a fragment shader.
+         *
+         * This shader takes a Vertex from VBO.hpp,
+         *
+         * Uniforms:
+         * - mvp: mat4
+         * - model: mat4
+         *
+         * Out to fragment shader:
+         * - FragPos: vec3
+         * - FragNorm: vec3
+         * - FragTex: vec2
+         *
+         * @param path the path to the fragment shader source
+         *
+         * @return the shader
+         */
+        static Shader::Ptr fromFragmentPath(const std::string_view & path);
+
+        /**
+         * Load a shader using the default vertex shader and a fragment shader.
+         *
+         * This shader takes a Vertex from VBO.hpp,
+         *
+         * Uniforms:
+         * - mvp: mat4
+         * - model: mat4
+         *
+         * Out to fragment shader:
+         * - FragPos: vec3
+         * - FragNorm: vec3
+         * - FragTex: vec2
+         *
+         * @param source the fragment shader source
+         *
+         * @return the shader
+         */
+        static Shader::Ptr fromFragmentSource(const std::string_view & source);
     };
 }
