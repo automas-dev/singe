@@ -25,17 +25,12 @@ namespace Tom::s3e {
 
         std::string line;
         for (; std::getline(is, line);) {
-            Logging::Graphics->trace("Source line \"{}\"", line);
             if (line[0] == '#') {
                 auto space = line.find_first_of(' ');
                 if (line.substr(0, space) == "#include") {
                     auto includeFile = line.substr(space + 2, line.length() - space - 3);
-                    Logging::Graphics->debug("Got include path {}", includeFile);
                     auto parent = std::string(parentOf(path));
-                    Logging::Graphics->debug("Parent path is {}", parent);
-                    auto subSource = shaderSource(parent + '/' + includeFile);
-                    source += subSource + '\n';
-                    continue;
+                    line = shaderSource(parent + '/' + includeFile);
                 }
             }
             source += line + '\n';
