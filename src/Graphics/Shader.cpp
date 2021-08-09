@@ -13,7 +13,17 @@ namespace Tom::s3e {
         return path.substr(0, lastSlash);
     }
 
-    static std::string shaderSource(const std::string_view & path) {
+    static std::string shaderSource(const std::string_view & path,
+                                    std::vector<std::string> & loaded) {
+        for (auto & l : loaded) {
+            if (l == path) {
+                Logging::Graphics->warning("File already included {}, skipping", path);
+                return "";
+            }
+        }
+
+        loaded.emplace_back(path);
+
         std::ifstream is(path.data());
         if (!is) {
             Logging::Graphics->error("shaderSource path={} failed to open file",
@@ -28,15 +38,21 @@ namespace Tom::s3e {
             if (line[0] == '#') {
                 auto space = line.find_first_of(' ');
                 if (line.substr(0, space) == "#include") {
-                    auto includeFile = line.substr(space + 2, line.length() - space - 3);
+                    auto includeFile =
+                        line.substr(space + 2, line.length() - space - 3);
                     auto parent = std::string(parentOf(path));
-                    line = shaderSource(parent + '/' + includeFile);
+                    line = shaderSource(parent + '/' + includeFile, loaded);
                 }
             }
             source += line + '\n';
         }
 
         return source;
+    }
+
+    static std::string shaderSource(const std::string_view & path) {
+        std::vector<std::string> loaded;
+        return shaderSource(path, loaded);
     }
 
     static bool compileSuccess(GLuint shader) {
