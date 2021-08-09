@@ -1,5 +1,5 @@
 
-set(TARGET workspace)
+set(TARGET scenes)
 add_executable(${TARGET}
     main.cpp
     Game.hpp
@@ -15,3 +15,4 @@ PRIVATE
     Threads::Threads
     Core
 )
+
