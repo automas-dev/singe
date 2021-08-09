@@ -1,5 +1,7 @@
 #version 330 core
 
+#include "util.glsl"
+
 in vec2 FragTex;
 
 out vec4 FragColor;
@@ -22,7 +24,9 @@ vec3 ambient = vec3(0.3, 0.3, 0.3);
 vec3 diffuse = vec3(0.8, 0.8, 0.8);
 vec3 specular = vec3(0.8, 0.8, 0.8);
 
-#include "util.glsl"
+vec3 calcAmbient() {
+    return (FragAlbedo * ambient);
+}
 
 vec3 calcLight(vec3 light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(light - FragPos);
