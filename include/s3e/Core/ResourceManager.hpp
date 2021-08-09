@@ -130,6 +130,17 @@ namespace Tom::s3e {
                                const std::string & fragmentPath);
 
         /**
+         * Load a Shader using the default vertex shader and `fragmentPath`.
+         *
+         * Note: this must be called in the same thread as the OpenGL context.
+         *
+         * @param fragmentPath the path to the fragment shader source
+         *
+         * @return a shard_ptr to a Shader
+         */
+        Shader::Ptr loadShader(const std::string & fragmentPath);
+
+        /**
          * Load a Scene from `path`.
          *
          * Note: the user needs to call send on the resulting Scene in the

@@ -83,6 +83,17 @@ namespace Tom::s3e {
         return shader;
     }
 
+    Shader::Ptr ResourceManager::loadShader(const std::string & fragmentPath) {
+        auto relFragmentPath = resourceAt(fragmentPath);
+        auto shader = Shader::fromFragmentPath(relFragmentPath);
+        if (!shader) {
+            Logging::Core->error(
+                "failed in call to Shader::loadFromPath(fragmentPath={})",
+                relFragmentPath);
+        }
+        return shader;
+    }
+
     std::unique_ptr<MaterialLib> ResourceManager::loadMaterials(
         const std::string & objPath, const std::string & name) {
         auto mtllib = std::make_unique<MaterialLib>();
