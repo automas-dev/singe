@@ -6,7 +6,7 @@ layout (location = 2) out vec3 gAlbedo;
 layout (location = 3) out float gSpecular;
 
 uniform sampler2D tex;
-uniform float specular;
+uniform float specular = 0.4;
 
 in vec3 FragPos;
 in vec3 FragNorm;
