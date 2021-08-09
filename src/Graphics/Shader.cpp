@@ -6,18 +6,42 @@
 #include "s3e/Support/log.hpp"
 
 namespace Tom::s3e {
+    static inline std::string_view parentOf(const std::string_view & path) {
+        auto lastSlash = path.find_last_of('/');
+        if (lastSlash == std::string_view::npos)
+            lastSlash = 0;
+        return path.substr(0, lastSlash);
+    }
+
     static std::string shaderSource(const std::string_view & path) {
-        std::ifstream t(path.data());
-        if (!t) {
+        std::ifstream is(path.data());
+        if (!is) {
             Logging::Graphics->error("shaderSource path={} failed to open file",
                                      path);
             return std::string();
         }
 
-        auto start = std::istreambuf_iterator<char>(t);
-        auto end = std::istreambuf_iterator<char>();
+        std::string source;
 
-        return std::string((start), end);
+        std::string line;
+        for (; std::getline(is, line);) {
+            Logging::Graphics->trace("Source line \"{}\"", line);
+            if (line[0] == '#') {
+                auto space = line.find_first_of(' ');
+                if (line.substr(0, space) == "#include") {
+                    auto includeFile = line.substr(space + 2, line.length() - space - 3);
+                    Logging::Graphics->debug("Got include path {}", includeFile);
+                    auto parent = std::string(parentOf(path));
+                    Logging::Graphics->debug("Parent path is {}", parent);
+                    auto subSource = shaderSource(parent + '/' + includeFile);
+                    source += subSource + '\n';
+                    continue;
+                }
+            }
+            source += line + '\n';
+        }
+
+        return source;
     }
 
     static bool compileSuccess(GLuint shader) {
