@@ -44,10 +44,44 @@ bool Game::onCreate() {
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
-    scene = std::make_shared<Scene>("Root");
-    if (!scene)
+    gBuff = std::make_shared<FrameBuffer>(
+        window->getSize(),
+        std::vector<FrameBufferAttachment> {
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT0, GL_RGB16F, GL_RGB, GL_FLOAT),
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT1, GL_RGB16F, GL_RGB, GL_FLOAT),
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT2, GL_RGB, GL_RGB, GL_FLOAT),
+            FrameBufferAttachment(GL_COLOR_ATTACHMENT3, GL_R16F, GL_RED, GL_FLOAT),
+        },
+        true, 0);
+
+    gShader = resManager.loadShader("shader/geom.vert", "shader/geom copy.frag");
+    if (!gShader)
         return false;
+
+    scene = std::make_shared<Scene>("Root");
+
+    auto floorScene = resManager.loadScene("model/cube_plane.obj");
+    if (!floorScene)
+        return false;
+    scene->children.push_back(floorScene);
     scene->send();
+
+    taskQueue.add([&] {
+        auto fountainScene = resManager.loadScene("model/fountain.obj");
+        if (!fountainScene)
+            return;
+        fountainScene->move({0, 0, 3});
+
+        auto cubeScene = resManager.loadScene("model/cube.obj");
+        if (!cubeScene)
+            return;
+
+        localTaskQueue.add([=] {
+            scene->children.push_back(fountainScene);
+            scene->children.push_back(cubeScene);
+            scene->send();
+        });
+    });
 
     SetMouseGrab(true);
     return true;
@@ -59,6 +93,25 @@ void Game::onDestroy() {
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
+    switch (e.code) {
+        case sf::Keyboard::Num1:
+            drawMode = 0;
+            break;
+        case sf::Keyboard::Num2:
+            drawMode = 1;
+            break;
+        case sf::Keyboard::Num3:
+            drawMode = 2;
+            break;
+        case sf::Keyboard::Num4:
+            drawMode = 3;
+            break;
+        case sf::Keyboard::Num0:
+            drawMode = 4;
+            break;
+        default:
+            break;
+    }
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
@@ -96,8 +149,27 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
-    defaultShader->setMat4("mvp", vp);
-    scene->draw(defaultShader);
+    gBuff->bind();
+    gShader->bind();
+    gShader->setMat4("mvp", vp);
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        scene->draw(gShader);
+    }
+    gBuff->unbind();
+
+    defaultShader->bind();
+    if (drawMode == 4) {
+        defaultShader->setMat4("mvp", vp);
+        scene->draw(defaultShader);
+    }
+    else {
+        defaultShader->setMat4("mvp", glm::mat4(1));
+        defaultShader->setMat4("model", glm::mat4(1));
+        auto & texs = gBuff->getTextures();
+        texs[drawMode]->bind();
+        draw_quad({-1, -1}, {2, 2});
+    }
 
     window->pushGLStates();
     window->draw(*fps);

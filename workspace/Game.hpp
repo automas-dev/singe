@@ -24,6 +24,9 @@ class Game : public GameBase {
     LocalDispatchQueue localTaskQueue;
     DispatchQueue taskQueue;
     Scene::Ptr scene;
+    Shader::Ptr gShader;
+    FrameBuffer::Ptr gBuff;
+    int drawMode = 4;
 
 public:
     Game(const sf::String & resPath);
