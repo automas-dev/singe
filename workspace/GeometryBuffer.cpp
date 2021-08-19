@@ -74,6 +74,7 @@ namespace Tom::s3e {
         shader->setVec3("viewPos", camera->getPosition());
         shader->setVec3("lightPos", {1, 2, 3});
         shader->setBool("hdr", hdr);
+        shader->setInt("mode", mode);
 
         auto & gTextures = buff->getTextures();
         for (int i = 0; i < gTextures.size(); i++) {

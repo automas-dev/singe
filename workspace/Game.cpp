@@ -44,7 +44,10 @@ bool Game::onCreate() {
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
-    gBuff = std::make_shared<GeometryBuffer>(window->getSize());
+    auto winSize = window->getSize();
+    winSize.x *= 1;
+    winSize.y *= 1;
+    gBuff = std::make_shared<GeometryBuffer>(winSize);
 
     auto lShader = resManager.loadShader("shader/light.frag");
     if (!lShader)
@@ -97,19 +100,19 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
     switch (e.code) {
         case sf::Keyboard::Num1:
-            drawMode = 0;
+            lightShader->mode = 0;
             break;
         case sf::Keyboard::Num2:
-            drawMode = 1;
+            lightShader->mode = 1;
             break;
         case sf::Keyboard::Num3:
-            drawMode = 2;
+            lightShader->mode = 2;
             break;
         case sf::Keyboard::Num4:
-            drawMode = 3;
+            lightShader->mode = 3;
             break;
         case sf::Keyboard::Num0:
-            drawMode = 4;
+            lightShader->mode = 4;
             break;
         default:
             break;

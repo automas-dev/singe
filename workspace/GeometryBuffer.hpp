@@ -39,6 +39,8 @@ namespace Tom::s3e {
         using Ptr = std::shared_ptr<LightingShader>;
         using ConstPtr = std::shared_ptr<const LightingShader>;
 
+        int mode = 0;
+
         LightingShader(const Shader::Ptr & shader);
 
         virtual ~LightingShader();
