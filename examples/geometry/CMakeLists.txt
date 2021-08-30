@@ -1,9 +1,11 @@
 
-set(TARGET workspace)
+set(TARGET geometry)
 add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
+    GeometryBuffer.hpp
+    GeometryBuffer.cpp
 )
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)

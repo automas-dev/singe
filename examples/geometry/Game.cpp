@@ -44,6 +44,17 @@ bool Game::onCreate() {
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
+    auto winSize = window->getSize();
+    winSize.x *= 1;
+    winSize.y *= 1;
+    gBuff = std::make_shared<GeometryBuffer>(winSize);
+
+    auto lShader = resManager.loadShader("shader/light.frag");
+    if (!lShader)
+        return false;
+
+    lightShader = std::make_shared<LightingShader>(lShader);
+
     scene = std::make_shared<Scene>("Root");
 
     auto floorScene = resManager.loadScene("model/cube_plane.obj");
@@ -87,6 +98,25 @@ void Game::onDestroy() {
 
 void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
     GameBase::onKeyPressed(e);
+    switch (e.code) {
+        case sf::Keyboard::Num1:
+            lightShader->mode = 0;
+            break;
+        case sf::Keyboard::Num2:
+            lightShader->mode = 1;
+            break;
+        case sf::Keyboard::Num3:
+            lightShader->mode = 2;
+            break;
+        case sf::Keyboard::Num4:
+            lightShader->mode = 3;
+            break;
+        case sf::Keyboard::Num0:
+            lightShader->mode = 4;
+            break;
+        default:
+            break;
+    }
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
@@ -107,6 +137,7 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
 
 void Game::onResized(const sf::Event::SizeEvent & e) {
     GameBase::onResized(e);
+    gBuff->setSize({e.width, e.height});
 }
 
 void Game::onUpdate(const sf::Time & delta) {
@@ -124,9 +155,18 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
+    gBuff->draw(scene, vp);
+
+    lightShader->draw(gBuff, camera);
+
     defaultShader->bind();
-    defaultShader->setMat4("mvp", vp);
-    scene->draw(defaultShader);
+    if (false) {
+        defaultShader->setMat4("mvp", glm::mat4(1));
+        defaultShader->setMat4("model", glm::mat4(1));
+        auto & texs = gBuff->getTextures();
+        texs[drawMode]->bind();
+        draw_quad({-1, -1}, {2, 2});
+    }
 
     window->pushGLStates();
     window->draw(*fps);

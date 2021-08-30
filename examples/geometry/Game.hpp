@@ -18,12 +18,17 @@
 #include <vector>
 using namespace Tom::s3e;
 
+#include "GeometryBuffer.hpp"
+
 class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
     LocalDispatchQueue localTaskQueue;
     DispatchQueue taskQueue;
     Scene::Ptr scene;
+    GeometryBuffer::Ptr gBuff;
+    LightingShader::Ptr lightShader;
+    int drawMode = 4;
 
 public:
     Game(const sf::String & resPath);
