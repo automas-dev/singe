@@ -142,6 +142,10 @@ namespace Tom::s3e {
         return samples > 0;
     }
 
+    GLsizei FrameBuffer::getSamples() const {
+        return samples;
+    }
+
     size_t FrameBuffer::count() const {
         return textures.size();
     }

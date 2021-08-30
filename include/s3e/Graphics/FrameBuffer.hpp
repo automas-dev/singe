@@ -152,6 +152,17 @@ namespace Tom::s3e {
         bool isMultisampled() const;
 
         /**
+         * Return the number of samples used for this FrameBuffer.
+         *
+         * If the number of samples is > 0, the FrameBuffer is considered to be
+         * multisamples and must be resolved or handled by the multisample
+         * texture bindings.
+         *
+         * @return the number of samples
+         */
+        GLsizei getSamples() const;
+
+        /**
          * Get the number of FrameBufferTexture textures in the FrameBuffer.
          *
          * @return the number of FrameBufferTexture textures
