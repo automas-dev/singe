@@ -1,5 +1,6 @@
 add_subdirectory(demo)
 add_subdirectory(geometry)
+add_subdirectory(instanced)
 # add_subdirectory(noise_benchmark)
 add_subdirectory(physics)
 add_subdirectory(scenes)
