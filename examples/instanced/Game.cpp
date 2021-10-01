@@ -53,6 +53,11 @@ bool Game::onCreate() {
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
+    instanceShader =
+        resManager.loadShader("shader/instance.vert", "shader/instance.frag");
+    if (!instanceShader)
+        return false;
+
     scene = std::make_shared<Scene>("Root");
 
     auto objectScene = resManager.loadScene("model/sphere.obj");
@@ -114,8 +119,8 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
-    defaultShader->setMat4("mvp", vp);
-    scene->draw(defaultShader);
+    instanceShader->setMat4("mvp", vp);
+    scene->draw(instanceShader);
 
     window->pushGLStates();
     window->draw(*fps);

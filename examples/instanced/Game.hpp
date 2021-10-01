@@ -21,7 +21,9 @@ using namespace Tom::s3e;
 class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
+    Mesh::Ptr mesh;
     Scene::Ptr scene;
+    Shader::Ptr instanceShader;
 
 public:
     Game(const sf::String & resPath);
