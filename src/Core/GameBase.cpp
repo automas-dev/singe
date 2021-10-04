@@ -41,6 +41,7 @@ namespace Tom::s3e {
         settings.antialiasingLevel = 8;
         settings.majorVersion = 3;
         settings.minorVersion = 0;
+        settings.stencilBits = 1;
 
         window = std::make_shared<sf::RenderWindow>(
             sf::VideoMode(width, height),
