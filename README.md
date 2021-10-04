@@ -94,32 +94,38 @@ int main() {
 
 Example programs can be found in the [examples](examples) folder.
 
-- [demo](examples/demo)
-- [physics](examples/physics)
-- [voxel](examples/voxel)
+- [Demo](examples/demo)
+- [Geometry Shader](examples/geometry)
+- [Instanced Rendering](examples/instanced)
+- [Outline Shader](examples/outline)
+- [Physics](examples/physics)
+- [Scenes](examples/scenes)
+- [Stencil](examples/stencil)
+- [Voxel](examples/voxel)
 
 
 ## Demo
 
 ```cpp
 #include <s3e.hpp>
+#include <memory>
 using namespace Tom::s3e;
 
 class Game : public GameBase {
-    DefaultResourceManager res;
-    sf::Font font;
-    Shader::Ptr shader;
-    Model::Ptr model;
+    ResourceManager res;
+    FPSDisplay::Ptr fps;
+    Scene::Ptr scene;
 
 public:
-    Game() : GameBase(), res("../res") { }
+    Game(const sf::String & resPath) : GameBase(), res(resPath) { }
     ~Game() { }
 
     bool onCreate(void) {
-        if (!font.loadFromFile(res.resourceAt("default_font.ttf"))) {
-            SPDLOG_ERROR("failed to load default font");
-            return false;
-        }
+        // defautFont loaded from memory by GameBase
+
+        fps = std::make_shared<FPSDisplay>();
+        fps->setFont(uiFont);
+        fps->setRate(0.1f);
 
         camera->move({3, 2, 1});
         camera->rotate({30, -70});
@@ -133,20 +139,31 @@ public:
             window->close();
         });
 
-        shader = res.loadShader("shader/shader.vert", "shader/shader.frag");
+        camera->move({5, 2, 5});
+        camera->rotateEuler({0, -1, 0});
+        camera->setFov(70);
+        
+        // defaultShader loaded by GameBase
 
-        model = res.loadModel("model/cube.obj");
-        model->setPosition({0, 0, 0});
-        model->setScale({0.1, 0.1, 0.1});
-        model->setRotation({M_PI/2, M_PI/3, M_PI/6});
+        scene = std::make_shared<Scene>("Root");
+
+        auto cubeScene = res.loadScene("model/cube.obj");
+        if (!cubeScene)
+            return false;
+        cubeScene->move({3, 0, 0});
+
+        scene->children.push_back(cubeScene);
+        // Send vertices to the GPU
+        scene->send();
 
         SetMouseGrab(true);
-
         return true;
     }
     void onDestroy(void) {
     }
     void onUpdate(const sf::Time & delta) {
+        float deltaS = delta.asSeconds();
+        fps->update(delta);
     }
     void onDraw() const {
         glEnable(GL_CULL_FACE);
@@ -155,49 +172,31 @@ public:
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
 
-        glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
+        glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
 
-        shader->bind();
-        shader->setMat4("mvp", vp);
+        defaultShader->bind();
+        defaultShader->setMat4("mvp", vp);
+        scene->draw(defaultShader);
 
-        shader->setMat4("model", model->modelMatrix());
-        model->draw();
-
-        shader->unbind();
+        window->pushGLStates();
+        window->draw(*fps);
+        window->popGLStates();
     }
 };
 
 int main() {
     spdlog::set_level(spdlog::level::debug);
-    Game game;
-    if (game.Create("Window"))
-        game.Start();
-    return 0;
+    // res is in the project root, one up from the build folder
+    try {
+        Game game("../res/");
+        if (game.Create("Window"))
+            game.Start();
+    }
+    catch (std::runtime_error & e) {
+        SPDLOG_ERROR("runtime_error: {}", e.what());
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 ```
-
-shader.vert
-```glsl
-#version 330 core
-
-layout (location = 0) in vec3 position;
-
-uniform mat4 mvp;
-uniform mat4 model;
-
-void main() {
-    gl_Position = mvp * model * vec4(position, 1.0);
-}
-```
-
-shader.frag
-```glsl
-#version 330 core
-
-out vec4 FragColor;
-
-void main() {
-    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-}
-```
-
