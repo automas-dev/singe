@@ -61,8 +61,7 @@ void main() {
 }
 )";
 
-Game::Game(const sf::String & resPath)
-    : GameBase(), resManager(resPath), taskQueue(DispatchQueue::Concurrent) {}
+Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
 Game::~Game() {}
 
@@ -132,67 +131,30 @@ bool Game::onCreate() {
     scene->children.push_back(floorScene);
     scene->send();
 
-    taskQueue.add([&] {
-        // auto fountainScene = resManager.loadScene("model/fountain.obj");
-        // if (!fountainScene)
-        //     return;
-        // fountainScene->move({0, 0, 3});
+    auto sphereScene = resManager.loadScene("model/sphere.obj");
+    if (!sphereScene)
+        return false;
+    sphereScene->scale({0.1, 0.1, 0.1});
+    sphereScene->move({1, 2, 3});
 
-        auto sphereScene = resManager.loadScene("model/sphere.obj");
-        if (!sphereScene)
-            return;
-        sphereScene->scale({0.1, 0.1, 0.1});
-        sphereScene->move({1, 2, 3});
+    auto cubeScene = resManager.loadScene("model/cube.obj");
+    if (!cubeScene)
+        return false;
+    cubeScene->move({3, 0, 0});
 
-        auto cubeScene = resManager.loadScene("model/cube.obj");
-        if (!cubeScene)
-            return;
-        cubeScene->move({3, 0, 0});
-
-        localTaskQueue.add([=] {
-            // scene->children.push_back(fountainScene);
-            scene->children.push_back(sphereScene);
-            scene->children.push_back(cubeScene);
-            scene->send();
-        });
-    });
+    scene->children.push_back(sphereScene);
+    scene->children.push_back(cubeScene);
+    scene->send();
 
     SetMouseGrab(true);
     return true;
 }
 
-void Game::onDestroy() {
-    taskQueue.stop();
-}
-
-void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
-    GameBase::onKeyPressed(e);
-}
-
-void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
-    GameBase::onKeyReleased(e);
-}
-
-void Game::onMouseMove(const sf::Event::MouseMoveEvent & e) {
-    GameBase::onMouseMove(e);
-}
-
-void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
-    GameBase::onMouseDown(e);
-}
-
-void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
-    GameBase::onMouseUp(e);
-}
-
-void Game::onResized(const sf::Event::SizeEvent & e) {
-    GameBase::onResized(e);
-}
+void Game::onDestroy() {}
 
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
     fps->update(delta);
-    localTaskQueue.processAll();
 }
 
 void Game::onDraw() const {

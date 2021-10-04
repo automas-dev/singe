@@ -54,7 +54,8 @@ bool Game::onCreate() {
     camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
-    auto devTexture = resManager.loadTexture("img/uv.png", GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
+    auto devTexture =
+        resManager.loadTexture("img/uv.png", GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
     if (!devTexture)
         return false;
 
@@ -98,30 +99,6 @@ bool Game::onCreate() {
 
 void Game::onDestroy() {
     taskQueue.stop();
-}
-
-void Game::onKeyPressed(const sf::Event::KeyEvent & e) {
-    GameBase::onKeyPressed(e);
-}
-
-void Game::onKeyReleased(const sf::Event::KeyEvent & e) {
-    GameBase::onKeyReleased(e);
-}
-
-void Game::onMouseMove(const sf::Event::MouseMoveEvent & e) {
-    GameBase::onMouseMove(e);
-}
-
-void Game::onMouseDown(const sf::Event::MouseButtonEvent & e) {
-    GameBase::onMouseDown(e);
-}
-
-void Game::onMouseUp(const sf::Event::MouseButtonEvent & e) {
-    GameBase::onMouseUp(e);
-}
-
-void Game::onResized(const sf::Event::SizeEvent & e) {
-    GameBase::onResized(e);
 }
 
 void Game::onUpdate(const sf::Time & delta) {
