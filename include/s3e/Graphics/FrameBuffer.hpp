@@ -204,6 +204,11 @@ namespace Tom::s3e {
         /**
          * Unbind this FrameBuffer, effectively binding the default FrameBuffer.
          */
-        void unbind() const;
+        static void unbind();
+
+        /**
+         * Call glClear with Color, Depth and Stencil buffer bits.
+         */
+        static void clear();
     };
 }
