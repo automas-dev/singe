@@ -8,6 +8,7 @@
 
 #include "default_font.h"
 #include "s3e/Core/GameBase.hpp"
+#include "s3e/Graphics/FrameBuffer.hpp"
 #include "s3e/Support/log.hpp"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
@@ -156,7 +157,7 @@ namespace Tom::s3e {
 
             onUpdate(delta);
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            FrameBuffer::clear();
             defaultShader->bind();
             onDraw();
             if (menu) {
