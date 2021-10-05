@@ -88,11 +88,9 @@ void GLAPIENTRY MessageCallback(GLenum source,
                  severity, message);
 }
 
-bool Game::onCreate() {
-    if (!font.loadFromFile(resManager.resourceAt("Questrial_Regular.ttf"))) {
-        SPDLOG_ERROR("failed to load Questrial_Regular.ttf");
-        return false;
-    }
+void Game::onCreate() {
+    if (!font.loadFromFile(resManager.resourceAt("Questrial_Regular.ttf")))
+        throw std::runtime_error("Failed to load Questrial_Regular.ttf");
 
     fps = std::make_shared<FPSDisplay>();
     fps->setFont(font);
@@ -121,62 +119,50 @@ bool Game::onCreate() {
 
     defaultShader =
         resManager.loadShader("shader/default.vs", "shader/default.fs");
-    if (!defaultShader) {
+    if (!defaultShader)
         throw std::runtime_error("Failed to load default shader");
-    }
 
     geometryShader = resManager.loadShader("shader/geom.vert", "shader/geom.frag");
-    if (!geometryShader) {
+    if (!geometryShader)
         throw std::runtime_error("Failed to load texture shader");
-    }
 
     debugShader = resManager.loadShader("shader/debug.vert", "shader/debug.frag");
-    if (!debugShader) {
+    if (!debugShader)
         throw std::runtime_error("Failed to load debug shader");
-    }
 
     lightingShader =
         resManager.loadShader("shader/lighting.vert", "shader/lighting.frag");
-    if (!lightingShader) {
+    if (!lightingShader)
         throw std::runtime_error("Failed to load lighting shader");
-    }
 
     monoShader = resManager.loadShader("shader/mono.vs", "shader/mono.fs");
-    if (!monoShader) {
+    if (!monoShader)
         throw std::runtime_error("Failed to load mono shader");
-    }
 
     cubeModel = resManager.loadScene("model/cube_plane.obj");
-    if (!cubeModel) {
+    if (!cubeModel)
         throw std::runtime_error("Failed to load cube model");
-    }
 
     sphereModel = resManager.loadScene("model/sphere.obj");
-    if (!sphereModel) {
+    if (!sphereModel)
         throw std::runtime_error("Failed to load sphere model");
-    }
     sphereModel->move({1, 2, 3});
     sphereModel->scale({0.1, 0.1, 0.1});
 
     hallModel = resManager.loadScene("model/hall.obj");
-    if (!hallModel) {
+    if (!hallModel)
         throw std::runtime_error("Failed to load hall model");
-    }
     hallModel->move({0, 0, -4});
 
     rootScene = std::make_shared<Scene>("root");
-    if (!rootScene)
-        return false;
-
     rootScene->children.push_back(cubeModel);
     rootScene->children.push_back(sphereModel);
     rootScene->children.push_back(hallModel);
     rootScene->send();
 
     texture = resManager.loadTexture("img/dev_texture_gray.png");
-    if (!texture) {
+    if (!texture)
         throw std::runtime_error("Failed to load dev texture");
-    }
 
     light0 = {
         .index = 0,
@@ -236,7 +222,6 @@ bool Game::onCreate() {
     SetMouseGrab(true);
 
     getGlError();
-    return true;
 }
 
 void Game::onDestroy() {}
