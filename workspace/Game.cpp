@@ -2,6 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <stdexcept>
+
 Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
 Game::~Game() {}
@@ -18,7 +20,7 @@ void GLAPIENTRY MessageCallback(GLenum source,
                  severity, message);
 }
 
-bool Game::onCreate() {
+void Game::onCreate() {
     // defautFont loaded from memory by GameBase
     fps = std::make_shared<FPSDisplay>();
     fps->setFont(uiFont);
@@ -40,26 +42,25 @@ bool Game::onCreate() {
     });
 
     camera->move({5, 2, 5});
-    camera->rotateEuler({0, -1, 0});
     camera->setFov(70);
 
     scene = std::make_shared<Scene>("Root");
 
     auto floorScene = resManager.loadScene("model/cube_plane.obj");
     if (!floorScene)
-        return false;
+        throw std::runtime_error("Failed to load model/cube_plane.obj");
     scene->children.push_back(floorScene);
     scene->send();
 
     auto sphereScene = resManager.loadScene("model/sphere.obj");
     if (!sphereScene)
-        return false;
+        throw std::runtime_error("Failed to load model/sphere.obj");
     sphereScene->scale({0.1, 0.1, 0.1});
     sphereScene->move({1, 2, 3});
 
     auto cubeScene = resManager.loadScene("model/cube.obj");
     if (!cubeScene)
-        return false;
+        throw std::runtime_error("Failed to load model/cube.obj");
     cubeScene->move({3, 0, 0});
 
     scene->children.push_back(sphereScene);
@@ -67,7 +68,6 @@ bool Game::onCreate() {
     scene->send();
 
     SetMouseGrab(true);
-    return true;
 }
 
 void Game::onDestroy() {}

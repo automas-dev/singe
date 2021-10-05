@@ -5,6 +5,7 @@
 
 #include <SFML/OpenGL.hpp>
 #include <glm/glm.hpp>
+#include <stdexcept>
 
 #include "default_font.h"
 #include "s3e/Core/GameBase.hpp"
@@ -72,13 +73,15 @@ namespace Tom::s3e {
 
         defaultShader = Shader::defaultShader();
 
-        Logging::Core->debug("calling onCreate()");
-        bool res = onCreate();
-        if (!res) {
-            Logging::Core->error("User overridden onCreate returned false");
-            onDestroy();
+        try {
+            Logging::Core->debug("calling onCreate()");
+            onCreate();
         }
-        return res;
+        catch (const std::runtime_error & e) {
+            Logging::Core->error("runtime_error in onCreate: {}", e.what());
+            return false;
+        }
+        return true;
     }
 
     void GameBase::Start(void) {

@@ -122,12 +122,13 @@ namespace Tom::s3e {
     protected:
         /**
          * Load and initialize any resources Used by the game. This method is
-         * called in Start() after the window is created. The return from this
-         * method is returned by Start()
+         * called in Create() after the window is created. If there is an
+         * unrecoverable error, throw a std::runtime_error and it will be caught
+         * by Create().
          *
-         * @return was initialization successful
+         * @throws std::runtime_error on failure
          */
-        virtual bool onCreate(void) = 0;
+        virtual void onCreate(void) = 0;
 
         /**
          * Free any resources used by the game. This method is called after the
