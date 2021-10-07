@@ -29,7 +29,7 @@ void GLAPIENTRY MessageCallback(GLenum source,
                  severity, message);
 }
 
-bool Game::onCreate() {
+void Game::onCreate() {
     // defautFont loaded from memory by GameBase
     fps = std::make_shared<FPSDisplay>();
     fps->setFont(uiFont);
@@ -55,7 +55,7 @@ bool Game::onCreate() {
 
     devTexture = resManager.loadTexture("img/uv.png");
     if (!devTexture)
-        return false;
+        throw std::runtime_error("Failed to load img/uv.png");
 
     chunks = std::make_shared<ChunkManager>();
     for (int x = 0; x < 5; x++)
@@ -65,7 +65,6 @@ bool Game::onCreate() {
 
     SetMouseGrab(true);
     getGlError();
-    return true;
 }
 
 void Game::onDestroy() {}
