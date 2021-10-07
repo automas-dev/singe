@@ -29,7 +29,7 @@ void GLAPIENTRY MessageCallback(GLenum source,
                  severity, message);
 }
 
-bool Game::onCreate() {
+void Game::onCreate() {
     // defautFont loaded from memory by GameBase
     fps = std::make_shared<FPSDisplay>();
     fps->setFont(uiFont);
@@ -55,14 +55,14 @@ bool Game::onCreate() {
 
     devTexture = resManager.loadTexture("img/uv.png");
     if (!devTexture)
-        return false;
+        throw std::runtime_error("Failed to load img/uv.png");
 
     physics = std::make_shared<Physics>();
     // physics->loadObjects();
 
     floorModel = resManager.loadScene("model/ground.obj");
     if (!floorModel)
-        return false;
+        throw std::runtime_error("Failed to load model/ground.obj");
     // auto *mesh = new btTriangleIndexVertexArray(/* TODO */);
     // btCollisionShape *collisionShape = new btBvhTriangleMeshShape(mesh, false);
     btCollisionShape * collisionShape = new btStaticPlaneShape({0, 1, 0}, 0);
@@ -71,13 +71,12 @@ bool Game::onCreate() {
 
     objectModel = resManager.loadScene("model/sphere.obj");
     if (!objectModel)
-        return false;
+        throw std::runtime_error("Failed to load model/sphere.obj");
     collisionShape = new btSphereShape(2);
     physics->makeRigidBody(collisionShape, 1, 1);
 
     SetMouseGrab(true);
     getGlError();
-    return true;
 }
 
 void Game::loadObjects() {
