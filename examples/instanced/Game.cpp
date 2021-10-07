@@ -29,7 +29,7 @@ void GLAPIENTRY MessageCallback(GLenum source,
                  severity, message);
 }
 
-bool Game::onCreate() {
+void Game::onCreate() {
     // defautFont loaded from memory by GameBase
     fps = std::make_shared<FPSDisplay>();
     fps->setFont(uiFont);
@@ -56,26 +56,25 @@ bool Game::onCreate() {
     instanceShader =
         resManager.loadShader("shader/instance.vert", "shader/instance.frag");
     if (!instanceShader)
-        return false;
+        throw std::runtime_error("Failed to load shader/instance");
 
     scene = std::make_shared<Scene>("Root");
 
     auto objectScene = resManager.loadScene("model/sphere.obj");
     if (!objectScene)
-        return false;
+        throw std::runtime_error("Failed to load model/sphere.obj");
     objectScene->move({0, 2, 0});
     scene->children.push_back(objectScene);
 
     auto floorScene = resManager.loadScene("model/cube_plane.obj");
     if (!floorScene)
-        return false;
+        throw std::runtime_error("Failed to load model/cube_plane.obj");
     scene->children.push_back(floorScene);
 
     scene->send();
 
     SetMouseGrab(true);
     getGlError();
-    return true;
 }
 
 void Game::onDestroy() {}

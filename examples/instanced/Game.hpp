@@ -29,7 +29,7 @@ public:
     Game(const sf::String & resPath);
     virtual ~Game();
 
-    bool onCreate(void) override;
+    void onCreate(void) override;
     void onDestroy(void) override;
 
     void onKeyPressed(const sf::Event::KeyEvent & e) override;
