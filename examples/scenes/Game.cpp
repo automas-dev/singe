@@ -30,7 +30,7 @@ void GLAPIENTRY MessageCallback(GLenum source,
                  severity, message);
 }
 
-bool Game::onCreate() {
+void Game::onCreate() {
     // defautFont loaded from memory by GameBase
     fps = std::make_shared<FPSDisplay>();
     fps->setFont(uiFont);
@@ -57,16 +57,16 @@ bool Game::onCreate() {
     auto devTexture =
         resManager.loadTexture("img/uv.png", GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
     if (!devTexture)
-        return false;
+        throw std::runtime_error("Failed to load img/uv.png");
 
     auto objectScene = resManager.loadScene("model/sphere.obj");
     if (!objectScene)
-        return false;
+        throw std::runtime_error("Failed to load model/sphere.obj");
     objectScene->move({0, 2, 0});
 
     scene = resManager.loadScene("model/cube_plane.obj");
     if (!scene)
-        return false;
+        throw std::runtime_error("Failed to load model/cube_plane.obj");
 
     scene->children.push_back(objectScene);
 
@@ -86,7 +86,7 @@ bool Game::onCreate() {
 
     auto humanScene = resManager.loadScene("model/Human.obj");
     if (!humanScene)
-        return false;
+        throw std::runtime_error("Failed to load model/Human.obj");
     humanScene->move({3, 0, 0});
     otherScene->children.push_back(humanScene);
 
@@ -94,7 +94,6 @@ bool Game::onCreate() {
 
     SetMouseGrab(true);
     getGlError();
-    return true;
 }
 
 void Game::onDestroy() {
