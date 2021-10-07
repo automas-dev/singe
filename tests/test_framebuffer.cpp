@@ -12,9 +12,7 @@ namespace {
         Game() : GameBase() {}
         virtual ~Game() {}
 
-        bool onCreate(void) override {
-            return true;
-        }
+        void onCreate(void) override {}
         void onDestroy(void) override {}
 
         void onUpdate(const sf::Time & delta) override {}
