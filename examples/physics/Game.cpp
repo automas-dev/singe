@@ -57,6 +57,7 @@ void Game::onCreate() {
     floorModel = resManager.loadScene("model/ground.obj");
     if (!floorModel)
         throw std::runtime_error("Failed to load model/ground.obj");
+    floorModel->send();
     // auto *mesh = new btTriangleIndexVertexArray(/* TODO */);
     // btCollisionShape *collisionShape = new btBvhTriangleMeshShape(mesh, false);
     btCollisionShape * collisionShape = new btStaticPlaneShape({0, 1, 0}, 0);
@@ -66,6 +67,7 @@ void Game::onCreate() {
     objectModel = resManager.loadScene("model/sphere.obj");
     if (!objectModel)
         throw std::runtime_error("Failed to load model/sphere.obj");
+    objectModel->send();
     collisionShape = new btSphereShape(2);
     physics->makeRigidBody(collisionShape, 1, 1);
 
