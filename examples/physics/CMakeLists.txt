@@ -1,6 +1,6 @@
 
 set(TARGET physics)
-add_executable(${TARGET} 
+add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
@@ -8,7 +8,7 @@ add_executable(${TARGET}
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)
 
-target_link_libraries(${TARGET} 
+target_link_libraries(${TARGET}
 PRIVATE
     spdlog::spdlog
     Core)
