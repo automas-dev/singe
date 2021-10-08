@@ -56,12 +56,12 @@ add_subdirectory(sfml-s3e EXCLUDE_FROM_ALL)
 
 add_executable(app main.cpp)
 
-target_link_libraries(app PRIVATE Tom::s3e)
+target_link_libraries(app PRIVATE s3e)
 ```
 
 main.cpp
 ```cpp
-#include <s3e.hpp>
+#include <s3e/Core.hpp>
 using namespace Tom::s3e;
 
 class App : public GameBase {
@@ -70,8 +70,7 @@ public:
     App() : GameBase() { }
     ~App() { }
 
-    bool onCreate(void) {
-        return true;
+    void onCreate(void) {
     }
     void onDestroy(void) {
     }
@@ -107,7 +106,7 @@ Example programs can be found in the [examples](examples) folder.
 ## Demo
 
 ```cpp
-#include <s3e.hpp>
+#include <s3e/Core.hpp>
 #include <memory>
 using namespace Tom::s3e;
 
@@ -120,7 +119,7 @@ public:
     Game(const sf::String & resPath) : GameBase(), res(resPath) { }
     ~Game() { }
 
-    bool onCreate(void) {
+    void onCreate(void) {
         // defautFont loaded from memory by GameBase
 
         fps = std::make_shared<FPSDisplay>();
@@ -149,7 +148,7 @@ public:
 
         auto cubeScene = res.loadScene("model/cube.obj");
         if (!cubeScene)
-            return false;
+            throw std::runtime_error("Failed to load model/cube.obj");
         cubeScene->move({3, 0, 0});
 
         scene->children.push_back(cubeScene);
@@ -157,7 +156,6 @@ public:
         scene->send();
 
         SetMouseGrab(true);
-        return true;
     }
     void onDestroy(void) {
     }
