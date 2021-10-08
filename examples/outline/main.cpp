@@ -1,4 +1,4 @@
-#include <s3e/Support/log.hpp>
+#include <spdlog/spdlog.h>
 
 #include "Game.hpp"
 

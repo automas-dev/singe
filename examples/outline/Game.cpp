@@ -1,7 +1,5 @@
 #include "Game.hpp"
 
-#include <spdlog/spdlog.h>
-
 static const char * white_frag = R"(
 #version 330 core
 out vec4 FragColor;
@@ -72,9 +70,10 @@ void GLAPIENTRY MessageCallback(GLenum source,
                                 GLsizei length,
                                 const GLchar * message,
                                 const void * userParam) {
-    SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
-                 severity, message);
+    Logging::Game->error(
+        "GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
+        (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity,
+        message);
 }
 
 void Game::onCreate() {
