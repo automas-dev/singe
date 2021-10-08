@@ -1,3 +1,5 @@
+#include <spdlog/spdlog.h>
+
 #include "Game.hpp"
 
 int main() {
