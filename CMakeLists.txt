@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15...3.20)
 
-project(Tom
+project(s3e
     VERSION 0.7.1
     DESCRIPTION "My implementation of C++ support classes and functions for 3D rendering using OpenGL and SFML."
     LANGUAGES CXX)

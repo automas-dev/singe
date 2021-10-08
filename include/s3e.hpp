@@ -1,6 +1,7 @@
 #pragma once
 
-#include "config.h"
+// Remember that config.h is available during build
+//#include "config.h"
 #include "s3e/Core/Camera.hpp"
 #include "s3e/Core/FPSDisplay.hpp"
 #include "s3e/Core/GameBase.hpp"

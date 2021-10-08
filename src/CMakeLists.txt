@@ -36,11 +36,9 @@ macro(library_component target source_list header_list)
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}) # This is for Windows?
 
     ## Include the headers in install
-    #install(DIRECTORY
-    #$ < BUILD_INTERFACE : ${${PROJECT_NAME } _SOURCE_DIR } / include>
-    #$ < INSTALL_INTERFACE : ${CMAKE_INSTALL_INCLUDEDIR }>
-    # #../ include /
-    #DESTINATION ${CMAKE_INSTALL_INCLUDEDIR })
+    install(DIRECTORY
+        ${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${target}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 endmacro()
 
 add_subdirectory(Support)
@@ -106,8 +104,6 @@ install(TARGETS ${TARGET}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}) # This is for Windows?
 
 ## Include the headers in install
-#install(DIRECTORY
-#$ < BUILD_INTERFACE : ${${PROJECT_NAME } _SOURCE_DIR } / include>
-#$ < INSTALL_INTERFACE : ${CMAKE_INSTALL_INCLUDEDIR }>
-# #../ include /
-#DESTINATION ${CMAKE_INSTALL_INCLUDEDIR })
+install(FILES
+    ${${PROJECT_NAME}_SOURCE_DIR}/include/s3e.hpp
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
