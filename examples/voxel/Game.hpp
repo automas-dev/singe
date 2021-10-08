@@ -14,7 +14,9 @@
 #include <mutex>
 #include <queue>
 #include <random>
-#include <s3e.hpp>
+#include <s3e/Core.hpp>
+#include <s3e/Graphics.hpp>
+#include <s3e/Support/log.hpp>
 #include <thread>
 #include <vector>
 using namespace Tom::s3e;
