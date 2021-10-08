@@ -7,7 +7,8 @@
 #include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
-#include <s3e.hpp>
+#include <s3e/Core.hpp>
+#include <s3e/Support/log.hpp>
 #include <vector>
 using namespace Tom::s3e;
 

@@ -105,5 +105,7 @@ install(TARGETS ${TARGET}
 
 ## Include the headers in install
 install(FILES
-    ${${PROJECT_NAME}_SOURCE_DIR}/include/s3e.hpp
+    ${${PROJECT_NAME}_SOURCE_DIR}/include/Core.hpp
+    ${${PROJECT_NAME}_SOURCE_DIR}/include/Graphics.hpp
+    ${${PROJECT_NAME}_SOURCE_DIR}/include/Support.hpp
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
