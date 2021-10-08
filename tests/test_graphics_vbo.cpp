@@ -17,7 +17,7 @@ namespace {
         void onDraw(void) const override {}
     };
 
-    TEST(VBO, VBO) {
+    TEST(Graphics_VBO, VBO) {
         Game game;
         game.Create("");
         VBO vbo;
@@ -27,7 +27,7 @@ namespace {
         EXPECT_EQ(VBO::Static, vbo.getUsage());
     }
 
-    TEST(VBO, VBO_mode_usage) {
+    TEST(Graphics_VBO, VBO_mode_usage) {
         Game game;
         game.Create("");
         VBO vbo(VBO::Lines, VBO::Dynamic);
@@ -35,7 +35,7 @@ namespace {
         EXPECT_EQ(VBO::Dynamic, vbo.getUsage());
     }
 
-    TEST(VBO, setMode) {
+    TEST(Graphics_VBO, setMode) {
         Game game;
         game.Create("");
         VBO vbo;
@@ -44,7 +44,7 @@ namespace {
         EXPECT_EQ(VBO::Lines, vbo.getMode());
     }
 
-    TEST(VBO, setUsage) {
+    TEST(Graphics_VBO, setUsage) {
         Game game;
         game.Create("");
         VBO vbo;
@@ -53,7 +53,7 @@ namespace {
         EXPECT_EQ(VBO::Dynamic, vbo.getUsage());
     }
 
-    TEST(VBO, loadFromPoints) {
+    TEST(Graphics_VBO, loadFromPoints) {
         Game game;
         game.Create("");
         VBO vbo;

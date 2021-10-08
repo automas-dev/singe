@@ -4,14 +4,14 @@ using namespace Tom::s3e;
 #include <gtest/gtest.h>
 
 namespace {
-    TEST(Vertex, Vertex) {
+    TEST(Graphics_Vertex, Vertex) {
         Vertex v;
         EXPECT_EQ(glm::vec3(0), v.pos);
         EXPECT_EQ(glm::vec3(0), v.norm);
         EXPECT_EQ(glm::vec2(0), v.uv);
     }
 
-    TEST(Vertex, Vertex_pos_norm_uv) {
+    TEST(Graphics_Vertex, Vertex_pos_norm_uv) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -23,7 +23,7 @@ namespace {
         EXPECT_EQ(uv, v.uv);
     }
 
-    TEST(Vertex, Vertex_Copy) {
+    TEST(Graphics_Vertex, Vertex_Copy) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -36,7 +36,7 @@ namespace {
         EXPECT_EQ(uv, v2.uv);
     }
 
-    TEST(Vertex, Copy_Assign) {
+    TEST(Graphics_Vertex, Copy_Assign) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -49,7 +49,7 @@ namespace {
         EXPECT_EQ(uv, v2.uv);
     }
 
-    TEST(Vertex, Vertex_Move) {
+    TEST(Graphics_Vertex, Vertex_Move) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -62,7 +62,7 @@ namespace {
         EXPECT_EQ(uv, v2.uv);
     }
 
-    TEST(Vertex, Move_Assign) {
+    TEST(Graphics_Vertex, Move_Assign) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -75,7 +75,7 @@ namespace {
         EXPECT_EQ(uv, v2.uv);
     }
 
-    TEST(Vertex, Add) {
+    TEST(Graphics_Vertex, Add) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -90,7 +90,7 @@ namespace {
         EXPECT_EQ(glm::vec2(6), v3.uv);
     }
 
-    TEST(Vertex, Subtract) {
+    TEST(Graphics_Vertex, Subtract) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -105,7 +105,7 @@ namespace {
         EXPECT_EQ(glm::vec2(0), v3.uv);
     }
 
-    TEST(Vertex, Add_Assign) {
+    TEST(Graphics_Vertex, Add_Assign) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);
@@ -120,7 +120,7 @@ namespace {
         EXPECT_EQ(glm::vec2(6), v2.uv);
     }
 
-    TEST(Vertex, Subtract_Assign) {
+    TEST(Graphics_Vertex, Subtract_Assign) {
         glm::vec3 pos(1, 2, 3);
         glm::vec3 norm(4, 5, 6);
         glm::vec2 uv(7, 8);

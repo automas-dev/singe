@@ -19,7 +19,7 @@ namespace {
         void onDraw(void) const override {}
     };
 
-    TEST(Shader, defaultShader) {
+    TEST(Graphics_Shader, defaultShader) {
         Game game;
         game.Create("");
         auto shader = Shader::defaultShader();

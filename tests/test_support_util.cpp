@@ -3,7 +3,7 @@
 #include <s3e/Support/Util.hpp>
 
 namespace {
-    TEST(Util, SplitStringSingle) {
+    TEST(Support_Util, SplitStringSingle) {
         std::vector<std::string> expect {
             "one",
         };
@@ -11,7 +11,7 @@ namespace {
         EXPECT_EQ(expect, actual);
     }
 
-    TEST(Util, SplitStringSpaceDouble) {
+    TEST(Support_Util, SplitStringSpaceDouble) {
         std::vector<std::string> expect {
             "one",
             "two",
@@ -20,7 +20,7 @@ namespace {
         EXPECT_EQ(expect, actual);
     }
 
-    TEST(Util, SplitStringSpaceTriple) {
+    TEST(Support_Util, SplitStringSpaceTriple) {
         std::vector<std::string> expect {
             "one",
             "two",
@@ -30,7 +30,7 @@ namespace {
         EXPECT_EQ(expect, actual);
     }
 
-    TEST(Util, SplitStringMultiDelimiter) {
+    TEST(Support_Util, SplitStringMultiDelimiter) {
         std::vector<std::string> expect {
             "one",
             "",
@@ -40,7 +40,7 @@ namespace {
         EXPECT_EQ(expect, actual);
     }
 
-    TEST(Util, SplitStringCommaDelimiter) {
+    TEST(Support_Util, SplitStringCommaDelimiter) {
         std::vector<std::string> expect {
             "one",
             "two",

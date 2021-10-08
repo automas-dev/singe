@@ -19,7 +19,7 @@ namespace {
         void onDraw(void) const override {}
     };
 
-    TEST(FrameBuffer, FrameBuffer) {
+    TEST(Graphics_FrameBuffer, FrameBuffer) {
         Game game;
         game.Create("");
         FrameBuffer fb({100, 200},

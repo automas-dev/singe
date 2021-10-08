@@ -19,7 +19,7 @@ namespace {
         void onDraw(void) const override {}
     };
 
-    TEST(Texture, TextureImage) {
+    TEST(Graphics_Texture, TextureImage) {
         Game game;
         game.Create("");
         sf::Image image;
@@ -30,7 +30,7 @@ namespace {
         EXPECT_EQ(200, tex.getSize().y);
     }
 
-    TEST(Texture, TextureSize) {
+    TEST(Graphics_Texture, TextureSize) {
         Game game;
         game.Create("");
         Texture tex({100, 200});
@@ -39,7 +39,7 @@ namespace {
         EXPECT_EQ(200, tex.getSize().y);
     }
 
-    TEST(Texture, resize) {
+    TEST(Graphics_Texture, resize) {
         Game game;
         game.Create("");
         Texture tex({100, 200});
