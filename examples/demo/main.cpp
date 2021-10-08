@@ -1,5 +1,3 @@
-#include <s3e/Support/log.hpp>
-
 #include "Game.hpp"
 
 int main() {
