@@ -44,46 +44,32 @@ add_subdirectory(Support)
 add_subdirectory(Graphics)
 add_subdirectory(Core)
 
-# set(TARGET s3e)
+set(TARGET s3e)
 
-# add_library(${TARGET})
+add_library(${TARGET} INTERFACE)
 
-# target_include_directories(${TARGET}
-#     PRIVATE
-#     ${GLM_INCLUDE_DIRS}
-#     ${BULLET_INCLUDE_DIR}
-#     PUBLIC
-#     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
-#     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_link_libraries(${TARGET}
+    INTERFACE
+    sfml-window
+    sfml-graphics
+    sfml-system
+    OpenGL::OpenGL
+    OpenGL::GLU
+    GLEW::GLEW
+    ${BULLET_LIBRARIES}
+    Support
+    Graphics
+    Core)
 
-# #set_property(TARGET ${TARGET} PROPERTY POSITION_INDEPENDENT_CODE ON)
-# target_compile_features(${TARGET} PUBLIC cxx_std_17)
+#Check for Inter Procedural Optimization(IPO)
+include(CheckIPOSupported)
+check_ipo_supported(RESULT result)
+if(result)
+    set_target_properties(${TARGET} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
 
-# target_link_libraries(${TARGET}
-#     PRIVATE
-#     fmt::fmt
-#     spdlog::spdlog
-#     sfml-window
-#     sfml-graphics
-#     sfml-system
-#     OpenGL::OpenGL
-#     OpenGL::GLU
-#     GLEW::GLEW
-#     ${BULLET_LIBRARIES}
-#     PUBLIC
-#     Support
-#     Graphics
-#     Core)
-
-# #Check for Inter Procedural Optimization(IPO)
-# include(CheckIPOSupported)
-# check_ipo_supported(RESULT result)
-# if(result)
-#     set_target_properties(${TARGET} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
-# endif()
-
-# #Add ALIAS target for use in add_subdirectory or build directory
-# add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
+#Add ALIAS target for use in add_subdirectory or build directory
+add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
 
 #IDE support, show headers in a folder
 source_group(TREE "${PROJECT_SOURCE_DIR}/include"
