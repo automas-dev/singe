@@ -43,3 +43,7 @@ target_link_libraries(${TARGET}
     DispatchQueue
     Graphics
     Support)
+
+target_include_directories(${TARGET}
+    PUBLIC
+    ${BULLET_INCLUDE_DIR})
