@@ -1,7 +1,5 @@
 #include "Game.hpp"
 
-#include <spdlog/spdlog.h>
-
 #include <exception>
 #include <glm/gtc/noise.hpp>
 
@@ -9,7 +7,7 @@
 static void getGlError() {
     GLenum err;
     while ((err = glGetError()) != GL_NO_ERROR) {
-        SPDLOG_ERROR("glGetError() returned {}", err);
+        Logging::Game->error("glGetError() returned {}", err);
     }
 }
 
@@ -24,9 +22,10 @@ void GLAPIENTRY MessageCallback(GLenum source,
                                 GLsizei length,
                                 const GLchar * message,
                                 const void * userParam) {
-    SPDLOG_ERROR("GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-                 (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type,
-                 severity, message);
+    Logging::Game->error(
+        "GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
+        (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity,
+        message);
 }
 
 void Game::onCreate() {
