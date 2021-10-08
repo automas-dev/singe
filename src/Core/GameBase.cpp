@@ -10,7 +10,10 @@
 #include "default_font.h"
 #include "s3e/Core/GameBase.hpp"
 #include "s3e/Graphics/FrameBuffer.hpp"
-#include "s3e/Support/log.hpp"
+
+namespace Tom::s3e::Logging {
+    Logger::Ptr Game = std::make_shared<Logger>("Game");
+}
 
 namespace Tom::s3e {
 

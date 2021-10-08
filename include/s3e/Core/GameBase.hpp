@@ -12,6 +12,11 @@
 #include "s3e/Core/Camera.hpp"
 #include "s3e/Core/Menu.hpp"
 #include "s3e/Graphics/Shader.hpp"
+#include "s3e/Support/log.hpp"
+
+namespace Tom::s3e::Logging {
+    extern Logger::Ptr Game;
+}
 
 namespace Tom::s3e {
 
