@@ -56,7 +56,7 @@ add_subdirectory(sfml-s3e EXCLUDE_FROM_ALL)
 
 add_executable(app main.cpp)
 
-target_link_libraries(app PRIVATE s3e)
+target_link_libraries(app PRIVATE s3e::Core)
 ```
 
 main.cpp
