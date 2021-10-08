@@ -64,10 +64,10 @@ add_subdirectory(Core)
 #     PRIVATE
 #     fmt::fmt
 #     spdlog::spdlog
-#     sfml-window 
-#     sfml-graphics 
+#     sfml-window
+#     sfml-graphics
 #     sfml-system
-#     OpenGL::OpenGL 
+#     OpenGL::OpenGL
 #     OpenGL::GLU
 #     GLEW::GLEW
 #     ${BULLET_LIBRARIES}

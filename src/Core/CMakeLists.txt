@@ -31,12 +31,11 @@ library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
 
 target_link_libraries(${TARGET}
     PRIVATE
-    fmt::fmt
     spdlog::spdlog
-    sfml-window 
-    sfml-graphics 
+    sfml-window
+    sfml-graphics
     sfml-system
-    OpenGL::OpenGL 
+    OpenGL::OpenGL
     OpenGL::GLU
     GLEW::GLEW
     ${BULLET_LIBRARIES}
