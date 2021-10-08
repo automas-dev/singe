@@ -38,8 +38,8 @@ target_link_libraries(${TARGET}
     OpenGL::OpenGL
     OpenGL::GLU
     GLEW::GLEW
-    ${BULLET_LIBRARIES}
     PUBLIC
+    ${BULLET_LIBRARIES}
     DispatchQueue
     Graphics
     Support)
