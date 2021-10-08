@@ -4,6 +4,8 @@ set(SOURCE_LIST
     test_framebuffer.cpp
     test_shader.cpp
     test_texture.cpp
+    test_support_parser.cpp
+    test_support_transform3d.cpp
     test_support_util.cpp
     test_vbo_vertex.cpp
     test_vbo.cpp)
