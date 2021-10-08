@@ -9,7 +9,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
 #include <memory>
-#include <s3e.hpp>
+#include <s3e/Core.hpp>
+#include <s3e/Support/log.hpp>
 #include <vector>
 using namespace Tom::s3e;
 
