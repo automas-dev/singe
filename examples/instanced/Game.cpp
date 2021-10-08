@@ -4,13 +4,6 @@
 #include <glm/gtc/noise.hpp>
 
 
-static void getGlError() {
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        Logging::Game->error("glGetError() returned {}", err);
-    }
-}
-
 Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
 Game::~Game() {}
@@ -34,9 +27,11 @@ void Game::onCreate() {
     fps->setFont(uiFont);
     fps->setRate(0.1f);
 
+#ifdef DEBUG
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
+#endif
 
     // Add menu buttons
     menu->addMenuItem("Resume", [&]() {
@@ -73,7 +68,6 @@ void Game::onCreate() {
     scene->send();
 
     SetMouseGrab(true);
-    getGlError();
 }
 
 void Game::onDestroy() {}

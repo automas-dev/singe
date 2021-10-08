@@ -63,13 +63,6 @@ static std::vector<glm::vec3> genGridCols(int steps = 10) {
     return cols;
 }
 
-static void getGlError() {
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        SPDLOG_ERROR("glGetError() returned {}", err);
-    }
-}
-
 Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
 Game::~Game() {}
@@ -95,9 +88,11 @@ void Game::onCreate() {
     fps->setFont(font);
     fps->setRate(0.1f);
 
+#ifdef DEBUG
     // During init, enable debug output
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
+#endif
 
     gridVerts = genGridVerts(10);
     gridCols = genGridCols(10);
@@ -219,8 +214,6 @@ void Game::onCreate() {
         true, 8);
 
     SetMouseGrab(true);
-
-    getGlError();
 }
 
 void Game::onDestroy() {}

@@ -1,6 +1,5 @@
 #include "Game.hpp"
 
-#include <spdlog/spdlog.h>
 
 Game::Game(const sf::String & resPath)
     : GameBase(), resManager(resPath), taskQueue(DispatchQueue::Concurrent) {}
