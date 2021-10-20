@@ -20,6 +20,13 @@ namespace Tom::s3e {
         Transform3d();
 
         /**
+         * Populate transform form a matrix.
+         * 
+         * @param matrix the glm mat4 to get transforms from
+         */
+        Transform3d(const glm::mat4 matrix);
+
+        /**
          * Destructor
          */
         virtual ~Transform3d();

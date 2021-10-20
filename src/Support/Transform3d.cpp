@@ -1,10 +1,20 @@
 #include "s3e/Support/Transform3d.hpp"
 
+#include <glm/gtx/matrix_decompose.hpp>
+
 #include "s3e/Support/Util.hpp"
 
 namespace Tom::s3e {
 
-    Transform3d::Transform3d() : m_position(0), m_rotation(glm::vec3(0, 0, 0)), m_scale(1) {}
+    Transform3d::Transform3d()
+        : m_position(0), m_rotation(glm::vec3(0, 0, 0)), m_scale(1) {}
+
+    Transform3d::Transform3d(const glm::mat4 matrix) {
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        glm::decompose(matrix, m_scale, m_rotation, m_position, skew, perspective);
+        m_rotation = glm::conjugate(m_rotation);
+    }
 
     Transform3d::~Transform3d() {}
 
