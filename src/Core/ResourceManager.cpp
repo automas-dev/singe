@@ -169,7 +169,8 @@ namespace Tom::s3e {
                     break;
                 case 'm':
                     if (token.key == "map_Kd") {
-                        material->image.loadFromFile(resourceAt(token.value));
+                        if (!material->image.loadFromFile(resourceAt(token.value)))
+                            return nullptr;
                     }
                     break;
                 default:
@@ -314,6 +315,8 @@ namespace Tom::s3e {
                     if (token.key != "mtllib")
                         return nullptr;
                     mtllib = loadMaterials(path, token.value);
+                    if (!mtllib)
+                        return nullptr;
                     break;
                 case 'u': // usemtl
                     if (token.key != "usemtl")
