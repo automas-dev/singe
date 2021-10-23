@@ -1,10 +1,10 @@
-#include "s3e/Core/FPSDisplay.hpp"
+#include "singe/Core/FPSDisplay.hpp"
 
 #include <fmt/format.h>
 
 const sf::Color light(200, 200, 200);
 
-namespace Tom::s3e {
+namespace singe {
     FPSDisplay::FPSDisplay() : frames(0), time(0.0f), rate(0.1f) {
         setString("FPS: N/A");
         setCharacterSize(14);

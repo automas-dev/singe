@@ -1,14 +1,14 @@
-#include "s3e/Support/Parser.hpp"
+#include "singe/Support/Parser.hpp"
 
-#include "s3e/Support/Util.hpp"
+#include "singe/Support/Util.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     std::vector<std::string> WavefrontParser::Token::params() const {
         return splitString(value, ' ');
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
     WavefrontParser::WavefrontParser(std::istream & is) : is(is) {}
 
     WavefrontParser::operator bool() const {

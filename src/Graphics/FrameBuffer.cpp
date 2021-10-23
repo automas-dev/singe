@@ -1,8 +1,8 @@
-#include "s3e/Graphics/FrameBuffer.hpp"
+#include "singe/Graphics/FrameBuffer.hpp"
 
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     FrameBufferTexture::FrameBufferTexture()
         : FrameBufferTexture(GL_COLOR_ATTACHMENT0, {0, 0}) {}
 
@@ -38,7 +38,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
     FrameBuffer::FrameBuffer(const sf::Vector2u & size,
                              std::vector<FrameBufferAttachment> attachments,
                              bool depthBuffer,

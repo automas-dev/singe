@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.15...3.20)
 
-project(s3e
-    VERSION 0.8.3
-    DESCRIPTION "My implementation of C++ support classes and functions for 3D rendering using OpenGL and SFML."
+project(singe
+    VERSION 0.1.0
+    DESCRIPTION "Scene In Nodes Game Engine"
     LANGUAGES CXX)
 
 # Set the default build type if non is specified
@@ -63,10 +63,8 @@ include_directories(${BULLET_INCLUDE_DIR})
 add_subdirectory(DispatchQueue EXCLUDE_FROM_ALL)
 
 add_subdirectory(src)
-add_subdirectory(tests)
 
 add_subdirectory(workspace)
-add_subdirectory(examples)
 
 # Create Targets file
 install(EXPORT ${PROJECT_NAME}Targets

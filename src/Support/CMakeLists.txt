@@ -7,7 +7,7 @@ set(HEADER_LIST
     Parser.hpp
     Transform3d.hpp
     Util.hpp)
-list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
+list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
     Keymap.cpp

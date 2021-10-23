@@ -1,11 +1,11 @@
-#include "s3e/Core/Menu.hpp"
+#include "singe/Core/Menu.hpp"
 
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
 const sf::Color light(200, 200, 200);
 const sf::Color dark(10, 10, 10);
 
-namespace Tom::s3e {
+namespace singe {
 
     MenuItem::MenuItem(std::function<void()> callback) : callback(callback) {}
 
@@ -27,7 +27,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
 
     Menu::Menu() : isMouseDown(false), visible(false) {}
 

@@ -1,10 +1,10 @@
-#include "s3e/Graphics/Texture.hpp"
+#include "singe/Graphics/Texture.hpp"
 
 #include <SFML/Graphics/Image.hpp>
 
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     Texture::Texture(const sf::Image & image,
                      GLint magFilter,
                      GLint minFilter,

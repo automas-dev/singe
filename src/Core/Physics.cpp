@@ -1,8 +1,8 @@
-#include "s3e/Core/Physics.hpp"
+#include "singe/Core/Physics.hpp"
 
 #include <chrono>
 
-namespace Tom::s3e {
+namespace singe {
     Physics::Physics()
         : collisionConfiguration(new btDefaultCollisionConfiguration()),
           dispatcher(new btCollisionDispatcher(collisionConfiguration)),
@@ -96,7 +96,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
 
     ThreadedPhysics::ThreadedPhysics(float updateInterval)
         : Physics(),

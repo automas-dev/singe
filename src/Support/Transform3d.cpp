@@ -1,10 +1,10 @@
-#include "s3e/Support/Transform3d.hpp"
+#include "singe/Support/Transform3d.hpp"
 
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include "s3e/Support/Util.hpp"
+#include "singe/Support/Util.hpp"
 
-namespace Tom::s3e {
+namespace singe {
 
     Transform3d::Transform3d()
         : m_position(0), m_rotation(glm::vec3(0, 0, 0)), m_scale(1) {}

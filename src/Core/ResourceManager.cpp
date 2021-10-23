@@ -1,4 +1,4 @@
-#include "s3e/Core/ResourceManager.hpp"
+#include "singe/Core/ResourceManager.hpp"
 
 #include <filesystem>
 
@@ -10,9 +10,9 @@ namespace fs = std::filesystem;
 #include <map>
 #include <vector>
 
-#include "s3e/Support/Parser.hpp"
-#include "s3e/Support/Util.hpp"
-#include "s3e/Support/log.hpp"
+#include "singe/Support/Parser.hpp"
+#include "singe/Support/Util.hpp"
+#include "singe/Support/log.hpp"
 
 #define PARSE_ERROR(TAG)                                                    \
     {                                                                       \
@@ -24,7 +24,7 @@ namespace fs = std::filesystem;
     if (nRead != (N))        \
         PARSE_ERROR(TAG);
 
-namespace Tom::s3e {
+namespace singe {
     ResourceManagerBase::ResourceManagerBase() : ResourceManagerBase("./") {}
 
     ResourceManagerBase::ResourceManagerBase(const std::string & path)
@@ -49,7 +49,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
     Texture::Ptr ResourceManager::loadTexture(const std::string & path,
                                               GLint magFilter,
                                               GLint minFilter) {

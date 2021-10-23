@@ -1,8 +1,8 @@
-#include "s3e/Graphics/VBO.hpp"
+#include "singe/Graphics/VBO.hpp"
 
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     Vertex::Vertex() : pos(0), norm(0), uv(0) {}
 
     Vertex::Vertex(const glm::vec3 & pos, const glm::vec3 & norm, const glm::vec2 & uv)
@@ -35,7 +35,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
     void draw_array(const std::vector<Vertex> & vertices, GLenum mode) {
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
@@ -69,7 +69,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
     VBO::VBO(VBO::Mode mode, VBO::Usage usage)
         : mode(mode), usage(usage), vao(0), vbo(0), nPoints(0) {
 

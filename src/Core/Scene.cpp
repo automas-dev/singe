@@ -1,8 +1,8 @@
-#include "s3e/Core/Scene.hpp"
+#include "singe/Core/Scene.hpp"
 
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     Scene::Scene(const std::string & name) : name(name) {}
 
     void Scene::send() {

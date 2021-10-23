@@ -12,7 +12,7 @@ set(HEADER_LIST
     Physics.hpp
     ResourceManager.hpp
     Scene.hpp)
-list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/s3e/${TARGET}/")
+list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
     Camera.cpp

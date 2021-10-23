@@ -1,6 +1,6 @@
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e::Logging {
+namespace singe::Logging {
     Logger::Ptr Graphics = std::make_shared<Logger>("Graphics");
     Logger::Ptr Core = std::make_shared<Logger>("Core");
 }

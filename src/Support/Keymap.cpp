@@ -1,6 +1,6 @@
-#include "s3e/Support/Keymap.hpp"
+#include "singe/Support/Keymap.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     Keymap::Keymap() {
         states.fill(false);
         last_states = states;

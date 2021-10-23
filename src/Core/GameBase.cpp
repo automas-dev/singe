@@ -8,14 +8,14 @@
 #include <stdexcept>
 
 #include "default_font.h"
-#include "s3e/Core/GameBase.hpp"
-#include "s3e/Graphics/FrameBuffer.hpp"
+#include "singe/Core/GameBase.hpp"
+#include "singe/Graphics/FrameBuffer.hpp"
 
-namespace Tom::s3e::Logging {
+namespace singe::Logging {
     Logger::Ptr Game = std::make_shared<Logger>("Game");
 }
 
-namespace Tom::s3e {
+namespace singe {
 
     GameBase::GameBase()
         : grab(false),

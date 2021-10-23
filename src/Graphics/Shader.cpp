@@ -1,13 +1,13 @@
-#include "s3e/Graphics/Shader.hpp"
+#include "singe/Graphics/Shader.hpp"
 
 #include <fstream>
 #include <string>
 #include <vector>
 
-#include "s3e/Support/Util.hpp"
-#include "s3e/Support/log.hpp"
+#include "singe/Support/Util.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     static inline std::string_view parentOf(const std::string_view & path) {
         auto lastSlash = path.find_last_of('/');
         if (lastSlash == std::string_view::npos)
@@ -279,7 +279,7 @@ namespace Tom::s3e {
     }
 }
 
-namespace Tom::s3e {
+namespace singe {
     static const std ::string defaultVertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;

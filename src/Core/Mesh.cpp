@@ -1,8 +1,8 @@
-#include "s3e/Core/Mesh.hpp"
+#include "singe/Core/Mesh.hpp"
 
-#include "s3e/Support/log.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     Mesh::Mesh() : vbo(nullptr) {}
 
     Mesh::~Mesh() {}

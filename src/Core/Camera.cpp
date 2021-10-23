@@ -1,12 +1,12 @@
-#include "s3e/Core/Camera.hpp"
+#include "singe/Core/Camera.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "s3e/Support/Util.hpp"
-#include "s3e/Support/log.hpp"
+#include "singe/Support/Util.hpp"
+#include "singe/Support/log.hpp"
 
-namespace Tom::s3e {
+namespace singe {
 
     constexpr float rotXMin = glm::radians(-89.f);
     constexpr float rotXMax = glm::radians(89.f);

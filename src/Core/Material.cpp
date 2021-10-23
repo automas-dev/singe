@@ -1,6 +1,6 @@
-#include "s3e/Core/Material.hpp"
+#include "singe/Core/Material.hpp"
 
-namespace Tom::s3e {
+namespace singe {
     Material::Material()
         : name("None"),
           ambient(0.8),

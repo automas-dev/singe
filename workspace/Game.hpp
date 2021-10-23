@@ -7,10 +7,10 @@
 #include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
-#include <s3e/Core.hpp>
-#include <s3e/Support/log.hpp>
+#include <singe/Core.hpp>
+#include <singe/Support/log.hpp>
 #include <vector>
-using namespace Tom::s3e;
+using namespace singe;
 
 class Game : public GameBase {
     ResourceManager resManager;
