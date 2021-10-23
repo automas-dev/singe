@@ -9,12 +9,10 @@ namespace Tom::s3e {
     Transform3d::Transform3d()
         : m_position(0), m_rotation(glm::vec3(0, 0, 0)), m_scale(1) {}
 
-    Transform3d::Transform3d(const glm::mat4 matrix) {
-        glm::vec3 skew;
-        glm::vec4 perspective;
-        glm::decompose(matrix, m_scale, m_rotation, m_position, skew, perspective);
-        m_rotation = glm::conjugate(m_rotation);
-    }
+    Transform3d::Transform3d(const glm::vec3 & position,
+                             const glm::quat & rotation,
+                             const glm::vec3 & scale)
+        : m_position(position), m_rotation(rotation), m_scale(scale) {}
 
     Transform3d::Transform3d(const glm::mat4 matrix) {
         glm::vec3 skew;
