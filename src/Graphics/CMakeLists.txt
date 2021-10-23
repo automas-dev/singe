@@ -25,5 +25,4 @@ target_link_libraries(${TARGET}
     PUBLIC
     GLEW::GLEW
     sfml-graphics
-    sfml-system
     glm)
