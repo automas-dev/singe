@@ -24,6 +24,7 @@ more of the rendering through nodes instead of draw calls.
       - [ ] Geometry
         - [ ] Mesh
         - [ ] Custom Draw
+      - [ ] Camera
       - [ ] Light
         - [ ] Point
         - [ ] Directional
