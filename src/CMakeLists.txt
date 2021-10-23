@@ -3,8 +3,6 @@ macro(library_component target source_list header_list)
     add_library(${target} ${source_list} ${header_list})
 
     target_include_directories(${target}
-        PRIVATE
-        ${GLM_INCLUDE_DIRS}
         PUBLIC
         $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
