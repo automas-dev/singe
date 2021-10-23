@@ -3,6 +3,7 @@
 #include <istream>
 #include <iterator>
 #include <string>
+#include <vector>
 
 namespace Tom::s3e {
     /**

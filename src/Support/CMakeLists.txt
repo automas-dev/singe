@@ -20,8 +20,8 @@ list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/
 library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
 
 target_link_libraries(${TARGET}
-    PRIVATE
-    fmt::fmt
     PUBLIC
+    sfml-window
     spdlog::spdlog
-    DispatchQueue)
+    glm
+    fmt::fmt)
