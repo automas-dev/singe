@@ -1,6 +1,6 @@
 #include "s3e/Core/FPSDisplay.hpp"
 
-#include <spdlog/fmt/fmt.h>
+#include <fmt/format.h>
 
 const sf::Color light(200, 200, 200);
 

@@ -32,14 +32,15 @@ library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
 target_link_libraries(${TARGET}
     PRIVATE
     spdlog::spdlog
-    sfml-window
-    sfml-graphics
-    sfml-system
     OpenGL::OpenGL
     OpenGL::GLU
-    GLEW::GLEW
     PUBLIC
+    Support
+    Graphics
+    GLEW::GLEW
+    sfml-graphics
+    glm
+    fmt::fmt
     ${BULLET_LIBRARIES}
     DispatchQueue
-    Graphics
-    Support)
+    )

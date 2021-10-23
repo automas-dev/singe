@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include <map>
 #include <memory>
 #include <string>
