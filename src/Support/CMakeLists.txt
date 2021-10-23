@@ -2,7 +2,6 @@
 set(TARGET Support)
 
 set(HEADER_LIST
-    Keymap.hpp
     log.hpp
     Parser.hpp
     Transform3d.hpp
@@ -10,8 +9,7 @@ set(HEADER_LIST
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
-    Keymap.cpp
-    log.cpp
+    log.cpp 
     Parser.cpp
     Transform3d.cpp
     Util.cpp)
