@@ -20,9 +20,10 @@ library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")
 target_link_libraries(${TARGET}
     PRIVATE
     Support
-    sfml-window
-    sfml-graphics
-    sfml-system
     OpenGL::OpenGL
     OpenGL::GLU
-    GLEW::GLEW)
+    PUBLIC
+    GLEW::GLEW
+    sfml-graphics
+    sfml-system
+    glm)

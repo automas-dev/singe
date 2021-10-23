@@ -1,6 +1,8 @@
 #include "s3e/Graphics/Shader.hpp"
 
 #include <fstream>
+#include <string>
+#include <vector>
 
 #include "s3e/Support/Util.hpp"
 #include "s3e/Support/log.hpp"
@@ -17,7 +19,8 @@ namespace Tom::s3e {
                                     std::vector<std::string> & loaded) {
         for (auto & l : loaded) {
             if (l == path) {
-                Logging::Graphics->warning("File already included {}, skipping", path);
+                Logging::Graphics->warning("File already included {}, skipping",
+                                           path);
                 return "";
             }
         }

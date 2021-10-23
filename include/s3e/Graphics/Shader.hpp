@@ -3,13 +3,10 @@
 #include <GL/glew.h>
 
 #include <SFML/OpenGL.hpp>
-#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 #include <glm/glm.hpp>
 #include <memory>
-#include <stdexcept>
-#include <string>
 #include <string_view>
-#include <vector>
 
 // https://www.khronos.org/opengl/wiki/Shader_Compilation
 
