@@ -16,6 +16,13 @@ namespace Tom::s3e {
         m_rotation = glm::conjugate(m_rotation);
     }
 
+    Transform3d::Transform3d(const glm::mat4 matrix) {
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        glm::decompose(matrix, m_scale, m_rotation, m_position, skew, perspective);
+        m_rotation = glm::conjugate(m_rotation);
+    }
+
     Transform3d::~Transform3d() {}
 
     void Transform3d::move(const glm::vec3 & delta) {

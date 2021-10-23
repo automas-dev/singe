@@ -20,6 +20,17 @@ namespace Tom::s3e {
         Transform3d();
 
         /**
+         * Populate transform form components.
+         *
+         * @param position the translation
+         * @param rotation the rotation
+         * @param scale the scale
+         */
+        Transform3d(const glm::vec3 & position,
+                    const glm::quat & rotation,
+                    const glm::vec3 & scale);
+
+        /**
          * Populate transform form a matrix.
          * 
          * @param matrix the glm mat4 to get transforms from
