@@ -43,6 +43,16 @@ more of the rendering through nodes instead of draw calls.
 - [ ] Remove derived Game class? Maybe?
   - [ ] Update GameBase to load scene's and other resources
 
+## Dependencies
+
+- SFML 2.5.1
+- GLEW 2.2.0
+- OpenGL 3.0
+- glm
+- fmtlib
+- spdlog
+- (optional) Doxygen 1.9.2
+
 ## Building
 
 ```sh
