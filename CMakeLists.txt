@@ -56,11 +56,24 @@ find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED CONFIG)
 find_package(fmt REQUIRED CONFIG)
 find_package(spdlog REQUIRED CONFIG)
-find_package(Bullet REQUIRED)
 
+find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIR})
 
-add_subdirectory(DispatchQueue EXCLUDE_FROM_ALL)
+include(FetchContent)
+FetchContent_Declare(
+    tomlplusplus
+    GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
+    GIT_TAG        v2.5.0
+)
+FetchContent_MakeAvailable(tomlplusplus)
+
+FetchContent_Declare(
+    DispatchQueue
+    GIT_REPOSITORY https://github.com/twh2898/DispatchQueue
+    GIT_TAG        v0.1.4
+)
+FetchContent_MakeAvailable(DispatchQueue)
 
 add_subdirectory(src)
 
