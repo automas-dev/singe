@@ -1,7 +1,4 @@
 
-[submodule "DispatchQueue"]
-	path = DispatchQueue
-	url = https://github.com/twh2898/DispatchQueue
 [submodule "googletest"]
 	path = googletest
 	url = https://github.com/google/googletest
