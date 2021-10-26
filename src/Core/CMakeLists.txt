@@ -10,6 +10,7 @@ set(HEADER_LIST
     Mesh.hpp
     Model.hpp
     Physics.hpp
+    RenderState.hpp
     ResourceManager.hpp
     Scene.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET}/")
@@ -23,6 +24,7 @@ set(SOURCE_LIST
     Mesh.cpp
     Model.cpp
     Physics.cpp
+    RenderState.cpp
     ResourceManager.cpp
     Scene.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
