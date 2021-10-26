@@ -18,7 +18,6 @@ class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
     Scene::Ptr scene;
-    Shader::Ptr gridShader;
     Grid::Ptr grid;
 
 public:
@@ -29,5 +28,5 @@ public:
     void onDestroy(void) override;
 
     void onUpdate(const sf::Time & delta) override;
-    void onDraw(void) const override;
+    void onDraw(void) override;
 };

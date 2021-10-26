@@ -2,31 +2,6 @@
 
 #include <stdexcept>
 
-static const std ::string gridFragmentShaderSource = R"(
-#version 330 core
-out vec4 FragColor;
-uniform vec3 camera;
-in vec3 FragPos;
-in vec3 FragNorm;
-in vec2 FragTex;
-void main() {
-    float h = abs(camera.y);
-    float d = distance(FragPos, vec3(camera.x, 0.0, camera.z));
-    float start = -h/tan(radians(-20));
-    float end = -h/tan(radians(-5));
-    float a = (d-end) / (start-end);
-    a = clamp(a, 0, 1);
-    if (FragPos.x == 0) {
-        FragColor = vec4(1.0, 0.0, 0.0, a);
-    }
-    else if (FragPos.z == 0) {
-        FragColor = vec4(0.0, 0.0, 1.0, a);
-    }
-    else {
-        FragColor = vec4(0.4, 0.4, 0.4, a);
-    }
-})";
-
 Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
 Game::~Game() {}
@@ -68,10 +43,6 @@ void Game::onCreate() {
     camera->move({5, 2, 5});
     camera->setFov(70);
 
-    gridShader = Shader::fromFragmentSource(gridFragmentShaderSource);
-    if (!gridShader)
-        throw std::runtime_error("Failed to load internal grid shader");
-
     scene = std::make_shared<Scene>("Root");
 
     auto floorScene = resManager.loadScene("model/cube_plane.obj");
@@ -81,7 +52,7 @@ void Game::onCreate() {
     scene->move({0, -1, 0});
     scene->send();
 
-    grid = std::make_shared<Grid>(100);
+    grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
 
     SetMouseGrab(true);
 }
@@ -93,7 +64,7 @@ void Game::onUpdate(const sf::Time & delta) {
     fps->update(delta);
 }
 
-void Game::onDraw() const {
+void Game::onDraw() {
     glClearColor(0.25, 0.25, 0.25, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -106,12 +77,8 @@ void Game::onDraw() const {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
-
-    gridShader->bind();
-    gridShader->setMat4("mvp", vp);
-    gridShader->setMat4("model", glm::mat4(1));
-    gridShader->setVec3("camera", camera->getPosition());
-    grid->draw();
+    RenderState state(*camera, *defaultShader, vp);
+    grid->draw(state);
 
     defaultShader->bind();
     defaultShader->setMat4("mvp", vp);

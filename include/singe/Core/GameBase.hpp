@@ -150,7 +150,7 @@ namespace singe {
         /**
          * Draw the frame.
          */
-        virtual void onDraw() const = 0;
+        virtual void onDraw() = 0;
 
         /**
          * Event callback for a key press event.
