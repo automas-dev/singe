@@ -64,7 +64,7 @@ void Game::onUpdate(const sf::Time & delta) {
     fps->update(delta);
 }
 
-void Game::onDraw() {
+void Game::onDraw() const {
     glClearColor(0.25, 0.25, 0.25, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 

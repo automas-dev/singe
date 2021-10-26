@@ -28,5 +28,5 @@ public:
     void onDestroy(void) override;
 
     void onUpdate(const sf::Time & delta) override;
-    void onDraw(void) override;
+    void onDraw(void) const override;
 };
