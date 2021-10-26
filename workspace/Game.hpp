@@ -12,10 +12,14 @@
 #include <vector>
 using namespace singe;
 
+#include "Grid.hpp"
+
 class Game : public GameBase {
     ResourceManager resManager;
     FPSDisplay::Ptr fps;
     Scene::Ptr scene;
+    Shader::Ptr gridShader;
+    Grid::Ptr grid;
 
 public:
     Game(const sf::String & resPath);
