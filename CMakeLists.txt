@@ -61,12 +61,13 @@ find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIR})
 
 include(FetchContent)
+
 FetchContent_Declare(
-    tomlplusplus
-    GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
-    GIT_TAG        v2.5.0
+    rapidxml
+    GIT_REPOSITORY https://gitlab.com/twh2898/rapidxml
+    GIT_TAG        1.13.0
 )
-FetchContent_MakeAvailable(tomlplusplus)
+FetchContent_MakeAvailable(rapidxml)
 
 FetchContent_Declare(
     DispatchQueue
