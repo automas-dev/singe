@@ -1,4 +1,4 @@
-#include "Grid.hpp"
+#include "singe/Core/Grid.hpp"
 
 static const std ::string gridVertexShaderSource = R"(
 #version 330 core
