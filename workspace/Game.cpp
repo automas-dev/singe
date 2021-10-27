@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "SceneParse.hpp"
+
 Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
 
 Game::~Game() {}
@@ -40,6 +42,9 @@ void Game::onCreate() {
         window->close();
     });
 
+    SceneStruct sceneStruct = parseScene("scene.xml", resManager);
+    grid = sceneStruct.grid;
+
     camera->move({5, 2, 5});
     camera->setFov(70);
 
@@ -52,7 +57,7 @@ void Game::onCreate() {
     scene->move({0, -1, 0});
     scene->send();
 
-    grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
+    // grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
 
     SetMouseGrab(true);
 }
@@ -78,7 +83,8 @@ void Game::onDraw() const {
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
     RenderState state(*camera, *defaultShader, vp);
-    grid->draw(state);
+    if (grid)
+        grid->draw(state);
 
     defaultShader->bind();
     defaultShader->setMat4("mvp", vp);

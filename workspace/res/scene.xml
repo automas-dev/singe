@@ -1,0 +1,27 @@
+<scene name="root">
+    <grid>
+        <n>100</n>
+        <step>1.0</step>
+        <material>
+            <type>SolidColor</type>
+            <color>0.7 0.8 0.9 1.0</color>
+        </material>
+    </grid>
+
+    <environment>
+        <material>
+            <type>SolidColor</type>
+            <color>0.3 0.3 0.3 1.0</color>
+        </material>
+    </environment>
+
+    <camera name="fpv_camera">
+        <pose>5 2 5 0 0 0</pose>
+        <control>fpv</control>
+        <projection>perspective</projection>
+        <fov>70</fov>
+        <znear>0.01</znear>
+        <zfar>1000</zfar>
+        <active>true</active>
+    </camera>
+</scene>
