@@ -1,0 +1,22 @@
+<!ELEMENT scene (grid,environment,camera)>
+<!ATTLIST scene name NMTOKEN #REQUIRED>
+
+<!ELEMENT grid (n,step,material)>
+<!ELEMENT n (#PCDATA)>
+<!ELEMENT step (#PCDATA)>
+
+<!ELEMENT material (type,color)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT color (#PCDATA)>
+
+<!ELEMENT environment (material)>
+
+<!ELEMENT camera (pose,control,projection,fov,znear,zfar,active)>
+<!ATTLIST camera name NMTOKEN #REQUIRED>
+<!ELEMENT pose (#PCDATA)>
+<!ELEMENT control (#PCDATA)>
+<!ELEMENT projection (#PCDATA)>
+<!ELEMENT fov (#PCDATA)>
+<!ELEMENT znear (#PCDATA)>
+<!ELEMENT zfar (#PCDATA)>
+<!ELEMENT active (#PCDATA)>
