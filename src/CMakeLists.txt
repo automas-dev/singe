@@ -20,11 +20,6 @@ macro(library_component target source_list header_list)
     #Add ALIAS target for use in add_subdirectory or build directory
     add_library(${PROJECT_NAME}::${target} ALIAS ${target})
 
-    #Export targets so build dir can be used by other projects
-    export(TARGETS ${target}
-        NAMESPACE ${PROJECT_NAME}::
-        FILE ${PROJECT_NAME}${target}Targets.cmake)
-
     #Add target to Project Targets for install
     install(TARGETS ${target}
         EXPORT ${PROJECT_NAME}Targets
@@ -73,11 +68,6 @@ add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
 source_group(TREE "${PROJECT_SOURCE_DIR}/include"
     PREFIX "Header Files"
     FILES ${HEADER_LIST})
-
-#Export targets so build dir can be used by other projects
-export(TARGETS ${TARGET}
-    NAMESPACE ${PROJECT_NAME}::
-    FILE ${PROJECT_NAME}Targets.cmake)
 
 #Add target to Project Targets for install
 install(TARGETS ${TARGET}
