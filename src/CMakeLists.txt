@@ -33,6 +33,8 @@ macro(library_component target source_list header_list)
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 endmacro()
 
+add_subdirectory(Transform3d)
+
 add_subdirectory(Support)
 add_subdirectory(Graphics)
 add_subdirectory(Core)

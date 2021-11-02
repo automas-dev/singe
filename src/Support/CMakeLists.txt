@@ -4,14 +4,12 @@ set(TARGET Support)
 set(HEADER_LIST
     log.hpp
     Parser.hpp
-    Transform3d.hpp
     Util.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
     log.cpp 
     Parser.cpp
-    Transform3d.cpp
     Util.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
 

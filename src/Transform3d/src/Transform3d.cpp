@@ -1,8 +1,6 @@
-#include "singe/Support/Transform3d.hpp"
+#include "Transform3d.hpp"
 
 #include <glm/gtx/matrix_decompose.hpp>
-
-#include "singe/Support/Util.hpp"
 
 namespace singe {
 

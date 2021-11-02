@@ -39,6 +39,7 @@ target_link_libraries(${TARGET}
     OpenGL::OpenGL
     OpenGL::GLU
     PUBLIC
+    Transform3d
     Support
     Graphics
     GLEW::GLEW

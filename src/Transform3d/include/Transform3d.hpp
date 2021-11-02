@@ -32,7 +32,7 @@ namespace singe {
 
         /**
          * Populate transform form a matrix.
-         * 
+         *
          * @param matrix the glm mat4 to get transforms from
          */
         Transform3d(const glm::mat4 matrix);
@@ -75,7 +75,7 @@ namespace singe {
          * @param delta the delta rotation
          */
         void rotateEuler(const glm::vec3 & delta);
-        
+
         /**
          * Rotate by adding delta.
          *
