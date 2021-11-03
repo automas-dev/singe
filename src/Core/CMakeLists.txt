@@ -5,6 +5,7 @@ set(HEADER_LIST
     Camera.hpp
     FPSDisplay.hpp
     GameBase.hpp
+    Geometry.hpp
     Grid.hpp
     Material.hpp
     Menu.hpp
@@ -20,6 +21,7 @@ set(SOURCE_LIST
     Camera.cpp
     FPSDisplay.cpp
     GameBase.cpp
+    Geometry.cpp
     Grid.cpp
     Material.cpp
     Menu.cpp
