@@ -9,8 +9,4 @@ namespace singe {
     void RenderState::sendMVP() const {
         shader->setMat4("mvp", transform);
     }
-
-    void RenderState::sendModel(const glm::mat4 & matrix) const {
-        shader->setMat4("model", matrix);
-    }
 }

@@ -88,7 +88,7 @@ void Game::onDraw() const {
 
     defaultShader->bind();
     defaultShader->setMat4("mvp", vp);
-    scene->draw(defaultShader);
+    scene->draw(state);
 
     window->pushGLStates();
     window->draw(*fps);

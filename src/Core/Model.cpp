@@ -17,8 +17,9 @@ namespace singe {
     }
 
     void Model::draw(RenderState state) const {
+        state.transform *= toMatrix();
+        state.sendMVP();
         for (auto & geom : geometry) {
-            state.sendModel(toMatrix());
             materials[geom.materialId]->bind(state.shader);
             geom.mesh->draw();
         }

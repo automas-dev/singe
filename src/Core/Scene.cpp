@@ -16,7 +16,6 @@ namespace singe {
 
     void Scene::draw(RenderState state) const {
         state.transform *= toMatrix();
-        state.sendMVP();
         for (auto & model : models) {
             model->draw(state);
         }

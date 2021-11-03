@@ -23,7 +23,5 @@ namespace singe {
         RenderState & operator=(RenderState && other) = default;
 
         void sendMVP() const;
-
-        void sendModel(const glm::mat4 & matrix) const;
     };
 }
