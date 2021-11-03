@@ -203,6 +203,8 @@ namespace singe {
                            const std::vector<glm::vec2> & avt,
                            const std::vector<glm::vec3> & avn) {
             auto model = std::make_shared<Model>(name);
+            auto mesh = std::make_shared<Mesh>();
+            model->geometry.emplace_back(mesh);
             model->materials.push_back(material);
             for (auto & face : af) {
                 for (auto & point : face.p) {
@@ -210,9 +212,9 @@ namespace singe {
                         || point.t > avt.size()) {
                         Logging::Core->error("Point out of range");
                     }
-                    model->points.emplace_back(av[point.v - 1],
-                                               avn[point.n - 1],
-                                               avt[point.t - 1]);
+                    mesh->points.emplace_back(av[point.v - 1],
+                                              avn[point.n - 1],
+                                              avt[point.t - 1]);
                 }
             }
             return model;
