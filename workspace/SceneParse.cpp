@@ -45,7 +45,7 @@ namespace singe {
                     auto * p = mat->first_node("color");
                     if (p) {
                         std::string value(p->value(), p->value_size());
-                        auto split = splitString(value);
+                        auto split = splitString(value, ' ');
                         color.r = std::stof(split[0]);
                         color.g = std::stof(split[1]);
                         color.b = std::stof(split[2]);
