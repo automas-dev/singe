@@ -22,6 +22,8 @@ namespace singe {
         float alpha;
         sf::Image image;
         Texture::Ptr texture;
+        Texture::Ptr normalTexture;
+        Texture::Ptr specularTexture;
 
         /**
          * Create a new Material with default values.
