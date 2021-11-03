@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+#include "singe/Graphics/Shader.hpp"
 #include "singe/Graphics/Texture.hpp"
 
 namespace singe {
@@ -35,6 +36,6 @@ namespace singe {
         /**
          * If texture is not a nullptr, call it's bind method.
          */
-        void bind() const;
+        void bind(const Shader::Ptr & shader) const;
     };
 }

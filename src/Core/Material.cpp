@@ -19,7 +19,7 @@ namespace singe {
         }
     }
 
-    void Material::bind() const {
+    void Material::bind(const Shader::Ptr & shader) const {
         if (texture)
             texture->bind();
     }

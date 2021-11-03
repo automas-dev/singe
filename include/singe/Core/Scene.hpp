@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "singe/Core/Model.hpp"
+#include "singe/Core/RenderState.hpp"
 #include "singe/Graphics/Shader.hpp"
 
 namespace singe {
@@ -46,7 +47,6 @@ namespace singe {
          * @param shader the shader to send the model matrix to
          * @param transform any parent transform
          */
-        void draw(const Shader::Ptr & shader,
-                  glm::mat4 transform = glm::mat4(1)) const;
+        void draw(RenderState state) const;
     };
 }

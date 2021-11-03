@@ -14,14 +14,14 @@ namespace singe {
         }
     }
 
-    void Scene::draw(const Shader::Ptr & shader, glm::mat4 transform) const {
-        transform *= toMatrix();
-        shader->setMat4("model", transform);
+    void Scene::draw(RenderState state) const {
+        state.transform *= toMatrix();
+        state.sendMVP();
         for (auto & model : models) {
-            model->draw();
+            model->draw(state);
         }
         for (auto & child : children) {
-            child->draw(shader, transform);
+            child->draw(state);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace singe {
         shader->setMat4("mvp", state.transform);
         shader->setVec3("color", color);
         shader->setInt("fade", fade);
-        shader->setVec3("camera", state.camera.getPosition());
+        shader->setVec3("camera", state.camera->getPosition());
         VBO::draw();
     }
 }

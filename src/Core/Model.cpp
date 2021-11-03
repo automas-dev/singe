@@ -6,22 +6,21 @@
 
 namespace singe {
 
-    Model::Model(const std::string & name) : Mesh(), name(name) {}
+    Model::Model(const std::string & name) : Transform3d(), name(name) {}
 
     Model::~Model() {}
 
     void Model::send() {
-        Mesh::send();
-        for (auto & material : materials) {
-            material->send();
+        for (auto & geom : geometry) {
+            geom.mesh->send();
         }
     }
 
-    void Model::draw() const {
-        for (int i = 0; i < materials.size(); i++) {
-            glActiveTexture(GL_TEXTURE0 + i);
-            materials[i]->bind();
+    void Model::draw(RenderState state) const {
+        for (auto & geom : geometry) {
+            state.sendModel(toMatrix());
+            materials[geom.materialId]->bind(state.shader);
+            geom.mesh->draw();
         }
-        Mesh::draw();
     }
 }

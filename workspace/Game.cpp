@@ -82,7 +82,7 @@ void Game::onDraw() const {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
-    RenderState state(*camera, *defaultShader, vp);
+    RenderState state(camera, defaultShader, vp);
     if (grid)
         grid->draw(state);
 

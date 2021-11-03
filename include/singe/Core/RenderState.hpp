@@ -8,11 +8,11 @@
 
 namespace singe {
     struct RenderState {
-        Camera & camera;
-        Shader & shader;
+        const Camera::Ptr & camera;
+        const Shader::Ptr & shader;
         glm::mat4 transform;
 
-        RenderState(Camera & camera, Shader & shader, glm::mat4 & transform);
+        RenderState(const Camera::Ptr & camera, const Shader::Ptr & shader, glm::mat4 & transform);
 
         RenderState(const RenderState & other) = default;
 
@@ -21,5 +21,9 @@ namespace singe {
         RenderState & operator=(const RenderState & other) = default;
 
         RenderState & operator=(RenderState && other) = default;
+
+        void sendMVP() const;
+
+        void sendModel(const glm::mat4 & matrix) const;
     };
 }

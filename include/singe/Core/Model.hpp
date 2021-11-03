@@ -4,19 +4,22 @@
 #include <memory>
 #include <string>
 
+#include "Transform3d.hpp"
+#include "singe/Core/Geometry.hpp"
 #include "singe/Core/Material.hpp"
-#include "singe/Core/Mesh.hpp"
+#include "singe/Core/RenderState.hpp"
 #include "singe/Graphics/VBO.hpp"
 
 namespace singe {
     /**
      * A Model which has a mesh and model transforms.
      */
-    struct Model : public Mesh {
+    struct Model : public Transform3d {
 
         using Ptr = std::shared_ptr<Model>;
         using ConstPtr = std::shared_ptr<const Model>;
 
+        std::vector<Geometry> geometry;
         std::vector<Material::Ptr> materials;
         std::string name;
 
@@ -37,11 +40,11 @@ namespace singe {
         /**
          * Send the Mesh and any materials to the OpenGL context.
          */
-        void send() override;
+        void send();
 
         /**
          * Bind textures and draw the mesh.
          */
-        void draw() const override;
+        void draw(RenderState state) const;
     };
 }
