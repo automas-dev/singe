@@ -26,6 +26,10 @@ namespace wavefront {
 }
 
 namespace wavefront {
+    Mesh::Mesh() : matId(0) {}
+}
+
+namespace wavefront {
     Model::Model() {}
 
     Model::~Model() {
