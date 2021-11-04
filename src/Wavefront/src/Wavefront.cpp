@@ -47,8 +47,7 @@ namespace wavefront {
         materials.clear();
     }
 
-    void Model::loadMaterialsFrom(const std::string & path,
-                                  const std::string & name) {
+    void Model::loadMaterialsFrom(const std::string & path) {
         std::ifstream is(path);
         if (!is.is_open()) {
             throw ModelLoadException("Failed to open file " + path);
@@ -143,7 +142,7 @@ namespace wavefront {
                     auto lastSlash = path.find_last_of('/');
                     std::string mtlPath = path.substr(0, lastSlash + 1);
                     mtlPath += token.value;
-                    loadMaterialsFrom(mtlPath, token.value);
+                    loadMaterialsFrom(mtlPath);
                 } break;
                 case 'u': { // usemtl
                     if (!mesh)

@@ -64,7 +64,7 @@ namespace wavefront {
 
         void clear();
 
-        void loadMaterialsFrom(const std::string & path, const std::string & name);
+        void loadMaterialsFrom(const std::string & path);
 
         void loadModelFrom(const std::string & path);
     };
