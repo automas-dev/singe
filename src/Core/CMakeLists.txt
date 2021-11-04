@@ -42,6 +42,7 @@ target_link_libraries(${TARGET}
     OpenGL::GLU
     PUBLIC
     Transform3d
+    Wavefront
     Support
     Graphics
     GLEW::GLEW

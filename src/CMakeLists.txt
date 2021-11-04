@@ -34,6 +34,7 @@ macro(library_component target source_list header_list)
 endmacro()
 
 add_subdirectory(Transform3d)
+add_subdirectory(Wavefront)
 
 add_subdirectory(Support)
 add_subdirectory(Graphics)
