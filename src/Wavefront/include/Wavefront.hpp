@@ -6,27 +6,6 @@
 #include <vector>
 
 namespace wavefront {
-    class ImageLoadError : public std::exception {
-        std::string reason;
-
-    public:
-        ImageLoadError(const char * path);
-        const char * what() const noexcept override;
-    };
-
-    struct ImageData {
-        int width, height, nrComponents;
-        unsigned char * data;
-
-        ImageData();
-        ImageData(const char * path);
-        ~ImageData();
-
-        void load(const char * path);
-
-        bool isLoaded() const;
-    };
-
     struct Mesh {
         std::string name;
         size_t matId;
@@ -51,9 +30,9 @@ namespace wavefront {
         glm::vec3 colAmbient;
         glm::vec3 colDiffuse;
         glm::vec3 colSpecular;
-        ImageData texAlbedo;
-        ImageData texNormal;
-        ImageData texSpecular;
+        std::string texAlbedo;
+        std::string texNormal;
+        std::string texSpecular;
         Material();
     };
 

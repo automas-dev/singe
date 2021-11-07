@@ -6,51 +6,6 @@
 
 #include "WavefrontParser.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-namespace wavefront {
-    ImageLoadError::ImageLoadError(const char * path)
-        : reason("Failed to load image ") {
-        reason += path;
-        reason += ' ';
-        reason += stbi_failure_reason();
-    }
-
-    const char * ImageLoadError::what() const noexcept {
-        return reason.c_str();
-    }
-}
-
-namespace wavefront {
-    ImageData::ImageData()
-        : width(0), height(0), nrComponents(0), data(nullptr) {}
-
-    ImageData::ImageData(const char * path) : ImageData() {
-        load(path);
-    }
-
-    ImageData::~ImageData() {
-        if (data) {
-            stbi_image_free(data);
-        }
-    }
-
-    void ImageData::load(const char * path) {
-        if (data) {
-            stbi_image_free(data);
-        }
-        data = stbi_load(path, &width, &height, &nrComponents, 0);
-        if (!data) {
-            throw ImageLoadError(path);
-        }
-    }
-
-    bool ImageData::isLoaded() const {
-        return data != nullptr;
-    }
-}
-
 namespace wavefront {
     Mesh::Mesh() : matId(0) {}
 
@@ -163,17 +118,17 @@ namespace wavefront {
                         case 'K': {
                             if (token.key == "map_Kd") {
                                 texPath += token.value;
-                                material->texAlbedo.load(texPath.c_str());
+                                material->texAlbedo = texPath;
                             }
                             else if (token.key == "map_Ks") {
                                 texPath += token.value;
-                                material->texSpecular.load(texPath.c_str());
+                                material->texSpecular = texPath;
                             }
                         } break;
                         case 'B': // map_Bump
                         case 'b': { // map_bump
                             texPath += token.value;
-                            material->texNormal.load(texPath.c_str());
+                            material->texNormal = texPath;
                         } break;
                         default:
                             break;

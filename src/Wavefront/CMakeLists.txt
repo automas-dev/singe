@@ -4,8 +4,7 @@ add_library(${TARGET} OBJECT
     src/Wavefront.cpp
     include/Wavefront.hpp
     src/WavefrontParser.cpp
-    include/WavefrontParser.hpp
-    include/stb_image.h)
+    include/WavefrontParser.hpp)
 
 target_link_libraries(${TARGET} PUBLIC glm)
 
