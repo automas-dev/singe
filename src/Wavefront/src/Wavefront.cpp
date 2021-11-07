@@ -23,8 +23,10 @@ namespace wavefront {
 }
 
 namespace wavefront {
-    ImageData::ImageData(const char * path)
-        : width(0), height(0), nrComponents(0), data(nullptr) {
+    ImageData::ImageData()
+        : width(0), height(0), nrComponents(0), data(nullptr) {}
+
+    ImageData::ImageData(const char * path) : ImageData() {
         load(path);
     }
 
