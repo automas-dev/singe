@@ -253,16 +253,19 @@ namespace wavefront {
                             throw ModelLoadException(
                                 "Face (c) component must have 3 values");
                         size_t iv = std::stoul(subParams[0]);
+                        iv -= 1; // index at 1
                         if (iv >= av.size())
                             throw ModelLoadException("Vertex out of bounds");
                         mesh->vertices.push_back(av[iv]);
 
                         size_t it = std::stoul(subParams[1]);
+                        it -= 1; // index at 1
                         if (it >= avt.size())
                             throw ModelLoadException("TexCoord out of bounds");
                         mesh->texcoords.push_back(avt[it]);
 
                         size_t in = std::stoul(subParams[2]);
+                        in -= 1; // index at 1
                         if (in >= avn.size())
                             throw ModelLoadException("Normal out of bounds");
                         mesh->normals.push_back(avn[in]);
@@ -282,13 +285,18 @@ namespace wavefront {
                     if (!mesh)
                         throw ModelLoadException(
                             "Got a (usemtl) before starign an object (o)");
+                    bool found = false;
                     for (int i = 0; i < materials.size(); i++) {
                         if (materials[i]->name == token.value) {
                             mesh->matId = i;
+                            found = true;
                             break;
                         }
                     }
-                    throw ModelLoadException("Unknown material name " + token.value);
+                    if (!found) {
+                        throw ModelLoadException("Unknown material name "
+                                                 + token.value);
+                    }
                 } break;
                 default:
                     break;
