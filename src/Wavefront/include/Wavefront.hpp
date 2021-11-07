@@ -35,6 +35,8 @@ namespace wavefront {
         std::vector<glm::vec3> normals;
 
         Mesh();
+
+        size_t size() const;
     };
 
     class MaterialLoadException : public std::runtime_error {

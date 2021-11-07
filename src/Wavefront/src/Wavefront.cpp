@@ -51,6 +51,10 @@ namespace wavefront {
 
 namespace wavefront {
     Mesh::Mesh() : matId(0) {}
+
+    size_t Mesh::size() const {
+        return vertices.size();
+    }
 }
 
 namespace wavefront {
