@@ -6,12 +6,23 @@
 #include <vector>
 
 namespace wavefront {
+    class ImageLoadError : public std::exception {
+        std::string reason;
+
+    public:
+        ImageLoadError(const char * path);
+        const char * what() const noexcept override;
+    };
+
     struct ImageData {
         int width, height, nrComponents;
         unsigned char * data;
 
+        ImageData();
         ImageData(const char * path);
         ~ImageData();
+
+        void load(const char * path);
 
         bool isLoaded() const;
     };
@@ -26,20 +37,22 @@ namespace wavefront {
         Mesh();
     };
 
+    class MaterialLoadException : public std::runtime_error {
+    public:
+        using runtime_error::runtime_error;
+    };
+
     struct Material {
         std::string name;
         float specExp;
         float alpha;
-        struct {
-            glm::vec3 ambient;
-            glm::vec3 diffuse;
-            glm::vec3 specular;
-        } color;
-        struct {
-            ImageData albedo;
-            ImageData normal;
-            ImageData specular;
-        } texture;
+        glm::vec3 colAmbient;
+        glm::vec3 colDiffuse;
+        glm::vec3 colSpecular;
+        ImageData texAlbedo;
+        ImageData texNormal;
+        ImageData texSpecular;
+        Material();
     };
 
     class ModelLoadException : public std::runtime_error {

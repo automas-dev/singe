@@ -10,13 +10,37 @@
 #include "stb_image.h"
 
 namespace wavefront {
-    ImageData::ImageData(const char * path) {
-        data = stbi_load(path, &width, &height, &nrComponents, 0);
+    ImageLoadError::ImageLoadError(const char * path)
+        : reason("Failed to load image ") {
+        reason += path;
+        reason += ' ';
+        reason += stbi_failure_reason();
+    }
+
+    const char * ImageLoadError::what() const noexcept {
+        return reason.c_str();
+    }
+}
+
+namespace wavefront {
+    ImageData::ImageData(const char * path)
+        : width(0), height(0), nrComponents(0), data(nullptr) {
+        load(path);
     }
 
     ImageData::~ImageData() {
         if (data) {
             stbi_image_free(data);
+        }
+    }
+
+    void ImageData::load(const char * path) {
+        if (data) {
+            stbi_image_free(data);
+        }
+        data = stbi_load(path, &width, &height, &nrComponents, 0);
+        if (!data) {
+            throw ImageLoadError(path);
         }
     }
 
@@ -27,6 +51,10 @@ namespace wavefront {
 
 namespace wavefront {
     Mesh::Mesh() : matId(0) {}
+}
+
+namespace wavefront {
+    Material::Material() : specExp(1.0), alpha(1.0) {}
 }
 
 namespace wavefront {
@@ -53,6 +81,102 @@ namespace wavefront {
             throw ModelLoadException("Failed to open file " + path);
         }
         Parser parser(is);
+
+        Material * material = nullptr;
+
+        for (auto & token : parser) {
+            switch (token.key[0]) {
+                case 'n': { // newmtl
+                    if (token.key != "newmtl")
+                        break;
+                    material = new Material();
+                    material->name = token.value;
+                    materials.push_back(material);
+                } break;
+                case 'K': {
+                    if (token.key.size() < 2)
+                        break;
+                    switch (token.key[1]) {
+                        case 'a': { // Ka
+                            if (!material)
+                                throw MaterialLoadException(
+                                    "Got a Color ambient (Ka) before starign an material (newmtl)");
+                            auto params = token.params();
+                            if (params.size() != material->colAmbient.length())
+                                throw MaterialLoadException(
+                                    "Color ambient (Ka) must have 3 values");
+                            for (int i = 0; i < material->colAmbient.length(); i++)
+                                material->colAmbient[i] = std::stof(params[i]);
+                        } break;
+                        case 'd': { // Kd
+                            if (!material)
+                                throw MaterialLoadException(
+                                    "Got a Color diffuse (Kd) before starign an material (newmtl)");
+                            auto params = token.params();
+                            if (params.size() != material->colDiffuse.length())
+                                throw MaterialLoadException(
+                                    "Color diffuse (Kd) must have 3 values");
+                            for (int i = 0; i < material->colDiffuse.length(); i++)
+                                material->colDiffuse[i] = std::stof(params[i]);
+                        } break;
+                        case 's': { // Ks
+                            if (!material)
+                                throw MaterialLoadException(
+                                    "Got a Color specular (Ks) before starign an material (newmtl)");
+                            auto params = token.params();
+                            if (params.size() != material->colSpecular.length())
+                                throw MaterialLoadException(
+                                    "Color specular (Ks) must have 3 values");
+                            for (int i = 0; i < material->colSpecular.length(); i++)
+                                material->colSpecular[i] = std::stof(params[i]);
+                        } break;
+                        default:
+                            break;
+                    }
+                } break;
+                case 'N': {
+                    if (token.key.size() < 2)
+                        break;
+                    switch (token.key[1]) {
+                        case 'i': { // Ni
+                            material->specExp = std::stof(token.value);
+                        } break;
+                        default:
+                            break;
+                    }
+                } break;
+                case 'd': { // d
+                    material->alpha = std::stof(token.value);
+                } break;
+                case 'm': {
+                    if (token.key.size() < 5 || token.key.substr(0, 4) != "map_")
+                        break;
+                    auto lastSlash = path.find_last_of('/');
+                    std::string texPath = path.substr(0, lastSlash + 1);
+                    switch (token.key[4]) {
+                        case 'K': {
+                            if (token.key == "map_Kd") {
+                                texPath += token.value;
+                                material->texAlbedo.load(texPath.c_str());
+                            }
+                            else if (token.key == "map_Ks") {
+                                texPath += token.value;
+                                material->texSpecular.load(texPath.c_str());
+                            }
+                        } break;
+                        case 'B': // map_Bump
+                        case 'b': { // map_bump
+                            texPath += token.value;
+                            material->texNormal.load(texPath.c_str());
+                        } break;
+                        default:
+                            break;
+                    }
+                } break;
+                default:
+                    break;
+            }
+        }
     }
 
     void Model::loadModelFrom(const std::string & path) {
@@ -105,6 +229,8 @@ namespace wavefront {
                                 for (int i = 0; i < vn.length(); i++)
                                     vn[i] = std::stof(params[i]);
                             } break;
+                            default:
+                                break;
                         }
                     }
                 } break;
@@ -145,11 +271,11 @@ namespace wavefront {
                     loadMaterialsFrom(mtlPath);
                 } break;
                 case 'u': { // usemtl
+                    if (token.key != "usemtl")
+                        break;
                     if (!mesh)
                         throw ModelLoadException(
                             "Got a (usemtl) before starign an object (o)");
-                    if (token.key != "usemtl")
-                        break;
                     for (int i = 0; i < materials.size(); i++) {
                         if (materials[i]->name == token.value) {
                             mesh->matId = i;
@@ -162,7 +288,5 @@ namespace wavefront {
                     break;
             }
         }
-
-        clear();
     }
 }
