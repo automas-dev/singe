@@ -1,6 +1,6 @@
 set(TARGET Wavefront)
 
-add_library(${TARGET} 
+add_library(${TARGET} OBJECT
     src/Wavefront.cpp
     include/Wavefront.hpp
     src/WavefrontParser.cpp

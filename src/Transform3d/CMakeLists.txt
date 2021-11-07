@@ -1,6 +1,6 @@
 set(TARGET Transform3d)
 
-add_library(${TARGET} src/Transform3d.cpp include/Transform3d.hpp)
+add_library(${TARGET} OBJECT src/Transform3d.cpp include/Transform3d.hpp)
 
 target_include_directories(${TARGET}
     PUBLIC
