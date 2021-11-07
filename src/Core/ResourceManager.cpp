@@ -95,13 +95,6 @@ namespace singe {
         return shader;
     }
 
-    static sf::Image convertMaterial(const wavefront::ImageData & data) {
-        sf::Image img;
-        size_t size = data.width * data.height * data.nrComponents;
-        img.loadFromMemory(data.data, size);
-        return img;
-    }
-
     Scene::Ptr ResourceManager::loadScene(const std::string & path) {
         auto relPath = resourceAt(path);
 
@@ -118,9 +111,6 @@ namespace singe {
         wavefront::Model model;
         try {
             model.loadModelFrom(relPath);
-        }
-        catch (const wavefront::ImageLoadError & e) {
-            throw std::runtime_error(e.what());
         }
         catch (const wavefront::ModelLoadException & e) {
             throw std::runtime_error(e.what());
@@ -149,15 +139,12 @@ namespace singe {
             material->specExp = mat->specExp;
             material->alpha = mat->alpha;
 
-            if (mat->texAlbedo.isLoaded())
-                material->texture =
-                    std::make_shared<Texture>(convertMaterial(mat->texAlbedo));
-            if (mat->texNormal.isLoaded())
-                material->normalTexture =
-                    std::make_shared<Texture>(convertMaterial(mat->texNormal));
-            if (mat->texSpecular.isLoaded())
-                material->specularTexture =
-                    std::make_shared<Texture>(convertMaterial(mat->texSpecular));
+            if (!mat->texAlbedo.empty())
+                material->texture = loadTexture(mat->texAlbedo);
+            if (!mat->texNormal.empty())
+                material->normalTexture = loadTexture(mat->texNormal);
+            if (!mat->texSpecular.empty())
+                material->specularTexture = loadTexture(mat->texSpecular);
         }
 
         return scene;
