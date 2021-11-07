@@ -81,20 +81,7 @@ namespace singe {
      * Texture, Model and Shader resources.
      */
     class ResourceManager : public ResourceManagerBase {
-    private:
         std::unordered_map<std::string, Texture::Ptr> textures;
-
-        /**
-         * Load a Wavefront .mtl file with the given name from the same
-         * directory as the .obj file it is loading from.
-         *
-         * @param objPath path to the .obj file which is loading the material
-         * @param name the material library name
-         *
-         * @return a unique_ptr to the MaterialLibrary
-         */
-        std::unique_ptr<MaterialLib> loadMaterials(const std::string & objPath,
-                                                   const std::string & name);
 
     public:
         using Ptr = std::shared_ptr<ResourceManager>;

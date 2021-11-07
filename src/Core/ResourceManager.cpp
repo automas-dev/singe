@@ -10,6 +10,7 @@ namespace fs = std::filesystem;
 #include <map>
 #include <vector>
 
+#include "Wavefront.hpp"
 #include "singe/Support/Parser.hpp"
 #include "singe/Support/Util.hpp"
 #include "singe/Support/log.hpp"
@@ -94,143 +95,15 @@ namespace singe {
         return shader;
     }
 
-    std::unique_ptr<MaterialLib> ResourceManager::loadMaterials(
-        const std::string & objPath, const std::string & name) {
-        auto mtllib = std::make_unique<MaterialLib>();
-        mtllib->name = name;
-
-        std::string mtlPath = objPath.substr(0, objPath.find_last_of('/') + 1);
-        mtlPath += name;
-        mtlPath = resourceAt(mtlPath);
-
-        std::ifstream is(mtlPath);
-        if (!is.is_open()) {
-            Logging::Core->error("Failed to open material library {}", mtlPath);
-            return nullptr;
-        }
-        WavefrontParser parser(is);
-
-        Material::Ptr material;
-
-        for (auto & token : parser) {
-            switch (token.key[0]) {
-                case 'n':
-                    if (token.key == "newmtl") {
-                        if (material)
-                            mtllib->materials[material->name] = material;
-                        material = std::make_shared<Material>();
-                        material->name = token.value;
-                    }
-                    break;
-                case 'K':
-                    switch (token.key[1]) {
-                        case 'a': // Ka
-                        {
-                            auto parts = token.params();
-                            if (parts.size() != 3)
-                                return nullptr;
-                            material->ambient.x = std::stof(parts[0]);
-                            material->ambient.y = std::stof(parts[1]);
-                            material->ambient.z = std::stof(parts[2]);
-                        } break;
-                        case 'd': // Kd
-                        {
-                            auto parts = token.params();
-                            if (parts.size() != 3)
-                                return nullptr;
-                            material->diffuse.x = std::stof(parts[0]);
-                            material->diffuse.y = std::stof(parts[1]);
-                            material->diffuse.z = std::stof(parts[2]);
-                        } break;
-                        case 's': // Ks
-                        {
-                            auto parts = token.params();
-                            if (parts.size() != 3)
-                                return nullptr;
-                            material->specular.x = std::stof(parts[0]);
-                            material->specular.y = std::stof(parts[1]);
-                            material->specular.z = std::stof(parts[2]);
-                        } break;
-                        default:
-                            break;
-                    }
-                    break;
-                case 'N':
-                    switch (token.key[1]) {
-                        case 'i': // Ni
-                            material->specExp = std::stof(token.value);
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case 'd':
-                    material->alpha = std::stof(token.value);
-                    break;
-                case 'm':
-                    if (token.key == "map_Kd") {
-                        if (!material->image.loadFromFile(resourceAt(token.value)))
-                            return nullptr;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        if (material) {
-            mtllib->materials[material->name] = material;
-        }
-
-        return mtllib;
+    static sf::Image convertMaterial(const wavefront::ImageData & data) {
+        sf::Image img;
+        size_t size = data.width * data.height * data.nrComponents;
+        img.loadFromMemory(data.data, size);
+        return img;
     }
-
-    struct TempModel {
-        struct Face {
-            struct Point {
-                std::size_t v, t, n;
-            };
-            std::array<Point, 3> p;
-        };
-
-        std::string name;
-        Material::Ptr material;
-        std::vector<Face> af;
-
-        TempModel(const std::string & name) : name(name) {}
-
-        Model::Ptr toModel(const std::vector<glm::vec3> & av,
-                           const std::vector<glm::vec2> & avt,
-                           const std::vector<glm::vec3> & avn) {
-            auto model = std::make_shared<Model>(name);
-            auto mesh = std::make_shared<Mesh>();
-            model->geometry.emplace_back(mesh);
-            model->materials.push_back(material);
-            for (auto & face : af) {
-                for (auto & point : face.p) {
-                    if (point.v > av.size() || point.n > avn.size()
-                        || point.t > avt.size()) {
-                        Logging::Core->error("Point out of range");
-                    }
-                    mesh->points.emplace_back(av[point.v - 1],
-                                              avn[point.n - 1],
-                                              avt[point.t - 1]);
-                }
-            }
-            return model;
-        }
-    };
-
 
     Scene::Ptr ResourceManager::loadScene(const std::string & path) {
         auto relPath = resourceAt(path);
-
-        std::ifstream is(relPath);
-        if (!is.is_open()) {
-            Logging::Core->warning("Failed to open file {}", relPath);
-            return nullptr;
-        }
-        WavefrontParser parser(is);
 
         std::string sceneName;
         {
@@ -242,96 +115,50 @@ namespace singe {
             }
         }
 
-        auto scene = std::make_shared<Scene>(sceneName);
-        std::unique_ptr<TempModel> tmpModel;
-        std::unique_ptr<MaterialLib> mtllib;
-
-        std::vector<glm::vec3> av;
-        std::vector<glm::vec2> avt;
-        std::vector<glm::vec3> avn;
-
-        int nRead;
-        std::string line;
-        std::string str;
-        for (auto & token : parser) {
-            switch (token.key[0]) {
-                case 'o':
-                    if (tmpModel)
-                        scene->models.push_back(tmpModel->toModel(av, avt, avn));
-                    tmpModel = std::make_unique<TempModel>(token.value);
-                    break;
-                case 'v':
-                    if (token.key.size() == 1) // v
-                    {
-                        auto parts = token.params();
-                        if (parts.size() != 3)
-                            return nullptr;
-                        glm::vec3 v;
-                        v.x = std::stof(parts[0]);
-                        v.y = std::stof(parts[1]);
-                        v.z = std::stof(parts[2]);
-                        av.push_back(v);
-                    }
-                    else {
-                        switch (token.key[1]) {
-                            case 't': // vt
-                            {
-                                auto parts = token.params();
-                                if (parts.size() != 2)
-                                    return nullptr;
-                                glm::vec2 vt;
-                                vt.x = std::stof(parts[0]);
-                                vt.y = std::stof(parts[1]);
-                                avt.push_back(vt);
-                            } break;
-                            case 'n': // vn
-                            {
-                                auto parts = token.params();
-                                if (parts.size() != 3)
-                                    return nullptr;
-                                glm::vec3 vn;
-                                vn.x = std::stof(parts[0]);
-                                vn.y = std::stof(parts[1]);
-                                vn.z = std::stof(parts[2]);
-                                avn.push_back(vn);
-                            } break;
-                        }
-                    }
-                    break;
-                case 'f': {
-                    auto parts = token.params();
-                    if (parts.size() != 3)
-                        return nullptr;
-                    TempModel::Face f;
-                    for (int i = 0; i < 3; i++) {
-                        auto subparts = splitString(parts[i], '/');
-                        if (subparts.size() != 3)
-                            return nullptr;
-                        f.p[i].v = std::stoul(subparts[0]);
-                        f.p[i].t = std::stoul(subparts[1]);
-                        f.p[i].n = std::stoul(subparts[2]);
-                    }
-                    tmpModel->af.push_back(f);
-                } break;
-                case 'm': // mtllib
-                    if (token.key != "mtllib")
-                        return nullptr;
-                    mtllib = loadMaterials(path, token.value);
-                    if (!mtllib)
-                        return nullptr;
-                    break;
-                case 'u': // usemtl
-                    if (token.key != "usemtl")
-                        return nullptr;
-                    tmpModel->material = mtllib->materials[token.value];
-                    break;
-                default:
-                    break;
-            }
+        wavefront::Model model;
+        try {
+            model.loadModelFrom(relPath);
+        }
+        catch (const wavefront::ImageLoadError & e) {
+            throw std::runtime_error(e.what());
+        }
+        catch (const wavefront::ModelLoadException & e) {
+            throw std::runtime_error(e.what());
         }
 
-        if (tmpModel)
-            scene->models.push_back(tmpModel->toModel(av, avt, avn));
+        auto scene = std::make_shared<Scene>(sceneName);
+        for (auto & obj : model.objects) {
+            auto mdl = std::make_shared<Model>(obj->name);
+            scene->models.push_back(mdl);
+
+            auto mesh = std::make_shared<Mesh>();
+            for (int i = 0; i < obj->size(); i++) {
+                mesh->points.emplace_back(obj->vertices[i],
+                                          obj->normals[i],
+                                          obj->texcoords[i]);
+            }
+            mdl->geometry.emplace_back(mesh, 0);
+            auto & mat = model.materials[obj->matId];
+            auto material = std::make_shared<Material>();
+            mdl->materials.push_back(material);
+
+            material->name = mat->name;
+            material->ambient = mat->colAmbient;
+            material->diffuse = mat->colDiffuse;
+            material->specular = mat->colSpecular;
+            material->specExp = mat->specExp;
+            material->alpha = mat->alpha;
+
+            if (mat->texAlbedo.isLoaded())
+                material->texture =
+                    std::make_shared<Texture>(convertMaterial(mat->texAlbedo));
+            if (mat->texNormal.isLoaded())
+                material->normalTexture =
+                    std::make_shared<Texture>(convertMaterial(mat->texNormal));
+            if (mat->texSpecular.isLoaded())
+                material->specularTexture =
+                    std::make_shared<Texture>(convertMaterial(mat->texSpecular));
+        }
 
         return scene;
     }
