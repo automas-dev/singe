@@ -1,6 +1,6 @@
 #include "singe/Core/Model.hpp"
 
-#include "singe/Graphics/VBO.hpp"
+#include "glpp/VBO.hpp"
 #include "singe/Support/Util.hpp"
 #include "singe/Support/log.hpp"
 

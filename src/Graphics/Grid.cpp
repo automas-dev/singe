@@ -1,6 +1,8 @@
-#include "singe/Core/Grid.hpp"
+#include "singe/Graphics/Grid.hpp"
 
-static const std ::string gridVertexShaderSource = R"(
+#include <string_view>
+
+static const std::string_view gridVertexShaderSource = R"(
 #version 330 core
 layout (location = 0) in vec3 aPos;
 uniform mat4 mvp;
@@ -10,7 +12,7 @@ void main() {
     FragPos = aPos;
 })";
 
-static const std ::string gridFragmentShaderSource = R"(
+static const std::string_view gridFragmentShaderSource = R"(
 #version 330 core
 out vec4 FragColor;
 uniform vec3 color;
@@ -31,6 +33,9 @@ void main() {
 })";
 
 namespace singe {
+    using glpp::Vertex;
+    using std::make_shared;
+
     Grid::Grid(int n, float spacing, const glm::vec3 & color, bool fade)
         : VBO(VBO::Lines, VBO::Static), color(color), fade(fade) {
         std::vector<Vertex> lines;
@@ -45,8 +50,8 @@ namespace singe {
         }
         loadFromPoints(lines);
 
-        shader = std::make_shared<Shader>();
-        shader->loadFromSource(gridVertexShaderSource, gridFragmentShaderSource);
+        shader = make_shared<glpp::Shader>(gridVertexShaderSource,
+                                           gridFragmentShaderSource);
     }
 
     Grid::~Grid() {}

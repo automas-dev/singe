@@ -7,8 +7,8 @@
 #include <vector>
 
 #include "singe/Core/Model.hpp"
-#include "singe/Core/RenderState.hpp"
-#include "singe/Graphics/Shader.hpp"
+#include "singe/Graphics/RenderState.hpp"
+#include "glpp/Shader.hpp"
 
 namespace singe {
 

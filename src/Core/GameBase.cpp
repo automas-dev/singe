@@ -9,7 +9,7 @@
 
 #include "default_font.h"
 #include "singe/Core/GameBase.hpp"
-#include "singe/Graphics/FrameBuffer.hpp"
+#include "glpp/FrameBuffer.hpp"
 
 namespace singe::Logging {
     Logger::Ptr Game = std::make_shared<Logger>("Game");

@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <singe/Core.hpp>
-#include <singe/Core/Grid.hpp>
+#include <singe/Graphics/Grid.hpp>
 #include <singe/Support/log.hpp>
 #include <vector>
 using namespace singe;

@@ -10,7 +10,7 @@
 
 #include "singe/Core/Camera.hpp"
 #include "singe/Core/Menu.hpp"
-#include "singe/Graphics/Shader.hpp"
+#include "glpp/Shader.hpp"
 #include "singe/Support/log.hpp"
 
 namespace singe::Logging {

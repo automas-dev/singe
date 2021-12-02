@@ -8,8 +8,8 @@
 
 #include "singe/Core/Model.hpp"
 #include "singe/Core/Scene.hpp"
-#include "singe/Graphics/Shader.hpp"
-#include "singe/Graphics/Texture.hpp"
+#include "glpp/Shader.hpp"
+#include "glpp/Texture.hpp"
 
 namespace singe {
 

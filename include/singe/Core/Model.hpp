@@ -7,8 +7,8 @@
 #include "Transform3d.hpp"
 #include "singe/Core/Geometry.hpp"
 #include "singe/Core/Material.hpp"
-#include "singe/Core/RenderState.hpp"
-#include "singe/Graphics/VBO.hpp"
+#include "singe/Graphics/RenderState.hpp"
+#include "glpp/VBO.hpp"
 
 namespace singe {
     /**

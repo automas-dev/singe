@@ -39,7 +39,8 @@ add_subdirectory(glpp EXCLUDE_FROM_ALL)
 
 add_subdirectory(Support)
 add_subdirectory(Graphics)
-add_subdirectory(Core)
+# add_subdirectory(Core)
+add_subdirectory(UI)
 
 set(TARGET s3e)
 

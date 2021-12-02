@@ -5,25 +5,29 @@
 #include <memory>
 #include <string>
 
-#include "singe/Graphics/Shader.hpp"
-#include "singe/Graphics/Texture.hpp"
+#include "glpp/Shader.hpp"
+#include "glpp/Texture.hpp"
 
 namespace singe {
+    using glpp::Shader;
+    using glpp::Texture;
+    using std::shared_ptr;
+
     /**
      * Material for a Model.
      */
     struct Material {
-        using Ptr = std::shared_ptr<Material>;
-        using ConstPtr = std::shared_ptr<const Material>;
+        using Ptr = shared_ptr<Material>;
+        using ConstPtr = shared_ptr<const Material>;
 
         std::string name;
         glm::vec3 ambient, diffuse, specular;
         float specExp;
         float alpha;
         sf::Image image;
-        Texture::Ptr texture;
-        Texture::Ptr normalTexture;
-        Texture::Ptr specularTexture;
+        shared_ptr<Texture> texture;
+        shared_ptr<Texture> normalTexture;
+        shared_ptr<Texture> specularTexture;
 
         /**
          * Create a new Material with default values.
@@ -38,6 +42,6 @@ namespace singe {
         /**
          * If texture is not a nullptr, call it's bind method.
          */
-        void bind(const Shader::Ptr & shader) const;
+        void bind(const Shader & shader) const;
     };
 }

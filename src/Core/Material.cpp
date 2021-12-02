@@ -1,6 +1,8 @@
 #include "singe/Core/Material.hpp"
 
 namespace singe {
+    using std::make_shared;
+
     Material::Material()
         : name("None"),
           ambient(0.8),
@@ -12,14 +14,14 @@ namespace singe {
 
     void Material::send() {
         if (!texture) {
-            texture = std::make_shared<Texture>(image);
+            texture = make_shared<Texture>(image);
         }
         else {
-            texture->loadFrom(image);
+            texture->loadFrom(image.getPixelsPtr(), {image.getSize().x, image.getSize().y}, 3);
         }
     }
 
-    void Material::bind(const Shader::Ptr & shader) const {
+    void Material::bind(const Shader & shader) const {
         if (texture)
             texture->bind();
     }

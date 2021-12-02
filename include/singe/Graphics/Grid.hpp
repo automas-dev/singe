@@ -1,17 +1,24 @@
 #pragma once
 
-#include "singe/Core/RenderState.hpp"
-#include "singe/Graphics/Shader.hpp"
-#include "singe/Graphics/VBO.hpp"
+#include <glm/glm.hpp>
+#include <glpp/Shader.hpp>
+#include <glpp/VBO.hpp>
+#include <memory>
+
+#include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
+    using glpp::Shader;
+    using glpp::VBO;
+    using std::shared_ptr;
+
     class Grid : VBO {
         glm::vec3 color;
         bool fade;
-        Shader::Ptr shader;
+        shared_ptr<Shader> shader;
 
     public:
-        using Ptr = std::shared_ptr<Grid>;
+        using Ptr = shared_ptr<Grid>;
 
         Grid(int n,
              float spacing = 1.0,

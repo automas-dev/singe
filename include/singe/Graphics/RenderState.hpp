@@ -2,17 +2,19 @@
 
 #include <Transform3d.hpp>
 #include <glm/glm.hpp>
+#include <glpp/Shader.hpp>
 
 #include "singe/Core/Camera.hpp"
-#include "singe/Graphics/Shader.hpp"
 
 namespace singe {
     struct RenderState {
         const Camera::Ptr & camera;
-        const Shader::Ptr & shader;
+        const glpp::Shader & shader;
         glm::mat4 transform;
 
-        RenderState(const Camera::Ptr & camera, const Shader::Ptr & shader, glm::mat4 & transform);
+        RenderState(const Camera::Ptr & camera,
+                    const glpp::Shader & shader,
+                    glm::mat4 & transform);
 
         RenderState(const RenderState & other) = default;
 

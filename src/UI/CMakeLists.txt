@@ -1,32 +1,15 @@
 
-set(TARGET Core)
+set(TARGET UI)
 
 set(HEADER_LIST
-    Camera.hpp
     FPSDisplay.hpp
-    GameBase.hpp
-    Geometry.hpp
-    Material.hpp
     Menu.hpp
-    Mesh.hpp
-    Model.hpp
-    Physics.hpp
-    ResourceManager.hpp
-    Scene.hpp)
+    Mesh.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
-    Camera.cpp
     FPSDisplay.cpp
-    GameBase.cpp
-    Geometry.cpp
-    Material.cpp
-    Menu.cpp
-    Mesh.cpp
-    Model.cpp
-    Physics.cpp
-    ResourceManager.cpp
-    Scene.cpp)
+    Menu.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "${${PROJECT_NAME}_SOURCE_DIR}/src/${TARGET}/")
 
 library_component(${TARGET} "${SOURCE_LIST}" "${HEADER_LIST}")

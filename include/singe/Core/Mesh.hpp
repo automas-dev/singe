@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "singe/Graphics/VBO.hpp"
+#include "glpp/VBO.hpp"
 
 namespace singe {
     /**

@@ -1,4 +1,4 @@
-#include "singe/Core/FPSDisplay.hpp"
+#include "singe/UI/FPSDisplay.hpp"
 
 #include <fmt/format.h>
 
