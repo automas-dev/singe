@@ -6,6 +6,8 @@
 #include <memory>
 #include <string>
 
+#include "singe/Core/Window.hpp"
+
 namespace singe {
 
     /**
@@ -54,7 +56,7 @@ namespace singe {
     /**
      * A menu system for the title screen and the in game pause menu.
      */
-    class Menu : public sf::Drawable, public sf::Transformable {
+    class Menu : public sf::Drawable, public sf::Transformable, public EventHandler {
         sf::Font font;
         sf::Text title;
         std::list<MenuItem::Ptr> items;

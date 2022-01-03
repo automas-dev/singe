@@ -108,7 +108,6 @@ namespace singe {
         void SetMoveSpeed(float speed);
 
     protected:
-
         /**
          * Process any updates before drawing the next frame.
          *
@@ -127,41 +126,6 @@ namespace singe {
          * @param event the key press event
          */
         void onKeyPressed(const sf::Event::KeyEvent & event) override;
-
-        /**
-         * Event callback for a key release event
-         *
-         * @param event the key release event
-         */
-        void onKeyReleased(const sf::Event::KeyEvent & event) override;
-
-        /**
-         * Event callback for a mouse move event.
-         *
-         * @param event the mouse move event
-         */
-        void onMouseMove(const sf::Event::MouseMoveEvent & event) override;
-
-        /**
-         * Event callback for a mouse button press.
-         *
-         * @param event the mouse button event
-         */
-        void onMouseDown(const sf::Event::MouseButtonEvent & event) override;
-
-        /**
-         * Event callback for a mouse button release.
-         *
-         * @param event the mouse button event
-         */
-        void onMouseUp(const sf::Event::MouseButtonEvent & event) override;
-
-        /**
-         * Event callback for a mouse scroll event.
-         *
-         * @param event the mouse scroll event
-         */
-        void onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) override;
 
         /**
          * Event callback for a window resize event.

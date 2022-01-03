@@ -40,6 +40,7 @@ namespace singe {
 
         // menu = std::make_shared<Menu>(uiFont, title);
         // menu->setPosition(300, 300);
+        window.addEventHandler(menu.get());
 
         window.addEventHandler(this);
     }
@@ -126,23 +127,6 @@ namespace singe {
             // }
         }
     }
-
-    void GameBase::onMouseMove(const sf::Event::MouseMoveEvent & event) {
-        if (menu)
-            menu->onMouseMove(event);
-    }
-
-    void GameBase::onMouseDown(const sf::Event::MouseButtonEvent & event) {
-        if (menu)
-            menu->onMouseDown(event);
-    }
-
-    void GameBase::onMouseUp(const sf::Event::MouseButtonEvent & event) {
-        if (menu)
-            menu->onMouseUp(event);
-    }
-
-    void GameBase::onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) {}
 
     void GameBase::onResized(const sf::Event::SizeEvent & event) {
         camera->setScreenSize({event.width, event.height});
