@@ -5,8 +5,8 @@
 #include <string>
 
 #include <Transform3d.hpp>
-#include <singe/Core/Geometry.hpp>
-#include <singe/Core/Material.hpp>
+#include <singe/Graphics/Geometry.hpp>
+#include <singe/Graphics/Material.hpp>
 #include "singe/Graphics/RenderState.hpp"
 #include <glpp/VBO.hpp>
 

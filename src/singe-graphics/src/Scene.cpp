@@ -1,4 +1,4 @@
-#include "singe/Core/Scene.hpp"
+#include "singe/Graphics/Scene.hpp"
 
 #include "singe/Support/log.hpp"
 

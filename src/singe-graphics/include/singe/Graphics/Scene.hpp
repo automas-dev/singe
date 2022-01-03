@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "singe/Core/Model.hpp"
+#include "singe/Graphics/Model.hpp"
 #include "singe/Graphics/RenderState.hpp"
 #include "glpp/Shader.hpp"
 

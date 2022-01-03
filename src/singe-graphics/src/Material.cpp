@@ -1,4 +1,4 @@
-#include "singe/Core/Material.hpp"
+#include "singe/Graphics/Material.hpp"
 
 namespace singe {
     using std::make_shared;

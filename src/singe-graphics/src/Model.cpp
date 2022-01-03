@@ -1,4 +1,4 @@
-#include "singe/Core/Model.hpp"
+#include "singe/Graphics/Model.hpp"
 
 #include "glpp/VBO.hpp"
 #include "singe/Support/Util.hpp"

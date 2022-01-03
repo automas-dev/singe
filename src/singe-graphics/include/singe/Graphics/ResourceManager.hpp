@@ -6,8 +6,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "singe/Core/Model.hpp"
-#include "singe/Core/Scene.hpp"
+#include "singe/Graphics/Model.hpp"
+#include "singe/Graphics/Scene.hpp"
 #include "glpp/Shader.hpp"
 #include "glpp/Texture.hpp"
 

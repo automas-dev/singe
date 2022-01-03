@@ -15,5 +15,6 @@ PRIVATE
     spdlog::spdlog
     Threads::Threads
     Core
+    Graphics
     rapidxml
 )
