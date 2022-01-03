@@ -38,10 +38,6 @@ add_subdirectory(glpp EXCLUDE_FROM_ALL)
 add_subdirectory(singe-support)
 add_subdirectory(singe-graphics)
 add_subdirectory(singe-core)
-# add_subdirectory(Support)
-# add_subdirectory(Graphics)
-# add_subdirectory(Core)
-# add_subdirectory(UI)
 
 set(TARGET singe)
 
