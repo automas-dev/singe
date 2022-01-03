@@ -1,17 +1,15 @@
 #pragma once
 
+#include <glpp/Buffer.hpp>
 #include <memory>
 #include <vector>
-
-#include <glpp/VBO.hpp>
 
 namespace singe {
     /**
      * Derived class of VBO which keeps a CPU side copy of points.
      */
     struct Mesh {
-        std::vector<Vertex> points;
-        VBO::Ptr vbo;
+        glpp::TextureVertexBuffer buffer;
 
         using Ptr = std::shared_ptr<Mesh>;
         using ConstPtr = std::shared_ptr<const Mesh>;
@@ -24,14 +22,7 @@ namespace singe {
          *
          * @param points the points to store
          */
-        void loadFromPoints(const std::vector<Vertex> & points);
-
-        /**
-         * Load buffer with data from points.
-         *
-         * @param points the data to send to the buffer
-         */
-        void loadFromPoints(std::vector<Vertex> && points);
+        void loadFromPoints(const std::vector<glpp::Vertex> & points);
 
         /**
          * Append points to this mesh.
@@ -40,16 +31,11 @@ namespace singe {
          *
          * @param points the points to append
          */
-        void appendPoints(const std::vector<Vertex> & points);
-
-        /**
-         * Send points to the OpenGL buffer.
-         */
-        virtual void send();
+        void appendPoints(const std::vector<glpp::Vertex> & points);
 
         /**
          * Call draw on vbo.
          */
-        virtual void draw() const;
+        virtual void draw(glpp::Buffer::Mode mode) const;
     };
 }
