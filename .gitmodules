@@ -2,6 +2,3 @@
 [submodule "googletest"]
 	path = googletest
 	url = https://github.com/google/googletest
-[submodule "src/glpp"]
-	path = src/glpp
-	url = https://github.com/twh2898/glpp.git
