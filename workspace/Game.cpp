@@ -4,7 +4,7 @@
 
 #include "SceneParse.hpp"
 
-Game::Game(const sf::String & resPath) : GameBase(), resManager(resPath) {}
+Game::Game(Window & window, const sf::String & resPath) : GameBase(window), resManager(resPath) {}
 
 Game::~Game() {}
 

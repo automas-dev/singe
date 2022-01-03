@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <singe/Core/GameBase.hpp>
+#include <singe/Core/Window.hpp>
 #include <singe/Graphics/Grid.hpp>
 #include <singe/Support/log.hpp>
 #include <vector>
@@ -21,7 +22,7 @@ class Game : public GameBase {
     Grid::Ptr grid;
 
 public:
-    Game(const sf::String & resPath);
+    Game(Window & window, const sf::String & resPath);
     virtual ~Game();
 
     void onCreate(void) override;
