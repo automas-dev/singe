@@ -5,19 +5,21 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <glm/glm.hpp>
+#include <glpp/Shader.hpp>
 #include <memory>
+#include <singe/Support/log.hpp>
 #include <vector>
 
 #include "singe/Core/Camera.hpp"
 #include "singe/Core/Menu.hpp"
-#include "glpp/Shader.hpp"
-#include <singe/Support/log.hpp>
+#include "singe/Core/Window.hpp"
 
 namespace singe::Logging {
     extern Logger::Ptr Game;
 }
 
 namespace singe {
+    using namespace glpp;
 
     /**
      * Game base to be extended by the user. This class manages the window,
@@ -29,7 +31,7 @@ namespace singe {
      * The user may optionally override the onKeyPressed, onKeyReleased,
      * onMouseMove, onMouseDown, onMouseUp, onMouseScroll or onResized.
      */
-    class GameBase {
+    class GameBase : public EventHandler {
         bool grab;
         glm::vec2 mouseSensitivity;
         float moveSpeed;
@@ -52,7 +54,7 @@ namespace singe {
         /// A font loaded from memory to act as the default font for GameBase.
         sf::Font uiFont;
         /// Pointer to a shader that is bound before the call to onDraw().
-        Shader::Ptr defaultShader;
+        std::shared_ptr<Shader> defaultShader;
 
     public:
         /**
@@ -157,48 +159,48 @@ namespace singe {
          *
          * @param event the key press event
          */
-        virtual void onKeyPressed(const sf::Event::KeyEvent & event);
+        void onKeyPressed(const sf::Event::KeyEvent & event) override;
 
         /**
          * Event callback for a key release event
          *
          * @param event the key release event
          */
-        virtual void onKeyReleased(const sf::Event::KeyEvent & event);
+        void onKeyReleased(const sf::Event::KeyEvent & event) override;
 
         /**
          * Event callback for a mouse move event.
          *
          * @param event the mouse move event
          */
-        virtual void onMouseMove(const sf::Event::MouseMoveEvent & event);
+        void onMouseMove(const sf::Event::MouseMoveEvent & event) override;
 
         /**
          * Event callback for a mouse button press.
          *
          * @param event the mouse button event
          */
-        virtual void onMouseDown(const sf::Event::MouseButtonEvent & event);
+        void onMouseDown(const sf::Event::MouseButtonEvent & event) override;
 
         /**
          * Event callback for a mouse button release.
          *
          * @param event the mouse button event
          */
-        virtual void onMouseUp(const sf::Event::MouseButtonEvent & event);
+        void onMouseUp(const sf::Event::MouseButtonEvent & event) override;
 
         /**
          * Event callback for a mouse scroll event.
          *
          * @param event the mouse scroll event
          */
-        virtual void onMouseScroll(const sf::Event::MouseWheelScrollEvent & event);
+        void onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) override;
 
         /**
          * Event callback for a window resize event.
          *
          * @param event the window resize event
          */
-        virtual void onResized(const sf::Event::SizeEvent & event);
+        void onResized(const sf::Event::SizeEvent & event) override;
     };
 }

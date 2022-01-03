@@ -5,6 +5,7 @@ set(HEADER_LIST
     FPSDisplay.hpp
     GameBase.hpp
     Menu.hpp
+    Window.hpp
     RenderState.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
 
@@ -13,6 +14,7 @@ set(SOURCE_LIST
     FPSDisplay.cpp
     GameBase.cpp
     Menu.cpp
+    Window.cpp
     RenderState.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "src/")
 
