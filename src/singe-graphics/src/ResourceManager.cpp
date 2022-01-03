@@ -11,7 +11,6 @@ namespace fs = std::filesystem;
 #include <vector>
 
 #include "Wavefront.hpp"
-#include "singe/Support/Parser.hpp"
 #include "singe/Support/Util.hpp"
 #include "singe/Support/log.hpp"
 

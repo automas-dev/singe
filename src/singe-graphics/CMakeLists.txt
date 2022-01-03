@@ -32,7 +32,7 @@ target_link_libraries(${TARGET}
     Transform3d
     Wavefront
     Support
-    # Graphics
+    Core
     GLEW::GLEW
     sfml-graphics
     glm

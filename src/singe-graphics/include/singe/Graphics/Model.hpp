@@ -2,13 +2,11 @@
 
 #include <Transform3d.hpp>
 #include <memory>
+#include <singe/Core/RenderState.hpp>
 #include <string>
 
-#include <Transform3d.hpp>
-#include <singe/Graphics/Geometry.hpp>
-#include <singe/Graphics/Material.hpp>
-#include "singe/Graphics/RenderState.hpp"
-#include <glpp/VBO.hpp>
+#include "singe/Graphics/Geometry.hpp"
+#include "singe/Graphics/Material.hpp"
 
 namespace singe {
     /**
@@ -45,6 +43,6 @@ namespace singe {
         /**
          * Bind textures and draw the mesh.
          */
-        void draw(RenderState state) const;
+        void draw(glpp::Buffer::Mode mode, RenderState state) const;
     };
 }

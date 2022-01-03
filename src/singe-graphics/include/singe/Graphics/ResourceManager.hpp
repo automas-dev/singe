@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <glpp/Shader.hpp>
+#include <glpp/Texture.hpp>
 #include <map>
 #include <memory>
 #include <string>
@@ -8,8 +10,6 @@
 
 #include "singe/Graphics/Model.hpp"
 #include "singe/Graphics/Scene.hpp"
-#include "glpp/Shader.hpp"
-#include "glpp/Texture.hpp"
 
 namespace singe {
 

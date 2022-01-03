@@ -37,7 +37,7 @@ namespace singe {
     using std::make_shared;
 
     Grid::Grid(int n, float spacing, const glm::vec3 & color, bool fade)
-        : VBO(VBO::Lines, VBO::Static), color(color), fade(fade) {
+        : TextureVertexBuffer(Buffer::Static), color(color), fade(fade) {
         std::vector<Vertex> lines;
         for (int i = -n; i <= n; i++) {
             // x line
@@ -62,6 +62,6 @@ namespace singe {
         shader->setVec3("color", color);
         shader->setInt("fade", fade);
         shader->setVec3("camera", state.camera->getPosition());
-        VBO::draw();
+        Buffer::draw(Buffer::Lines);
     }
 }

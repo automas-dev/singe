@@ -14,10 +14,13 @@ namespace singe {
 
     void Material::send() {
         if (!texture) {
-            texture = make_shared<Texture>(image);
+            texture = make_shared<Texture>(
+                image.getPixelsPtr(),
+                glm::uvec2(image.getSize().x, image.getSize().y), 3);
         }
         else {
-            texture->loadFrom(image.getPixelsPtr(), {image.getSize().x, image.getSize().y}, 3);
+            texture->loadFrom(image.getPixelsPtr(),
+                              {image.getSize().x, image.getSize().y}, 3);
         }
     }
 

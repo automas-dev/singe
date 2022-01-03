@@ -2,17 +2,16 @@
 
 #include <glm/glm.hpp>
 #include <glpp/Shader.hpp>
-#include <glpp/VBO.hpp>
+#include <glpp/Buffer.hpp>
 #include <memory>
-
-#include "singe/Graphics/RenderState.hpp"
+#include <singe/Core/RenderState.hpp>
 
 namespace singe {
     using glpp::Shader;
-    using glpp::VBO;
+    using glpp::TextureVertexBuffer;
     using std::shared_ptr;
 
-    class Grid : VBO {
+    class Grid : TextureVertexBuffer {
         glm::vec3 color;
         bool fade;
         shared_ptr<Shader> shader;
