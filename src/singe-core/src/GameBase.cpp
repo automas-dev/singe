@@ -27,7 +27,8 @@ namespace singe {
         // glewExperimental = true;
         GLenum err = glewInit();
         if (err != GLEW_OK) {
-            // throw GameBaseException("glewInit failed: " + glewGetErrorString(err));
+            // throw GameBaseException("glewInit failed: " +
+            // glewGetErrorString(err));
             throw GameBaseException("glewInit failed");
         }
 
@@ -92,8 +93,6 @@ namespace singe {
             // }
             window.display();
         }
-
-        onDestroy();
     }
 
     void GameBase::Stop(void) {

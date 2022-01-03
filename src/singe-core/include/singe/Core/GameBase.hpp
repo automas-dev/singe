@@ -108,21 +108,6 @@ namespace singe {
         void SetMoveSpeed(float speed);
 
     protected:
-        /**
-         * Load and initialize any resources Used by the game. This method is
-         * called in Create() after the window is created. If there is an
-         * unrecoverable error, throw a std::runtime_error and it will be caught
-         * by Create().
-         *
-         * @throws std::runtime_error on failure
-         */
-        virtual void onCreate(void) = 0;
-
-        /**
-         * Free any resources used by the game. This method is called after the
-         * main game loop stops.
-         */
-        virtual void onDestroy(void) = 0;
 
         /**
          * Process any updates before drawing the next frame.
