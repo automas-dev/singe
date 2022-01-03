@@ -78,7 +78,7 @@ FetchContent_MakeAvailable(DispatchQueue)
 
 add_subdirectory(src)
 
-add_subdirectory(workspace)
+# add_subdirectory(workspace)
 
 # Create Targets file
 install(EXPORT ${PROJECT_NAME}Targets

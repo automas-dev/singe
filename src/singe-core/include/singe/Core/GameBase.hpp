@@ -2,12 +2,11 @@
 
 #include <GL/glew.h>
 
-#include <SFML/OpenGL.hpp>
-#include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <glpp/Shader.hpp>
 #include <memory>
 #include <singe/Support/log.hpp>
+#include <stdexcept>
 #include <vector>
 
 #include "singe/Core/Camera.hpp"
@@ -21,6 +20,11 @@ namespace singe::Logging {
 namespace singe {
     using namespace glpp;
 
+    class GameInitError : public std::runtime_error {
+    public:
+        using std::runtime_error::runtime_error;
+    };
+
     /**
      * Game base to be extended by the user. This class manages the window,
      * main game loop, event callbacks and mouse capture.
@@ -32,57 +36,43 @@ namespace singe {
      * onMouseMove, onMouseDown, onMouseUp, onMouseScroll or onResized.
      */
     class GameBase : public EventHandler {
-        bool grab;
         glm::vec2 mouseSensitivity;
         float moveSpeed;
 
     protected:
-        /// Pointer to the SFML RenderWindow object
-        std::shared_ptr<sf::RenderWindow> window;
+        /// Reference to the Window object
+        Window & window;
+
         /**
          * Pointer to the Camera object created by GameBase.
          *
          * This pointer may be replaced by a derived class but it must exist.
          */
         Camera::Ptr camera;
+
         /**
          * Pointer to the Menu object created by GameBase.
          *
          * This pointer may be replaced or set to nullptr by a derived class.
          */
         Menu::Ptr menu;
+
         /// A font loaded from memory to act as the default font for GameBase.
         sf::Font uiFont;
+
         /// Pointer to a shader that is bound before the call to onDraw().
-        std::shared_ptr<Shader> defaultShader;
+        Shader defaultShader;
 
     public:
         /**
          * Construct a new GameBase.
          */
-        GameBase(void);
+        GameBase(Window & window);
 
         /**
          * Destruct the GameBase.
          */
         virtual ~GameBase();
-
-        /**
-         * Create the window. This method calls the onCreate() virtual method
-         * which is where the user should load and initialize resources before
-         * the game starts.
-         *
-         * @param title the window title
-         * @param width the window width in pixels
-         * @param height the window height in pixels
-         * @param fullscreen should the window start in fullscreen
-         *
-         * @return was the window created and the call to onCreate() returns true
-         */
-        bool Create(const std::string & title,
-                    unsigned int width = 800,
-                    unsigned int height = 600,
-                    bool fullscreen = false);
 
         /**
          * Start the main game loop. This method blocks until the game is
@@ -102,14 +92,6 @@ namespace singe {
          * @param status the exist status
          */
         void Fail(int status = 1) noexcept;
-
-
-        /**
-         * Grab or release the mouse.
-         *
-         * @param grab should the mouse be grabbed or released
-         */
-        void SetMouseGrab(bool grab);
 
         /**
          * Set the mouse sensitivity for the x and y axis.

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
+#include <glm/glm.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -62,7 +63,7 @@ namespace singe {
         virtual void onResized(const sf::Event::SizeEvent & event) {}
     };
 
-    class Window {
+    class Window : public EventHandler {
         bool grab;
 
     protected:
@@ -96,14 +97,32 @@ namespace singe {
          */
         void setMouseGrab(bool grab);
 
+        glm::ivec2 getMousePosition() const;
+
+        void setMousePosition(const glm::ivec2 & pos);
+
         bool isOpen() const;
 
         void close();
+
+        glm::uvec2 getSize() const;
 
         void poll();
 
         void display();
 
         void addEventHandler(EventHandler * handler);
+
+        void onKeyPressed(const sf::Event::KeyEvent & event) override;
+
+        void onMouseMove(const sf::Event::MouseMoveEvent & event) override;
+
+        void onMouseDown(const sf::Event::MouseButtonEvent & event) override;
+
+        void onMouseUp(const sf::Event::MouseButtonEvent & event) override;
+
+        void onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) override;
+
+        void onResized(const sf::Event::SizeEvent & event) override;
     };
 }

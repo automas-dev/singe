@@ -32,12 +32,25 @@ namespace singe {
         }
     }
 
+    glm::ivec2 Window::getMousePosition() const {
+        sf::Mouse::getPosition(window);
+    }
+
+    void Window::setMousePosition(const glm::ivec2 & pos) {
+        sf::Mouse::setPosition({pos.x, pos.y});
+    }
+
     bool Window::isOpen() const {
         return window.isOpen();
     }
 
     void Window::close() {
         window.close();
+    }
+
+    glm::uvec2 Window::getSize() const {
+        auto size = window.getSize();
+        return {size.x, size.y};
     }
 
 #define FIRE_EVENT(E) \
