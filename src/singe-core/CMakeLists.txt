@@ -25,8 +25,8 @@ target_link_libraries(${TARGET}
     spdlog::spdlog
     OpenGL::OpenGL
     OpenGL::GLU
-    glpp
     PUBLIC
+    glpp
     Transform3d
     Wavefront
     Support

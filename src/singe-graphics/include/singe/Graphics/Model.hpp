@@ -36,11 +36,6 @@ namespace singe {
         virtual ~Model();
 
         /**
-         * Send the Mesh and any materials to the OpenGL context.
-         */
-        void send();
-
-        /**
          * Bind textures and draw the mesh.
          */
         void draw(glpp::Buffer::Mode mode, RenderState state) const;

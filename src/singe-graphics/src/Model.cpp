@@ -9,12 +9,6 @@ namespace singe {
 
     Model::~Model() {}
 
-    void Model::send() {
-        for (auto & geom : geometry) {
-            geom.mesh->send();
-        }
-    }
-
     void Model::draw(glpp::Buffer::Mode mode, RenderState state) const {
         state.transform *= toMatrix();
         state.sendMVP();
