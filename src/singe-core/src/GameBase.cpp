@@ -27,8 +27,8 @@ namespace singe {
         // glewExperimental = true;
         GLenum err = glewInit();
         if (err != GLEW_OK) {
-            // throw GameInitError("glewInit failed: " + glewGetErrorString(err));
-            throw GameInitError("glewInit failed");
+            // throw GameBaseException("glewInit failed: " + glewGetErrorString(err));
+            throw GameBaseException("glewInit failed");
         }
 
         camera = std::make_shared<Camera>();

@@ -20,7 +20,7 @@ namespace singe::Logging {
 namespace singe {
     using namespace glpp;
 
-    class GameInitError : public std::runtime_error {
+    class GameBaseException : public std::runtime_error {
     public:
         using std::runtime_error::runtime_error;
     };
