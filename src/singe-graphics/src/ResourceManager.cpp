@@ -50,9 +50,9 @@ namespace singe {
 }
 
 namespace singe {
-    Texture::Ptr ResourceManager::loadTexture(const std::string & path,
-                                              GLint magFilter,
-                                              GLint minFilter) {
+    std::shared_ptr<Texture> ResourceManager::loadTexture(const std::string & path,
+                                                          GLint magFilter,
+                                                          GLint minFilter) {
         if (textures.count(path) > 0)
             return textures[path];
 
@@ -69,29 +69,18 @@ namespace singe {
         return newTex;
     }
 
-    Shader::Ptr ResourceManager::loadShader(const std::string & vertexPath,
-                                            const std::string & fragmentPath) {
+    std::shared_ptr<Shader> ResourceManager::loadShader(
+        const std::string & vertexPath, const std::string & fragmentPath) {
         auto relVertexPath = resourceAt(vertexPath);
         auto relFragmentPath = resourceAt(fragmentPath);
-        auto shader = std::make_shared<Shader>();
-        if (!shader->loadFromPath(relVertexPath, relFragmentPath)) {
-            Logging::Core->error(
-                "failed in call to Shader::loadFromPath(vertexPath={}, fragmentPath={})",
-                relVertexPath, relFragmentPath);
-            return nullptr;
-        }
-        return shader;
+        auto shader = Shader::fromPaths(relVertexPath, relFragmentPath);
+        return std::make_shared<Shader>(std::move(shader));
     }
 
-    Shader::Ptr ResourceManager::loadShader(const std::string & fragmentPath) {
+    std::shared_ptr<Shader> ResourceManager::loadShader(const std::string & fragmentPath) {
         auto relFragmentPath = resourceAt(fragmentPath);
         auto shader = Shader::fromFragmentPath(relFragmentPath);
-        if (!shader) {
-            Logging::Core->error(
-                "failed in call to Shader::loadFromPath(fragmentPath={})",
-                relFragmentPath);
-        }
-        return shader;
+        return std::make_shared<Shader>(std::move(shader));
     }
 
     Scene::Ptr ResourceManager::loadScene(const std::string & path) {

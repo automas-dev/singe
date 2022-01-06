@@ -81,7 +81,7 @@ namespace singe {
      * Texture, Model and Shader resources.
      */
     class ResourceManager : public ResourceManagerBase {
-        std::unordered_map<std::string, Texture::Ptr> textures;
+        std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 
     public:
         using Ptr = std::shared_ptr<ResourceManager>;
@@ -98,9 +98,9 @@ namespace singe {
          *
          * @return a shared_ptr to a Texture
          */
-        Texture::Ptr loadTexture(const std::string & path,
-                                 GLint magFilter = GL_LINEAR,
-                                 GLint minFilter = GL_LINEAR_MIPMAP_LINEAR);
+        std::shared_ptr<Texture> loadTexture(const std::string & path,
+                                             GLint magFilter = GL_LINEAR,
+                                             GLint minFilter = GL_LINEAR_MIPMAP_LINEAR);
 
         /**
          * Load a Shader using `vertexPath` and `fragmentPath`.
@@ -112,8 +112,8 @@ namespace singe {
          *
          * @return a shard_ptr to a Shader
          */
-        Shader::Ptr loadShader(const std::string & vertexPath,
-                               const std::string & fragmentPath);
+        std::shared_ptr<Shader> loadShader(const std::string & vertexPath,
+                                           const std::string & fragmentPath);
 
         /**
          * Load a Shader using the default vertex shader and `fragmentPath`.
@@ -124,7 +124,7 @@ namespace singe {
          *
          * @return a shard_ptr to a Shader
          */
-        Shader::Ptr loadShader(const std::string & fragmentPath);
+        std::shared_ptr<Shader> loadShader(const std::string & fragmentPath);
 
         /**
          * Load a Scene from `path`.
