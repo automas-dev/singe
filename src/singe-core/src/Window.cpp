@@ -33,7 +33,8 @@ namespace singe {
     }
 
     glm::ivec2 Window::getMousePosition() const {
-        sf::Mouse::getPosition(window);
+        auto pos = sf::Mouse::getPosition(window);
+        return {pos.x, pos.y};
     }
 
     void Window::setMousePosition(const glm::ivec2 & pos) {

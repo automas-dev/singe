@@ -112,17 +112,5 @@ namespace singe {
         void display();
 
         void addEventHandler(EventHandler * handler);
-
-        void onKeyPressed(const sf::Event::KeyEvent & event) override;
-
-        void onMouseMove(const sf::Event::MouseMoveEvent & event) override;
-
-        void onMouseDown(const sf::Event::MouseButtonEvent & event) override;
-
-        void onMouseUp(const sf::Event::MouseButtonEvent & event) override;
-
-        void onMouseScroll(const sf::Event::MouseWheelScrollEvent & event) override;
-
-        void onResized(const sf::Event::SizeEvent & event) override;
     };
 }
