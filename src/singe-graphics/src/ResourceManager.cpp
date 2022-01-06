@@ -64,7 +64,9 @@ namespace singe {
             return nullptr;
         }
 
-        auto newTex = std::make_shared<Texture>(image, magFilter, minFilter);
+        auto newTex = std::make_shared<Texture>(image.getPixelsPtr(),
+                                                glm::uvec2(magFilter, minFilter),
+                                                4);
         textures[path] = newTex;
         return newTex;
     }
