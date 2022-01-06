@@ -8,7 +8,7 @@ namespace singe {
     void Scene::draw(RenderState state) const {
         state.transform *= toMatrix();
         for (auto & model : models) {
-            model->draw(state);
+            model->draw(glpp::Buffer::Triangles, state);
         }
         for (auto & child : children) {
             child->draw(state);
