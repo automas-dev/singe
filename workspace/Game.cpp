@@ -4,7 +4,47 @@
 
 #include "SceneParse.hpp"
 
-Game::Game(Window & window, const sf::String & resPath) : GameBase(window), resManager(resPath) {}
+Game::Game(Window & window, const sf::String & resPath)
+    : GameBase(window), resManager(resPath) {
+
+    // defautFont loaded from memory by GameBase
+    // fps = std::make_shared<FPSDisplay>();
+    // fps->setFont(uiFont);
+    // fps->setRate(0.1f);
+
+#ifdef DEBUG
+    // During init, enable debug output
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(MessageCallback, 0);
+#endif
+
+    // Add menu buttons
+    menu->addMenuItem("Resume", [&]() {
+        menu->hide();
+        window.setMouseGrab(true);
+    });
+    menu->addMenuItem("Exit", [&]() {
+        window.close();
+    });
+
+    SceneStruct sceneStruct = parseScene("scene.xml", resManager);
+    grid = sceneStruct.grid;
+
+    camera->move({5, 2, 5});
+    camera->setFov(70);
+
+    scene = std::make_shared<Scene>("Root");
+
+    auto floorScene = resManager.loadScene("model/cube_plane.obj");
+    if (!floorScene)
+        throw std::runtime_error("Failed to load model/cube_plane.obj");
+    scene->children.push_back(floorScene);
+    scene->move({0, -1, 0});
+
+    // grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
+
+    window.setMouseGrab(true);
+}
 
 Game::~Game() {}
 
@@ -21,52 +61,9 @@ void GLAPIENTRY MessageCallback(GLenum source,
         message);
 }
 
-void Game::onCreate() {
-    // defautFont loaded from memory by GameBase
-    fps = std::make_shared<FPSDisplay>();
-    fps->setFont(uiFont);
-    fps->setRate(0.1f);
-
-#ifdef DEBUG
-    // During init, enable debug output
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
-#endif
-
-    // Add menu buttons
-    menu->addMenuItem("Resume", [&]() {
-        menu->hide();
-        SetMouseGrab(true);
-    });
-    menu->addMenuItem("Exit", [&]() {
-        window->close();
-    });
-
-    SceneStruct sceneStruct = parseScene("scene.xml", resManager);
-    grid = sceneStruct.grid;
-
-    camera->move({5, 2, 5});
-    camera->setFov(70);
-
-    scene = std::make_shared<Scene>("Root");
-
-    auto floorScene = resManager.loadScene("model/cube_plane.obj");
-    if (!floorScene)
-        throw std::runtime_error("Failed to load model/cube_plane.obj");
-    scene->children.push_back(floorScene);
-    scene->move({0, -1, 0});
-    scene->send();
-
-    // grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
-
-    SetMouseGrab(true);
-}
-
-void Game::onDestroy() {}
-
 void Game::onUpdate(const sf::Time & delta) {
     float deltaS = delta.asSeconds();
-    fps->update(delta);
+    // fps->update(delta);
 }
 
 void Game::onDraw() const {
@@ -86,11 +83,11 @@ void Game::onDraw() const {
     if (grid)
         grid->draw(state);
 
-    defaultShader->bind();
-    defaultShader->setMat4("mvp", vp);
+    defaultShader.bind();
+    defaultShader.setMat4("mvp", vp);
     scene->draw(state);
 
-    window->pushGLStates();
-    window->draw(*fps);
-    window->popGLStates();
+    // window->pushGLStates();
+    // window->draw(*fps);
+    // window->popGLStates();
 }
