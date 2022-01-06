@@ -113,9 +113,9 @@ namespace singe {
 
             auto mesh = std::make_shared<Mesh>();
             for (int i = 0; i < obj->size(); i++) {
-                mesh->points.emplace_back(obj->vertices[i],
-                                          obj->normals[i],
-                                          obj->texcoords[i]);
+                mesh->buffer.buff.emplace_back(obj->vertices[i],
+                                               obj->normals[i],
+                                               obj->texcoords[i]);
             }
             mdl->geometry.emplace_back(mesh, 0);
             auto & mat = model.materials[obj->matId];
