@@ -79,7 +79,7 @@ FetchContent_MakeAvailable(DispatchQueue)
 FetchContent_Declare(
     glpp
     GIT_REPOSITORY https://github.com/twh2898/glpp.git
-    GIT_TAG        0.2.2
+    GIT_TAG        0.2.3
 )
 FetchContent_MakeAvailable(glpp)
 
