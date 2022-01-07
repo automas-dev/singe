@@ -65,7 +65,7 @@ namespace singe {
         }
 
         auto newTex = std::make_shared<Texture>(image.getPixelsPtr(),
-                                                glm::uvec2(magFilter, minFilter),
+                                                glm::uvec2(image.getSize().x, image.getSize().y),
                                                 4);
         textures[path] = newTex;
         return newTex;

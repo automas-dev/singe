@@ -9,7 +9,8 @@ namespace singe {
                    unsigned int width,
                    unsigned int height,
                    bool fullscreen)
-        : window(sf::VideoMode(width, height),
+        : grab(false),
+          window(sf::VideoMode(width, height),
                  title,
                  sf::Style::Default | (fullscreen ? sf::Style::Fullscreen : 0),
                  settings) {
@@ -31,9 +32,14 @@ namespace singe {
         window.close();
     }
 
+    bool Window::getMouseGrab() const {
+        return grab;
+    }
+
     void Window::setMouseGrab(bool grab) {
         this->grab = grab;
         window.setMouseCursorVisible(!grab);
+        window.setMouseCursorGrabbed(grab);
 
         if (grab) {
             auto size = window.getSize();
@@ -95,6 +101,9 @@ namespace singe {
                     glViewport(0, 0, event.size.width, event.size.height);
                     FIRE_EVENT(onResized(event.size));
                 } break;
+                case sf::Event::Closed:
+                    close();
+                    break;
                 default:
                     break;
             }

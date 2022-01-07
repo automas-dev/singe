@@ -32,7 +32,7 @@ namespace singe {
 
         // menu = std::make_shared<Menu>(uiFont, title);
         // menu->setPosition(300, 300);
-        window.addEventHandler(menu.get());
+        // window.addEventHandler(menu.get());
 
         window.addEventHandler(this);
     }
@@ -59,7 +59,9 @@ namespace singe {
 
             glm::ivec2 center(window.getSize().x / 2, window.getSize().y / 2);
             auto mouse = window.getMousePosition();
-            window.setMousePosition(center);
+            if (window.getMouseGrab()) {
+                window.setMousePosition(center);
+            }
 
             glm::vec2 mouseDelta(mouse.x - center.x, mouse.y - center.y);
             mouseDelta *= mouseSensitivity;
@@ -109,6 +111,7 @@ namespace singe {
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
         if (event.code == sf::Keyboard::Escape) {
+            window.setMouseGrab(!window.getMouseGrab());
             // if (menu->isVisible()) {
             //     menu->hide();
             //     SetMouseGrab(true);

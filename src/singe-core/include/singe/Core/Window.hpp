@@ -98,6 +98,8 @@ namespace singe {
 
         ~Window();
 
+        bool getMouseGrab() const;
+
         /**
          * Grab or release the mouse.
          *

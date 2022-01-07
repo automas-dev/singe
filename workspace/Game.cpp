@@ -19,16 +19,16 @@ Game::Game(Window & window, const sf::String & resPath)
 #endif
 
     // Add menu buttons
-    menu->addMenuItem("Resume", [&]() {
-        menu->hide();
-        window.setMouseGrab(true);
-    });
-    menu->addMenuItem("Exit", [&]() {
-        window.close();
-    });
+    // menu->addMenuItem("Resume", [&]() {
+    //     menu->hide();
+    //     window.setMouseGrab(true);
+    // });
+    // menu->addMenuItem("Exit", [&]() {
+    //     window.close();
+    // });
 
-    SceneStruct sceneStruct = parseScene("scene.xml", resManager);
-    grid = sceneStruct.grid;
+    // SceneStruct sceneStruct = parseScene("scene.xml", resManager);
+    // grid = sceneStruct.grid;
 
     camera->move({5, 2, 5});
     camera->setFov(70);
