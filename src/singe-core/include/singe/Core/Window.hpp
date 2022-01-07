@@ -1,10 +1,13 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -61,6 +64,11 @@ namespace singe {
          * @param event the window resize event
          */
         virtual void onResized(const sf::Event::SizeEvent & event) {}
+    };
+
+    class GlewInitException : public std::runtime_error {
+    public:
+        using std::runtime_error::runtime_error;
     };
 
     class Window : public EventHandler {

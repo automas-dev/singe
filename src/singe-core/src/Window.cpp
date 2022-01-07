@@ -1,5 +1,7 @@
 #include "singe/Core/Window.hpp"
 
+#include <iostream>
+
 namespace singe {
     const sf::ContextSettings settings(24, 1, 8, 3, 0);
 
@@ -15,6 +17,14 @@ namespace singe {
         window.setFramerateLimit(60);
         window.setActive();
         window.setKeyRepeatEnabled(false);
+
+        // glewExperimental = true;
+        GLenum err = glewInit();
+        if (err != GLEW_OK) {
+            throw GlewInitException(
+                "glewInit failed: "
+                + std::string((const char *)glewGetErrorString(err)));
+        }
     }
 
     Window::~Window() {

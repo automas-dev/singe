@@ -24,14 +24,6 @@ namespace singe {
           menu(nullptr),
           defaultShader(Shader::defaultShader()) {
 
-        // glewExperimental = true;
-        GLenum err = glewInit();
-        if (err != GLEW_OK) {
-            // throw GameBaseException("glewInit failed: " +
-            // glewGetErrorString(err));
-            throw GameBaseException("glewInit failed");
-        }
-
         camera = std::make_shared<Camera>();
         auto size = window.getSize();
         camera->setScreenSize({size.x, size.y});

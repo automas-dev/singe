@@ -6,7 +6,6 @@
 #include <glpp/Shader.hpp>
 #include <memory>
 #include <singe/Support/log.hpp>
-#include <stdexcept>
 #include <vector>
 
 #include "singe/Core/Camera.hpp"
@@ -19,11 +18,6 @@ namespace singe::Logging {
 
 namespace singe {
     using namespace glpp;
-
-    class GameBaseException : public std::runtime_error {
-    public:
-        using std::runtime_error::runtime_error;
-    };
 
     /**
      * Game base to be extended by the user. This class manages the window,
