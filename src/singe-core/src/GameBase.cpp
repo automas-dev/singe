@@ -30,9 +30,9 @@ namespace singe {
 
         uiFont.loadFromMemory(__default_font_start, __default_font_size);
 
-        // menu = std::make_shared<Menu>(uiFont, title);
-        // menu->setPosition(300, 300);
-        // window.addEventHandler(menu.get());
+        menu = std::make_shared<Menu>(uiFont, "tmp title");
+        menu->setPosition(300, 300);
+        window.addEventHandler(menu.get());
 
         window.addEventHandler(this);
     }
@@ -49,32 +49,32 @@ namespace singe {
 
             sf::Time delta = clock.restart();
 
-            // if (grab) {
-            int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D)
-                    - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-            int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E)
-                    - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
-            int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S)
-                    - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-
-            glm::ivec2 center(window.getSize().x / 2, window.getSize().y / 2);
-            auto mouse = window.getMousePosition();
             if (window.getMouseGrab()) {
-                window.setMousePosition(center);
+                int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D)
+                        - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+                int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E)
+                        - sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
+                int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S)
+                        - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+
+                glm::ivec2 center(window.getSize().x / 2, window.getSize().y / 2);
+                auto mouse = window.getMousePosition();
+                if (window.getMouseGrab()) {
+                    window.setMousePosition(center);
+                }
+
+                glm::vec2 mouseDelta(mouse.x - center.x, mouse.y - center.y);
+                mouseDelta *= mouseSensitivity;
+                glm::vec3 rotation(glm::radians(mouseDelta.y),
+                                   glm::radians(mouseDelta.x),
+                                   0);
+                if (rotation.x != 0 || rotation.y != 0)
+                    camera->rotateEuler(rotation);
+
+                camera->moveDolly({x * delta.asSeconds() * moveSpeed,
+                                   y * delta.asSeconds() * moveSpeed,
+                                   z * delta.asSeconds() * moveSpeed});
             }
-
-            glm::vec2 mouseDelta(mouse.x - center.x, mouse.y - center.y);
-            mouseDelta *= mouseSensitivity;
-            glm::vec3 rotation(glm::radians(mouseDelta.y),
-                               glm::radians(mouseDelta.x),
-                               0);
-            if (rotation.x != 0 || rotation.y != 0)
-                camera->rotateEuler(rotation);
-
-            camera->moveDolly({x * delta.asSeconds() * moveSpeed,
-                               y * delta.asSeconds() * moveSpeed,
-                               z * delta.asSeconds() * moveSpeed});
-            // }
 
             onUpdate(delta);
 
@@ -82,11 +82,11 @@ namespace singe {
             FrameBuffer::clear();
             defaultShader.bind();
             onDraw();
-            // if (menu) {
-            //     window->pushGLStates();
-            //     window->draw(*menu);
-            //     window->popGLStates();
-            // }
+            if (menu) {
+                window.window.pushGLStates();
+                window.window.draw(*menu);
+                window.window.popGLStates();
+            }
             window.display();
         }
     }
@@ -113,14 +113,12 @@ namespace singe {
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
         if (event.code == sf::Keyboard::Escape) {
             window.setMouseGrab(!window.getMouseGrab());
-            // if (menu->isVisible()) {
-            //     menu->hide();
-            //     SetMouseGrab(true);
-            // }
-            // else {
-            //     menu->show();
-            //     SetMouseGrab(false);
-            // }
+            if (window.getMouseGrab()) {
+                menu->hide();
+            }
+            else {
+                menu->show();
+            }
         }
     }
 

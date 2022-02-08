@@ -75,12 +75,12 @@ namespace singe {
         bool grab;
 
     protected:
-        /// Pointer to the SFML RenderWindow object
-        sf::RenderWindow window;
-
         std::vector<EventHandler *> handlers;
 
     public:
+        /// Pointer to the SFML RenderWindow object
+        sf::RenderWindow window;
+
         Window(const std::string & title,
                unsigned int width = 800,
                unsigned int height = 600,
