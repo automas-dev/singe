@@ -2,10 +2,11 @@
 
 #include <stdexcept>
 
-#include "SceneParse.hpp"
+// #include "SceneParse.hpp"
 
 Game::Game(Window & window, const sf::String & resPath)
-    : GameBase(window), resManager(resPath) {
+    // : GameBase(window), resManager(resPath) {
+    : GameBase(window) {
 
     // defautFont loaded from memory by GameBase
     // fps = std::make_shared<FPSDisplay>();
@@ -33,13 +34,13 @@ Game::Game(Window & window, const sf::String & resPath)
     camera->move({5, 2, 5});
     camera->setFov(70);
 
-    scene = std::make_shared<Scene>("Root");
+    // scene = std::make_shared<Scene>("Root");
 
-    auto floorScene = resManager.loadScene("model/cube_plane.obj");
-    if (!floorScene)
-        throw std::runtime_error("Failed to load model/cube_plane.obj");
-    scene->children.push_back(floorScene);
-    scene->move({0, -1, 0});
+    // auto floorScene = resManager.loadScene("model/cube_plane.obj");
+    // if (!floorScene)
+    //     throw std::runtime_error("Failed to load model/cube_plane.obj");
+    // scene->children.push_back(floorScene);
+    // scene->move({0, -1, 0});
 
     // grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
 
@@ -79,13 +80,13 @@ void Game::onDraw() const {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
-    RenderState state(camera, defaultShader, vp);
-    if (grid)
-        grid->draw(state);
+    // RenderState state(camera, defaultShader, vp);
+    // if (grid)
+    //     grid->draw(state);
 
     defaultShader.bind();
     defaultShader.setMat4("mvp", vp);
-    scene->draw(state);
+    // scene->draw(state);
 
     // window->pushGLStates();
     // window->draw(*fps);

@@ -78,6 +78,7 @@ namespace singe {
 
             onUpdate(delta);
 
+            FrameBuffer::unbind(); // Bind default frame buffer
             FrameBuffer::clear();
             defaultShader.bind();
             onDraw();

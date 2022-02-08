@@ -9,18 +9,18 @@
 #include <memory>
 #include <singe/Core/GameBase.hpp>
 #include <singe/Core/Window.hpp>
-#include <singe/Graphics/Grid.hpp>
-#include <singe/Graphics/ResourceManager.hpp>
+// #include <singe/Graphics/Grid.hpp>
+// #include <singe/Graphics/ResourceManager.hpp>
 #include <singe/Support/log.hpp>
 #include <vector>
 using namespace singe;
 
 
 class Game : public GameBase {
-    ResourceManager resManager;
+    // ResourceManager resManager;
     // FPSDisplay::Ptr fps;
-    Scene::Ptr scene;
-    Grid::Ptr grid;
+    // Scene::Ptr scene;
+    // Grid::Ptr grid;
 
 public:
     Game(Window & window, const sf::String & resPath);
