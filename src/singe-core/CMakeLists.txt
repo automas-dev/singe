@@ -2,20 +2,20 @@ set(TARGET Core)
 
 set(HEADER_LIST
     Camera.hpp
-    # FPSDisplay.hpp
+    FPSDisplay.hpp
     GameBase.hpp
-    # Menu.hpp
+    Menu.hpp
     Window.hpp
-    RenderState.hpp)
+)
 list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
     Camera.cpp
-    # FPSDisplay.cpp
+    FPSDisplay.cpp
     GameBase.cpp
-    # Menu.cpp
+    Menu.cpp
     Window.cpp
-    RenderState.cpp)
+)
 list(TRANSFORM SOURCE_LIST PREPEND "src/")
 
 add_library(${TARGET} ${HEADER_LIST} ${SOURCE_LIST} include/default_font.h)

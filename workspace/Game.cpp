@@ -28,6 +28,10 @@ Game::Game(Window & window) : GameBase(window) {
 
     // TODO: load here
 
+    // Load models / textures / scenes
+    // No fancy render api, just each model can be drawn
+    // Maybe add something like pyglet Batch to group rendering
+
     window.setMouseGrab(true);
 }
 
