@@ -37,10 +37,8 @@ void Game::onUpdate(const sf::Time & delta) {
     // TODO: update here
 }
 
-void Game::onDraw() const {
+inline void setupGl() {
     glClearColor(0.25, 0.25, 0.25, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
@@ -48,6 +46,10 @@ void Game::onDraw() const {
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void Game::onDraw() const {
+    setupGl();
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
     defaultShader.bind();
