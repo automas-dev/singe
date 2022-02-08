@@ -2,53 +2,6 @@
 
 #include <stdexcept>
 
-// #include "SceneParse.hpp"
-
-Game::Game(Window & window, const sf::String & resPath)
-    // : GameBase(window), resManager(resPath) {
-    : GameBase(window) {
-
-    // defautFont loaded from memory by GameBase
-    // fps = std::make_shared<FPSDisplay>();
-    // fps->setFont(uiFont);
-    // fps->setRate(0.1f);
-
-#ifdef DEBUG
-    // During init, enable debug output
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
-#endif
-
-    // Add menu buttons
-    // menu->addMenuItem("Resume", [&]() {
-    //     menu->hide();
-    //     window.setMouseGrab(true);
-    // });
-    // menu->addMenuItem("Exit", [&]() {
-    //     window.close();
-    // });
-
-    // SceneStruct sceneStruct = parseScene("scene.xml", resManager);
-    // grid = sceneStruct.grid;
-
-    camera->move({5, 2, 5});
-    camera->setFov(70);
-
-    // scene = std::make_shared<Scene>("Root");
-
-    // auto floorScene = resManager.loadScene("model/cube_plane.obj");
-    // if (!floorScene)
-    //     throw std::runtime_error("Failed to load model/cube_plane.obj");
-    // scene->children.push_back(floorScene);
-    // scene->move({0, -1, 0});
-
-    // grid = std::make_shared<Grid>(50, 1.0, glm::vec3(0.47, 0.6, 0.81));
-
-    window.setMouseGrab(true);
-}
-
-Game::~Game() {}
-
 void GLAPIENTRY MessageCallback(GLenum source,
                                 GLenum type,
                                 GLuint id,
@@ -62,9 +15,26 @@ void GLAPIENTRY MessageCallback(GLenum source,
         message);
 }
 
+Game::Game(Window & window) : GameBase(window) {
+
+#ifdef DEBUG
+    // During init, enable debug output
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(MessageCallback, 0);
+#endif
+
+    camera->move({5, 2, 5});
+    camera->setFov(70);
+
+    // TODO: load here
+
+    window.setMouseGrab(true);
+}
+
+Game::~Game() {}
+
 void Game::onUpdate(const sf::Time & delta) {
-    float deltaS = delta.asSeconds();
-    // fps->update(delta);
+    // TODO: update here
 }
 
 void Game::onDraw() const {
@@ -80,15 +50,8 @@ void Game::onDraw() const {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
-    // RenderState state(camera, defaultShader, vp);
-    // if (grid)
-    //     grid->draw(state);
-
     defaultShader.bind();
     defaultShader.setMat4("mvp", vp);
-    // scene->draw(state);
 
-    // window->pushGLStates();
-    // window->draw(*fps);
-    // window->popGLStates();
+    // TODO: draw here
 }

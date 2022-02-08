@@ -7,7 +7,7 @@ int main() {
 
     try {
         Window window("Workspace");
-        Game game(window, "../../workspace/res/");
+        Game game(window);
         game.Start();
     }
     catch (std::runtime_error & e) {
