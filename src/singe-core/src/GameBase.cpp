@@ -20,6 +20,7 @@ namespace singe {
         : window(window),
           mouseSensitivity(0.2, 0.2),
           moveSpeed(5),
+          fpsShow(true),
           camera(nullptr),
           menu(nullptr),
           defaultShader(Shader::defaultShader()) {
@@ -29,10 +30,19 @@ namespace singe {
         camera->setScreenSize({size.x, size.y});
 
         uiFont.loadFromMemory(__default_font_start, __default_font_size);
+        fpsDisplay.setFont(uiFont);
 
         menu = std::make_shared<Menu>(uiFont, "tmp title");
         menu->setPosition(300, 300);
         window.addEventHandler(menu.get());
+
+        menu->addMenuItem("Resume", [&]() {
+            menu->hide();
+            window.setMouseGrab(true);
+        });
+        menu->addMenuItem("Exit", [&]() {
+            window.close();
+        });
 
         window.addEventHandler(this);
     }
@@ -76,15 +86,23 @@ namespace singe {
                                    z * delta.asSeconds() * moveSpeed});
             }
 
+            fpsDisplay.update(delta);
             onUpdate(delta);
 
             FrameBuffer::unbind(); // Bind default frame buffer
             FrameBuffer::clear();
             defaultShader.bind();
             onDraw();
-            if (menu) {
+            if (menu || fpsShow) {
                 window.window.pushGLStates();
+            }
+
+            if (menu)
                 window.window.draw(*menu);
+            if (fpsShow)
+                window.window.draw(fpsDisplay);
+
+            if (menu || fpsShow) {
                 window.window.popGLStates();
             }
             window.display();
@@ -108,6 +126,14 @@ namespace singe {
 
     void GameBase::SetMoveSpeed(float speed) {
         moveSpeed = speed;
+    }
+
+    void GameBase::showFps() {
+        fpsShow = true;
+    }
+
+    void GameBase::hideFps() {
+        fpsShow = false;
     }
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {

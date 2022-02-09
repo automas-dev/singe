@@ -3,12 +3,12 @@
 #include <Transform3d.hpp>
 #include <glm/glm.hpp>
 #include <memory>
-#include <singe/Core/RenderState.hpp>
 #include <string>
 #include <vector>
 
 #include "glpp/Shader.hpp"
 #include "singe/Graphics/Model.hpp"
+#include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
 

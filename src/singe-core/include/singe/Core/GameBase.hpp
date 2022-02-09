@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "singe/Core/Camera.hpp"
+#include "singe/Core/FPSDisplay.hpp"
 #include "singe/Core/Menu.hpp"
 #include "singe/Core/Window.hpp"
 
@@ -32,6 +33,7 @@ namespace singe {
     class GameBase : public EventHandler {
         glm::vec2 mouseSensitivity;
         float moveSpeed;
+        bool fpsShow;
 
     protected:
         /// Reference to the Window object
@@ -43,6 +45,8 @@ namespace singe {
          * This pointer may be replaced by a derived class but it must exist.
          */
         Camera::Ptr camera;
+
+        FPSDisplay fpsDisplay;
 
         /**
          * Pointer to the Menu object created by GameBase.
@@ -100,6 +104,10 @@ namespace singe {
          * @param speed the new move speed
          */
         void SetMoveSpeed(float speed);
+
+        void showFps();
+
+        void hideFps();
 
     protected:
         /**

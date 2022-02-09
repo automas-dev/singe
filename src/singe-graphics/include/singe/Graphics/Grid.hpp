@@ -1,10 +1,11 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glpp/Shader.hpp>
 #include <glpp/Buffer.hpp>
+#include <glpp/Shader.hpp>
 #include <memory>
-#include <singe/Core/RenderState.hpp>
+
+#include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
     using glpp::Shader;

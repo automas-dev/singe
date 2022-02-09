@@ -143,7 +143,7 @@ namespace singe {
          *
          * @param e the mouse move event
          */
-        void onMouseMove(sf::Event::MouseMoveEvent e);
+        void onMouseMove(const sf::Event::MouseMoveEvent & e) override;
 
         /**
          * Event callback for the mouse down event. If the menu is not visible,
@@ -151,7 +151,7 @@ namespace singe {
          *
          * @param e the mouse press event
          */
-        void onMouseDown(sf::Event::MouseButtonEvent e);
+        void onMouseDown(const sf::Event::MouseButtonEvent & e) override;
 
         /**
          * Event callback for the mouse up event. If the menu is not visible,
@@ -159,6 +159,6 @@ namespace singe {
          *
          * @param e the mouse up event
          */
-        void onMouseUp(sf::Event::MouseButtonEvent e);
+        void onMouseUp(const sf::Event::MouseButtonEvent & e) override;
     };
 }

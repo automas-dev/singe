@@ -113,7 +113,7 @@ namespace singe {
         }
     }
 
-    void Menu::onMouseMove(sf::Event::MouseMoveEvent e) {
+    void Menu::onMouseMove(const sf::Event::MouseMoveEvent & e) {
         if (!visible)
             return;
 
@@ -129,7 +129,7 @@ namespace singe {
         }
     }
 
-    void Menu::onMouseDown(sf::Event::MouseButtonEvent e) {
+    void Menu::onMouseDown(const sf::Event::MouseButtonEvent & e) {
         if (!visible)
             return;
 
@@ -142,7 +142,7 @@ namespace singe {
         }
     }
 
-    void Menu::onMouseUp(sf::Event::MouseButtonEvent e) {
+    void Menu::onMouseUp(const sf::Event::MouseButtonEvent & e) {
         if (!visible)
             return;
 

@@ -2,11 +2,11 @@
 
 #include <Transform3d.hpp>
 #include <memory>
-#include <singe/Core/RenderState.hpp>
 #include <string>
 
 #include "singe/Graphics/Geometry.hpp"
 #include "singe/Graphics/Material.hpp"
+#include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
     /**

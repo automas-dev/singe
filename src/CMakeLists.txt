@@ -35,7 +35,7 @@ add_subdirectory(Transform3d)
 add_subdirectory(Wavefront)
 
 add_subdirectory(singe-support)
-add_subdirectory(singe-graphics)
+# add_subdirectory(singe-graphics)
 add_subdirectory(singe-core)
 
 set(TARGET singe)
