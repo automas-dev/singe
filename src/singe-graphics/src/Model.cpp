@@ -5,7 +5,7 @@
 
 namespace singe {
 
-    Model::Model(const std::string & name) : Transform3d(), name(name) {}
+    Model::Model(const std::string & name) : Transform(), name(name) {}
 
     Model::~Model() {}
 

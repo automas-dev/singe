@@ -4,13 +4,13 @@
 
 namespace fs = std::filesystem;
 
+#include <Wavefront.hpp>
 #include <array>
 #include <fstream>
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
 
-#include "Wavefront.hpp"
 #include "singe/Support/Util.hpp"
 #include "singe/Support/log.hpp"
 
@@ -64,9 +64,10 @@ namespace singe {
             return nullptr;
         }
 
-        auto newTex = std::make_shared<Texture>(image.getPixelsPtr(),
-                                                glm::uvec2(image.getSize().x, image.getSize().y),
-                                                4);
+        auto newTex = std::make_shared<Texture>(
+            image.getPixelsPtr(),
+            glm::uvec2(image.getSize().x, image.getSize().y),
+            4);
         textures[path] = newTex;
         return newTex;
     }

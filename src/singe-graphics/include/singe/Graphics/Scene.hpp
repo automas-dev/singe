@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Transform3d.hpp>
+#include <glpp/extra/Transform.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 #include <string>
@@ -11,13 +11,14 @@
 #include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
+    using glpp::extra::Transform;
 
     /**
      * A collection of models that share a transform.
      *
      * The transforms also apply to all children.
      */
-    struct Scene : public Transform3d {
+    struct Scene : public Transform {
 
         using Ptr = std::shared_ptr<Scene>;
         using ConstPtr = std::shared_ptr<const Scene>;

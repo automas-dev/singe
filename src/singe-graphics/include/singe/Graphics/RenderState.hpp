@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Transform3d.hpp>
 #include <glm/glm.hpp>
 #include <glpp/Shader.hpp>
 

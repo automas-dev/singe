@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Transform3d.hpp>
+#include <glpp/extra/Transform.hpp>
 #include <memory>
 #include <string>
 
@@ -9,10 +9,12 @@
 #include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
+    using glpp::extra::Transform;
+
     /**
      * A Model which has a mesh and model transforms.
      */
-    struct Model : public Transform3d {
+    struct Model : public Transform {
 
         using Ptr = std::shared_ptr<Model>;
         using ConstPtr = std::shared_ptr<const Model>;
