@@ -31,7 +31,6 @@ target_link_libraries(${TARGET}
     OpenGL::GLU
     glpp
     PUBLIC
-    Transform3d
     Wavefront
     Support
     Core

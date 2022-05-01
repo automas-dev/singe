@@ -4,16 +4,17 @@
 
 #include <SFML/OpenGL.hpp>
 #include <SFML/System.hpp>
-#include <Transform3d.hpp>
 #include <glm/glm.hpp>
+#include <glpp/extra/Transform.hpp>
 #include <memory>
 
 namespace singe {
+    using glpp::extra::Transform;
 
     /**
      * First person camera used to generate the projection and view matrices.
      */
-    class Camera : public Transform3d {
+    class Camera : public Transform {
     public:
         /**
          * Projection mode for projectino matrix.
