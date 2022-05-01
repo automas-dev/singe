@@ -5,3 +5,6 @@
 [submodule "src/glpp"]
 	path = src/glpp
 	url = https://github.com/twh2898/glpp.git
+[submodule "src/Wavefront"]
+	path = src/Wavefront
+	url = https://github.com/twh2898/wavefront.git
