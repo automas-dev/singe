@@ -79,8 +79,9 @@ FetchContent_MakeAvailable(DispatchQueue)
 FetchContent_Declare(
     glpp
     GIT_REPOSITORY https://github.com/twh2898/glpp.git
-    GIT_TAG        0.3.3
+    GIT_TAG        0.4.1
 )
+set(GLPP_BUILD_EXAMPLES off)
 FetchContent_MakeAvailable(glpp)
 
 add_subdirectory(src)
