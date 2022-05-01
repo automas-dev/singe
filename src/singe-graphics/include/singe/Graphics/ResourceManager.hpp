@@ -71,11 +71,6 @@ namespace singe {
         std::string resourceAt(const std::string & path) const;
     };
 
-    struct MaterialLib {
-        std::string name;
-        std::map<std::string, Material::Ptr> materials;
-    };
-
     /**
      * An implementation of ResourceManagerBase that has methods for loading
      * Texture, Model and Shader resources.
