@@ -2,31 +2,36 @@
 
 #include <stdexcept>
 
-void GLAPIENTRY MessageCallback(GLenum source,
-                                GLenum type,
-                                GLuint id,
-                                GLenum severity,
-                                GLsizei length,
-                                const GLchar * message,
-                                const void * userParam) {
-    Logging::Game->error(
-        "GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
-        (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity,
-        message);
-}
+static const char * vertexShaderSource = R"(
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aCol;
+uniform mat4 mvp;
+out vec3 color;
+void main() {
+    gl_Position = mvp * vec4(aPos, 1.0);
+    color = aCol;
+})";
+
+static const char * fragmentShaderSource = R"(
+#version 330 core
+in vec3 color;
+out vec4 FragColor;
+void main() {
+    FragColor = vec4(color, 1.0);
+})";
 
 Game::Game(Window & window) : GameBase(window) {
-
-#ifdef DEBUG
-    // During init, enable debug output
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
-#endif
-
-    camera->move({5, 2, 5});
-    camera->setFov(70);
+    camera.setPosition({5, 2, 5});
+    camera.setFov(70);
 
     // TODO: load here
+
+    // auto * g = new Grid(10);
+
+    // grid = std::shared_ptr<Grid>(g);
+
+    mvp = defaultShader.uniform("mvp");
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
@@ -55,9 +60,11 @@ inline void setupGl() {
 void Game::onDraw() const {
     setupGl();
 
-    glm::mat4 vp = camera->projMatrix() * camera->toMatrix();
+    glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
     defaultShader.bind();
-    defaultShader.setMat4("mvp", vp);
+    mvp.setMat4(vp);
 
     // TODO: draw here
+    // RenderState state(defaultShader, vp);
+    // grid->draw(state);
 }

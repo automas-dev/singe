@@ -1,5 +1,7 @@
 #include <spdlog/spdlog.h>
 
+#include <glpp/extra/debug.hpp>
+
 #include "Game.hpp"
 
 int main() {
@@ -7,6 +9,9 @@ int main() {
 
     try {
         Window window("Workspace");
+
+        glpp::extra::initDebug();
+
         Game game(window);
         game.Start();
     }
