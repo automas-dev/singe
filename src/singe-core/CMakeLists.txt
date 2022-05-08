@@ -1,7 +1,6 @@
 set(TARGET Core)
 
 set(HEADER_LIST
-    Camera.hpp
     FPSDisplay.hpp
     GameBase.hpp
     Menu.hpp
@@ -10,7 +9,6 @@ set(HEADER_LIST
 list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
-    Camera.cpp
     FPSDisplay.cpp
     GameBase.cpp
     Menu.cpp

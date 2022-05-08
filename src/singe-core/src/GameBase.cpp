@@ -21,13 +21,9 @@ namespace singe {
           mouseSensitivity(0.2, 0.2),
           moveSpeed(5),
           fpsShow(true),
-          camera(nullptr),
+          camera(window.getSize(), Camera::Perspective, 80.0f),
           menu(nullptr),
           defaultShader(Shader::defaultShader()) {
-
-        camera = std::make_shared<Camera>();
-        auto size = window.getSize();
-        camera->setScreenSize({size.x, size.y});
 
         uiFont.loadFromMemory(__default_font_start, __default_font_size);
         fpsDisplay.setFont(uiFont);
@@ -79,9 +75,9 @@ namespace singe {
                                    glm::radians(mouseDelta.x),
                                    0);
                 if (rotation.x != 0 || rotation.y != 0)
-                    camera->rotateEuler(rotation);
+                    camera.rotateDolly(rotation);
 
-                camera->moveDolly({x * delta.asSeconds() * moveSpeed,
+                camera.moveDolly({x * delta.asSeconds() * moveSpeed,
                                    y * delta.asSeconds() * moveSpeed,
                                    z * delta.asSeconds() * moveSpeed});
             }
@@ -149,6 +145,6 @@ namespace singe {
     }
 
     void GameBase::onResized(const sf::Event::SizeEvent & event) {
-        camera->setScreenSize({event.width, event.height});
+        camera.setScreenSize({event.width, event.height});
     }
 }

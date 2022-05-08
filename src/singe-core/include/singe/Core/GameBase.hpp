@@ -4,11 +4,11 @@
 
 #include <glm/glm.hpp>
 #include <glpp/Shader.hpp>
+#include <glpp/extra/Camera.hpp>
 #include <memory>
 #include <singe/Support/log.hpp>
 #include <vector>
 
-#include "singe/Core/Camera.hpp"
 #include "singe/Core/FPSDisplay.hpp"
 #include "singe/Core/Menu.hpp"
 #include "singe/Core/Window.hpp"
@@ -19,6 +19,7 @@ namespace singe::Logging {
 
 namespace singe {
     using namespace glpp;
+    using namespace glpp::extra;
 
     /**
      * Game base to be extended by the user. This class manages the window,
@@ -44,7 +45,7 @@ namespace singe {
          *
          * This pointer may be replaced by a derived class but it must exist.
          */
-        Camera::Ptr camera;
+        Camera camera;
 
         FPSDisplay fpsDisplay;
 
