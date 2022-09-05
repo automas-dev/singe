@@ -1,22 +1,32 @@
 #include "singe/Graphics/Mesh.hpp"
 
-#include "singe/Support/log.hpp"
-using namespace glpp;
+#include <GL/glew.h>
+// gl.h after glew.h, clang-format don't sort
+#include <GL/gl.h>
+
+#include <vector>
 
 namespace singe {
-    Mesh::Mesh() {}
+    using std::vector;
+    using glpp::Attribute;
+    using glpp::extra::Vertex;
+
+    static const vector<Attribute> attrs {
+        {0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0},
+        {1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3 * sizeof(float))},
+        {2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6 * sizeof(float))},
+    };
+
+    Mesh::Mesh() : array({attrs}), n(0) {}
 
     Mesh::~Mesh() {}
 
-    void Mesh::loadFromPoints(const std::vector<Vertex> & points) {
-        buffer.loadFromPoints(points);
+    void Mesh::bufferData(const vector<Vertex> & data, Buffer::Usage usage) {
+        array.bufferData(0, data.size() * sizeof(Vertex), data.data(), usage);
+        n = data.size();
     }
 
-    void Mesh::appendPoints(const std::vector<Vertex> & points) {
-        buffer.buff.insert(buffer.buff.end(), points.begin(), points.end());
-    }
-
-    void Mesh::draw(glpp::Buffer::Mode mode) const {
-        buffer.draw(mode);
+    void Mesh::draw(RenderState & state) const {
+        array.drawArrays(Buffer::Triangles, n, 0);
     }
 }

@@ -1,47 +1,34 @@
 #pragma once
 
 #include <glpp/extra/Transform.hpp>
-#include <glm/glm.hpp>
 #include <memory>
-#include <string>
 #include <vector>
 
-#include "glpp/Shader.hpp"
-#include "singe/Graphics/Model.hpp"
-#include "singe/Graphics/RenderState.hpp"
+#include "Model.hpp"
+#include "RenderState.hpp"
 
 namespace singe {
+    using std::shared_ptr;
+    using std::vector;
     using glpp::extra::Transform;
 
-    /**
-     * A collection of models that share a transform.
-     *
-     * The transforms also apply to all children.
-     */
-    struct Scene : public Transform {
+    class Scene {
+        vector<shared_ptr<Scene>> children;
+        vector<shared_ptr<Model>> models;
+        Transform transform;
 
-        using Ptr = std::shared_ptr<Scene>;
-        using ConstPtr = std::shared_ptr<const Scene>;
+    public:
+        Scene();
 
-        std::string name;
-        std::vector<Model::Ptr> models;
-        std::vector<Scene::Ptr> children;
+        Scene(Scene && other);
 
-        /**
-         * Create a new scene with name,
-         *
-         * @param the scene name
-         */
-        Scene(const std::string & name);
+        Scene & operator=(Scene && other);
 
-        /**
-         * Draw the scene.
-         *
-         * Sends the model matrix to shader at the uniform named "model".
-         *
-         * @param shader the shader to send the model matrix to
-         * @param transform any parent transform
-         */
+        Scene(const Scene &) = delete;
+        Scene & operator=(const Scene &) = delete;
+
+        ~Scene();
+
         void draw(RenderState state) const;
     };
 }

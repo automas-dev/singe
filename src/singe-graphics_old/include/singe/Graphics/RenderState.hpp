@@ -2,20 +2,17 @@
 
 #include <glm/glm.hpp>
 #include <glpp/Shader.hpp>
-#include <glpp/extra/Transform.hpp>
 
 namespace singe {
-    using glm::mat4;
-    using glpp::Uniform;
     using glpp::Shader;
-    using glpp::extra::Transform;
+    using glpp::Uniform;
 
     struct RenderState {
-        mat4 transform;
-        Shader & shader;
+        const Shader & shader;
         Uniform mvp;
+        glm::mat4 transform;
 
-        RenderState(Shader & shader);
+        RenderState(const glpp::Shader & shader, const glm::mat4 & transform);
 
         /**
          * Default copy constructor.
@@ -37,10 +34,10 @@ namespace singe {
          */
         RenderState & operator=(RenderState && other) = default;
 
-        ~RenderState();
-
-        void pushTransform(const Transform & transform);
-
-        void pushTransform(const mat4 & matrix);
+        /**
+         * Multiply the current transform by `transform` and send it to the
+         * shader.
+         */
+        void pushTransform(const glm::mat4 & transform);
     };
 }

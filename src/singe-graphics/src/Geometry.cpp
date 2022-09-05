@@ -1,6 +1,24 @@
 #include "singe/Graphics/Geometry.hpp"
 
+#include <memory>
+
 namespace singe {
-    Geometry::Geometry(const Mesh::Ptr & mesh, size_t materialId)
-        : mesh(mesh), materialId(materialId) {}
+    using std::move;
+
+    Geometry::Geometry(const Material * material) : material(material) {}
+
+    Geometry::Geometry(Geometry && other)
+        : mesh(move(other.mesh)), material(other.material) {}
+
+    Geometry & Geometry::operator=(Geometry && other) {
+        mesh = move(other.mesh);
+        material = other.material;
+        return *this;
+    }
+
+    Geometry::~Geometry() {}
+
+    void Geometry::draw(RenderState & state) const {
+        mesh.draw(state);
+    }
 }

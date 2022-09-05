@@ -1,45 +1,35 @@
 #pragma once
 
-#include <glpp/extra/Transform.hpp>
-#include <memory>
 #include <string>
+#include <vector>
 
-#include "singe/Graphics/Geometry.hpp"
-#include "singe/Graphics/Material.hpp"
-#include "singe/Graphics/RenderState.hpp"
+#include "Geometry.hpp"
+#include "Material.hpp"
+#include "RenderState.hpp"
 
 namespace singe {
-    using glpp::extra::Transform;
+    using std::string;
+    using std::vector;
 
-    /**
-     * A Model which has a mesh and model transforms.
-     */
-    struct Model : public Transform {
+    class Model {
+        vector<Material> materials;
+        vector<Geometry> geometry;
+        Transform transform;
 
-        using Ptr = std::shared_ptr<Model>;
-        using ConstPtr = std::shared_ptr<const Model>;
+    public:
+        Model();
 
-        std::vector<Geometry> geometry;
-        std::vector<Material::Ptr> materials;
-        std::string name;
+        Model(Model && other);
 
-        /**
-         * Create a new Model with name and Mesh parameters.
-         *
-         * @param name the model name
-         * @param mode the Mesh draw mode
-         * @param usage the Mesh update usage
-         */
-        Model(const std::string & name);
+        Model & operator=(Model && other);
 
-        /**
-         * Destruct the Model.
-         */
-        virtual ~Model();
+        Model(const Model &) = delete;
+        Model & operator=(const Model &) = delete;
 
-        /**
-         * Bind textures and draw the mesh.
-         */
-        void draw(glpp::Buffer::Mode mode, RenderState state) const;
+        ~Model();
+
+        void draw(RenderState state) const;
+
+        static Model fromPath(const string & path);
     };
 }

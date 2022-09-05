@@ -1,17 +1,29 @@
 #include "singe/Graphics/Scene.hpp"
 
-#include "singe/Support/log.hpp"
+#include <memory>
 
 namespace singe {
-    Scene::Scene(const std::string & name) : name(name) {}
+    using std::move;
+
+    Scene::Scene() {}
+
+    Scene::Scene(Scene && other)
+        : children(move(other.children)),
+          models(move(other.models)),
+          transform(move(other.transform)) {}
+
+    Scene & Scene::operator=(Scene && other) {
+        children = move(other.children);
+        models = move(other.models);
+        transform = move(other.transform);
+        return *this;
+    }
+
+    Scene::~Scene() {}
 
     void Scene::draw(RenderState state) const {
-        state.transform *= toMatrix();
-        for (auto & model : models) {
-            model->draw(glpp::Buffer::Triangles, state);
-        }
-        for (auto & child : children) {
-            child->draw(state);
-        }
+        state.pushTransform(transform);
+        for (auto & model : models) model->draw(state);
+        for (auto & child : children) child->draw(state);
     }
 }

@@ -1,143 +1,105 @@
 #include "singe/Graphics/ResourceManager.hpp"
 
+#include <Wavefront.hpp>
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
-#include <Wavefront.hpp>
-#include <array>
-#include <fstream>
-#include <glm/glm.hpp>
-#include <map>
-#include <vector>
-
-#include "singe/Support/Util.hpp"
-#include "singe/Support/log.hpp"
-
-#define PARSE_ERROR(TAG)                                                    \
-    {                                                                       \
-        Logging::Core->error("Failed to parse tag {}: {}", (TAG), line_no); \
-        return nullptr;                                                     \
-    }
-
-#define ASSERT_NREAD(N, TAG) \
-    if (nRead != (N))        \
-        PARSE_ERROR(TAG);
-
 namespace singe {
-    ResourceManagerBase::ResourceManagerBase() : ResourceManagerBase("./") {}
+    using std::make_shared;
 
-    ResourceManagerBase::ResourceManagerBase(const std::string & path)
-        : rootPath(path) {}
+    ResourceManager::ResourceManager(const path & root) : root(root) {}
 
-    ResourceManagerBase::~ResourceManagerBase() {}
+    ResourceManager::ResourceManager(ResourceManager && other)
+        : root(other.root) {}
 
-    void ResourceManagerBase::setResourcePath(const std::string & path) {
-        rootPath = path;
+    ResourceManager & ResourceManager::operator=(ResourceManager && other) {
+        root = other.root;
+        return *this;
     }
 
-    const std::string & ResourceManagerBase::getResourcePath() {
-        return rootPath;
+    ResourceManager::~ResourceManager() {}
+
+    void ResourceManager::setRoot(const path & root) {
+        this->root = root;
     }
 
-    std::string ResourceManagerBase::resourceAt(const std::string & path) const {
-        fs::path base(path);
-        if (base.is_absolute())
-            return path;
+    const path & ResourceManager::getRoot() const {
+        return root;
+    }
+
+    path ResourceManager::resourceAt(const path & subPath) const {
+        if (subPath.is_absolute())
+            return subPath;
         else
-            return {fs::path(rootPath) / base};
-    }
-}
-
-namespace singe {
-    std::shared_ptr<Texture> ResourceManager::loadTexture(const std::string & path,
-                                                          GLint magFilter,
-                                                          GLint minFilter) {
-        if (textures.count(path) > 0)
-            return textures[path];
-
-        auto relPath = resourceAt(path);
-        sf::Image image;
-        if (!image.loadFromFile(relPath)) {
-            Logging::Core->error("failed in call to Texture::loadFromPath(path={})",
-                                 relPath);
-            return nullptr;
-        }
-
-        auto newTex = std::make_shared<Texture>(
-            image.getPixelsPtr(),
-            glm::uvec2(image.getSize().x, image.getSize().y),
-            4);
-        textures[path] = newTex;
-        return newTex;
+            return root / subPath;
     }
 
-    std::shared_ptr<Shader> ResourceManager::loadShader(
-        const std::string & vertexPath, const std::string & fragmentPath) {
-        auto relVertexPath = resourceAt(vertexPath);
-        auto relFragmentPath = resourceAt(fragmentPath);
-        auto shader = Shader::fromPaths(relVertexPath, relFragmentPath);
-        return std::make_shared<Shader>(std::move(shader));
+    shared_ptr<Texture> ResourceManager::getTexture(const string & name) {
+        static path subPath("img");
+
+        if (textures.find(name) == textures.end()) {
+            path fullPath = resourceAt(subPath / name);
+            auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
+            textures[name] = texture;
+            return texture;
+        }
+        else
+            return textures[name];
     }
 
-    std::shared_ptr<Shader> ResourceManager::loadShader(const std::string & fragmentPath) {
-        auto relFragmentPath = resourceAt(fragmentPath);
-        auto shader = Shader::fromFragmentPath(relFragmentPath);
-        return std::make_shared<Shader>(std::move(shader));
+    shared_ptr<Shader> ResourceManager::getShader(const string & name) {
+        static path subPath("shader");
+
+        if (shaders.find(name) == shaders.end()) {
+            path fullVertexPath = resourceAt(subPath / (name + ".vert"));
+            path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
+            auto shader = make_shared<Shader>(
+                Shader::fromPaths(fullVertexPath, fullFragmentPath));
+            shaders[name] = shader;
+            return shader;
+        }
+        else
+            return shaders[name];
     }
 
-    Scene::Ptr ResourceManager::loadScene(const std::string & path) {
-        auto relPath = resourceAt(path);
+    shared_ptr<Shader> ResourceManager::getShaderFragmentOnly(const string & name) {
+        static path subpath("shader");
 
-        std::string sceneName;
-        {
-            auto i = relPath.find_last_of('/');
-            if (i != std::string::npos) {
-                i++;
-                auto n = relPath.size() - 4 - i;
-                sceneName = relPath.substr(i, n);
-            }
+        if (shaders.find(name) == shaders.end()) {
+            path fullFragmentPath = resourceAt(subpath / (name + ".frag"));
+            auto shader =
+                make_shared<Shader>(Shader::fromFragmentPath(fullFragmentPath));
+            shaders[name] = shader;
+            return shader;
         }
-
-        wavefront::Model model;
-        try {
-            model.loadModelFrom(relPath);
-        }
-        catch (const wavefront::ModelLoadException & e) {
-            throw std::runtime_error(e.what());
-        }
-
-        auto scene = std::make_shared<Scene>(sceneName);
-        for (auto & obj : model.objects) {
-            auto mdl = std::make_shared<Model>(obj->name);
-            scene->models.push_back(mdl);
-
-            auto mesh = std::make_shared<Mesh>();
-            for (int i = 0; i < obj->size(); i++) {
-                mesh->buffer.buff.emplace_back(obj->vertices[i],
-                                               obj->normals[i],
-                                               obj->texcoords[i]);
-            }
-            mdl->geometry.emplace_back(mesh, 0);
-            auto & mat = model.materials[obj->matId];
-            auto material = std::make_shared<Material>();
-            mdl->materials.push_back(material);
-
-            material->name = mat->name;
-            material->ambient = mat->colAmbient;
-            material->diffuse = mat->colDiffuse;
-            material->specular = mat->colSpecular;
-            material->specExp = mat->specExp;
-            material->alpha = mat->alpha;
-
-            if (!mat->texAlbedo.empty())
-                material->texture = loadTexture(mat->texAlbedo);
-            if (!mat->texNormal.empty())
-                material->normalTexture = loadTexture(mat->texNormal);
-            if (!mat->texSpecular.empty())
-                material->specularTexture = loadTexture(mat->texSpecular);
-        }
-
-        return scene;
+        else
+            return shaders[name];
     }
+
+    shared_ptr<Model> ResourceManager::getModel(const string & name) {
+        static path subPath("model");
+
+        if (models.find(name) == models.end()) {
+            path fullPath = resourceAt(subPath / name);
+            auto model = make_shared<Model>(Model::fromPath(fullPath));
+            models[name] = model;
+            return model;
+        }
+        else
+            return models[name];
+    }
+
+    // shared_ptr<Scene> ResourceManager::getScene(const string & name) {
+    //     static path subPath("scene");
+
+    //     if (scenes.find(name) == scenes.end()) {
+    //         path fullPath = resourceAt(subPath / name);
+    //         auto scene = make_shared<Scene>(Scene::fromPath(fullPath));
+    //         scenes[name] = scene;
+    //         return scene;
+    //     }
+    //     else
+    //         return scenes[name];
+    // }
 }

@@ -1,31 +1,17 @@
 #include "singe/Graphics/Material.hpp"
 
+#include <memory>
+
 namespace singe {
-    using std::make_shared;
+    using std::move;
 
-    Material::Material()
-        : name("None"),
-          ambient(0.8),
-          diffuse(0.8),
-          specular(0.8),
-          specExp(500),
-          alpha(1.0),
-          texture(nullptr) {}
+    Material::Material() {}
 
-    void Material::send() {
-        if (!texture) {
-            texture = make_shared<Texture>(
-                image.getPixelsPtr(),
-                glm::uvec2(image.getSize().x, image.getSize().y), 3);
-        }
-        else {
-            texture->loadFrom(image.getPixelsPtr(),
-                              {image.getSize().x, image.getSize().y}, 3);
-        }
+    Material::Material(Material && other) {}
+
+    Material & Material::operator=(Material && other) {
+        return *this;
     }
 
-    void Material::bind(const Shader & shader) const {
-        if (texture)
-            texture->bind();
-    }
+    Material::~Material() {}
 }

@@ -1,10 +1,18 @@
 #include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
-    RenderState::RenderState(const glpp::Shader & shader, glm::mat4 & transform)
-        : shader(shader), transform(transform) {}
+    RenderState::RenderState(Shader & shader)
+        : shader(shader), mvp(shader.uniform("mvp")) {}
 
-    void RenderState::sendMVP() const {
-        shader.setMat4("mvp", transform);
+    RenderState::~RenderState() {}
+
+    void RenderState::pushTransform(const Transform & transform) {
+        pushTransform(transform.toMatrix());
+    }
+
+    void RenderState::pushTransform(const mat4 & matrix) {
+        transform *= matrix;
+        // shader.bind();
+        mvp.setMat4(transform);
     }
 }

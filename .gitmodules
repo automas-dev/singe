@@ -8,3 +8,6 @@
 [submodule "src/Wavefront"]
 	path = src/Wavefront
 	url = https://github.com/twh2898/wavefront.git
+[submodule "src/assimp"]
+	path = src/assimp
+	url = https://github.com/assimp/assimp.git

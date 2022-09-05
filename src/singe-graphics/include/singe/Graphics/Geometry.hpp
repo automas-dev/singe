@@ -1,25 +1,28 @@
 #pragma once
 
-#include <memory>
+#include <glm/glm.hpp>
 
-#include "singe/Graphics/Mesh.hpp"
+#include "Material.hpp"
+#include "Mesh.hpp"
+#include "RenderState.hpp"
 
 namespace singe {
-    struct Geometry {
-        Mesh::Ptr mesh;
-        size_t materialId;
+    class Geometry {
+        Mesh mesh;
+        const Material * material;
 
-        using Ptr = std::shared_ptr<Geometry>;
-        using ConstPtr = std::shared_ptr<const Geometry>;
+    public:
+        Geometry(const Material * material);
 
-        Geometry(const Mesh::Ptr & mesh, size_t materialId = 0);
+        Geometry(Geometry && other);
 
-        Geometry(const Geometry & other) = default;
+        Geometry & operator=(Geometry && other);
 
-        Geometry(Geometry && other) = default;
+        Geometry(const Geometry &) = delete;
+        Geometry & operator=(const Geometry &) = delete;
 
-        Geometry & operator=(const Geometry & other) = default;
+        ~Geometry();
 
-        Geometry & operator=(Geometry && other) = default;
+        void draw(RenderState & state) const;
     };
 }

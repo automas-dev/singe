@@ -1,41 +1,35 @@
 #pragma once
 
 #include <glpp/Buffer.hpp>
-#include <memory>
+#include <glpp/extra/Buffer.hpp>
 #include <vector>
 
+#include "RenderState.hpp"
+
 namespace singe {
-    /**
-     * Derived class of VBO which keeps a CPU side copy of points.
-     */
-    struct Mesh {
-        glpp::TextureVertexBuffer buffer;
+    using std::vector;
+    using glpp::Buffer;
+    using glpp::BufferArray;
+    using glpp::extra::Vertex;
 
-        using Ptr = std::shared_ptr<Mesh>;
-        using ConstPtr = std::shared_ptr<const Mesh>;
+    class Mesh {
+        BufferArray array;
+        size_t n;
 
+    public:
         Mesh();
-        virtual ~Mesh();
 
-        /**
-         * Store points for future use.
-         *
-         * @param points the points to store
-         */
-        void loadFromPoints(const std::vector<glpp::Vertex> & points);
+        Mesh(Mesh && other);
 
-        /**
-         * Append points to this mesh.
-         *
-         * Note: this method does not call send().
-         *
-         * @param points the points to append
-         */
-        void appendPoints(const std::vector<glpp::Vertex> & points);
+        Mesh & operator=(Mesh && other);
 
-        /**
-         * Call draw on vbo.
-         */
-        virtual void draw(glpp::Buffer::Mode mode) const;
+        Mesh(const Mesh &) = delete;
+        Mesh & operator=(const Mesh &) = delete;
+
+        ~Mesh();
+
+        void bufferData(const vector<Vertex> & data, Buffer::Usage usage = Buffer::Static);
+
+        void draw(RenderState & state) const;
     };
 }
