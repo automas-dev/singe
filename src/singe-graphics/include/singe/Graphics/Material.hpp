@@ -2,9 +2,11 @@
 
 #include <glm/glm.hpp>
 #include <glpp/Texture.hpp>
+#include <memory>
 #include <string>
 
 namespace singe {
+    using std::shared_ptr;
     using std::string;
     using glm::vec3;
     using glpp::Texture;

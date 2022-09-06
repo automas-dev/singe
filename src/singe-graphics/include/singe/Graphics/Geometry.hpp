@@ -23,6 +23,8 @@ namespace singe {
 
         ~Geometry();
 
+        Mesh & getMesh();
+
         void draw(RenderState & state) const;
     };
 }

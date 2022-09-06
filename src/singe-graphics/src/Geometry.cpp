@@ -18,6 +18,10 @@ namespace singe {
 
     Geometry::~Geometry() {}
 
+    Mesh & Geometry::getMesh() {
+        return mesh;
+    }
+
     void Geometry::draw(RenderState & state) const {
         mesh.draw(state);
     }
