@@ -37,7 +37,7 @@ add_subdirectory(Wavefront EXCLUDE_FROM_ALL)
 add_subdirectory(assimp EXCLUDE_FROM_ALL)
 
 add_subdirectory(singe-support)
-add_subdirectory(singe-graphics)
+# add_subdirectory(singe-graphics)
 add_subdirectory(singe-core)
 
 set(TARGET singe)
