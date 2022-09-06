@@ -4,9 +4,11 @@
 // gl.h after glew.h, clang-format don't sort
 #include <GL/gl.h>
 
+#include <memory>
 #include <vector>
 
 namespace singe {
+    using std::move;
     using std::vector;
     using glpp::Attribute;
     using glpp::extra::Vertex;
@@ -18,6 +20,14 @@ namespace singe {
     };
 
     Mesh::Mesh() : array({attrs}), n(0) {}
+
+    Mesh::Mesh(Mesh && other) : array(move(other.array)), n(other.n) {}
+
+    Mesh & Mesh::operator=(Mesh && other) {
+        array = move(other.array);
+        n = other.n;
+        return *this;
+    }
 
     Mesh::~Mesh() {}
 

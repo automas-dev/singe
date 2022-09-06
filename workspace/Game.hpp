@@ -3,15 +3,16 @@
 #include <singe/Core/FPSDisplay.hpp>
 #include <singe/Core/GameBase.hpp>
 #include <singe/Core/Window.hpp>
-// #include <singe/Graphics/Grid.hpp>
+#include <singe/Graphics/Model.hpp>
 #include <singe/Support/log.hpp>
 using namespace singe;
 
+#include <memory>
 
 class Game : public GameBase {
     FPSDisplay fps;
-    // Grid::Ptr grid;
     Uniform mvp;
+    Model model;
 
 public:
     Game(Window & window);

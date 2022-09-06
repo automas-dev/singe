@@ -27,9 +27,7 @@ Game::Game(Window & window) : GameBase(window) {
 
     // TODO: load here
 
-    // auto * g = new Grid(10);
-
-    // grid = std::shared_ptr<Grid>(g);
+    model = Model::fromPath("../../workspace/res/model/cube.obj");
 
     mvp = defaultShader.uniform("mvp");
 
