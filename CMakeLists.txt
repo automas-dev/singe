@@ -90,7 +90,13 @@ FetchContent_Declare(
     GIT_TAG         0.1.0
 )
 
-FetchContent_MakeAvailable(rapidxml googletest DispatchQueue glpp Wavefront)
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY  https://github.com/assimp/assimp.git
+    GIT_TAG         v5.2.5
+)
+
+FetchContent_MakeAvailable(rapidxml googletest DispatchQueue glpp Wavefront assimp)
 
 add_subdirectory(src)
 

@@ -31,8 +31,6 @@ macro(library_component target)
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${target})
 endmacro()
 
-add_subdirectory(assimp EXCLUDE_FROM_ALL)
-
 add_subdirectory(singe-support)
 add_subdirectory(singe-graphics)
 add_subdirectory(singe-core)
