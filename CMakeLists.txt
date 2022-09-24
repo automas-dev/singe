@@ -75,7 +75,7 @@ FetchContent_Declare(
 FetchContent_Declare(
     DispatchQueue
     GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue.git
-    GIT_TAG         v0.1.4
+    GIT_TAG         0.2.2
 )
 
 FetchContent_Declare(
