@@ -1,13 +1,4 @@
 
-[submodule "googletest"]
-	path = googletest
-	url = https://github.com/google/googletest
-[submodule "src/glpp"]
-	path = src/glpp
-	url = https://github.com/twh2898/glpp.git
-[submodule "src/Wavefront"]
-	path = src/Wavefront
-	url = https://github.com/twh2898/wavefront.git
 [submodule "src/assimp"]
 	path = src/assimp
 	url = https://github.com/assimp/assimp.git

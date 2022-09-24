@@ -25,11 +25,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Support folders in IDEs
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-    add_subdirectory(googletest EXCLUDE_FROM_ALL)
     # Testing only available for top level projects. It calls enable_testing
     # which must be in the main CMakeLists.
     include(CTest)
-    include_directories(${googletest_SOURCE_DIR}/include ${googletest_SOURCE_DIR})
 
     # Generate documentation using Doxygen
     find_package(Doxygen)
@@ -60,27 +58,41 @@ find_package(spdlog REQUIRED CONFIG)
 find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIR})
 
-include(ExternalProject)
+include(FetchContent)
 
-ExternalProject_Add(
-    project_rapidxml
-    GIT_REPOSITORY  https://gitlab.com/twh2898/rapidxml
+FetchContent_Declare(
+    rapidxml
+    GIT_REPOSITORY  https://gitlab.com/twh2898/rapidxml.git
     GIT_TAG         1.13.0
-    UPDATE_COMMAND  ""
-    INSTALL_COMMAND ""
 )
 
-ExternalProject_Add(
-    DispatchQueue.git
-    GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue
-    GIT_TAG         v0.1.4
-    UPDATE_COMMAND  ""
-    INSTALL_COMMAND ""
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY  https://github.com/google/googletest
+    GIT_TAG         release-1.12.1
 )
+
+FetchContent_Declare(
+    DispatchQueue
+    GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue.git
+    GIT_TAG         v0.1.4
+)
+
+FetchContent_Declare(
+    glpp
+    GIT_REPOSITORY  https://github.com/twh2898/glpp.git
+    GIT_TAG         0.5.4
+)
+
+FetchContent_Declare(
+    Wavefront
+    GIT_REPOSITORY  https://github.com/twh2898/wavefront.git
+    GIT_TAG         0.1.0
+)
+
+FetchContent_MakeAvailable(rapidxml googletest DispatchQueue glpp Wavefront)
 
 add_subdirectory(src)
-
-add_subdirectory(workspace)
 
 # Create Targets file
 install(EXPORT ${PROJECT_NAME}Targets
@@ -103,3 +115,9 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+
+# Add examples and tests
+if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
+    add_subdirectory(workspace)
+    # add_subdirectory(tests)
+endif()
