@@ -16,5 +16,5 @@ PRIVATE
     Threads::Threads
     Core
     Graphics
-    rapidxml
+    # rapidxml
 )

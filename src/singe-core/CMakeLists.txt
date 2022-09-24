@@ -32,7 +32,7 @@ target_link_libraries(${TARGET}
     sfml-graphics
     glm
     fmt::fmt
-    DispatchQueue
+    # DispatchQueue
     )
 
 set_property(TARGET ${TARGET} PROPERTY POSITION_INDEPENDENT_CODE ON)

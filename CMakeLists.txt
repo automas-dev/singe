@@ -60,21 +60,23 @@ find_package(spdlog REQUIRED CONFIG)
 find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIR})
 
-include(FetchContent)
+include(ExternalProject)
 
-FetchContent_Declare(
-    rapidxml
-    GIT_REPOSITORY https://gitlab.com/twh2898/rapidxml
-    GIT_TAG        1.13.0
+ExternalProject_Add(
+    project_rapidxml
+    GIT_REPOSITORY  https://gitlab.com/twh2898/rapidxml
+    GIT_TAG         1.13.0
+    UPDATE_COMMAND  ""
+    INSTALL_COMMAND ""
 )
-FetchContent_MakeAvailable(rapidxml)
 
-FetchContent_Declare(
-    DispatchQueue
-    GIT_REPOSITORY https://github.com/twh2898/DispatchQueue
-    GIT_TAG        v0.1.4
+ExternalProject_Add(
+    DispatchQueue.git
+    GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue
+    GIT_TAG         v0.1.4
+    UPDATE_COMMAND  ""
+    INSTALL_COMMAND ""
 )
-FetchContent_MakeAvailable(DispatchQueue)
 
 add_subdirectory(src)
 
