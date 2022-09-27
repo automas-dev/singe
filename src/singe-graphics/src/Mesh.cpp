@@ -34,6 +34,7 @@ namespace singe {
     void Mesh::bufferData(const vector<Vertex> & data, Buffer::Usage usage) {
         array.bufferData(0, data.size() * sizeof(Vertex), data.data(), usage);
         n = data.size();
+        array.unbind();
     }
 
     void Mesh::draw(RenderState & state) const {

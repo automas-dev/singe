@@ -81,7 +81,7 @@ FetchContent_Declare(
 FetchContent_Declare(
     glpp
     GIT_REPOSITORY  https://github.com/twh2898/glpp.git
-    GIT_TAG         0.5.4
+    GIT_TAG         0.5.5
 )
 
 FetchContent_Declare(
@@ -90,13 +90,20 @@ FetchContent_Declare(
     GIT_TAG         0.1.0
 )
 
-FetchContent_Declare(
-    assimp
-    GIT_REPOSITORY  https://github.com/assimp/assimp.git
-    GIT_TAG         v5.2.5
-)
+# FetchContent_Declare(
+#     assimp
+#     GIT_REPOSITORY  https://github.com/assimp/assimp.git
+#     GIT_TAG         v5.2.5
+# )
 
-FetchContent_MakeAvailable(rapidxml googletest DispatchQueue glpp Wavefront assimp)
+FetchContent_MakeAvailable(
+    rapidxml
+    googletest
+    DispatchQueue
+    glpp
+    Wavefront
+    # assimp
+    )
 
 add_subdirectory(src)
 

@@ -27,7 +27,7 @@ Game::Game(Window & window) : GameBase(window) {
 
     // TODO: load here
 
-    // model = Model::fromPath("../../workspace/res/model/cube.obj");
+    model = Model::fromPath("../../workspace/res/model/cube.obj");
 
     mvp = defaultShader.uniform("mvp");
 
