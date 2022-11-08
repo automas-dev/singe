@@ -12,10 +12,10 @@ namespace singe {
 
     struct RenderState {
         mat4 transform;
-        Shader & shader;
-        Uniform mvp;
+        const Shader & shader;
+        const Uniform mvp;
 
-        RenderState(Shader & shader);
+        RenderState(const mat4 & transform, const Shader & shader);
 
         /**
          * Default copy constructor.

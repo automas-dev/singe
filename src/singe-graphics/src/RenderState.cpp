@@ -1,8 +1,8 @@
 #include "singe/Graphics/RenderState.hpp"
 
 namespace singe {
-    RenderState::RenderState(Shader & shader)
-        : shader(shader), mvp(shader.uniform("mvp")) {}
+    RenderState::RenderState(const mat4 & transform, const Shader & shader)
+        : transform(transform), shader(shader), mvp(shader.uniform("mvp")) {}
 
     RenderState::~RenderState() {}
 
