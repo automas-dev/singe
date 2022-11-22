@@ -13,6 +13,7 @@ class Game : public GameBase {
     FPSDisplay fps;
     Uniform mvp;
     Model model;
+    Shader shader;
 
 public:
     Game(Window & window);
