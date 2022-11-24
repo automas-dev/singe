@@ -54,7 +54,7 @@ namespace singe {
     }
 
     void Window::setMousePosition(const glm::ivec2 & pos) {
-        sf::Mouse::setPosition({pos.x, pos.y});
+        sf::Mouse::setPosition({pos.x, pos.y}, window);
     }
 
     bool Window::isOpen() const {
