@@ -21,16 +21,19 @@ void main() {
     FragColor = vec4(color, 1.0);
 })";
 
-Game::Game(Window & window) : GameBase(window), shader(Shader::defaultShader()) {
+Game::Game(Window & window)
+    : GameBase(window),
+      shader(vertexShaderSource, fragmentShaderSource),
+      mvp(shader.uniform("mvp")),
+      gridShader(Grid::shader()),
+      grid(10, {1, 1, 1}, true) {
+
     camera.setPosition({5, 2, 5});
     camera.setFov(70);
 
     // TODO: load here
 
     model = Model::fromPath("../../workspace/res/model/cube.obj");
-
-    shader = Shader(vertexShaderSource, fragmentShaderSource);
-    mvp = shader.uniform("mvp");
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
@@ -47,8 +50,9 @@ void Game::onUpdate(const sf::Time & delta) {
 
 inline void setupGl() {
     glClearColor(0.25, 0.25, 0.25, 1.0);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glDisable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -56,15 +60,8 @@ inline void setupGl() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-inline void setupGl2() {
-    glClearColor(0.25, 0.25, 0.25, 1.0);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
-}
-
 void Game::onDraw() const {
-    setupGl2();
+    setupGl();
 
     glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
     shader.bind();
@@ -72,5 +69,11 @@ void Game::onDraw() const {
 
     RenderState state(vp, shader);
     model.draw(state);
+
+    gridShader.bind();
+    Uniform gridMvp = gridShader.uniform("mvp");
+    gridMvp.setMat4(vp);
+    grid.draw();
+
     glpp::BufferArray::unbind();
 }

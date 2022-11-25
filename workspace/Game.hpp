@@ -7,13 +7,17 @@
 #include <singe/Support/log.hpp>
 using namespace singe;
 
+#include <glpp/extra/Grid.hpp>
+using glpp::extra::Grid;
+
 #include <memory>
 
 class Game : public GameBase {
     FPSDisplay fps;
     Uniform mvp;
     Model model;
-    Shader shader;
+    Shader shader, gridShader;
+    Grid grid;
 
 public:
     Game(Window & window);
