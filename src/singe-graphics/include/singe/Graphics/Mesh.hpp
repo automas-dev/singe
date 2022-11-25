@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glpp/Buffer.hpp>
-#include <glpp/extra/Buffer.hpp>
+#include <glpp/extra/Vertex.hpp>
 #include <vector>
 
 #include "RenderState.hpp"
