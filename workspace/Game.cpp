@@ -23,15 +23,16 @@ void main() {
 
 Game::Game(Window & window)
     : GameBase(window),
-      shader(vertexShaderSource, fragmentShaderSource),
-      mvp(shader.uniform("mvp")),
+      shader(Shader::defaultShader()),
       gridShader(Grid::shader()),
       grid(10, {1, 1, 1}, true) {
 
     camera.setPosition({5, 2, 5});
-    camera.setFov(70);
+    camera.setRotation({0.2, -0.75, 0});
 
     // TODO: load here
+
+    mvp = shader.uniform("mvp");
 
     model = Model::fromPath("../../workspace/res/model/cube.obj");
 
