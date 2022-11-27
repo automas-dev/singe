@@ -13,13 +13,7 @@ namespace singe {
     using glpp::Attribute;
     using glpp::extra::Vertex;
 
-    static const vector<Attribute> attrs {
-        {0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0},
-        {1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(3 * sizeof(float))},
-        {2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)(6 * sizeof(float))},
-    };
-
-    Mesh::Mesh() : array({attrs}), n(0) {}
+    Mesh::Mesh() : array(), n(0) {}
 
     Mesh::Mesh(Mesh && other) : array(move(other.array)), n(other.n) {}
 
@@ -32,7 +26,7 @@ namespace singe {
     Mesh::~Mesh() {}
 
     void Mesh::bufferData(const vector<Vertex> & data, Buffer::Usage usage) {
-        array.bufferData(0, data.size() * sizeof(Vertex), data.data(), usage);
+        array.bufferData(data, usage);
         n = data.size();
         array.unbind();
     }

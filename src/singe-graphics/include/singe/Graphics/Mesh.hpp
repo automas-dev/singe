@@ -9,11 +9,11 @@
 namespace singe {
     using std::vector;
     using glpp::Buffer;
-    using glpp::BufferArray;
     using glpp::extra::Vertex;
+    using glpp::extra::VertexBufferArray;
 
     class Mesh {
-        BufferArray array;
+        VertexBufferArray array;
         size_t n;
 
     public:
