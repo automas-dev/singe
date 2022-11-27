@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://www.w3schools.com"
+    xmlns="https://www.w3schools.com"
+    elementFormDefault="qualified">
+
+    <xs:simpleType name="color">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]+(\.[0-9]+)? [0-9]+(\.[0-9]+)? [0-9]+(\.[0-9]+)?( [0-9]+(\.[0-9]+)?)?"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="pose">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9]+(\.[0-9]+)? ){5}[0-9]+(\.[0-9]+)?"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="positiveFloat">
+        <xs:restriction base="xs:float">
+            <xs:minInclusive value="0" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="material">
+        <xs:sequence>
+            <xs:element name="type" type="xs:string" />
+            <xs:element name="color" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="grid">
+        <xs:sequence>
+            <xs:element name="n" type="xs:positiveInteger" />
+            <xs:element name="color" type="color" />
+            <xs:element name="pose" type="pose" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="environment">
+        <xs:sequence>
+            <xs:element name="material" type="material" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="projection">
+        <xs:sequence>
+            <xs:element name="mode" type="xs:string" />
+            <xs:element name="fov" type="positiveFloat" />
+            <xs:element name="znear" type="positiveFloat" />
+            <xs:element name="zfar" type="positiveFloat" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="camera">
+        <xs:sequence>
+            <xs:element name="pose" type="pose" />
+            <xs:element name="control" type="xs:string" />
+            <xs:element name="active" type="xs:boolean" />
+            <xs:element name="projection" type="projection" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" />
+    </xs:complexType>
+
+    <xs:element name="scene">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="grid" type="grid" />
+                <xs:element name="environment" type="environment" />
+                <xs:element name="camera" type="camera" />
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
