@@ -4,6 +4,7 @@
 #include <singe/Core/GameBase.hpp>
 #include <singe/Core/Window.hpp>
 #include <singe/Graphics/Model.hpp>
+#include <singe/Graphics/Scene.hpp>
 #include <singe/Support/log.hpp>
 using namespace singe;
 
@@ -18,6 +19,7 @@ class Game : public GameBase {
     Model model;
     Shader shader, gridShader;
     Grid grid;
+    Scene scene;
 
 public:
     Game(Window & window);
