@@ -23,6 +23,13 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="projectionMode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="perspective" />
+            <xs:enumeration value="orthographic" />
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:complexType name="material">
         <xs:sequence>
             <xs:element name="type" type="xs:string" />
@@ -47,7 +54,7 @@
 
     <xs:complexType name="projection">
         <xs:sequence>
-            <xs:element name="mode" type="xs:string" />
+            <xs:element name="mode" type="projectionMode" />
             <xs:element name="fov" type="positiveFloat" />
             <xs:element name="znear" type="positiveFloat" />
             <xs:element name="zfar" type="positiveFloat" />
