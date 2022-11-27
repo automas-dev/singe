@@ -23,6 +23,8 @@ namespace singe {
     }
 
     void Geometry::draw(RenderState & state) const {
+        if (material)
+            material->texture->bind();
         mesh.draw(state);
     }
 }
