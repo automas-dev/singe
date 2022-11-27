@@ -8,26 +8,26 @@ namespace singe {
     Material::Material() {}
 
     Material::Material(Material && other)
-        : name(std::move(other.name)),
-          ambient(std::move(other.ambient)),
-          diffuse(std::move(other.diffuse)),
-          specular(std::move(other.specular)),
+        : name(move(other.name)),
+          ambient(move(other.ambient)),
+          diffuse(move(other.diffuse)),
+          specular(move(other.specular)),
           specExp(other.specExp),
           alpha(other.alpha),
-          texture(std::move(other.texture)),
-          normalTexture(std::move(other.normalTexture)),
-          specularTexture(std::move(other.specularTexture)) {}
+          texture(move(other.texture)),
+          normalTexture(move(other.normalTexture)),
+          specularTexture(move(other.specularTexture)) {}
 
     Material & Material::operator=(Material && other) {
-        name = std::move(other.name);
-        ambient = std::move(other.ambient);
-        diffuse = std::move(other.diffuse);
-        specular = std::move(other.specular);
+        name = move(other.name);
+        ambient = move(other.ambient);
+        diffuse = move(other.diffuse);
+        specular = move(other.specular);
         specExp = other.specExp;
         alpha = other.alpha;
-        texture = std::move(other.texture);
-        normalTexture = std::move(other.normalTexture);
-        specularTexture = std::move(other.specularTexture);
+        texture = move(other.texture);
+        normalTexture = move(other.normalTexture);
+        specularTexture = move(other.specularTexture);
         return *this;
     }
 
