@@ -11,12 +11,11 @@ namespace singe {
     using std::string;
     using std::vector;
 
-    class Model {
+    struct Model {
         vector<Material> materials;
         vector<Geometry> geometry;
         Transform transform;
 
-    public:
         Model();
 
         Model(Model && other);

@@ -12,12 +12,11 @@ namespace singe {
     using std::vector;
     using glpp::extra::Transform;
 
-    class Scene {
+    struct Scene {
         vector<shared_ptr<Scene>> children;
         vector<shared_ptr<Model>> models;
         Transform transform;
 
-    public:
         Scene();
 
         Scene(Scene && other);

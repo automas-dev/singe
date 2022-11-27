@@ -12,11 +12,10 @@ namespace singe {
     using glpp::extra::Vertex;
     using glpp::extra::VertexBufferArray;
 
-    class Mesh {
+    struct Mesh {
         VertexBufferArray array;
         size_t n;
 
-    public:
         Mesh();
 
         Mesh(Mesh && other);
@@ -28,7 +27,8 @@ namespace singe {
 
         ~Mesh();
 
-        void bufferData(const vector<Vertex> & data, Buffer::Usage usage = Buffer::Static);
+        void bufferData(const vector<Vertex> & data,
+                        Buffer::Usage usage = Buffer::Static);
 
         void draw(RenderState & state) const;
     };

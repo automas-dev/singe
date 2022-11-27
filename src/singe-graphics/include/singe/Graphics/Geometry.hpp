@@ -7,11 +7,10 @@
 #include "RenderState.hpp"
 
 namespace singe {
-    class Geometry {
+    struct Geometry {
         Mesh mesh;
         const Material * material;
 
-    public:
         Geometry(const Material * material);
 
         Geometry(Geometry && other);
