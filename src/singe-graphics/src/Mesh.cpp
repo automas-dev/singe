@@ -32,6 +32,6 @@ namespace singe {
     }
 
     void Mesh::draw(RenderState & state) const {
-        array.drawArrays(Buffer::Triangles, n, 0);
+        array.drawArrays(Buffer::Triangles, 0, n);
     }
 }
