@@ -19,7 +19,7 @@
 
     <xs:simpleType name="positiveFloat">
         <xs:restriction base="xs:float">
-            <xs:minInclusive value="0" />
+            <xs:minExclusive value="0" />
         </xs:restriction>
     </xs:simpleType>
 
