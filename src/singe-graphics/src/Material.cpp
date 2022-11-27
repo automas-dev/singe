@@ -32,4 +32,21 @@ namespace singe {
     }
 
     Material::~Material() {}
+
+    void Material::bind() const {
+        if (texture) {
+            glActiveTexture(GL_TEXTURE0);
+            texture->bind();
+        }
+
+        if (normalTexture) {
+            glActiveTexture(GL_TEXTURE1);
+            normalTexture->bind();
+        }
+
+        if (specularTexture) {
+            glActiveTexture(GL_TEXTURE2);
+            specularTexture->bind();
+        }
+    }
 }

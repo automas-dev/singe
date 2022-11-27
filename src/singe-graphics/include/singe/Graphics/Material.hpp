@@ -30,5 +30,7 @@ namespace singe {
         Material & operator=(const Material &) = delete;
 
         ~Material();
+
+        void bind() const;
     };
 }
