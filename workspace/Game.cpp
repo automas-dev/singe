@@ -25,7 +25,7 @@ Game::Game(Window & window)
     : GameBase(window),
       shader(Shader::defaultShader()),
       gridShader(Grid::shader()),
-      grid(10, {1, 1, 1}, true) {
+      grid(10, {1, 1, 1, 1}, true) {
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
