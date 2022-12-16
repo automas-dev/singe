@@ -3,7 +3,7 @@ include(FetchContent)
 FetchContent_Declare(
     glpp
     GIT_REPOSITORY  https://github.com/twh2898/glpp.git
-    GIT_TAG         0.6.4
+    GIT_TAG         0.6.8
 )
 
 set(GLPP_BUILD_DOCS OFF CACHE BOOL "" FORCE)
