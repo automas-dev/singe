@@ -12,11 +12,11 @@ include(FetchContent)
 #     GIT_TAG         release-1.12.1
 # )
 
-FetchContent_Declare(
-    DispatchQueue
-    GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue.git
-    GIT_TAG         0.2.2
-)
+# FetchContent_Declare(
+#     DispatchQueue
+#     GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue.git
+#     GIT_TAG         0.2.2
+# )
 
 FetchContent_Declare(
     glpp
@@ -39,7 +39,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(
     # rapidxml
     # googletest
-    DispatchQueue
+    # DispatchQueue
     glpp
     Wavefront
     # assimp
