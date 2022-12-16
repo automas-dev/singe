@@ -6,11 +6,11 @@ include(FetchContent)
 #     GIT_TAG         1.13.0
 # )
 
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY  https://github.com/google/googletest
-    GIT_TAG         release-1.12.1
-)
+# FetchContent_Declare(
+#     googletest
+#     GIT_REPOSITORY  https://github.com/google/googletest
+#     GIT_TAG         release-1.12.1
+# )
 
 FetchContent_Declare(
     DispatchQueue
@@ -38,7 +38,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(
     # rapidxml
-    googletest
+    # googletest
     DispatchQueue
     glpp
     Wavefront
