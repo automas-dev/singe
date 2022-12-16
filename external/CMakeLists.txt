@@ -1,4 +1,7 @@
-include(FetchContent)
+include(${CMAKE_CURRENT_LIST_DIR}/Wavefront.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/glpp.cmake)
+
+# include(FetchContent)
 
 # FetchContent_Declare(
 #     rapidxml
@@ -18,29 +21,15 @@ include(FetchContent)
 #     GIT_TAG         0.2.2
 # )
 
-FetchContent_Declare(
-    glpp
-    GIT_REPOSITORY  https://github.com/twh2898/glpp.git
-    GIT_TAG         0.6.4
-)
-
-FetchContent_Declare(
-    Wavefront
-    GIT_REPOSITORY  https://github.com/twh2898/wavefront.git
-    GIT_TAG         0.1.0
-)
-
 # FetchContent_Declare(
 #     assimp
 #     GIT_REPOSITORY  https://github.com/assimp/assimp.git
 #     GIT_TAG         v5.2.5
 # )
 
-FetchContent_MakeAvailable(
-    # rapidxml
-    # googletest
-    # DispatchQueue
-    glpp
-    Wavefront
-    # assimp
-    )
+# FetchContent_MakeAvailable(
+#     rapidxml
+#     googletest
+#     DispatchQueue
+#     assimp
+#     )
