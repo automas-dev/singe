@@ -60,7 +60,7 @@ namespace singe {
         sf::Font uiFont;
 
         /// Pointer to a shader that is bound before the call to onDraw().
-        Shader defaultShader;
+        Shader & defaultShader;
 
     public:
         /**

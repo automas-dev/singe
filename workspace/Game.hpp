@@ -17,7 +17,8 @@ class Game : public GameBase {
     FPSDisplay fps;
     Uniform mvp;
     Model model;
-    Shader shader, gridShader;
+    Shader & shader;
+    Shader & gridShader;
     Grid grid;
     Scene scene;
 
