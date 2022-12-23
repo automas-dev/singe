@@ -34,7 +34,7 @@ Game::Game(Window & window)
 
     mvp = shader.uniform("mvp");
 
-    model = Model::fromPath("../../workspace/res/model/cube.obj");
+    model = Model::fromPath("../../examples/res/model/cube.obj");
     model.transform.move({0, 0, 3});
 
     scene.models.push_back(&model);
