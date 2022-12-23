@@ -6,7 +6,8 @@
 namespace fs = std::filesystem;
 
 namespace singe {
-    using std::make_shared;
+    using std::make_unique;
+    using std::move;
 
     ResourceManager::ResourceManager(const path & root) : root(root) {}
 
@@ -35,59 +36,67 @@ namespace singe {
             return root / subPath;
     }
 
-    shared_ptr<Texture> ResourceManager::getTexture(const string & name) {
+    Texture & ResourceManager::getTexture(const string & name) {
         static path subPath("img");
 
         if (textures.find(name) == textures.end()) {
             path fullPath = resourceAt(subPath / name);
-            auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
-            textures[name] = texture;
-            return texture;
+            auto texture = make_unique<Texture>(Texture::fromPath(fullPath));
+            textures[name] = move(texture);
         }
-        else
-            return textures[name];
+
+        return *textures[name];
     }
 
-    shared_ptr<Shader> ResourceManager::getShader(const string & name) {
+    Texture * ResourceManager::getTexturePtr(const string & name) {
+        return textures[name].get();
+    }
+
+    Shader & ResourceManager::getShader(const string & name) {
         static path subPath("shader");
 
         if (shaders.find(name) == shaders.end()) {
             path fullVertexPath = resourceAt(subPath / (name + ".vert"));
             path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
-            auto shader = make_shared<Shader>(
+            auto shader = make_unique<Shader>(
                 Shader::fromPaths(fullVertexPath, fullFragmentPath));
-            shaders[name] = shader;
-            return shader;
+            shaders[name] = move(shader);
         }
-        else
-            return shaders[name];
+
+        return *shaders[name];
     }
 
-    shared_ptr<Shader> ResourceManager::getShaderFragmentOnly(const string & name) {
+    Shader * ResourceManager::getShaderPtr(const string & name) {
+        return shaders[name].get();
+    }
+
+    Shader & ResourceManager::getShaderFragmentOnly(const string & name) {
         static path subpath("shader");
 
         if (shaders.find(name) == shaders.end()) {
             path fullFragmentPath = resourceAt(subpath / (name + ".frag"));
             auto shader =
-                make_shared<Shader>(Shader::fromFragmentPath(fullFragmentPath));
-            shaders[name] = shader;
-            return shader;
+                make_unique<Shader>(Shader::fromFragmentPath(fullFragmentPath));
+            shaders[name] = move(shader);
         }
-        else
-            return shaders[name];
+
+        return *shaders[name];
     }
 
-    shared_ptr<Model> ResourceManager::getModel(const string & name) {
+    Model & ResourceManager::getModel(const string & name) {
         static path subPath("model");
 
         if (models.find(name) == models.end()) {
             path fullPath = resourceAt(subPath / name);
-            auto model = make_shared<Model>(Model::fromPath(fullPath));
-            models[name] = model;
-            return model;
+            auto model = make_unique<Model>(Model::fromPath(fullPath));
+            models[name] = move(model);
         }
-        else
-            return models[name];
+
+        return *models[name];
+    }
+
+    Model * ResourceManager::getModelPtr(const string & name) {
+        return models[name].get();
     }
 
     // shared_ptr<Scene> ResourceManager::getScene(const string & name) {

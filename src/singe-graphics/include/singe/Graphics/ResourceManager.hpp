@@ -15,7 +15,7 @@ namespace singe {
     using std::string;
     using std::map;
     using std::vector;
-    using std::shared_ptr;
+    using std::unique_ptr;
     using std::weak_ptr;
     using std::filesystem::path;
     using glpp::Shader;
@@ -23,10 +23,10 @@ namespace singe {
 
     class ResourceManager {
         path root;
-        map<string, shared_ptr<Texture>> textures;
-        map<string, shared_ptr<Shader>> shaders;
-        map<string, shared_ptr<Model>> models;
-        map<string, shared_ptr<Scene>> scenes;
+        map<string, unique_ptr<Texture>> textures;
+        map<string, unique_ptr<Shader>> shaders;
+        map<string, unique_ptr<Model>> models;
+        map<string, unique_ptr<Scene>> scenes;
 
     public:
         ResourceManager(const path & root);
@@ -46,13 +46,19 @@ namespace singe {
 
         path resourceAt(const path & subPath) const;
 
-        shared_ptr<Texture> getTexture(const string & name);
+        Texture & getTexture(const string & name);
 
-        shared_ptr<Shader> getShader(const string & name);
+        [[deprecated]] Texture * getTexturePtr(const string & name);
 
-        shared_ptr<Shader> getShaderFragmentOnly(const string & name);
+        Shader & getShader(const string & name);
 
-        shared_ptr<Model> getModel(const string & name);
+        [[deprecated]] Shader * getShaderPtr(const string & name);
+
+        Shader & getShaderFragmentOnly(const string & name);
+
+        Model & getModel(const string & name);
+
+        [[deprecated]] Model * getModelPtr(const string & name);
 
         // shared_ptr<Scene> getScene(const string & name);
     };
