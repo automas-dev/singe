@@ -34,10 +34,10 @@ Game::Game(Window & window)
 
     mvp = shader.uniform("mvp");
 
-    model = Model::fromPath("../../../examples/res/model/cube.obj");
+    auto model = Model::fromPath("../../../examples/res/model/cube.obj");
     model.transform.move({0, 0, 3});
 
-    scene.models.push_back(&model);
+    scene.models.emplace_back(std::move(model));
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
@@ -52,7 +52,7 @@ void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
     // TODO: update here
     scene.transform.rotateEuler({0, s * 0.5, 0});
-    model.transform.rotateEuler({0, -s, 0});
+    scene.models[0].transform.rotateEuler({0, -s, 0});
 }
 
 inline void setupGl() {
