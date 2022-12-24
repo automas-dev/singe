@@ -16,7 +16,6 @@ using glpp::extra::Grid;
 class Game : public GameBase {
     FPSDisplay fps;
     Uniform mvp;
-    Model model;
     Shader & shader;
     Shader & gridShader;
     Grid grid;
