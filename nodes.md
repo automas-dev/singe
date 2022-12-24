@@ -38,3 +38,29 @@ sending to gpu.
   - Reflections?
 - When to send mesh to gpu?
   - Call Mesh::send()?
+
+## Resource Ownership
+
+ResourceManager can own assets for simple programs, but more complex games will
+require loading duplicate resources as unique instances.
+
+The executable / game should be responsible for owning resources.
+ResourceManager can assist in loading these resources, but should not hold any
+of them. The only exception can be shaders and possibly textures which hold no
+unique state within the instance.
+
+Scenes may need to own their resources, but then again, resources may need to
+be shared between them. If models are loaded as unique instances, a model can 
+have an instance for each scene.
+
+Models hold a mesh via Geometry and some Materials. A Mesh does not hold any
+state, and could be shared. Geometry holds a single mesh with some number of
+Materials. Materials and Geometry are loaded with the model and should be a
+unique instance for that model.
+
+I don't want to have to own the model of a Scene. Each model should be a
+unique instance because of it's transform.
+
+### Future
+
+Geometry or Mesh could hold the buffer in memory for reference or modification.

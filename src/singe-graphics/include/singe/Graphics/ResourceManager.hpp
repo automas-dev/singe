@@ -25,8 +25,6 @@ namespace singe {
         path root;
         map<string, unique_ptr<Texture>> textures;
         map<string, unique_ptr<Shader>> shaders;
-        map<string, unique_ptr<Model>> models;
-        map<string, unique_ptr<Scene>> scenes;
 
     public:
         ResourceManager(const path & root);
@@ -56,9 +54,7 @@ namespace singe {
 
         Shader & getShaderFragmentOnly(const string & name);
 
-        Model & getModel(const string & name);
-
-        [[deprecated]] Model * getModelPtr(const string & name);
+        Model loadModel(const string & name);
 
         // shared_ptr<Scene> getScene(const string & name);
     };

@@ -83,20 +83,11 @@ namespace singe {
         return *shaders[name];
     }
 
-    Model & ResourceManager::getModel(const string & name) {
+    Model ResourceManager::loadModel(const string & name) {
         static path subPath("model");
 
-        if (models.find(name) == models.end()) {
-            path fullPath = resourceAt(subPath / name);
-            auto model = make_unique<Model>(Model::fromPath(fullPath));
-            models[name] = move(model);
-        }
-
-        return *models[name];
-    }
-
-    Model * ResourceManager::getModelPtr(const string & name) {
-        return models[name].get();
+        path fullPath = resourceAt(subPath / name);
+        return Model::fromPath(fullPath);
     }
 
     // shared_ptr<Scene> ResourceManager::getScene(const string & name) {

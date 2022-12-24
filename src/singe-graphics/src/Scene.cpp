@@ -23,7 +23,7 @@ namespace singe {
 
     void Scene::draw(RenderState state) const {
         state.pushTransform(transform);
-        for (auto & model : models) model->draw(state);
-        for (auto & child : children) child->draw(state);
+        for (auto & model : models) model.draw(state);
+        for (auto & child : children) child.draw(state);
     }
 }
