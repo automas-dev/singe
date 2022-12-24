@@ -1,5 +1,5 @@
 
-set(TARGET demo)
+set(TARGET scene)
 add_executable(${TARGET}
     main.cpp
     Game.hpp
