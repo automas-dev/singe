@@ -8,7 +8,7 @@ int main() {
     spdlog::set_level(spdlog::level::trace);
 
     try {
-        Window window("Demo");
+        Window window("Scene");
 
         glpp::extra::initDebug();
 
