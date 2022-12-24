@@ -25,11 +25,21 @@ class Game : public GameBase {
     Grid grid;
     Scene scene;
     Scene * otherScene;
+    bool showGrid;
+
+    enum DisplayMode {
+        Point = GL_POINT,
+        Line = GL_LINE,
+        Fill = GL_FILL
+    };
+
+    DisplayMode wireframe;
 
 public:
     Game(Window & window);
     virtual ~Game();
 
+    void onKeyPressed(const sf::Event::KeyEvent & event) override;
     void onUpdate(const sf::Time & delta) override;
     void onDraw(void) const override;
 };
