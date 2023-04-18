@@ -58,7 +58,7 @@ namespace singe::Logging {
         template<typename FormatString>
         Logger(const FormatString & subsystem)
             : Logger(subsystem,
-#ifdef DEBUG
+#ifndef NDEBUG
                      Debug
 #else
                      Info
