@@ -9,8 +9,9 @@ namespace singe {
 
     Geometry::Geometry(const shared_ptr<Mesh> & mesh)
         : mesh(mesh), array(), n(0) {
+
         if (mesh)
-            n = mesh->size();
+            update();
     }
 
     Geometry::Geometry(Geometry && other)
