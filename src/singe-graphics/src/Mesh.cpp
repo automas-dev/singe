@@ -5,22 +5,29 @@
 namespace singe {
     using std::move;
 
-    Mesh::Mesh() : points(), array() {}
+    Mesh::Mesh() : material(nullptr) {}
 
-    Mesh::Mesh(const vector<Vertex> & points) : points(points), array() {
+    Mesh::Mesh(const vector<Vertex> & points)
+        : points(points), material(nullptr) {
         update();
     }
 
-    Mesh::Mesh(vector<Vertex> && points) : points(move(points)), array() {
+    Mesh::Mesh(vector<Vertex> && points)
+        : points(move(points)), material(nullptr) {
         update();
     }
 
     Mesh::Mesh(Mesh && other)
-        : points(move(other.points)), array(move(other.array)) {}
+        : points(move(other.points)),
+          array(move(other.array)),
+          material(other.material),
+          transform(other.transform) {}
 
     Mesh & Mesh::operator=(Mesh && other) {
         points = move(other.points);
         array = move(other.array);
+        material = other.material;
+        transform = other.transform;
         return *this;
     }
 
