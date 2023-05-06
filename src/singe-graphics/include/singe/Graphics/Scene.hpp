@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "Model.hpp"
+#include "Mesh.hpp"
 #include "RenderState.hpp"
 
 namespace singe {
