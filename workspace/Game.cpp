@@ -6,8 +6,8 @@ Game::Game(Window & window)
     : GameBase(window),
       res("../../examples/res"),
       shader(res.getShader("default")),
-      gridShader(res.getShader("grid"))
-    //   grid(10, {1, 1, 1, 1}, true) 
+      gridShader(res.getShader("grid")),
+      grid(10, {1, 1, 1, 1}, true) 
     {
 
     camera.setPosition({5, 2, 5});

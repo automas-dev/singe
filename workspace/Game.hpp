@@ -20,7 +20,7 @@ class Game : public GameBase {
     FPSDisplay fps;
     std::shared_ptr<singe::Shader> shader;
     std::shared_ptr<singe::Shader> gridShader;
-    // Grid grid;
+    Grid grid;
     Scene scene;
 
 public:
