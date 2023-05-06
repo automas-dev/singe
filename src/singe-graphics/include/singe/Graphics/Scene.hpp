@@ -13,8 +13,8 @@ namespace singe {
     using glpp::extra::Transform;
 
     struct Scene {
-        vector<Scene> children;
-        vector<Model> models;
+        vector<shared_ptr<Scene>> children;
+        vector<shared_ptr<Mesh>> models;
         Transform transform;
 
         Scene();
