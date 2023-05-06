@@ -32,6 +32,12 @@ namespace singe {
     }
 
     void Mesh::draw(RenderState & state) const {
+        state.pushTransform(transform);
+        if (material) {
+            material->bind();
+            if (material->shader)
+                material->shader->mvp().setMat4(state.transform);
+        }
         array.drawArrays(Buffer::Triangles, 0, points.size());
     }
 }
