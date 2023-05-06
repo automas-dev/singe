@@ -1,13 +1,10 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glpp/Shader.hpp>
 #include <glpp/extra/Transform.hpp>
 
 namespace singe {
     using glm::mat4;
-    using glpp::Uniform;
-    using glpp::Shader;
     using glpp::extra::Transform;
 
     /**
@@ -16,19 +13,24 @@ namespace singe {
      */
     struct RenderState {
         mat4 transform;
-        const Shader & shader;
-        const Uniform mvp;
 
         /**
-         * Create a RenderState with initial transform and shader. The shader
-         * will be used to get the mvp uniform.
+         * Create a RenderState with initial transform.
          */
-        RenderState(const mat4 & transform, const Shader & shader);
+        RenderState(const mat4 & transform);
 
         ~RenderState();
 
+        /**
+         *  Multiply this matrix with the matrix of another Transform.
+         */
         void pushTransform(const Transform & transform);
 
+        /**
+         * Multiply this matrix with another matrix.
+         *
+         * @param matrix the matrix used to multiply transform
+         */
         void pushTransform(const mat4 & matrix);
     };
 }
