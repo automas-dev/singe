@@ -18,6 +18,27 @@
       - [x] Alpha
       - [x] Specular Exponent
 
+**Re-structure**
+
+- [Scene](src/singe-graphics/include/singe/Graphics/Scene.hpp)
+  - vector<shared_ptr<[Scene](src/singe-graphics/include/singe/Graphics/Scene.hpp)>>
+  - vector<shared_ptr<[Mesh](src/singe-graphics/include/singe/Graphics/Mesh.hpp)>>
+  - glpp::Transform
+- [Mesh](src/singe-graphics/include/singe/Graphics/Mesh.hpp)
+  - VertexArrayBuffer
+  - vector<Vertex>
+  - shared_ptr<[Material](src/singe-graphics/include/singe/Graphics/Material.hpp)>
+  - glpp::Transform
+- [Material](src/singe-graphics/include/singe/Graphics/Material.hpp)
+  - shared_ptr<[Shader](src/singe-graphics/include/singe/Graphics/Shader.hpp)>
+  - shared_ptr<glpp::Texture>
+  - ...
+- [Shader](src/singe-graphics/include/singe/Graphics/Shader.hpp)
+  - glm::Shader
+  - glm::Uniform
+- [RenderState](src/singe-graphics/include/singe/Graphics/RenderState.hpp)
+  - glm::mat4
+
 ## Model Loading
 
 Models are loaded into the main structs, they should be **loaded into a temp
@@ -63,13 +84,18 @@ instance because of it's transform.
 
 ### Future
 
-Geometry or Mesh could hold the buffer in memory for reference or modification.
+☑️ Mesh could hold the buffer in memory for reference or modification.
 
-# Local Geometry
+# ☑️ Local Mesh
 
-Goal: store geometry / mesh locally for modification.
+Goal: store mesh locally for modification.
 
 Idea
 
-- Geometry has optional pointer to a Source mesh that can be modified and used
-  to update the vba
+- Mesh has source mesh that can be modified and used to update the vba
+
+## Looking at Godot
+
+- Mesh contains Material and Vertices
+  - Could switch Mesh and Geometry back
+  - Keep VertexArrayBuffer
