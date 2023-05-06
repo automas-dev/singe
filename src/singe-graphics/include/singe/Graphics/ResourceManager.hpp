@@ -1,7 +1,6 @@
 #pragma once
 
 #include <filesystem>
-#include <glpp/Shader.hpp>
 #include <glpp/Texture.hpp>
 #include <map>
 #include <memory>
@@ -9,24 +8,32 @@
 #include <vector>
 
 #include "Material.hpp"
+#include "Mesh.hpp"
 #include "Scene.hpp"
+#include "Shader.hpp"
 
 namespace singe {
     using std::string;
     using std::map;
     using std::vector;
-    using std::unique_ptr;
-    using std::weak_ptr;
+    using std::shared_ptr;
     using std::filesystem::path;
-    using glpp::Shader;
     using glpp::Texture;
 
+    /**
+     * Manage path resolution, resource loading and resource caching for re-use.
+     */
     class ResourceManager {
         path root;
-        map<string, unique_ptr<Texture>> textures;
-        map<string, unique_ptr<Shader>> shaders;
+        map<string, shared_ptr<Texture>> textures;
+        map<string, shared_ptr<Shader>> shaders;
 
     public:
+        /**
+         * Create a ResourceManager with all resources located at root.
+         *
+         * @param root the resource directory
+         */
         ResourceManager(const path & root);
 
         ResourceManager(ResourceManager && other);
@@ -38,23 +45,73 @@ namespace singe {
 
         ~ResourceManager();
 
+        /**
+         * Update the path to the resource directory
+         *
+         * @param root the new resource directory
+         */
         void setRoot(const path & root);
 
+        /**
+         * Get the path to the current resource directory.
+         *
+         * @return the current resource directory
+         */
         const path & getRoot() const;
 
+        /**
+         * Resolve a relative path to an absolute path.
+         *
+         * @param subPath relative path to the resource
+         *
+         * @return the absolute path to the resource
+         */
         path resourceAt(const path & subPath) const;
 
-        Texture & getTexture(const string & name);
+        /**
+         * Load a glpp::Texture or return the cached texture if it exists.
+         *
+         * The sub path for images is /img
+         *
+         * @param name the texture name
+         *
+         * @return shared_ptr to the glpp::Texture
+         */
+        shared_ptr<Texture> & getTexture(const string & name);
 
-        [[deprecated]] Texture * getTexturePtr(const string & name);
+        /**
+         * Load a Shader or return the cached shader if it exists.
+         *
+         * The sub path for shaders is /shader
+         *
+         * @param name the shader name
+         *
+         * @return shared_ptr to the Shader
+         */
+        shared_ptr<Shader> & getShader(const string & name);
 
-        Shader & getShader(const string & name);
+        /**
+         * Load a Shader from fragment source only or return the cached shader
+         * if it exists.
+         *
+         * The sub path for shaders is /shader
+         *
+         * @param name the shader name
+         *
+         * @return shared_ptr to the Shader
+         */
+        shared_ptr<Shader> & getShaderFragmentOnly(const string & name);
 
-        [[deprecated]] Shader * getShaderPtr(const string & name);
-
-        Shader & getShaderFragmentOnly(const string & name);
-
-        Model loadModel(const string & name);
+        /**
+         * Load a model.
+         *
+         * The sub path for models is /model
+         *
+         * @param name the model name
+         *
+         * @return shared_ptr to the Mesh
+         */
+        shared_ptr<Mesh> loadModel(const string & name);
 
         // shared_ptr<Scene> getScene(const string & name);
     };
