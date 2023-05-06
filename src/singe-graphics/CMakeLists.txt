@@ -6,7 +6,8 @@ set(HEADER_LIST
     Model.hpp
     RenderState.hpp
     ResourceManager.hpp
-    Scene.hpp)
+    Scene.hpp
+    Shader.hpp)
 list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
@@ -15,7 +16,8 @@ set(SOURCE_LIST
     Model.cpp
     RenderState.cpp
     ResourceManager.cpp
-    Scene.cpp)
+    Scene.cpp
+    Shader.cpp)
 list(TRANSFORM SOURCE_LIST PREPEND "src/")
 
 add_library(${TARGET} ${HEADER_LIST} ${SOURCE_LIST})
