@@ -58,9 +58,18 @@ state, and could be shared. Geometry holds a single mesh with some number of
 Materials. Materials and Geometry are loaded with the model and should be a
 unique instance for that model.
 
-I don't want to have to own the model of a Scene. Each model should be a
-unique instance because of it's transform.
+I don't want to have to own the model of a Scene. Each model should be a unique
+instance because of it's transform.
 
 ### Future
 
 Geometry or Mesh could hold the buffer in memory for reference or modification.
+
+# Local Geometry
+
+Goal: store geometry / mesh locally for modification.
+
+Idea
+
+- Geometry has optional pointer to a Source mesh that can be modified and used
+  to update the vba
