@@ -8,7 +8,8 @@ namespace singe {
     Material::Material() {}
 
     Material::Material(Material && other)
-        : name(move(other.name)),
+        : shader(other.shader),
+          name(move(other.name)),
           ambient(move(other.ambient)),
           diffuse(move(other.diffuse)),
           specular(move(other.specular)),
@@ -19,6 +20,7 @@ namespace singe {
           specularTexture(move(other.specularTexture)) {}
 
     Material & Material::operator=(Material && other) {
+        shader = other.shader;
         name = move(other.name);
         ambient = move(other.ambient);
         diffuse = move(other.diffuse);
@@ -34,6 +36,9 @@ namespace singe {
     Material::~Material() {}
 
     void Material::bind() const {
+        if (shader)
+            shader->bind();
+
         if (texture) {
             glActiveTexture(GL_TEXTURE0);
             texture->bind();

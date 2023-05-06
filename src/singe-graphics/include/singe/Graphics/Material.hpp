@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include "Shader.hpp"
+
 namespace singe {
     using std::shared_ptr;
     using std::string;
@@ -12,6 +14,8 @@ namespace singe {
     using glpp::Texture;
 
     struct Material {
+        shared_ptr<Shader> shader;
+
         string name;
         vec3 ambient, diffuse, specular;
         float specExp;
