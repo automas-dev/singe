@@ -8,5 +8,8 @@ namespace singe {
     using glpp::extra::Vertex;
 
     /// @brief Vector of Vertex points
-    class Mesh : public vector<Vertex> {};
+    class Mesh : public vector<Vertex> {
+    public:
+        virtual ~Mesh() {}
+    };
 }
