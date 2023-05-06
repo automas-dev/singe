@@ -7,5 +7,6 @@ namespace singe {
     using std::vector;
     using glpp::extra::Vertex;
 
-    using Mesh = vector<Vertex>;
+    /// @brief Vector of Vertex points
+    class Mesh : public vector<Vertex> {};
 }
