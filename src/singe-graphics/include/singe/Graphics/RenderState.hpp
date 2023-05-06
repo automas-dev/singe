@@ -10,32 +10,20 @@ namespace singe {
     using glpp::Shader;
     using glpp::extra::Transform;
 
+    /**
+     * Store transform, shader and mvp uniform. Pass this by value to create
+     * a stack effect of applying transforms in layers.
+     */
     struct RenderState {
         mat4 transform;
         const Shader & shader;
         const Uniform mvp;
 
+        /**
+         * Create a RenderState with initial transform and shader. The shader
+         * will be used to get the mvp uniform.
+         */
         RenderState(const mat4 & transform, const Shader & shader);
-
-        /**
-         * Default copy constructor.
-         */
-        RenderState(const RenderState & other) = default;
-
-        /**
-         * Default move constructor.
-         */
-        RenderState(RenderState && other) = default;
-
-        /**
-         * Default copy assign operator.
-         */
-        RenderState & operator=(const RenderState & other) = default;
-
-        /**
-         * Default move assign operator.
-         */
-        RenderState & operator=(RenderState && other) = default;
 
         ~RenderState();
 
