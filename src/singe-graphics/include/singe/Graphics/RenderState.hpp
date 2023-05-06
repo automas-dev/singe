@@ -41,7 +41,7 @@ namespace singe {
          *
          * @param shader the Shader with mvp uniform
          */
-        void apply(const Shader * shader);
+        // void apply(const Shader * shader);
 
         /**
          * Apply the current transform to the glpp::Uniform mvp.
