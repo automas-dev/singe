@@ -17,6 +17,7 @@ Game::Game(Window & window)
 
     auto & model = scene.models.emplace_back( res.loadModel("cube.obj"));
     model->transform.move({0, 0, 3});
+    model->material->shader = shader;
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
@@ -50,7 +51,7 @@ void Game::onDraw() const {
     setupGl();
 
     glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
-    defaultShader.bind();
+    // defaultShader.bind();
     // shader->mvp().setMat4(vp);
 
     RenderState state(vp);
