@@ -1,7 +1,6 @@
 set(TARGET Graphics)
 
 set(HEADER_LIST
-    Geometry.hpp
     Material.hpp
     Mesh.hpp
     Model.hpp
@@ -11,8 +10,8 @@ set(HEADER_LIST
 list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
 
 set(SOURCE_LIST
-    Geometry.cpp
     Material.cpp
+    Mesh.cpp
     Model.cpp
     RenderState.cpp
     ResourceManager.cpp
