@@ -1,17 +1,26 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <glpp/Buffer.hpp>
+#include <glpp/extra/Vertex.hpp>
+#include <memory>
 
-#include "Material.hpp"
 #include "Mesh.hpp"
 #include "RenderState.hpp"
 
 namespace singe {
-    struct Geometry {
-        Mesh mesh;
-        const Material * material;
+    using std::shared_ptr;
 
-        Geometry(const Material * material);
+    using glpp::Buffer;
+    using glpp::extra::VertexBufferArray;
+
+    struct Geometry {
+        shared_ptr<Mesh> mesh;
+        VertexBufferArray array;
+        size_t n;
+
+        Geometry();
+
+        Geometry(const shared_ptr<Mesh> & mesh);
 
         Geometry(Geometry && other);
 
@@ -22,7 +31,7 @@ namespace singe {
 
         ~Geometry();
 
-        Mesh & getMesh();
+        void update(Buffer::Usage usage = Buffer::Static);
 
         void draw(RenderState & state) const;
     };

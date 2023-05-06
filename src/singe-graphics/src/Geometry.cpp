@@ -5,26 +5,38 @@
 namespace singe {
     using std::move;
 
-    Geometry::Geometry(const Material * material) : material(material) {}
+    Geometry::Geometry() : mesh(nullptr), array(), n(0) {}
+
+    Geometry::Geometry(const shared_ptr<Mesh> & mesh)
+        : mesh(mesh), array(), n(0) {
+        if (mesh)
+            n = mesh->size();
+    }
 
     Geometry::Geometry(Geometry && other)
-        : mesh(move(other.mesh)), material(other.material) {}
+        : mesh(move(other.mesh)), array(move(other.array)), n(other.n) {}
 
     Geometry & Geometry::operator=(Geometry && other) {
         mesh = move(other.mesh);
-        material = other.material;
+        array = move(other.array);
+        n = other.n;
         return *this;
     }
 
     Geometry::~Geometry() {}
 
-    Mesh & Geometry::getMesh() {
-        return mesh;
+    void Geometry::update(Buffer::Usage usage) {
+        if (mesh) {
+            array.bufferData(*mesh, usage);
+            n = mesh->size();
+            array.unbind();
+        }
+        else
+            n = 0;
     }
 
     void Geometry::draw(RenderState & state) const {
-        if (material)
-            material->bind();
-        mesh.draw(state);
+        if (mesh)
+            array.drawArrays(Buffer::Triangles, 0, n);
     }
 }

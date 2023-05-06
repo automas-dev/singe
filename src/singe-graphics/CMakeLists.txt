@@ -13,7 +13,6 @@ list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
 set(SOURCE_LIST
     Geometry.cpp
     Material.cpp
-    Mesh.cpp
     Model.cpp
     RenderState.cpp
     ResourceManager.cpp
