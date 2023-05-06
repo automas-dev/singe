@@ -12,4 +12,13 @@ namespace singe {
     void RenderState::pushTransform(const mat4 & matrix) {
         transform *= matrix;
     }
+
+    void RenderState::apply(const Shader * shader) {
+        if (shader)
+            apply(shader->mvp());
+    }
+
+    void RenderState::apply(const glpp::Uniform & uniform) {
+        uniform.setMat4(transform);
+    }
 }

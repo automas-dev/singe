@@ -1,7 +1,10 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glpp/Shader.hpp>
 #include <glpp/extra/Transform.hpp>
+
+#include "Shader.hpp"
 
 namespace singe {
     using glm::mat4;
@@ -32,5 +35,19 @@ namespace singe {
          * @param matrix the matrix used to multiply transform
          */
         void pushTransform(const mat4 & matrix);
+
+        /**
+         * Apply the current transform to the Shader mvp uniform.
+         *
+         * @param shader the Shader with mvp uniform
+         */
+        void apply(const Shader * shader);
+
+        /**
+         * Apply the current transform to the glpp::Uniform mvp.
+         *
+         * @param mvp the glpp::Uniform for mvp which is mat4
+         */
+        void apply(const glpp::Uniform & mvp);
     };
 }
