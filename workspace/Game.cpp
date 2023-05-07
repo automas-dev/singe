@@ -7,15 +7,14 @@ Game::Game(Window & window)
       res("../../examples/res"),
       shader(res.getShader("default")),
       gridShader(res.getShader("grid")),
-      grid(10, {1, 1, 1, 1}, true) 
-    {
+      grid(10, {1, 1, 1, 1}, true) {
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
 
     // TODO: load here
 
-    auto & model = scene.models.emplace_back( res.loadModel("cube.obj"));
+    auto & model = scene.models.emplace_back(res.loadModel("cube.obj"));
     model->transform.move({0, 0, 3});
     model->material->shader = shader;
 
