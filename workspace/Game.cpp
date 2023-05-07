@@ -14,8 +14,26 @@ Game::Game(Window & window)
 
     // TODO: load here
 
-    auto & model = scene.models.emplace_back(res.loadModel("cube.obj"));
-    model->transform.move({0, 0, 3});
+    shared_ptr<Mesh> model;
+
+    model = scene.models.emplace_back(res.loadModel("sphere.obj"));
+    model->transform.move({0, 1, 0});
+    model->material->shader = shader;
+
+    model = scene.models.emplace_back(res.loadModel("plane.obj"));
+    model->transform.move({0, 0, 0});
+    model->material->shader = shader;
+
+    model = scene.models.emplace_back(res.loadModel("cube.obj"));
+    model->transform.move({0, 1, 3});
+    model->material->shader = shader;
+
+    model = scene.models.emplace_back(res.loadModel("fountain.obj"));
+    model->transform.move({2, 0, -3});
+    model->material->shader = shader;
+
+    model = scene.models.emplace_back(res.loadModel("Human.obj"));
+    model->transform.move({-2, 0, -3});
     model->material->shader = shader;
 
     // Load models / textures / scenes
@@ -31,7 +49,8 @@ void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
     // TODO: update here
     scene.transform.rotateEuler({0, s * 0.5, 0});
-    scene.models[0]->transform.rotateEuler({0, -s, 0});
+    for (auto & model : scene.models)
+        model->transform.rotateEuler({0, -s, 0});
 }
 
 inline void setupGl() {
