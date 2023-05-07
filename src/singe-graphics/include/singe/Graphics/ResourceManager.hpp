@@ -17,14 +17,15 @@ namespace singe {
     using std::map;
     using std::vector;
     using std::shared_ptr;
-    using std::filesystem::path;
     using glpp::Texture;
+
+    namespace fs = std::filesystem;
 
     /**
      * Manage path resolution, resource loading and resource caching for re-use.
      */
     class ResourceManager {
-        path root;
+        fs::path root;
         map<string, shared_ptr<Texture>> textures;
         map<string, shared_ptr<Shader>> shaders;
 
@@ -34,7 +35,7 @@ namespace singe {
          *
          * @param root the resource directory
          */
-        ResourceManager(const path & root);
+        ResourceManager(const fs::path & root);
 
         ResourceManager(ResourceManager && other);
 
@@ -50,14 +51,14 @@ namespace singe {
          *
          * @param root the new resource directory
          */
-        void setRoot(const path & root);
+        void setRoot(const fs::path & root);
 
         /**
          * Get the path to the current resource directory.
          *
          * @return the current resource directory
          */
-        const path & getRoot() const;
+        const fs::path & getRoot() const;
 
         /**
          * Resolve a relative path to an absolute path.
@@ -66,7 +67,7 @@ namespace singe {
          *
          * @return the absolute path to the resource
          */
-        path resourceAt(const path & subPath) const;
+        fs::path resourceAt(const fs::path & subPath) const;
 
         /**
          * Load a glpp::Texture or return the cached texture if it exists.

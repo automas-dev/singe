@@ -4,14 +4,16 @@
 #include <filesystem>
 #include <singe/Support/log.hpp>
 
-namespace fs = std::filesystem;
-
 namespace singe {
     using std::make_shared;
     using std::move;
 
-    ResourceManager::ResourceManager(const path & root) : root(root) {
-        Logging::Graphics->trace("Resource manager created with root {}",
+    namespace Logging {
+        auto Resource = make_shared<Logger>("Resource");
+    }
+
+    ResourceManager::ResourceManager(const fs::path & root) : root(root) {
+        Logging::Resource->trace("Resource manager created with root {}",
                                  root.c_str());
     }
 
@@ -25,16 +27,16 @@ namespace singe {
 
     ResourceManager::~ResourceManager() {}
 
-    void ResourceManager::setRoot(const path & root) {
-        Logging::Graphics->trace("ResourceManager::setRoot {}", root.c_str());
+    void ResourceManager::setRoot(const fs::path & root) {
+        Logging::Resource->trace("ResourceManager::setRoot {}", root.c_str());
         this->root = root;
     }
 
-    const path & ResourceManager::getRoot() const {
+    const fs::path & ResourceManager::getRoot() const {
         return root;
     }
 
-    path ResourceManager::resourceAt(const path & subPath) const {
+    fs::path ResourceManager::resourceAt(const fs::path & subPath) const {
         if (subPath.is_absolute())
             return subPath;
         else
@@ -42,12 +44,12 @@ namespace singe {
     }
 
     shared_ptr<Texture> & ResourceManager::getTexture(const string & name) {
-        Logging::Graphics->debug("ResourceManager::getTexture {}", name);
-        static path subPath("img");
+        Logging::Resource->debug("ResourceManager::getTexture {}", name);
+        static fs::path subPath("img");
 
         if (textures.find(name) == textures.end()) {
-            path fullPath = resourceAt(subPath / name);
-            Logging::Graphics->trace("Full path is {}", fullPath.c_str());
+            fs::path fullPath = resourceAt(subPath / name);
+            Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
             auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
             textures[name] = move(texture);
@@ -57,14 +59,14 @@ namespace singe {
     }
 
     shared_ptr<Shader> & ResourceManager::getShader(const string & name) {
-        Logging::Graphics->debug("ResourceManager::getShader {}", name);
-        static path subPath("shader");
+        Logging::Resource->debug("ResourceManager::getShader {}", name);
+        static fs::path subPath("shader");
 
         if (shaders.find(name) == shaders.end()) {
-            path fullVertexPath = resourceAt(subPath / (name + ".vert"));
-            path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
-            Logging::Graphics->trace("Vertex path is {}", fullVertexPath.c_str());
-            Logging::Graphics->trace("Fragment path is {}",
+            fs::path fullVertexPath = resourceAt(subPath / (name + ".vert"));
+            fs::path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
+            Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
+            Logging::Resource->trace("Fragment path is {}",
                                      fullFragmentPath.c_str());
 
             auto shader = make_shared<Shader>(
@@ -76,12 +78,12 @@ namespace singe {
     }
 
     shared_ptr<Shader> & ResourceManager::getShaderFragmentOnly(const string & name) {
-        Logging::Graphics->debug("ResourceManager::getShaderFragmentOnly {}", name);
-        static path subpath("shader");
+        Logging::Resource->debug("ResourceManager::getShaderFragmentOnly {}", name);
+        static fs::path subpath("shader");
 
         if (shaders.find(name) == shaders.end()) {
-            path fullFragmentPath = resourceAt(subpath / (name + ".frag"));
-            Logging::Graphics->trace("Fragment path is {}",
+            fs::path fullFragmentPath = resourceAt(subpath / (name + ".frag"));
+            Logging::Resource->trace("Fragment path is {}",
                                      fullFragmentPath.c_str());
 
             auto shader = make_shared<Shader>(
@@ -93,11 +95,11 @@ namespace singe {
     }
 
     shared_ptr<Mesh> ResourceManager::loadModel(const string & name) {
-        Logging::Graphics->debug("ResourceManager::loadModel {}", name);
-        static path subPath("model");
+        Logging::Resource->debug("ResourceManager::loadModel {}", name);
+        static fs::path subPath("model");
 
-        path fullPath = resourceAt(subPath / name);
-        Logging::Graphics->trace("Full path is {}", fullPath.c_str());
+        fs::path fullPath = resourceAt(subPath / name);
+        Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
         wavefront::Model wfModel;
         wfModel.loadModelFrom(fullPath);
@@ -115,7 +117,7 @@ namespace singe {
             model->update();
         }
         else {
-            Logging::Graphics->warning("Model has no points");
+            Logging::Resource->warning("Model has no points");
         }
 
         if (!wfModel.materials.empty()) {
@@ -137,7 +139,7 @@ namespace singe {
                 material->specularTexture = getTexture(mat->texSpecular);
         }
         else {
-            Logging::Graphics->warning("Model has no material");
+            Logging::Resource->warning("Model has no material");
         }
 
         return model;
