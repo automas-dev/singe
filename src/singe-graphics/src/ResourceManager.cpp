@@ -107,7 +107,7 @@ namespace singe {
         auto model = std::make_shared<singe::Mesh>();
 
         if (!wfModel.objects.empty()) {
-            auto * obj = wfModel.objects[0];
+            auto & obj = wfModel.objects[0];
 
             for (int i = 0; i < obj->size(); i++) {
                 model->points.emplace_back(obj->vertices[i], obj->normals[i],
@@ -123,7 +123,7 @@ namespace singe {
         if (!wfModel.materials.empty()) {
             model->material = make_shared<Material>();
 
-            auto * mat = wfModel.materials[0];
+            auto & mat = wfModel.materials[0];
             auto & material = model->material;
             material->name = mat->name;
             material->ambient = mat->colAmbient;
