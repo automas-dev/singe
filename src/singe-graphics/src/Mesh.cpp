@@ -38,7 +38,7 @@ namespace singe {
         array.unbind();
     }
 
-    void Mesh::draw(RenderState & state) const {
+    void Mesh::draw(RenderState state) const {
         state.pushTransform(transform);
         if (material) {
             material->bind();

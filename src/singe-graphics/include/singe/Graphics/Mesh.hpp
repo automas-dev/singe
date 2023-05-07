@@ -85,6 +85,6 @@ namespace singe {
          *
          * @param state the parent state with transform for shader's mvp uniform
          */
-        void draw(RenderState & state) const;
+        void draw(RenderState state) const;
     };
 }
