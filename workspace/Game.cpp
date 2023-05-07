@@ -69,9 +69,6 @@ void Game::onDraw() const {
     setupGl();
 
     glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
-    // defaultShader.bind();
-    // shader->mvp().setMat4(vp);
-
     RenderState state(vp);
     scene.draw(state);
 
