@@ -9,7 +9,7 @@ namespace singe {
     using std::move;
 
     namespace Logging {
-        auto Resource = make_shared<Logger>("Resource");
+        Logger::Ptr Resource = make_shared<Logger>("Resource");
     }
 
     ResourceManager::ResourceManager(const fs::path & root) : root(root) {

@@ -11,6 +11,11 @@
 #include "Mesh.hpp"
 #include "Scene.hpp"
 #include "Shader.hpp"
+#include "singe/Support/log.hpp"
+
+namespace singe::Logging {
+    extern Logger::Ptr Resource;
+}
 
 namespace singe {
     using std::string;

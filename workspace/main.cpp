@@ -6,6 +6,7 @@
 
 int main() {
     spdlog::set_level(spdlog::level::trace);
+    Logging::Resource->setLevel(Logging::Logger::Debug);
 
     try {
         Window window("Workspace");
