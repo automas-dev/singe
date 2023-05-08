@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15...3.20)
 
 project(singe
-    VERSION 0.1.0
+    VERSION 0.9.0
     DESCRIPTION "Scene In Nodes Game Engine"
     LANGUAGES CXX)
 
