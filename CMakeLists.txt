@@ -57,7 +57,7 @@ add_subdirectory(external)
 
 add_subdirectory(src)
 
-# add_subdirectory(examples)
+add_subdirectory(examples)
 
 add_compile_options (-fdiagnostics-color)
 
