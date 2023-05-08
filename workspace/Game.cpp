@@ -72,10 +72,9 @@ void Game::onDraw() const {
     RenderState state(vp);
     scene.draw(state);
 
-    // gridShader.bind();
-    // Uniform gridMvp = gridShader.uniform("mvp");
-    // gridMvp.setMat4(vp);
-    // grid.draw();
+    gridShader->bind();
+    gridShader->mvp().setMat4(vp);
+    grid.draw();
 
     glpp::BufferArray::unbind();
 }
