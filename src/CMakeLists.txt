@@ -1,10 +1,8 @@
 
-macro(library_component target source_list header_list)
-    add_library(${target} ${source_list} ${header_list})
-
+macro(library_component target)
     target_include_directories(${target}
         PUBLIC
-        $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
     #set_property(TARGET ${TARGET} PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -29,34 +27,25 @@ macro(library_component target source_list header_list)
 
     ## Include the headers in install
     install(DIRECTORY
-        ${${PROJECT_NAME}_SOURCE_DIR}/include/${PROJECT_NAME}/${target}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+        include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${target})
 endmacro()
 
-add_subdirectory(Transform3d)
-add_subdirectory(Wavefront)
-add_subdirectory(glpp EXCLUDE_FROM_ALL)
+add_subdirectory(singe-support)
+add_subdirectory(singe-graphics)
+add_subdirectory(singe-core)
 
-add_subdirectory(Support)
-add_subdirectory(Graphics)
-add_subdirectory(Core)
-
-set(TARGET s3e)
+set(TARGET singe)
 
 add_library(${TARGET} INTERFACE)
 
 target_link_libraries(${TARGET}
     INTERFACE
-    sfml-window
-    sfml-graphics
-    sfml-system
     OpenGL::OpenGL
     OpenGL::GLU
     GLEW::GLEW
     ${BULLET_LIBRARIES}
-    Support
-    Graphics
-    Core)
+    )
 
 #Check for Inter Procedural Optimization(IPO)
 include(CheckIPOSupported)
@@ -67,11 +56,6 @@ endif()
 
 #Add ALIAS target for use in add_subdirectory or build directory
 add_library(${PROJECT_NAME}::${TARGET} ALIAS ${TARGET})
-
-#IDE support, show headers in a folder
-source_group(TREE "${PROJECT_SOURCE_DIR}/include"
-    PREFIX "Header Files"
-    FILES ${HEADER_LIST})
 
 #Add target to Project Targets for install
 install(TARGETS ${TARGET}

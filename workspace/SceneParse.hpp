@@ -1,9 +1,9 @@
 #pragma once
 
 #include <singe/Core/Camera.hpp>
-#include <singe/Core/Grid.hpp>
-#include <singe/Core/ResourceManager.hpp>
-#include <singe/Core/Scene.hpp>
+#include <singe/Graphics/Grid.hpp>
+#include <singe/Graphics/ResourceManager.hpp>
+#include <singe/Graphics/Scene.hpp>
 #include <string>
 #include <vector>
 

@@ -5,18 +5,6 @@ project(singe
     DESCRIPTION "Scene In Nodes Game Engine"
     LANGUAGES CXX)
 
-# Set the default build type if non is specified
-set(default_build_type "Release")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    message(STATUS "Setting build type to '${default_build_type}' since none was specified.")
-    set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
-        STRING "Choose the type of build." FORCE)
-
-    # Set possible values of build type for cmake-gui
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-        "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
-
 # Only if this is the top level project (not included with add_subdirectory)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Use -std=c++xx instead of -std=g++xx
@@ -25,11 +13,9 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Support folders in IDEs
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-    add_subdirectory(googletest EXCLUDE_FROM_ALL)
     # Testing only available for top level projects. It calls enable_testing
     # which must be in the main CMakeLists.
     include(CTest)
-    include_directories(${googletest_SOURCE_DIR}/include ${googletest_SOURCE_DIR})
 
     # Generate documentation using Doxygen
     find_package(Doxygen)
@@ -39,6 +25,15 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         message(STATUS "Doxygen not found, not building docs")
     endif()
 endif()
+
+option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." TRUE)
+if (${FORCE_COLORED_OUTPUT})
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options (-fdiagnostics-color=always)
+  elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options (-fcolor-diagnostics)
+  endif ()
+endif ()
 
 # Use for platform independent install dirs, despite being called GNU
 include(GNUInstallDirs)
@@ -53,32 +48,18 @@ find_package(Threads REQUIRED)
 find_package(SFML 2.5 REQUIRED CONFIG COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(glm REQUIRED CONFIG)
-find_package(fmt REQUIRED CONFIG)
-find_package(spdlog REQUIRED CONFIG)
+find_package(glm REQUIRED)
 
 find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIR})
 
-include(FetchContent)
-
-FetchContent_Declare(
-    rapidxml
-    GIT_REPOSITORY https://gitlab.com/twh2898/rapidxml
-    GIT_TAG        1.13.0
-)
-FetchContent_MakeAvailable(rapidxml)
-
-FetchContent_Declare(
-    DispatchQueue
-    GIT_REPOSITORY https://github.com/twh2898/DispatchQueue
-    GIT_TAG        v0.1.4
-)
-FetchContent_MakeAvailable(DispatchQueue)
+add_subdirectory(external)
 
 add_subdirectory(src)
 
-add_subdirectory(workspace)
+add_subdirectory(examples)
+
+add_compile_options (-fdiagnostics-color)
 
 # Create Targets file
 install(EXPORT ${PROJECT_NAME}Targets
@@ -101,3 +82,9 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+
+# Add examples and tests
+if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
+    add_subdirectory(workspace)
+    # add_subdirectory(tests)
+endif()

@@ -1,31 +1,31 @@
 #pragma once
 
-#include <GL/glew.h>
-
-#include <SFML/Graphics.hpp>
-#include <SFML/OpenGL.hpp>
-#include <SFML/Window.hpp>
-#include <glm/glm.hpp>
-#include <memory>
-#include <singe/Core.hpp>
-#include <singe/Core/Grid.hpp>
+#include <singe/Core/FPSDisplay.hpp>
+#include <singe/Core/GameBase.hpp>
+#include <singe/Core/Window.hpp>
+#include <singe/Graphics/Mesh.hpp>
+#include <singe/Graphics/ResourceManager.hpp>
+#include <singe/Graphics/Scene.hpp>
+#include <singe/Graphics/Shader.hpp>
 #include <singe/Support/log.hpp>
-#include <vector>
 using namespace singe;
 
+#include <glpp/extra/Grid.hpp>
+using glpp::extra::Grid;
+
+#include <memory>
 
 class Game : public GameBase {
-    ResourceManager resManager;
-    FPSDisplay::Ptr fps;
-    Scene::Ptr scene;
-    Grid::Ptr grid;
+    ResourceManager res;
+    FPSDisplay fps;
+    std::shared_ptr<singe::Shader> shader;
+    std::shared_ptr<singe::Shader> gridShader;
+    Grid grid;
+    Scene scene;
 
 public:
-    Game(const sf::String & resPath);
+    Game(Window & window);
     virtual ~Game();
-
-    void onCreate(void) override;
-    void onDestroy(void) override;
 
     void onUpdate(const sf::Time & delta) override;
     void onDraw(void) const override;
