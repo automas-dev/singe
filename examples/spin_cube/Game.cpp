@@ -2,29 +2,11 @@
 
 #include <stdexcept>
 
-static const char * vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aCol;
-uniform mat4 mvp;
-out vec3 color;
-void main() {
-    gl_Position = mvp * vec4(aPos, 1.0);
-    color = aCol;
-})";
-
-static const char * fragmentShaderSource = R"(
-#version 330 core
-in vec3 color;
-out vec4 FragColor;
-void main() {
-    FragColor = vec4(color, 1.0);
-})";
-
 Game::Game(Window & window)
     : GameBase(window),
-      shader(Shader::defaultShader()),
-      gridShader(Grid::shader()),
+      res("../../../examples/res"),
+      shader(res.getShader("default")),
+      gridShader(res.getShader("grid")),
       grid(10, {1, 1, 1, 1}, true) {
 
     camera.setPosition({5, 2, 5});
@@ -32,12 +14,11 @@ Game::Game(Window & window)
 
     // TODO: load here
 
-    mvp = shader.uniform("mvp");
+    shared_ptr<Mesh> model;
 
-    auto model = Model::fromPath("../../../examples/res/model/cube.obj");
-    model.transform.move({0, 0, 3});
-
-    scene.models.emplace_back(std::move(model));
+    model = scene.models.emplace_back(res.loadModel("cube.obj"));
+    model->transform.move({0, 0, 3});
+    model->material->shader = shader;
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
@@ -52,7 +33,7 @@ void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
     // TODO: update here
     scene.transform.rotateEuler({0, s * 0.5, 0});
-    scene.models[0].transform.rotateEuler({0, -s, 0});
+    scene.models[0]->transform.rotateEuler({0, -s, 0});
 }
 
 inline void setupGl() {
@@ -71,15 +52,11 @@ void Game::onDraw() const {
     setupGl();
 
     glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
-    shader.bind();
-    mvp.setMat4(vp);
-
-    RenderState state(vp, shader);
+    RenderState state(vp);
     scene.draw(state);
 
-    gridShader.bind();
-    Uniform gridMvp = gridShader.uniform("mvp");
-    gridMvp.setMat4(vp);
+    gridShader->bind();
+    gridShader->mvp().setMat4(vp);
     grid.draw();
 
     glpp::BufferArray::unbind();
