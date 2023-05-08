@@ -1,8 +1,11 @@
 # Scene In Nodes Game Engine
 
+> This project has been through some major re-structuring in recent versions.
+> Not everything has been updated and much has not yet been documented.
+
 This project is a learning space where I can implement concepts in 3d rendering
-and general game engine mechanics. It is a fork of the S3E project that handles
-more of the rendering through nodes instead of draw calls.
+and general game engine mechanics. It is a fork of the S3E project that focuses
+on rendering through nodes instead of draw calls.
 
 ## Project Goals
 
@@ -14,6 +17,7 @@ more of the rendering through nodes instead of draw calls.
     - Texture / Shader / FrameBuffer / VBO
     - Camera Controls
 - Provide access to underlying implementation for finer control
+- Use latest and best practices for C++
 
 ### ToDo
 
@@ -44,6 +48,11 @@ more of the rendering through nodes instead of draw calls.
   - [ ] Update GameBase to load scene's and other resources
 
 ## Dependencies
+
+This project relies on abstractions for OpenGL form the
+[GLPP](https://github.com/twh2898/glpp.git) project. For an exact list of
+dependencies and their versions, see the cmake files in the
+[external/](external/) directory.
 
 - SFML 2.5.1
 - GLEW 2.2.0
