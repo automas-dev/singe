@@ -2,30 +2,11 @@
 
 #include <stdexcept>
 
-static const char * vertexShaderSource = R"(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aCol;
-uniform mat4 mvp;
-out vec3 color;
-void main() {
-    gl_Position = mvp * vec4(aPos, 1.0);
-    color = aCol;
-})";
-
-static const char * fragmentShaderSource = R"(
-#version 330 core
-in vec3 color;
-out vec4 FragColor;
-void main() {
-    FragColor = vec4(color, 1.0);
-})";
-
 Game::Game(Window & window)
     : GameBase(window),
       res("../../../examples/res"),
-      shader(Shader::defaultShader()),
-      gridShader(Grid::shader()),
+      shader(res.getShader("default")),
+      gridShader(res.getShader("grid")),
       grid(10, {1, 1, 1, 1}, true),
       showGrid(true),
       wireframe(Fill) {
@@ -34,23 +15,26 @@ Game::Game(Window & window)
     camera.setRotation({0, -1, 0});
     camera.setFov(70);
 
-    mvp = shader.uniform("mvp");
+    shared_ptr<Mesh> model;
 
-    auto & objectScene = scene.children.emplace_back();
-    objectScene.transform.move({0, 2, 0});
+    auto & objectScene = scene.children.emplace_back(std::make_shared<Scene>());
+    objectScene->transform.move({0, 2, 0});
 
-    objectScene.models.emplace_back(res.loadModel("sphere.obj"));
+    model = objectScene->models.emplace_back(res.loadModel("sphere.obj"));
+    model->material->shader = shader;
 
-    scene.models.emplace_back(res.loadModel("cube_plane.obj"));
+    model = scene.models.emplace_back(res.loadModel("plane.obj"));
+    model->material->shader = shader;
 
-    otherScene = &scene.children.emplace_back();
+    auto otherScene = scene.children.emplace_back(std::make_shared<Scene>());
 
-    auto & fountain =
-        otherScene->models.emplace_back(res.loadModel("fountain.obj"));
-    fountain.transform.move({0, 0, 3});
+    model = otherScene->models.emplace_back(res.loadModel("fountain.obj"));
+    model->transform.move({0, 0, 3});
+    model->material->shader = shader;
 
-    auto & human = otherScene->models.emplace_back(res.loadModel("Human.obj"));
-    human.transform.move({3, 0, 0});
+    model = otherScene->models.emplace_back(res.loadModel("Human.obj"));
+    model->transform.move({3, 0, 0});
+    model->material->shader = shader;
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
@@ -95,7 +79,7 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & event) {
 
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
-    scene.children[0].transform.rotateEuler({s, s * 0.2, 0});
+    scene.children[0]->transform.rotateEuler({s, s * 0.2, 0});
     otherScene->transform.rotateEuler({0, s * 0.1, 0});
 }
 
@@ -118,16 +102,12 @@ void Game::onDraw() const {
     glPointSize(2.0);
 
     glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
-    shader.bind();
-    mvp.setMat4(vp);
-
-    RenderState state(vp, shader);
+    RenderState state(vp);
     scene.draw(state);
 
     if (showGrid) {
-        gridShader.bind();
-        Uniform gridMvp = gridShader.uniform("mvp");
-        gridMvp.setMat4(vp);
+        gridShader->bind();
+        gridShader->mvp().setMat4(vp);
         grid.draw();
     }
 
