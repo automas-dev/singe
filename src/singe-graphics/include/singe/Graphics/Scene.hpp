@@ -12,6 +12,9 @@ namespace singe {
     using std::vector;
     using glpp::extra::Transform;
 
+    /**
+     * Group of Mesh and child Scenes.
+     */
     struct Scene {
         vector<shared_ptr<Scene>> children;
         vector<shared_ptr<Mesh>> models;
@@ -28,6 +31,14 @@ namespace singe {
 
         ~Scene();
 
+        /**
+         * Draw child scenes and then mesh in this scene.
+         *
+         * Mesh in this scene will be drawn with this transform and child
+         * scenes will transform with this scene as their origin.
+         *
+         * @param state the RenderState with the current global transform
+         */
         void draw(RenderState state) const;
     };
 }

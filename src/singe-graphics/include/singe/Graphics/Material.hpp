@@ -13,6 +13,9 @@ namespace singe {
     using glm::vec3;
     using glpp::Texture;
 
+    /**
+     * Material properties, textures and shader.
+     */
     struct Material {
         shared_ptr<Shader> shader;
 
@@ -35,6 +38,9 @@ namespace singe {
 
         ~Material();
 
+        /**
+         * Bind the shader and textures.
+         */
         void bind() const;
     };
 }
