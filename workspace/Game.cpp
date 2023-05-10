@@ -9,6 +9,17 @@ Game::Game(Window & window)
       gridShader(res.getShader("grid")),
       grid(10, {1, 1, 1, 1}, true) {
 
+    sf::Text loadingText;
+    loadingText.setFont(uiFont);
+    loadingText.setString("Loading");
+    loadingText.setCharacterSize(32);
+    loadingText.setFillColor(sf::Color(200, 200, 200));
+    loadingText.setOrigin(loadingText.getLocalBounds().left,
+                          loadingText.getLocalBounds().top);
+    loadingText.setPosition(100, 100);
+    window.window.draw(loadingText);
+    window.display();
+
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
 
@@ -49,8 +60,7 @@ void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
     // TODO: update here
     scene.transform.rotateEuler({0, s * 0.5, 0});
-    for (auto & model : scene.models)
-        model->transform.rotateEuler({0, -s, 0});
+    for (auto & model : scene.models) model->transform.rotateEuler({0, -s, 0});
 }
 
 inline void setupGl() {
