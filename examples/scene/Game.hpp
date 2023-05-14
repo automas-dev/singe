@@ -22,7 +22,7 @@ class Game : public GameBase {
     std::shared_ptr<singe::Shader> gridShader;
     Grid grid;
     Scene scene;
-    Scene * otherScene;
+    shared_ptr<Scene> otherScene;
     bool showGrid;
 
     enum DisplayMode {

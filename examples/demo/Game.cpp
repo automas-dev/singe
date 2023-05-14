@@ -15,19 +15,23 @@ Game::Game(Window & window)
     camera.setRotation({0, -1, 0});
     camera.setFov(80);
 
-    shared_ptr<Mesh> model;
+    shared_ptr<Scene> modelScene;
 
-    model = scene.models.emplace_back(res.loadModel("plane.obj"));
-    model->material->shader = shader;
+    modelScene = scene.addChild();
+    modelScene->models = res.loadModel("plane.obj");
 
-    model = scene.models.emplace_back(res.loadModel("sphere.obj"));
-    model->transform.move({1, 2, 3});
-    model->transform.scale({0.1, 0.1, 0.1});
-    model->material->shader = shader;
+    modelScene = scene.addChild();
+    modelScene->models = res.loadModel("sphere.obj");
+    modelScene->transform.move({1, 2, 3});
+    modelScene->transform.scale({0.1, 0.1, 0.1});
 
-    model = scene.models.emplace_back(res.loadModel("hall.obj"));
-    model->transform.move({0, 0, -5});
-    model->material->shader = shader;
+    modelScene = scene.addChild();
+    modelScene->models = res.loadModel("hall.obj");
+    modelScene->transform.move({0, 0, -5});
+
+    for (auto & s : scene.children) {
+        for (auto & m : s->models) m->material->shader = shader;
+    }
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
