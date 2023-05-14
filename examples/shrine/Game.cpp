@@ -12,11 +12,15 @@ Game::Game(Window & window)
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
 
-    shared_ptr<Mesh> model;
+    shared_ptr<Scene> modelScene;
 
-    model = scene.models.emplace_back(res.loadModel("cube.obj"));
-    model->transform.move({0, 0, 3});
-    model->material->shader = shader;
+    modelScene = scene.addChild();
+    modelScene->models = res.loadModel("cube.obj");
+    modelScene->transform.move({0, 0, 3});
+
+    for (auto & s : scene.children) {
+        for (auto & m : s->models) m->material->shader = shader;
+    }
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn
