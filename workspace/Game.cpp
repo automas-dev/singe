@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+using std::make_shared;
+
 Game::Game(Window & window)
     : GameBase(window),
       res("../../examples/res"),
@@ -25,27 +27,33 @@ Game::Game(Window & window)
 
     // TODO: load here
 
-    shared_ptr<Mesh> model;
+    auto subScene = scene.addChild();
 
-    model = scene.models.emplace_back(res.loadModel("sphere.obj"));
-    model->transform.move({0, 1, 0});
-    model->material->shader = shader;
+    auto modelScene = subScene->addChild();
+    modelScene->models = res.loadModel("sphere.obj");
+    modelScene->transform.move({0, 1, 0});
 
-    model = scene.models.emplace_back(res.loadModel("plane.obj"));
-    model->transform.move({0, 0, 0});
-    model->material->shader = shader;
+    modelScene = subScene->addChild();
+    modelScene->models = res.loadModel("plane.obj");
+    modelScene->transform.move({0, 0, 0});
 
-    model = scene.models.emplace_back(res.loadModel("cube.obj"));
-    model->transform.move({0, 1, 3});
-    model->material->shader = shader;
+    modelScene = subScene->addChild();
+    modelScene->models = res.loadModel("cube.obj");
+    modelScene->transform.move({0, 1, 3});
 
-    model = scene.models.emplace_back(res.loadModel("fountain.obj"));
-    model->transform.move({2, 0, -3});
-    model->material->shader = shader;
+    modelScene = subScene->addChild();
+    modelScene->models = res.loadModel("fountain.obj");
+    modelScene->transform.move({2, 0, -3});
 
-    model = scene.models.emplace_back(res.loadModel("Human.obj"));
-    model->transform.move({-2, 0, -3});
-    model->material->shader = shader;
+    modelScene = subScene->addChild();
+    modelScene->models = res.loadModel("Human.obj");
+    modelScene->transform.move({-2, 0, -3});
+
+    for (auto & s : subScene->children) {
+        for (auto & m : s->models) m->material->shader = shader;
+    }
+
+    // modelScene->material->shader = shader;
 
     // Load models / textures / scenes
     // No fancy render api, just each model can be drawn

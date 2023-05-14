@@ -4,6 +4,7 @@
 #include <glpp/Texture.hpp>
 #include <map>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -25,6 +26,11 @@ namespace singe {
     using glpp::Texture;
 
     namespace fs = std::filesystem;
+
+    class ResourceLoadException : public std::runtime_error {
+    public:
+        using std::runtime_error::runtime_error;
+    };
 
     /**
      * Manage path resolution, resource loading and resource caching for re-use.
@@ -115,9 +121,9 @@ namespace singe {
          *
          * @param name the model name
          *
-         * @return shared_ptr to the Mesh
+         * @return vector of models
          */
-        shared_ptr<Mesh> loadModel(const string & name);
+        vector<shared_ptr<Mesh>> loadModel(const string & name);
 
         // shared_ptr<Scene> getScene(const string & name);
     };

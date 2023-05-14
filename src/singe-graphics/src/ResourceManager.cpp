@@ -94,7 +94,7 @@ namespace singe {
         return shaders[name];
     }
 
-    shared_ptr<Mesh> ResourceManager::loadModel(const string & name) {
+    vector<shared_ptr<Mesh>> ResourceManager::loadModel(const string & name) {
         Logging::Resource->debug("ResourceManager::loadModel {}", name);
         static fs::path subPath("model");
 
@@ -104,27 +104,19 @@ namespace singe {
         wavefront::Model wfModel;
         wfModel.loadModelFrom(fullPath);
 
-        auto model = std::make_shared<singe::Mesh>();
+        if (wfModel.materials.empty())
+            Logging::Resource->warning("Model has no material");
 
-        if (!wfModel.objects.empty()) {
-            auto & obj = wfModel.objects[0];
-
-            for (int i = 0; i < obj->size(); i++) {
-                model->points.emplace_back(obj->vertices[i], obj->normals[i],
-                                           obj->texcoords[i]);
-            }
-
-            model->update();
-        }
-        else {
-            Logging::Resource->warning("Model has no points");
+        if (wfModel.objects.empty()) {
+            Logging::Resource->error("Model has no objects");
+            return {};
         }
 
-        if (!wfModel.materials.empty()) {
-            model->material = make_shared<Material>();
+        vector<shared_ptr<Material>> materials;
 
-            auto & mat = wfModel.materials[0];
-            auto & material = model->material;
+        for (auto & mat : wfModel.materials) {
+            auto material = materials.emplace_back(make_shared<Material>());
+
             material->name = mat->name;
             material->ambient = mat->colAmbient;
             material->diffuse = mat->colDiffuse;
@@ -138,11 +130,29 @@ namespace singe {
             if (!mat->texSpecular.empty())
                 material->specularTexture = getTexture(mat->texSpecular);
         }
-        else {
-            Logging::Resource->warning("Model has no material");
+
+        vector<shared_ptr<Mesh>> models;
+
+        for (auto & obj : wfModel.objects) {
+            auto & model = models.emplace_back(make_shared<Mesh>());
+
+            if (obj->size() == 0)
+                Logging::Resource->warning("Object " + obj->name + " has no points");
+
+            for (int i = 0; i < obj->size(); i++) {
+                model->points.emplace_back(obj->vertices[i], obj->normals[i],
+                                           obj->texcoords[i]);
+            }
+
+            model->update();
+
+            if (0 > obj->matId >= materials.size())
+                Logging::Resource->error("Invalid material id");
+            else
+                model->material = materials[obj->matId];
         }
 
-        return model;
+        return models;
     }
 
     // shared_ptr<Scene> ResourceManager::getScene(const string & name) {
