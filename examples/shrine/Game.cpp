@@ -7,7 +7,8 @@ Game::Game(Window & window)
       res("../../../examples/res"),
       shader(res.getShader("default")),
       gridShader(res.getShader("grid")),
-      grid(10, {1, 1, 1, 1}, true) {
+      grid(10, {1, 1, 1, 1}, true),
+      tPillar(0) {
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
@@ -15,8 +16,10 @@ Game::Game(Window & window)
     shared_ptr<Scene> modelScene;
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("cube.obj");
-    modelScene->transform.move({0, 0, 3});
+    modelScene->models = res.loadModel("plane.obj");
+
+    pillar = scene.addChild();
+    pillar->models = res.loadModel("pillar.obj");
 
     for (auto & s : scene.children) {
         for (auto & m : s->models) m->material->shader = shader;
@@ -49,15 +52,19 @@ void Game::onMouseUp(const sf::Event::MouseButtonEvent & event) {
 
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
-    // scene.transform.rotateEuler({0, s * 0.5, 0});
-    // scene.models[0]->transform.rotateEuler({0, -s, 0});
+    tPillar += s;
+
+    pillar->models[1]->transform.rotateEuler({0, s * 0.5, 0});
+    pillar->models[1]->transform.move({0, sin(tPillar) * 0.005, 0});
+    pillar->models[2]->transform.rotateEuler({0, s * -0.25, 0});
+    pillar->models[2]->transform.move({0, sin(tPillar) * 0.01, 0});
 }
 
 inline void setupGl() {
     glClearColor(0.25, 0.25, 0.25, 1.0);
     glDisable(GL_CULL_FACE);
-    // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);

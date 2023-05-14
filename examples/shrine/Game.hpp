@@ -20,6 +20,8 @@ class Game : public GameBase {
     std::shared_ptr<singe::Shader> gridShader;
     Grid grid;
     Scene scene;
+    shared_ptr<Scene> pillar;
+    float tPillar;
 
 public:
     Game(Window & window);
