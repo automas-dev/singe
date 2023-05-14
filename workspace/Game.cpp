@@ -27,29 +27,29 @@ Game::Game(Window & window)
 
     // TODO: load here
 
-    auto subScene = scene.addChild();
+    shared_ptr<Scene> modelScene;
 
-    auto modelScene = subScene->addChild();
+    modelScene = scene.addChild();
     modelScene->models = res.loadModel("sphere.obj");
     modelScene->transform.move({0, 1, 0});
 
-    modelScene = subScene->addChild();
+    modelScene = scene.addChild();
     modelScene->models = res.loadModel("plane.obj");
     modelScene->transform.move({0, 0, 0});
 
-    modelScene = subScene->addChild();
+    modelScene = scene.addChild();
     modelScene->models = res.loadModel("cube.obj");
     modelScene->transform.move({0, 1, 3});
 
-    modelScene = subScene->addChild();
+    modelScene = scene.addChild();
     modelScene->models = res.loadModel("fountain.obj");
     modelScene->transform.move({2, 0, -3});
 
-    modelScene = subScene->addChild();
+    modelScene = scene.addChild();
     modelScene->models = res.loadModel("Human.obj");
     modelScene->transform.move({-2, 0, -3});
 
-    for (auto & s : subScene->children) {
+    for (auto & s : scene.children) {
         for (auto & m : s->models) m->material->shader = shader;
     }
 
@@ -68,7 +68,8 @@ void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
     // TODO: update here
     scene.transform.rotateEuler({0, s * 0.5, 0});
-    for (auto & model : scene.models) model->transform.rotateEuler({0, -s, 0});
+    for (auto & child : scene.children)
+        child->transform.rotateEuler({0, -s, 0});
 }
 
 inline void setupGl() {
