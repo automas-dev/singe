@@ -85,7 +85,7 @@ void Game::onKeyPressed(const sf::Event::KeyEvent & event) {
 
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
-    scene.children[0]->transform.rotateEuler({s, s * 0.2, 0});
+    scene.children[0]->children[0]->transform.rotateEuler({s, s * 0.2, 0});
     otherScene->transform.rotateEuler({0, s * 0.1, 0});
 }
 
