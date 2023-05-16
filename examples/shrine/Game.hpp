@@ -17,7 +17,6 @@ class Game : public GameBase {
     ResourceManager res;
     FPSDisplay fps;
     std::shared_ptr<singe::Shader> shader;
-    std::shared_ptr<singe::Shader> gridShader;
     Grid grid;
     Scene scene;
     shared_ptr<Scene> pillar;

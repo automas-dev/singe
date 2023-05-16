@@ -8,7 +8,6 @@ Game::Game(Window & window)
     : GameBase(window),
       res("../../examples/res"),
       shader(res.getShader("default")),
-      gridShader(res.getShader("grid")),
       grid(10, {1, 1, 1, 1}, true) {
 
     sf::Text loadingText;
@@ -91,9 +90,7 @@ void Game::onDraw() const {
     RenderState state(vp);
     scene.draw(state);
 
-    gridShader->bind();
-    gridShader->mvp().setMat4(vp);
-    grid.draw();
+    grid.draw(vp);
 
     glpp::BufferArray::unbind();
 }
