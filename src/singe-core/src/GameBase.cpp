@@ -22,8 +22,7 @@ namespace singe {
           moveSpeed(5),
           fpsShow(true),
           camera(window.getSize(), Camera::Perspective, 80.0f),
-          menu(nullptr),
-          defaultShader(Shader::defaultShader()) {
+          menu(nullptr) {
 
         uiFont.loadFromMemory(__default_font_start, __default_font_size);
         fpsDisplay.setFont(uiFont);
@@ -78,8 +77,8 @@ namespace singe {
                     camera.rotateDolly(rotation);
 
                 camera.moveDolly({x * delta.asSeconds() * moveSpeed,
-                                   y * delta.asSeconds() * moveSpeed,
-                                   z * delta.asSeconds() * moveSpeed});
+                                  y * delta.asSeconds() * moveSpeed,
+                                  z * delta.asSeconds() * moveSpeed});
             }
 
             fpsDisplay.update(delta);
@@ -87,7 +86,6 @@ namespace singe {
 
             FrameBuffer::unbind(); // Bind default frame buffer
             FrameBuffer::clear();
-            defaultShader.bind();
             onDraw();
             if (menu || fpsShow) {
                 window.window.pushGLStates();

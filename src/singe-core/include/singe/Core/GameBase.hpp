@@ -59,9 +59,6 @@ namespace singe {
         /// A font loaded from memory to act as the default font for GameBase.
         sf::Font uiFont;
 
-        /// Pointer to a shader that is bound before the call to onDraw().
-        Shader & defaultShader;
-
     public:
         /**
          * Construct a new GameBase.
