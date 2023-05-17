@@ -4,8 +4,8 @@ add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
-    # SceneParse.hpp
-    # SceneParse.cpp
+    # Scene.hpp
+    # Scene.cpp
 )
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="root">
+    <grid>
+        <n>100</n>
+        <color>0.7 0.8 0.9 1.0</color>
+        <pose>0 0 0 0 0 0</pose>
+    </grid>
+
+    <environment>
+        <material name="default_env">
+            <type>SolidColor</type>
+            <color>0.3 0.3 0.3</color>
+        </material>
+    </environment>
+
+    <camera name="fpv_camera">
+        <pose>5 2 5 0 0 0</pose>
+        <control>fpv</control>
+        <active>true</active>
+        <projection>
+            <mode>perspective</mode>
+            <fov>80</fov>
+            <znear>0.01</znear>
+            <zfar>1000</zfar>
+        </projection>
+    </camera>
+</scene>

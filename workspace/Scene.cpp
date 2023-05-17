@@ -1,4 +1,4 @@
-#include "SceneParse.hpp"
+#include "Scene.hpp"
 
 #include <fstream>
 #include <rapidxml.hpp>
@@ -7,7 +7,18 @@
 using namespace rapidxml;
 
 namespace singe {
+    using std::ifstream;
 
+    SceneLoader::SceneLoader(ResourceManager & res) : res(res) {}
+
+    SceneLoader::~SceneLoader() {}
+
+    shared_ptr<Scene> SceneLoader::loadScene(const string & name) const {
+        ifstream is(res.resourceAt(name));
+    }
+}
+
+namespace singe {
     SceneStruct parseScene(const std::string & file, const ResourceManager & res) {
         std::ifstream is(res.resourceAt(file));
         if (!is.is_open()) {
