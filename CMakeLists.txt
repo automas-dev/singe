@@ -5,6 +5,10 @@ project(singe
     DESCRIPTION "Scene In Nodes Game Engine"
     LANGUAGES CXX)
 
+option(SINGE_BUILD_DOCS "Builds the singe documentation" ON)
+option(SINGE_BUILD_EXAMPLES "Builds the singe examples" ON)
+option(SINGE_BUILD_TESTS "Builds the singe tests" ON)
+
 # Only if this is the top level project (not included with add_subdirectory)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Use -std=c++xx instead of -std=g++xx
@@ -13,27 +17,23 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Support folders in IDEs
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-    # Testing only available for top level projects. It calls enable_testing
-    # which must be in the main CMakeLists.
-    include(CTest)
+    if(SINGE_BUILD_TESTS)
+        # Testing only available for top level projects. It calls enable_testing
+        # which must be in the main CMakeLists.
+        include(CTest)
+    endif()
 
-    # Generate documentation using Doxygen
-    find_package(Doxygen)
-    if(Doxygen_FOUND)
-        add_subdirectory(docs)
-    else()
-        message(STATUS "Doxygen not found, not building docs")
+    if(SINGE_BUILD_DOCS)
+        # Generate documentation using Doxygen
+        find_package(Doxygen)
+
+        if(Doxygen_FOUND)
+            add_subdirectory(docs)
+        else()
+            message(STATUS "Doxygen not found, not building docs")
+        endif()
     endif()
 endif()
-
-option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." TRUE)
-if (${FORCE_COLORED_OUTPUT})
-  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    add_compile_options (-fdiagnostics-color=always)
-  elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    add_compile_options (-fcolor-diagnostics)
-  endif ()
-endif ()
 
 # Use for platform independent install dirs, despite being called GNU
 include(GNUInstallDirs)
@@ -57,9 +57,9 @@ add_subdirectory(external)
 
 add_subdirectory(src)
 
-add_subdirectory(examples)
-
-add_compile_options (-fdiagnostics-color)
+if(SINGE_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 # Create Targets file
 install(EXPORT ${PROJECT_NAME}Targets
@@ -86,5 +86,6 @@ install(FILES
 # Add examples and tests
 if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND BUILD_TESTING)
     add_subdirectory(workspace)
+
     # add_subdirectory(tests)
 endif()
