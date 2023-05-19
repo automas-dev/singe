@@ -55,7 +55,7 @@ namespace singe {
         ResourceManager(const ResourceManager &) = delete;
         ResourceManager & operator=(const ResourceManager &) = delete;
 
-        ~ResourceManager();
+        virtual ~ResourceManager();
 
         /**
          * Update the path to the resource directory
