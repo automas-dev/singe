@@ -5,7 +5,7 @@
 Game::Game(Window & window)
     : GameBase(window),
       res("../../../examples/res"),
-      shader(res.getShader("default")),
+      shader(res.getMVPShader("default")),
       grid(10, {1, 1, 1, 1}, true),
       showGrid(true),
       wireframe(Fill) {

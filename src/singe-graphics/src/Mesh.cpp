@@ -43,9 +43,7 @@ namespace singe {
         if (material) {
             material->bind();
             if (material->shader)
-                state.apply(material->shader->mvp());
-                // material->shader->mvp().setMat4(transform.toMatrix());
-            // state.apply(material->shader.get());
+                material->shader->bind(state);
         }
         array.drawArrays(Buffer::Triangles, 0, points.size());
     }

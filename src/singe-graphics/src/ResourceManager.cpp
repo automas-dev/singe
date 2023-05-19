@@ -77,6 +77,20 @@ namespace singe {
         return shaders[name];
     }
 
+    shared_ptr<MVPShader> ResourceManager::getMVPShader(const string & name) {
+        Logging::Resource->debug("ResourceManager::getMVPShader {}", name);
+        static fs::path subPath("shader");
+        fs::path fullVertexPath = resourceAt(subPath / (name + ".vert"));
+        fs::path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
+        Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
+        Logging::Resource->trace("Fragment path is {}", fullFragmentPath.c_str());
+
+        auto shader = make_shared<MVPShader>(
+            glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
+
+        return shader;
+    }
+
     shared_ptr<Shader> & ResourceManager::getShaderFragmentOnly(const string & name) {
         Logging::Resource->debug("ResourceManager::getShaderFragmentOnly {}", name);
         static fs::path subpath("shader");

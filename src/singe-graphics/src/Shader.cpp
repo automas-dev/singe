@@ -5,17 +5,12 @@
 namespace singe {
     using std::move;
 
-    Shader::Shader(glpp::Shader && shader)
-        : m_shader(move(shader)), m_mvp(m_shader.uniform("mvp")) {}
+    Shader::Shader(glpp::Shader && shader) : m_shader(move(shader)) {}
 
     Shader::~Shader() {}
 
     const glpp::Shader & Shader::shader() const {
         return m_shader;
-    }
-
-    const glpp::Uniform & Shader::mvp() const {
-        return m_mvp;
     }
 
     glpp::Uniform Shader::uniform(const string & name) const {
@@ -26,7 +21,25 @@ namespace singe {
         m_shader.bind();
     }
 
+    void Shader::bind(RenderState & state) const {
+        m_shader.bind();
+    }
+
     void Shader::unbind() const {
         m_shader.unbind();
+    }
+}
+
+namespace singe {
+    MVPShader::MVPShader(glpp::Shader && shader)
+        : Shader(move(shader)), m_mvp(m_shader.uniform("mvp")) {}
+
+    const glpp::Uniform & MVPShader::mvp() const {
+        return m_mvp;
+    }
+
+    void MVPShader::bind(RenderState & state) const {
+        m_shader.bind();
+        m_mvp.setMat4(state.transform);
     }
 }

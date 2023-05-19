@@ -7,7 +7,7 @@ using std::make_shared;
 Game::Game(Window & window)
     : GameBase(window),
       res("../../examples/res"),
-      shader(res.getShader("default")),
+      shader(res.getMVPShader("default")),
       grid(10, {1, 1, 1, 1}, true) {
 
     sf::Text loadingText;

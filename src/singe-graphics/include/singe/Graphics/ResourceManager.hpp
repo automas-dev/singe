@@ -103,6 +103,17 @@ namespace singe {
         shared_ptr<Shader> & getShader(const string & name);
 
         /**
+         * Load an MVPShader or return the cached shader if it exists.
+         *
+         * The sub path for shaders is /shader
+         *
+         * @param name the shader name
+         *
+         * @return shared_ptr to the MVPShader
+         */
+        shared_ptr<MVPShader> getMVPShader(const string & name);
+
+        /**
          * Load a Shader from fragment source only or return the cached shader
          * if it exists.
          *
