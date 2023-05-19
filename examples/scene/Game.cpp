@@ -106,12 +106,11 @@ void Game::onDraw() const {
     glPolygonMode(GL_FRONT_AND_BACK, wireframe);
     glPointSize(2.0);
 
-    glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
-    RenderState state(vp);
+    RenderState state(camera);
     scene.draw(state);
 
     if (showGrid) {
-        grid.draw(vp);
+        grid.draw(state.getMVP());
     }
 
     glpp::BufferArray::unbind();

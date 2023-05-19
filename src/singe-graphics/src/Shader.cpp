@@ -40,6 +40,6 @@ namespace singe {
 
     void MVPShader::bind(RenderState & state) const {
         Shader::bind(state);
-        m_mvp.setMat4(state.transform);
+        m_mvp.setMat4(state.getMVP());
     }
 }

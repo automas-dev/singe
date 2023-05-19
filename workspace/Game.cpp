@@ -86,11 +86,9 @@ inline void setupGl() {
 void Game::onDraw() const {
     setupGl();
 
-    glm::mat4 vp = camera.projMatrix() * camera.viewMatrix();
-    RenderState state(vp);
+    RenderState state(camera);
     scene.draw(state);
-
-    grid.draw(vp);
+    grid.draw(state.getMVP());
 
     glpp::BufferArray::unbind();
 }
