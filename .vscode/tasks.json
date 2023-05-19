@@ -18,6 +18,7 @@
             "detail": "CMake template build task",
             "presentation": {
                 "reveal": "always",
+                "clear": true,
                 "focus": true
             }
         }
