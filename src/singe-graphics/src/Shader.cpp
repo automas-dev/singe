@@ -27,6 +27,9 @@ namespace singe {
 
     void Shader::bind(RenderState & state) const {
         m_shader.bind();
+        for (auto & extra : m_extras) {
+            extra->send();
+        }
     }
 
     void Shader::unbind() const {
