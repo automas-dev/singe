@@ -60,7 +60,9 @@ namespace singe {
         void bind() const;
 
         /**
-         * Bind the shader
+         * Bind the shader and apply any extra uniforms.
+         *
+         * @param state the RenderState including transforms
          */
         virtual void bind(RenderState & state) const;
 
@@ -70,6 +72,10 @@ namespace singe {
         void unbind() const;
     };
 
+    /**
+     * Derived Shader which holds a uniform called mvp. The glpp::Shader must
+     * have a uniform called mvp of type mat4.
+     */
     class MVPShader : public Shader {
         glpp::Uniform m_mvp;
 
@@ -90,7 +96,9 @@ namespace singe {
         const glpp::Uniform & mvp() const;
 
         /**
-         * Bind the shader
+         * Bind the shader and apply the mvp uniform.
+         *
+         * @param state the RenderState including transforms
          */
         void bind(RenderState & state) const override;
     };
