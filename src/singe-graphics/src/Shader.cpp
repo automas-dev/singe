@@ -17,6 +17,10 @@ namespace singe {
         return m_shader.uniform(name.data());
     }
 
+    void Shader::addExtra(const shared_ptr<UniformExtra> & extra) {
+        m_extras.emplace_back(extra);
+    }
+
     void Shader::bind() const {
         m_shader.bind();
     }

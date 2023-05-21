@@ -3,12 +3,15 @@
 #include <glpp/Shader.hpp>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "RenderState.hpp"
+#include "UniformExtra.hpp"
 
 namespace singe {
     using std::shared_ptr;
     using std::string;
+    using std::vector;
 
     /**
      * Wrapper for glpp shader which also holds mvp uniform.
@@ -16,6 +19,7 @@ namespace singe {
     class Shader {
     protected:
         glpp::Shader m_shader;
+        vector<shared_ptr<UniformExtra>> m_extras;
 
     public:
         /**
@@ -42,6 +46,13 @@ namespace singe {
          * @return the glpp::Uniform
          */
         glpp::Uniform uniform(const string & name) const;
+
+        /**
+         * Add an exta uniform to be applied when this shader is bound.
+         *
+         * @param extra a shared_ptr to a derived class of UniformExtra
+         */
+        void addExtra(const shared_ptr<UniformExtra> & extra);
 
         /**
          * Bind the shader
