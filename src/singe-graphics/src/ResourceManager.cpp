@@ -2,11 +2,18 @@
 
 #include <Wavefront.hpp>
 #include <filesystem>
+#include <fstream>
+#include <rapidxml.hpp>
 #include <singe/Support/log.hpp>
+#include <string_view>
 
 namespace singe {
+    using std::ifstream;
+    using std::istreambuf_iterator;
     using std::make_shared;
     using std::move;
+    using std::string_view;
+    using rapidxml::xml_document;
 
     namespace Logging {
         Logger::Ptr Resource = make_shared<Logger>("Resource");
@@ -169,16 +176,41 @@ namespace singe {
         return models;
     }
 
-    // shared_ptr<Scene> ResourceManager::getScene(const string & name) {
-    //     static path subPath("scene");
+    shared_ptr<Scene> ResourceManager::loadScene(const string & name) {
+        Logging::Resource->debug("ResourceManager::loadScene {}", name);
+        static fs::path subPath("scene");
 
-    //     if (scenes.find(name) == scenes.end()) {
-    //         path fullPath = resourceAt(subPath / name);
-    //         auto scene = make_shared<Scene>(Scene::fromPath(fullPath));
-    //         scenes[name] = scene;
-    //         return scene;
-    //     }
-    //     else
-    //         return scenes[name];
-    // }
+        fs::path fullPath = resourceAt(subPath / name);
+        Logging::Resource->trace("Full path is {}", fullPath.c_str());
+
+        ifstream is(fullPath);
+        if (!is.is_open()) {
+            Logging::Resource->error("Failed to open scene file {}", fullPath);
+            return nullptr;
+        }
+
+        string body((istreambuf_iterator<char>(is)), istreambuf_iterator<char>());
+
+        xml_document doc;
+        doc.parse<0>(body.data());
+
+        auto * root = doc.first_node("scene");
+        if (!root) {
+            Logging::Resource->error("No root scene node");
+            return nullptr;
+        }
+
+        auto * nameAttr = root->first_attribute("name");
+        if (!nameAttr) {
+            Logging::Resource->error("Root scene has no name");
+            return nullptr;
+        }
+
+        string sceneName(nameAttr->value(), nameAttr->value_size());
+        // TODO: Add name field to Scene struct
+
+        shared_ptr<Scene> scene = make_shared<Scene>();
+
+        return scene;
+    }
 }

@@ -4,8 +4,8 @@ add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
-    # SceneParse.hpp
-    # SceneParse.cpp
+    SceneParse.hpp
+    SceneParse.cpp
 )
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)
@@ -16,5 +16,5 @@ PRIVATE
     Threads::Threads
     Core
     Graphics
-    # rapidxml
+    rapidxml
 )

@@ -136,6 +136,6 @@ namespace singe {
          */
         vector<shared_ptr<Mesh>> loadModel(const string & name);
 
-        // shared_ptr<Scene> getScene(const string & name);
+        shared_ptr<Scene> loadScene(const string & name);
     };
 }
