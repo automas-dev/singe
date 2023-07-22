@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="workspace">
+
+    <!-- Cameras -->
+
+    <camera name="fpv_camera">
+        <pose>5 2 5 0.2 -0.75 0</pose>
+        <projection>
+            <mode>perspective</mode>
+            <fov>70</fov>
+            <znear>0.01</znear>
+            <zfar>1000</zfar>
+        </projection>
+    </camera>
+
+    <!-- Shaders -->
+
+    <shader name="default" type="mvp">
+        <source type="vertex" path="shader/default.vert" />
+        <source type="fragment" path="shader/default.frag" />
+    </shader>
+
+    <shader name="light" type="mvp">
+        <source type="vertex" path="shader/light.vert" />
+        <source type="fragment" path="shader/light.frag" />
+
+        <uniform name="mvp" type="mat4" />
+        <uniform name="lightDir" type="vec3">0 0 -1</uniform>
+        <uniform name="lightPos" type="vec3">0 0 0</uniform>
+        <uniform name="gamma" type="float">0.2</uniform>
+    </shader>
+
+    <!-- Mesh -->
+
+    <model name="sphere">
+        <mesh path="model/sphere.obj" />
+        <shader ref="light" />
+    </model>
+
+    <model name="human">
+        <mesh path="model/human.obj" />
+        <shader ref="light" />
+    </model>
+
+    <!-- Grid -->
+
+    <grid>
+        <size>10</size>
+        <color>0.5 0.5 0.5 1</color>
+    </grid>
+
+    <!-- Scene -->
+
+    <model name="plane">
+        <mesh path="model/plane.obj" />
+        <shader ref="light" />
+    </model>
+
+    <model name="plane2">
+        <transform>
+            <position>0 0.2 0</position>
+            <scale>0.5 0.5 0.5</scale>
+        </transform>
+        <mesh path="model/plane.obj" />
+        <shader ref="light" />
+    </model>
+
+    <scene name="sphere">
+        <transform>
+            <position>0 1 0</position>
+        </transform>
+
+        <grid name="small">
+            <size>3</size>
+            <color>1 1 1 1</color>
+        </grid>
+
+        <model name="sphere">
+            <mesh path="model/sphere.obj" />
+            <shader ref="light" />
+            <transform>
+                <position>0 0 0</position>
+            </transform>
+        </model>
+    </scene>
+
+    <scene name="cube">
+        <transform>
+            <position>0 1 3</position>
+            <rotation>0.5 0 0.3</rotation>
+        </transform>
+
+        <model name="cube">
+            <mesh path="model/cube.obj" />
+            <shader ref="light" />
+        </model>
+    </scene>
+
+    <scene name="fountain">
+        <transform>
+            <position>2 0 -3</position>
+        </transform>
+
+        <model name="fountain">
+            <mesh path="model/fountain.obj" />
+            <shader ref="light" />
+        </model>
+    </scene>
+
+    <scene name="human">
+        <transform>
+            <position>-2 0 -3</position>
+            <scale>0.5 0.5 0.5</scale>
+        </transform>
+
+        <model name="human">
+            <mesh path="obj/human.obj" />
+            <shader ref="light" />
+        </model>
+    </scene>
+</scene>
