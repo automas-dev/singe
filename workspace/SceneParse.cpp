@@ -12,6 +12,7 @@ namespace singe::scene {
     using std::make_shared;
     using std::stof;
     using std::stoi;
+    using std::move;
 
     static string traceNode(const xml_node<char> * node) {
         if (!node)
@@ -39,11 +40,21 @@ namespace singe::scene {
             ERROR(node, "received nullptr"); \
     }
 
+    static vec3 parseVec3(const xml_node<char> * node) {
+        PTR_CHECK(node);
+
+        auto parts = splitString(string(node->value(), node->value_size()));
+        if (parts.size() < 3)
+            throw SceneParseError(traceNode(node) + " : must have 3 components");
+
+        return vec3(stof(parts[0]), stof(parts[1]), stof(parts[2]));
+    }
+
     static vec4 parseVec4(const xml_node<char> * node) {
         PTR_CHECK(node);
 
         auto parts = splitString(string(node->value(), node->value_size()));
-        if (parts.size() < 6)
+        if (parts.size() < 4)
             throw SceneParseError(traceNode(node) + " : must have 4 components");
 
         return vec4(stof(parts[0]), stof(parts[1]), stof(parts[2]), stof(parts[3]));
@@ -58,6 +69,26 @@ namespace singe::scene {
 
         return Pose(vec3(stof(parts[0]), stof(parts[1]), stof(parts[2])),
                     vec3(stof(parts[3]), stof(parts[4]), stof(parts[5])));
+    }
+
+    static Transform parseTransform(const xml_node<char> * node) {
+        PTR_CHECK(node);
+
+        Transform transform;
+
+        auto * pos_node = node->first_node("position");
+        if (pos_node)
+            transform.pos = parseVec3(pos_node);
+
+        auto * rot_node = node->first_node("rotation");
+        if (rot_node)
+            transform.rot = parseVec3(rot_node);
+
+        auto * scale_node = node->first_node("scale");
+        if (scale_node)
+            transform.scale = parseVec3(scale_node);
+
+        return transform;
     }
 
     static Camera::Projection::Mode parseMode(const xml_node<char> * node) {
@@ -167,34 +198,69 @@ namespace singe::scene {
             ERROR(node, "missing name attribute");
 
         string name(name_attr->value(), name_attr->value_size());
-        Shader::Uniform uniform(name);
 
         auto * type_attr = node->first_attribute("type");
         if (!type_attr)
             ERROR(node, "missing type attribute");
 
         string type_str(type_attr->value(), type_attr->value_size());
-        uniform.type = uniformType(type_str);
+        auto type = uniformType(type_str);
 
-        uniform.defaultValue = string(node->value(), node->value_size());
+        string value(node->value(), node->value_size());
 
+        Shader::Uniform uniform(name, type, value);
         return uniform;
     }
 
-    static Shader parseShader(const xml_node<char> * node) {
+    static Shader::Source parseSource(const xml_node<char> * node) {
         PTR_CHECK(node);
+
+        auto * type_attr = node->first_attribute("type");
+        if (!type_attr)
+            ERROR(node, "missing type attribute");
+
+        string type(type_attr->value(), type_attr->value_size());
+
+        auto * path_attr = node->first_attribute("path");
+        if (!path_attr)
+            ERROR(node, "missing path attribute");
+
+        string path(path_attr->value(), path_attr->value_size());
+
+        return Shader::Source(type, path);
+    }
+
+    static Shader parseShader(const xml_node<char> * node, Scene & parent) {
+        PTR_CHECK(node);
+
+        // Check for ref
+
+        auto * ref_attr = node->first_attribute("ref");
+        if (ref_attr) {
+            string ref(ref_attr->value(), ref_attr->value_size());
+            return parent.findShader(ref);
+        }
+
+        // Create Shader
 
         auto * name_attr = node->first_attribute("name");
         if (!name_attr)
             ERROR(node, "missing name attribute");
 
         string name(name_attr->value(), name_attr->value_size());
-        Shader shader(name);
 
-        auto * type_attr = node->first_attribute("name");
-        if (type_attr) {
-            string type(name_attr->value(), name_attr->value_size());
-            shader.type = type;
+        auto * type_attr = node->first_attribute("type");
+        if (!type_attr)
+            ERROR(node, "missing type attribute");
+
+        string type(type_attr->value(), type_attr->value_size());
+
+        Shader shader(name, type);
+
+        auto * source_node = node->first_node("source");
+        while (source_node) {
+            shader.source.emplace_back(parseSource(source_node));
+            source_node = source_node->next_sibling("source");
         }
 
         auto * uniform_node = node->first_node("uniform");
@@ -209,20 +275,24 @@ namespace singe::scene {
     static Model::Mesh parseMesh(const xml_node<char> * node) {
         PTR_CHECK(node);
 
+        auto * path_attr = node->first_attribute("path");
+        if (!path_attr)
+            ERROR(node, "missing path attribute");
+
+        string path(path_attr->value(), path_attr->value_size());
+        Model::Mesh mesh(path);
+
+        return mesh;
+    }
+
+    static Model parseModel(const xml_node<char> * node, Scene & parent) {
+        PTR_CHECK(node);
+
         auto * name_attr = node->first_attribute("name");
         if (!name_attr)
             ERROR(node, "missing name attribute");
 
         string name(name_attr->value(), name_attr->value_size());
-        Model::Mesh mesh(name);
-
-        // Add any attrib or node parsing here, if Mesh gets anything
-
-        return mesh;
-    }
-
-    static Model parseModel(const xml_node<char> * node) {
-        PTR_CHECK(node);
 
         auto * mesh_node = node->first_node("mesh");
         if (!mesh_node)
@@ -230,14 +300,16 @@ namespace singe::scene {
 
         Model::Mesh mesh = parseMesh(mesh_node);
 
-        auto * name_attr = node->first_attribute("name");
-        if (!name_attr)
-            ERROR(node, "missing name attribute");
+        auto * shader_node = node->first_node("shader");
+        if (!shader_node)
+            ERROR(node, "missing shader node");
+        Shader shader = parseShader(shader_node, parent);
 
-        string name(name_attr->value(), name_attr->value_size());
-        Model model(name, mesh);
+        Model model(name, mesh, shader);
 
-        // TODO: shader
+        auto * transform_node = node->first_node("transform");
+        if (transform_node)
+            model.transform = parseTransform(transform_node);
 
         return model;
     }
@@ -246,12 +318,6 @@ namespace singe::scene {
         PTR_CHECK(node);
 
         Grid grid;
-
-        auto * name_attr = node->first_attribute("name");
-        if (name_attr) {
-            string name(name_attr->value(), name_attr->value_size());
-            grid.name = name;
-        }
 
         auto * size_node = node->first_node("size");
         if (size_node) {
@@ -266,72 +332,84 @@ namespace singe::scene {
         return grid;
     }
 
-    static Defs parseDefs(const xml_node<char> * root) {
-        PTR_CHECK(root);
+    static shared_ptr<Scene> parseScene(const xml_node<char> * node,
+                                        shared_ptr<Scene> parent) {
+        PTR_CHECK(node);
 
-        Defs defs;
+        auto * name_attr = node->first_attribute("name");
+        if (!name_attr)
+            ERROR(node, "missing name attribute");
 
-        auto * cameras = root->first_node("cameras");
-        if (cameras) {
-            auto * camera_node = cameras->first_node("camera");
-            while (camera_node) {
-                defs.cameras.emplace_back(
-                    make_shared<Camera>(parseCamera(camera_node)));
-                camera_node = camera_node->next_sibling("camera");
-            }
+        string name(name_attr->value(), name_attr->value_size());
+
+        shared_ptr<Scene> scene = make_shared<Scene>(parent, name);
+
+        auto * transform_node = node->first_node("transform");
+        if (transform_node)
+            scene->transform = parseTransform(transform_node);
+
+        auto * grid_node = node->first_node("grid");
+        if (grid_node)
+            scene->grid = make_shared<Grid>(parseGrid(grid_node));
+
+        auto * camera_node = node->first_node("camera");
+        while (camera_node) {
+            scene->cameras.emplace_back(parseCamera(camera_node));
+            camera_node = camera_node->next_sibling("camera");
         }
 
-        auto * shaders = root->first_node("shaders");
-        if (shaders) {
-            auto * shader_node = shaders->first_node("shader");
-            while (shader_node) {
-                defs.shaders.emplace_back(
-                    make_shared<Shader>(parseShader(shader_node)));
-                shader_node = shader_node->next_sibling("shader");
-            }
+        // IMPORTANT: Shaders must be loaded before models
+        auto * shader_node = node->first_node("shader");
+        while (shader_node) {
+            scene->cameras.emplace_back(parseShader(shader_node, *scene));
+            shader_node = shader_node->next_sibling("shader");
         }
 
-        auto * models = root->first_node("models");
-        if (models) {
-            auto * model_node = models->first_node("model");
-            while (model_node) {
-                defs.models.emplace_back(
-                    make_shared<Model>(parseModel(model_node)));
-                model_node = model_node->next_sibling("model");
-            }
+        auto * model_node = node->first_node("model");
+        while (model_node) {
+            scene->cameras.emplace_back(parseModel(model_node, *scene));
+            model_node = model_node->next_sibling("model");
         }
 
-        auto * grids = root->first_node("grids");
-        if (grids) {
-            auto * grid_node = grids->first_node("grid");
-            while (grid_node) {
-                defs.grids.emplace_back(make_shared<Grid>(parseGrid(grid_node)));
-                grid_node = grid_node->next_sibling("grid");
-            }
+        auto * scene_node = node->first_node("scene");
+        while (scene_node) {
+            scene->children.emplace_back(parseScene(scene_node, scene));
+            scene_node = scene_node->next_sibling("scene");
         }
 
-        return defs;
+        return scene;
     }
 
-
-    class SceneReader {
-    public:
-        SceneReader();
-
-        shared_ptr<Scene> parse(const xml_node<char> * root) {
-            auto * nameAttr = root->first_attribute("name");
-            if (!nameAttr) {
-                Logging::Resource->error("Root scene has no name attribute");
-                return nullptr;
+    Shader & Scene::findShader(const string & name) {
+        for (auto & shader : shaders) {
+            if (shader.name == name) {
+                return shader;
             }
-
-            string name(nameAttr->value(), nameAttr->value_size());
-            shared_ptr<Scene> scene = make_shared<Scene>(nullptr, name);
-            if (scene) {
-            }
-            return scene;
         }
-    };
+        if (parent) {
+            return parent->findShader(name);
+        }
+        throw SceneParseError("Unable to find shader " + name);
+    }
+
+    SceneReader::SceneReader() {}
+
+    shared_ptr<Scene> SceneReader::parse(const xml_node<char> * root) {
+        auto * nameAttr = root->first_attribute("name");
+        if (!nameAttr) {
+            Logging::Resource->error("Root scene has no name attribute");
+            return nullptr;
+        }
+
+        try {
+            return parseScene(root, nullptr);
+        }
+        catch (const SceneParseError & e) {
+            Logging::Resource->error("Failed to parse scene: {}", e.what());
+        }
+
+        return nullptr;
+    }
 }
 
 namespace singe {
@@ -363,73 +441,6 @@ namespace singe {
             return nullptr;
         }
 
-        auto * nameAttr = root->first_attribute("name");
-        if (!nameAttr) {
-            Logging::Resource->error("Root scene has no name attribute");
-            return nullptr;
-        }
-
-        string sceneName(nameAttr->value(), nameAttr->value_size());
-        shared_ptr<scene::Scene> scene =
-            make_shared<scene::Scene>(nullptr, sceneName);
-
-        parseDefs(scene, root);
-
-        // TODO: everything else
-
-        return scene;
-    }
-}
-
-namespace singe::scene {
-    SceneStruct parseScene(const std::string & file, const ResourceManager & res) {
-        std::ifstream is(res.resourceAt(file));
-        if (!is.is_open()) {
-            throw std::runtime_error("Failed to open file " + file);
-        }
-        std::string body((std::istreambuf_iterator<char>(is)),
-                         std::istreambuf_iterator<char>());
-
-        xml_document<> doc;
-        doc.parse<0>(body.data());
-
-        SceneStruct ss;
-
-        auto * scene = doc.first_node("scene");
-
-        for (auto * node = scene->first_node(); node; node = node->next_sibling()) {
-            std::string name(node->name(), node->name_size());
-            if (name == "grid") {
-                int n = 100;
-                float step = 1.0;
-                glm::vec4 color(1);
-                bool fade = false;
-                auto * p = node->first_node("n");
-                if (p) {
-                    std::string value(p->value(), p->value_size());
-                    n = std::stoi(value);
-                }
-                p = node->first_node("step");
-                if (p) {
-                    std::string value(p->value(), p->value_size());
-                    step = std::stof(value);
-                }
-                auto * mat = node->first_node("material");
-                if (mat) {
-                    auto * p = mat->first_node("color");
-                    if (p) {
-                        std::string value(p->value(), p->value_size());
-                        auto split = splitString(value, ' ');
-                        color.r = std::stof(split[0]);
-                        color.g = std::stof(split[1]);
-                        color.b = std::stof(split[2]);
-                        color.a = std::stof(split[3]);
-                    }
-                }
-                ss.grid = std::make_shared<Grid>(n, step, color, fade);
-            }
-        }
-
-        return ss;
+        return scene::SceneReader().parse(root);
     }
 }

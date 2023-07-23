@@ -119,11 +119,11 @@ namespace singe::scene {
         string name;
         Transform transform;
         Mesh mesh;
-        shared_ptr<Shader> shader;
+        Shader shader;
 
         Model(const string & name,
               const Mesh & mesh,
-              const shared_ptr<Shader> & shader,
+              const Shader & shader,
               const Transform & transform = Transform())
             : name(name), mesh(mesh), shader(shader), transform(transform) {}
     };
@@ -141,13 +141,13 @@ namespace singe::scene {
         string name;
         Transform transform;
         shared_ptr<Grid> grid;
-        vector<shared_ptr<Camera>> cameras;
-        vector<shared_ptr<Shader>> shaders;
-        vector<shared_ptr<Model>> models;
-        vector<shared_ptr<Scene>> children;
+        vector<Camera> cameras;
+        vector<Shader> shaders;
+        vector<Model> models;
+        vector<Scene> children;
 
         /// Find a shader by ref name
-        shared_ptr<Shader> & findShader(const string & name);
+        Shader & findShader(const string & name);
 
         Scene(const shared_ptr<Scene> & parent, const string & name)
             : parent(parent), name(name) {}
@@ -157,7 +157,7 @@ namespace singe::scene {
     public:
         SceneReader();
 
-        shared_ptr<Scene> parse(const string & name);
+        shared_ptr<Scene> parse(const xml_node<char> * root);
     };
 }
 
