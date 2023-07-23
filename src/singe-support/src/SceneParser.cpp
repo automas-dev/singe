@@ -1,10 +1,11 @@
-#include "SceneParse.hpp"
+#include "singe/Support/SceneParser.hpp"
 
 #include <fstream>
 #include <rapidxml.hpp>
-#include <singe/Support/Util.hpp>
-#include <singe/Support/log.hpp>
 #include <stdexcept>
+
+#include "singe/Support/Util.hpp"
+#include "singe/Support/log.hpp"
 
 using namespace rapidxml;
 
