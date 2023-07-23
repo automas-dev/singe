@@ -64,7 +64,10 @@ namespace singe::scene {
         Pose pose;
         Projection projection;
 
-        Camera(const string & name) : name(name) {}
+        Camera(const string & name,
+               Projection projection = Projection(),
+               Pose pose = Pose())
+            : name(name), projection(projection), pose(pose) {}
     };
 
     struct Shader {
@@ -84,65 +87,67 @@ namespace singe::scene {
 
             string name;
             Type type;
-            string defaultValue;
+            string value;
 
-            Uniform(const string & name) : name(name) {}
+            Uniform(const string & name, Type type, const string & value = "")
+                : name(name), type(type), value(value) {}
+        };
+
+        struct Source {
+            string type;
+            string path;
+
+            Source(const string & type, const string & path)
+                : type(type), path(path) {}
         };
 
         string name;
         string type;
+        vector<Source> source;
         vector<Uniform> uniforms;
 
-        Shader(const string & name) : name(name) {}
-    };
-
-    struct Material {
-        // TODO: material
+        Shader(const string & name, const string & type) : name(name) {}
     };
 
     struct Model {
         struct Mesh {
-            string name;
+            string path;
 
-            Mesh(const string & name) : name(name) {}
+            Mesh(const string & path) : path(path) {}
         };
 
         string name;
-        Mesh mesh;
         Transform transform;
+        Mesh mesh;
         shared_ptr<Shader> shader;
-        // shared_ptr<Material> material;
 
-        Model(const string & name, const Mesh & mesh)
-            : name(name), mesh(mesh) {}
+        Model(const string & name,
+              const Mesh & mesh,
+              const shared_ptr<Shader> & shader,
+              const Transform & transform = Transform())
+            : name(name), mesh(mesh), shader(shader), transform(transform) {}
     };
 
     struct Grid {
-        string name;
         int size;
         vec4 color;
 
-        Grid(const string & name = "", int size = 10, const vec4 & color = vec4(1))
-            : name(name), size(size), color(color) {}
-    };
-
-    struct Defs {
-        vector<shared_ptr<Camera>> cameras;
-        vector<shared_ptr<Shader>> shaders;
-        vector<shared_ptr<Model>> models;
-        vector<shared_ptr<Grid>> grids;
+        Grid(int size = 10, const vec4 & color = vec4(1))
+            : size(size), color(color) {}
     };
 
     struct Scene {
         shared_ptr<Scene> parent;
         string name;
-        Defs defs;
         Transform transform;
+        shared_ptr<Grid> grid;
         vector<shared_ptr<Camera>> cameras;
         vector<shared_ptr<Shader>> shaders;
         vector<shared_ptr<Model>> models;
-        vector<shared_ptr<Grid>> grids;
         vector<shared_ptr<Scene>> children;
+
+        /// Find a shader by ref name
+        shared_ptr<Shader> & findShader(const string & name);
 
         Scene(const shared_ptr<Scene> & parent, const string & name)
             : parent(parent), name(name) {}

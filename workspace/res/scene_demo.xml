@@ -9,8 +9,8 @@
         <projection>
             <mode>perspective</mode>
             <fov>70</fov>
-            <znear>0.01</znear>
-            <zfar>1000</zfar>
+            <near>0.01</near>
+            <far>1000</far>
         </projection>
     </camera>
 

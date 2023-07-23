@@ -21,11 +21,11 @@ Children
 ```xml
 <scene name="root">
     <transform>...</transform>
+    <grid>...</grid>
 
     <camera>...</camera>
     <shader>...</shader>
     <model>...</model>
-    <grid>...</grid>
 
     <scene>...</scene>
 </scene>
@@ -55,15 +55,15 @@ Children
 
 - `mode`: enum
 - `fov`: `float`
-- `znear`: `float`
-- `zfar`: `float`
+- `near`: `float`
+- `far`: `float`
 
 ```xml
 <projection>
     <mode>...</mode>
     <fov>...</fov>
-    <znear>...</znear>
-    <zfar>...</zfar>
+    <near>...</near>
+    <far>...</far>
 </projection>
 ```
 
@@ -156,25 +156,32 @@ Attributes
 
 Children
 
+- (optional)`transform`
 - `mesh`
 - `shader`
-- `transform`
 
 ```xml
 <model name="sphere">
+    <transform>...</transform>
     <mesh path="model/sphere.obj" />
     <shader ref="light" />
-    <transform>...</transform>
 </model>
 ```
+
+### `mesh`
+
+Attributes
+
+- `path`: `string`
 
 ## `grid`
 
 Each `scene` may have at most 1 grid.
 
-`size` is an integer radius in number of cells.
+`size` is an integer radius in number of cells, default value is `10`.
 
-`color` components values are from 0 to 1 and ordered Red, Green, Blue, Alpha.
+`color` components values are from 0 to 1 and ordered Red, Green, Blue, Alpha,
+default value is `1 1 1 1` (white).
 
 Children
 
@@ -295,14 +302,13 @@ classDiagram
         vec4 color
     }
     class Scene {
-        Scene parent
+        Scene* parent
         string name
-        Defs defs
         Transform transform
         Camera*[] cameras
         Shader*[] shaders
         Model*[] models
-        Grid*[] grids
+        Grid* grid
         Scene*[] children
     }
     %%Scene --|> Scene
