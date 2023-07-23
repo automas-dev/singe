@@ -152,13 +152,6 @@ namespace singe::scene {
         Scene(const shared_ptr<Scene> & parent, const string & name)
             : parent(parent), name(name) {}
     };
-
-    class SceneReader {
-    public:
-        SceneReader();
-
-        shared_ptr<Scene> parse(const xml_node<char> * root);
-    };
 }
 
 namespace singe {

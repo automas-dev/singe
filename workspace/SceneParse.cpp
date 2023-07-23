@@ -32,7 +32,7 @@ namespace singe::scene {
 
 #define ERROR(node, msg)                  \
     throw SceneParseError(traceNode(node) \
-                          + " :" __FILE__ ":"_STR(__LINE__) " " + (msg))
+                          + " :" __FILE__ ":" _STR(__LINE__) " " + (msg))
 
 #define PTR_CHECK(node)                      \
     {                                        \
@@ -361,13 +361,13 @@ namespace singe::scene {
         // IMPORTANT: Shaders must be loaded before models
         auto * shader_node = node->first_node("shader");
         while (shader_node) {
-            scene->cameras.emplace_back(parseShader(shader_node, *scene));
+            scene->shaders.emplace_back(parseShader(shader_node, *scene));
             shader_node = shader_node->next_sibling("shader");
         }
 
         auto * model_node = node->first_node("model");
         while (model_node) {
-            scene->cameras.emplace_back(parseModel(model_node, *scene));
+            scene->models.emplace_back(parseModel(model_node, *scene));
             model_node = model_node->next_sibling("model");
         }
 
@@ -390,25 +390,6 @@ namespace singe::scene {
             return parent->findShader(name);
         }
         throw SceneParseError("Unable to find shader " + name);
-    }
-
-    SceneReader::SceneReader() {}
-
-    shared_ptr<Scene> SceneReader::parse(const xml_node<char> * root) {
-        auto * nameAttr = root->first_attribute("name");
-        if (!nameAttr) {
-            Logging::Resource->error("Root scene has no name attribute");
-            return nullptr;
-        }
-
-        try {
-            return parseScene(root, nullptr);
-        }
-        catch (const SceneParseError & e) {
-            Logging::Resource->error("Failed to parse scene: {}", e.what());
-        }
-
-        return nullptr;
     }
 }
 
@@ -441,6 +422,13 @@ namespace singe {
             return nullptr;
         }
 
-        return scene::SceneReader().parse(root);
+        try {
+            return scene::parseScene(root, nullptr);
+        }
+        catch (const scene::SceneParseError & e) {
+            Logging::Resource->error("Failed to parse scene: {}", e.what());
+        }
+
+        return nullptr;
     }
 }
