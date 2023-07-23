@@ -13,6 +13,8 @@ namespace singe::scene {
     using std::stof;
     using std::stoi;
     using std::move;
+    using std::ifstream;
+    using std::istreambuf_iterator;
 
     static string traceNode(const xml_node<char> * node) {
         if (!node)
@@ -391,45 +393,28 @@ namespace singe::scene {
         }
         throw SceneParseError("Unable to find shader " + name);
     }
-}
 
-namespace singe {
-    using std::ifstream;
-    using std::istreambuf_iterator;
-    using std::make_shared;
+    SceneParser::SceneParser() {}
 
-    shared_ptr<scene::Scene> SceneResourceManager::loadScene(const string & name) {
-        Logging::Resource->debug("SceneResourceManager::loadScene {}", name);
-        static fs::path subPath("scene");
+    shared_ptr<Scene> SceneParser::parse(const string & filename) {
+        ifstream is(filename);
+        if (!is.is_open())
+            throw SceneParseError("Failed to open file " + filename);
 
-        fs::path fullPath = resourceAt(subPath / name);
-        Logging::Resource->trace("Full path is {}", fullPath.c_str());
+        return parse(is);
+    }
 
-        ifstream is(fullPath);
-        if (!is.is_open()) {
-            Logging::Resource->error("Failed to open scene file {}",
-                                     fullPath.c_str());
-            return nullptr;
-        }
-
-        string body((istreambuf_iterator<char>(is)), istreambuf_iterator<char>());
+    shared_ptr<Scene> SceneParser::parse(istream & stream) {
+        string body((istreambuf_iterator<char>(stream)),
+                    istreambuf_iterator<char>());
 
         xml_document doc;
         doc.parse<0>(body.data());
 
         auto * root = doc.first_node("scene");
-        if (!root) {
-            Logging::Resource->error("No root scene node");
-            return nullptr;
-        }
+        if (!root)
+            throw SceneParseError("No root scene node");
 
-        try {
-            return scene::parseScene(root, nullptr);
-        }
-        catch (const scene::SceneParseError & e) {
-            Logging::Resource->error("Failed to parse scene: {}", e.what());
-        }
-
-        return nullptr;
+        return scene::parseScene(root, nullptr);
     }
 }

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <istream>
 #include <map>
 #include <memory>
-#include <singe/Graphics/ResourceManager.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -13,6 +13,7 @@ namespace singe::scene {
     using std::vector;
     using std::map;
     using std::shared_ptr;
+    using std::istream;
 
     using glm::vec3;
     using glm::vec4;
@@ -152,13 +153,13 @@ namespace singe::scene {
         Scene(const shared_ptr<Scene> & parent, const string & name)
             : parent(parent), name(name) {}
     };
-}
 
-namespace singe {
-    class SceneResourceManager : public ResourceManager {
+    class SceneParser {
     public:
-        using ResourceManager::ResourceManager;
+        SceneParser();
 
-        shared_ptr<scene::Scene> loadScene(const string & name);
+        shared_ptr<Scene> parse(const string & filename);
+
+        shared_ptr<Scene> parse(istream & stream);
     };
 }
