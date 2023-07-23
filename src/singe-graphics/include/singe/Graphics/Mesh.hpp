@@ -20,10 +20,10 @@ namespace singe {
     /**
      * VertexArrayBuffer with optional Material.
      *
-     * Remember to call Mesh::update() after making changes to points. This will
-     * buffer the mesh points into the vertex buffer.
+     * Remember to call Model::update() after making changes to points. This
+     * will buffer the mesh points into the vertex buffer.
      */
-    class Mesh {
+    class Model {
         VertexBufferArray array;
 
     public:
@@ -32,41 +32,41 @@ namespace singe {
         Transform transform;
 
         /**
-         * Create an empty Mesh. This will do nothing until points are added to
-         * mesh and Mesh::update() is called.
+         * Create an empty Model. This will do nothing until points are added to
+         * mesh and Model::update() is called.
          */
-        Mesh();
+        Model();
 
         /**
-         * Create a Mesh by copying points. This constructor will call
-         * Mesh::update().
+         * Create a Model by copying points. This constructor will call
+         * Model::update().
          *
          * @param points the Vertex points for this mesh
          */
-        Mesh(const vector<Vertex> & points);
+        Model(const vector<Vertex> & points);
 
         /**
-         * Create a Mesh by moving points. This constructor will call
-         * Mesh::update().
+         * Create a Model by moving points. This constructor will call
+         * Model::update().
          *
          * @param points the Vertex points for this mesh
          */
-        Mesh(vector<Vertex> && points);
+        Model(vector<Vertex> && points);
 
         /// @brief  Move constructor
-        /// @param other Other Mesh to move fields from
-        Mesh(Mesh && other);
+        /// @param other Other Model to move fields from
+        Model(Model && other);
 
         /// @brief Move operator
-        /// @param other Other Mesh to move fields from
-        /// @return This Mesh
-        Mesh & operator=(Mesh && other);
+        /// @param other Other Model to move fields from
+        /// @return This Model
+        Model & operator=(Model && other);
 
-        Mesh(const Mesh &) = delete;
-        Mesh & operator=(const Mesh &) = delete;
+        Model(const Model &) = delete;
+        Model & operator=(const Model &) = delete;
 
         /// @brief Make this a virtual class for derivation.
-        virtual ~Mesh();
+        virtual ~Model();
 
         /**
          * Buffer points into the vertex buffer.
@@ -80,7 +80,7 @@ namespace singe {
         /**
          * Draw the vertex buffer.
          *
-         * You must call Mesh::update() to buffer any changes to points before
+         * You must call Model::update() to buffer any changes to points before
          * drawing.
          *
          * @param state the parent state with transform for shader's mvp uniform

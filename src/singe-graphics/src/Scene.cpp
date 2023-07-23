@@ -26,8 +26,8 @@ namespace singe {
         return children.emplace_back(make_shared<Scene>());
     }
 
-    shared_ptr<Mesh> & Scene::addModel() {
-        return models.emplace_back(make_shared<Mesh>());
+    shared_ptr<Model> & Scene::addModel() {
+        return models.emplace_back(make_shared<Model>());
     }
 
     void Scene::draw(RenderState state) const {

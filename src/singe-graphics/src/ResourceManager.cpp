@@ -115,7 +115,7 @@ namespace singe {
         return shaders[name];
     }
 
-    vector<shared_ptr<Mesh>> ResourceManager::loadModel(const string & name) {
+    vector<shared_ptr<Model>> ResourceManager::loadModel(const string & name) {
         Logging::Resource->debug("ResourceManager::loadModel {}", name);
         static fs::path subPath("model");
 
@@ -152,10 +152,10 @@ namespace singe {
                 material->specularTexture = getTexture(mat->texSpecular);
         }
 
-        vector<shared_ptr<Mesh>> models;
+        vector<shared_ptr<Model>> models;
 
         for (auto & obj : wfModel.objects) {
-            auto & model = models.emplace_back(make_shared<Mesh>());
+            auto & model = models.emplace_back(make_shared<Model>());
 
             if (obj->size() == 0)
                 Logging::Resource->warning("Object " + obj->name + " has no points");

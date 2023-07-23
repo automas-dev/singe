@@ -13,11 +13,11 @@ namespace singe {
     using glpp::extra::Transform;
 
     /**
-     * Group of Mesh and child Scenes.
+     * Group of Models and child Scenes.
      */
     struct Scene {
         vector<shared_ptr<Scene>> children;
-        vector<shared_ptr<Mesh>> models;
+        vector<shared_ptr<Model>> models;
         Transform transform;
 
         Scene();
@@ -43,12 +43,12 @@ namespace singe {
          *
          * @return reference to the new model
          */
-        shared_ptr<Mesh> & addModel();
+        shared_ptr<Model> & addModel();
 
         /**
          * Draw child scenes and then mesh in this scene.
          *
-         * Mesh in this scene will be drawn with this transform and child
+         * Models in this scene will be drawn with this transform and child
          * scenes will transform with this scene as their origin.
          *
          * @param state the RenderState with the current global transform

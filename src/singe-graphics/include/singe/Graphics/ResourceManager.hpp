@@ -134,7 +134,7 @@ namespace singe {
          *
          * @return vector of models
          */
-        vector<shared_ptr<Mesh>> loadModel(const string & name);
+        vector<shared_ptr<Model>> loadModel(const string & name);
 
         shared_ptr<Scene> loadScene(const string & name);
     };

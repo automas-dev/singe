@@ -5,25 +5,25 @@
 namespace singe {
     using std::move;
 
-    Mesh::Mesh() : material(nullptr) {}
+    Model::Model() : material(nullptr) {}
 
-    Mesh::Mesh(const vector<Vertex> & points)
+    Model::Model(const vector<Vertex> & points)
         : points(points), material(nullptr) {
         update();
     }
 
-    Mesh::Mesh(vector<Vertex> && points)
+    Model::Model(vector<Vertex> && points)
         : points(move(points)), material(nullptr) {
         update();
     }
 
-    Mesh::Mesh(Mesh && other)
+    Model::Model(Model && other)
         : points(move(other.points)),
           array(move(other.array)),
           material(other.material),
           transform(other.transform) {}
 
-    Mesh & Mesh::operator=(Mesh && other) {
+    Model & Model::operator=(Model && other) {
         points = move(other.points);
         array = move(other.array);
         material = other.material;
@@ -31,14 +31,14 @@ namespace singe {
         return *this;
     }
 
-    Mesh::~Mesh() {}
+    Model::~Model() {}
 
-    void Mesh::update(Buffer::Usage usage) {
+    void Model::update(Buffer::Usage usage) {
         array.bufferData(points, usage);
         array.unbind();
     }
 
-    void Mesh::draw(RenderState state) const {
+    void Model::draw(RenderState state) const {
         state.pushTransform(transform);
         if (material) {
             material->bind();
