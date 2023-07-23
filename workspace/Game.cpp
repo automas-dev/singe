@@ -3,12 +3,12 @@
 #include <stdexcept>
 
 using std::make_shared;
+using glpp::extra::Grid;
 
 Game::Game(Window & window)
     : GameBase(window),
       res("../../examples/res"),
-      shader(res.getMVPShader("default")),
-      grid(10, {1, 1, 1, 1}, true) {
+      shader(res.getMVPShader("default")) {
 
     sf::Text loadingText;
     loadingText.setFont(uiFont);
@@ -25,6 +25,8 @@ Game::Game(Window & window)
     camera.setRotation({0.2, -0.75, 0});
 
     // TODO: load here
+
+    scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
 
     shared_ptr<Scene> modelScene;
 
@@ -88,7 +90,6 @@ void Game::onDraw() const {
 
     RenderState state(camera);
     scene.draw(state);
-    grid.draw(state.getMVP());
 
     glpp::BufferArray::unbind();
 }

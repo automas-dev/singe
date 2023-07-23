@@ -11,12 +11,14 @@ namespace singe {
     Scene::Scene(Scene && other)
         : children(move(other.children)),
           models(move(other.models)),
-          transform(move(other.transform)) {}
+          transform(move(other.transform)),
+          grid(move(other.grid)) {}
 
     Scene & Scene::operator=(Scene && other) {
         children = move(other.children);
         models = move(other.models);
         transform = move(other.transform);
+        grid = move(other.grid);
         return *this;
     }
 
@@ -32,6 +34,8 @@ namespace singe {
 
     void Scene::draw(RenderState state) const {
         state.pushTransform(transform);
+        if (grid)
+            grid->draw(state.getMVP());
         for (auto & model : models) model->draw(state);
         for (auto & child : children) child->draw(state);
     }

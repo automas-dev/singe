@@ -10,16 +10,12 @@
 #include <singe/Support/log.hpp>
 using namespace singe;
 
-#include <glpp/extra/Grid.hpp>
-using glpp::extra::Grid;
-
 #include <memory>
 
 class Game : public GameBase {
     ResourceManager res;
     FPSDisplay fps;
     std::shared_ptr<singe::Shader> shader;
-    Grid grid;
     Scene scene;
 
 public:

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <glpp/extra/Grid.hpp>
 #include <glpp/extra/Transform.hpp>
 #include <memory>
 #include <vector>
 
 #include "Model.hpp"
 #include "RenderState.hpp"
+
+using glpp::extra::Grid;
 
 namespace singe {
     using std::shared_ptr;
@@ -18,6 +21,7 @@ namespace singe {
     struct Scene {
         vector<shared_ptr<Scene>> children;
         vector<shared_ptr<Model>> models;
+        shared_ptr<Grid> grid;
         Transform transform;
 
         Scene();
