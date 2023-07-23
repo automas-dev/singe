@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "Material.hpp"
-#include "Mesh.hpp"
 #include "RenderState.hpp"
 
 namespace singe {

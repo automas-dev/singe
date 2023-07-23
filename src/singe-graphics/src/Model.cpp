@@ -1,4 +1,4 @@
-#include "singe/Graphics/Mesh.hpp"
+#include "singe/Graphics/Model.hpp"
 
 #include <memory>
 

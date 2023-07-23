@@ -3,7 +3,7 @@
 #include <singe/Core/FPSDisplay.hpp>
 #include <singe/Core/GameBase.hpp>
 #include <singe/Core/Window.hpp>
-#include <singe/Graphics/Mesh.hpp>
+#include <singe/Graphics/Model.hpp>
 #include <singe/Graphics/ResourceManager.hpp>
 #include <singe/Graphics/Scene.hpp>
 #include <singe/Graphics/Shader.hpp>

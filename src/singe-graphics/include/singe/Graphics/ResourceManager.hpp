@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "Material.hpp"
-#include "Mesh.hpp"
+#include "Model.hpp"
 #include "Scene.hpp"
 #include "Shader.hpp"
 #include "singe/Support/log.hpp"
