@@ -3,7 +3,7 @@
 #include <Wavefront.hpp>
 #include <filesystem>
 #include <fstream>
-#include <rapidxml.hpp>
+#include <singe/Support/SceneParser.hpp>
 #include <singe/Support/log.hpp>
 #include <string_view>
 
@@ -13,7 +13,6 @@ namespace singe {
     using std::make_shared;
     using std::move;
     using std::string_view;
-    using rapidxml::xml_document;
 
     namespace Logging {
         Logger::Ptr Resource = make_shared<Logger>("Resource");
@@ -176,6 +175,45 @@ namespace singe {
         return models;
     }
 
+    inline Transform convertTransform(const scene::Transform & transform) {
+        return Transform(transform.pos, glm::quat(transform.rot), transform.scale);
+    }
+
+    static shared_ptr<Scene> convertScene(ResourceManager * res,
+                                          shared_ptr<scene::Scene> & resScene) {
+        auto scene = make_shared<Scene>();
+
+        if (resScene->grid) {
+            scene->grid = make_shared<Grid>(resScene->grid->size,
+                                            resScene->grid->color,
+                                            false);
+        }
+
+        scene->transform = convertTransform(resScene->transform);
+
+        // TODO: Cameras
+
+        for (auto & resModel : resScene->models) {
+            auto model = make_shared<Model>();
+
+            model->transform = convertTransform(resModel.transform);
+
+            // TODO: mesh
+            // model->res->loadModel()
+
+            // TODO: shader
+            // model->material->shader = res->loadShader()
+
+            scene->models.emplace_back(model);
+        }
+
+        for (auto & child : resScene->children) {
+            scene->children.emplace_back(convertScene(res, child));
+        }
+
+        return scene;
+    }
+
     shared_ptr<Scene> ResourceManager::loadScene(const string & name) {
         Logging::Resource->debug("ResourceManager::loadScene {}", name);
         static fs::path subPath("scene");
@@ -190,28 +228,8 @@ namespace singe {
             return nullptr;
         }
 
-        string body((istreambuf_iterator<char>(is)), istreambuf_iterator<char>());
-
-        xml_document doc;
-        doc.parse<0>(body.data());
-
-        auto * root = doc.first_node("scene");
-        if (!root) {
-            Logging::Resource->error("No root scene node");
-            return nullptr;
-        }
-
-        auto * nameAttr = root->first_attribute("name");
-        if (!nameAttr) {
-            Logging::Resource->error("Root scene has no name");
-            return nullptr;
-        }
-
-        string sceneName(nameAttr->value(), nameAttr->value_size());
-        // TODO: Add name field to Scene struct
-
-        shared_ptr<Scene> scene = make_shared<Scene>();
-
+        auto resScene = scene::SceneParser().parse(is);
+        auto scene = convertScene(this, resScene);
         return scene;
     }
 }
