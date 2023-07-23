@@ -403,11 +403,12 @@ namespace singe {
         static fs::path subPath("scene");
 
         fs::path fullPath = resourceAt(subPath / name);
-        Logging::Resource->trace("Full path is {}", fullPath);
+        Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
         ifstream is(fullPath);
         if (!is.is_open()) {
-            Logging::Resource->error("Failed to open scene file {}", fullPath);
+            Logging::Resource->error("Failed to open scene file {}",
+                                     fullPath.c_str());
             return nullptr;
         }
 

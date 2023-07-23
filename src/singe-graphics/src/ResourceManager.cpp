@@ -185,7 +185,8 @@ namespace singe {
 
         ifstream is(fullPath);
         if (!is.is_open()) {
-            Logging::Resource->error("Failed to open scene file {}", fullPath);
+            Logging::Resource->error("Failed to open scene file {}",
+                                     fullPath.c_str());
             return nullptr;
         }
 

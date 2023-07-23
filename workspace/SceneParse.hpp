@@ -144,7 +144,7 @@ namespace singe::scene {
         vector<Camera> cameras;
         vector<Shader> shaders;
         vector<Model> models;
-        vector<Scene> children;
+        vector<shared_ptr<Scene>> children;
 
         /// Find a shader by ref name
         Shader & findShader(const string & name);
