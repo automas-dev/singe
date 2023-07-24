@@ -54,6 +54,8 @@ Game::Game(Window & window)
         for (auto & m : s->models) m->material->shader = shader;
     }
 
+    scene.children.emplace_back(res.loadScene("scene_demo.xml"));
+
     // modelScene->material->shader = shader;
 
     // Load models / textures / scenes
