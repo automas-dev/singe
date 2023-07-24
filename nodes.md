@@ -99,3 +99,21 @@ Idea
 - Mesh contains Material and Vertices
   - Could switch Mesh and Geometry back
   - Keep VertexArrayBuffer
+
+# Nodes
+
+After completing the scene file definition and SceneParser code, things are
+starting to come together. The current structure of ResourceManager does not
+allow for loading shaders, or any other resources, directly from a path
+relative to the resources folder. In addition, Models and Scenes etc. don't
+have any name attribute.
+
+Plan: Create a base `Node` class from which all other classes extend. This is
+exactly like nodes in Godot. I'm still not sure how to handle variable node
+types with the C++ type system. Possible solutions include
+
+- "Stringly" typed nodes with attributes, name, etc.
+- Scenes are handled by code which does not need knowledge of the types
+  - Game code will still create nodes that are directly interacted with
+- Some lookup system by node name with casing to the "assumed" class type
+- Can a visitor pattern be used here?
