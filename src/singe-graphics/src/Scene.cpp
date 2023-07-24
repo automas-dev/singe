@@ -34,7 +34,7 @@ namespace singe {
 
     void Scene::draw(RenderState state) const {
         state.pushTransform(transform);
-        if (grid)
+        if (grid && state.getGridEnable())
             grid->draw(state.getMVP());
         for (auto & model : models) model->draw(state);
         for (auto & child : children) child->draw(state);

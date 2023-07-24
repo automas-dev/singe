@@ -91,6 +91,7 @@ void Game::onDraw() const {
     setupGl();
 
     RenderState state(camera);
+    state.setGridEnable(true);
     scene.draw(state);
 
     glpp::BufferArray::unbind();
