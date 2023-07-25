@@ -39,6 +39,7 @@ namespace singe {
         fs::path root;
         map<string, shared_ptr<Texture>> textures;
         map<string, shared_ptr<Shader>> shaders;
+        map<string, shared_ptr<MVPShader>> mvpShaders;
 
     public:
         /**
@@ -83,58 +84,60 @@ namespace singe {
         /**
          * Load a glpp::Texture or return the cached texture if it exists.
          *
-         * The sub path for images is /img
+         * If useCached is false, the loaded texture will not be added to the
+         * cache.
          *
-         * @param name the texture name
+         * @param path the texture path relative to resource root
+         * @param useCached should a cached version be returned if present
          *
          * @return shared_ptr to the glpp::Texture
          */
-        shared_ptr<Texture> & getTexture(const string & name);
+        shared_ptr<Texture> & getTexture(const string & path,
+                                         bool useCached = true);
 
         /**
          * Load a Shader or return the cached shader if it exists.
          *
-         * The sub path for shaders is /shader
+         * If useCached is false, the loaded shader will not be added to the
+         * cache.
          *
-         * @param name the shader name
+         * @param vertPath the vertex shader path relative to resource root
+         * @param fragPath the fragment shader path relative to resource root
+         * @param useCached should a cached version be returned if present
          *
          * @return shared_ptr to the Shader
          */
-        shared_ptr<Shader> & getShader(const string & name);
+        shared_ptr<Shader> & getShader(const string & vertPath,
+                                       const string & fragPath,
+                                       bool useCached = true);
 
         /**
          * Load an MVPShader or return the cached shader if it exists.
          *
-         * The sub path for shaders is /shader
+         * If useCached is false, the loaded shader will not be added to the
+         * cache.
          *
-         * @param name the shader name
+         * @param vertPath the vertex shader path relative to resource root
+         * @param fragPath the fragment shader path relative to resource root
+         * @param useCached should a cached version be returned if present
          *
          * @return shared_ptr to the MVPShader
          */
-        shared_ptr<MVPShader> getMVPShader(const string & name);
-
-        /**
-         * Load a Shader from fragment source only or return the cached shader
-         * if it exists.
-         *
-         * The sub path for shaders is /shader
-         *
-         * @param name the shader name
-         *
-         * @return shared_ptr to the Shader
-         */
-        shared_ptr<Shader> & getShaderFragmentOnly(const string & name);
+        shared_ptr<MVPShader> & getMVPShader(const string & vertPath,
+                                             const string & fragPath,
+                                             bool useCached = true);
 
         /**
          * Load a model.
          *
-         * The sub path for models is /model
+         * If useCached is false, the loaded model will not be added to the
+         * cache.
          *
-         * @param name the model name
+         * @param path the texture path relative to resource root
          *
          * @return vector of models
          */
-        vector<shared_ptr<Model>> loadModel(const string & name);
+        vector<shared_ptr<Model>> loadModel(const string & path);
 
         shared_ptr<Scene> loadScene(const string & name);
     };

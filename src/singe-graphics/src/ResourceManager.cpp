@@ -49,76 +49,80 @@ namespace singe {
             return root / subPath;
     }
 
-    shared_ptr<Texture> & ResourceManager::getTexture(const string & name) {
-        Logging::Resource->debug("ResourceManager::getTexture {}", name);
-        static fs::path subPath("img");
+    shared_ptr<Texture> & ResourceManager::getTexture(const string & path,
+                                                      bool useCached) {
+        Logging::Resource->debug("ResourceManager::getTexture {} {}", path,
+                                 useCached);
 
-        if (textures.find(name) == textures.end()) {
-            fs::path fullPath = resourceAt(subPath / name);
-            Logging::Resource->trace("Full path is {}", fullPath.c_str());
+        fs::path fullPath = resourceAt(path);
+        Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
-            auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
-            textures[name] = move(texture);
+        map<string, shared_ptr<Texture>>::iterator cached;
+        if (useCached && (cached = textures.find(path)) != textures.end()) {
+            return cached->second;
         }
 
-        return textures[name];
-    }
-
-    shared_ptr<Shader> & ResourceManager::getShader(const string & name) {
-        Logging::Resource->debug("ResourceManager::getShader {}", name);
-        static fs::path subPath("shader");
-
-        if (shaders.find(name) == shaders.end()) {
-            fs::path fullVertexPath = resourceAt(subPath / (name + ".vert"));
-            fs::path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
-            Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
-            Logging::Resource->trace("Fragment path is {}",
-                                     fullFragmentPath.c_str());
-
-            auto shader = make_shared<Shader>(
-                glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
-            shaders[name] = move(shader);
+        auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
+        if (useCached) {
+            textures[path] = move(texture);
         }
-
-        return shaders[name];
+        return texture;
     }
 
-    shared_ptr<MVPShader> ResourceManager::getMVPShader(const string & name) {
-        Logging::Resource->debug("ResourceManager::getMVPShader {}", name);
-        static fs::path subPath("shader");
-        fs::path fullVertexPath = resourceAt(subPath / (name + ".vert"));
-        fs::path fullFragmentPath = resourceAt(subPath / (name + ".frag"));
+    shared_ptr<Shader> & ResourceManager::getShader(const string & vertPath,
+                                                    const string & fragPath,
+                                                    bool useCached) {
+        Logging::Resource->debug("ResourceManager::getShader {} {} {}",
+                                 vertPath, fragPath, useCached);
+
+        fs::path fullVertexPath = resourceAt(vertPath);
+        fs::path fullFragmentPath = resourceAt(fragPath);
         Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
         Logging::Resource->trace("Fragment path is {}", fullFragmentPath.c_str());
 
-        auto shader = make_shared<MVPShader>(
-            glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
+        map<string, shared_ptr<Shader>>::iterator cached;
+        if (useCached
+            && (cached = shaders.find(vertPath + fragPath)) == shaders.end()) {
+            return cached->second;
+        }
 
+        auto shader = make_shared<Shader>(
+            glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
+        if (useCached) {
+            shaders[vertPath + fragPath] = move(shader);
+        }
         return shader;
     }
 
-    shared_ptr<Shader> & ResourceManager::getShaderFragmentOnly(const string & name) {
-        Logging::Resource->debug("ResourceManager::getShaderFragmentOnly {}", name);
-        static fs::path subpath("shader");
+    shared_ptr<MVPShader> & ResourceManager::getMVPShader(const string & vertPath,
+                                                          const string & fragPath,
+                                                          bool useCached) {
+        Logging::Resource->debug("ResourceManager::getMVPShader {} {} {}",
+                                 vertPath, fragPath, useCached);
 
-        if (shaders.find(name) == shaders.end()) {
-            fs::path fullFragmentPath = resourceAt(subpath / (name + ".frag"));
-            Logging::Resource->trace("Fragment path is {}",
-                                     fullFragmentPath.c_str());
+        fs::path fullVertexPath = resourceAt(vertPath);
+        fs::path fullFragmentPath = resourceAt(fragPath);
+        Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
+        Logging::Resource->trace("Fragment path is {}", fullFragmentPath.c_str());
 
-            auto shader = make_shared<Shader>(
-                glpp::Shader::fromFragmentPath(fullFragmentPath));
-            shaders[name] = move(shader);
+        map<string, shared_ptr<MVPShader>>::iterator cached;
+        if (useCached
+            && (cached = mvpShaders.find(vertPath + fragPath)) == mvpShaders.end()) {
+            return cached->second;
         }
 
-        return shaders[name];
+        auto shader = make_shared<MVPShader>(
+            glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
+        if (useCached) {
+            mvpShaders[vertPath + fragPath] = move(shader);
+        }
+        return shader;
     }
 
-    vector<shared_ptr<Model>> ResourceManager::loadModel(const string & name) {
-        Logging::Resource->debug("ResourceManager::loadModel {}", name);
-        static fs::path subPath("model");
+    vector<shared_ptr<Model>> ResourceManager::loadModel(const string & path) {
+        Logging::Resource->debug("ResourceManager::loadModel {}", path);
 
-        fs::path fullPath = resourceAt(subPath / name);
+        fs::path fullPath = resourceAt(path);
         Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
         wavefront::Model wfModel;
