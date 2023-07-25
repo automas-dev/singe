@@ -31,30 +31,30 @@ Game::Game(Window & window)
     shared_ptr<Scene> modelScene;
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("sphere.obj");
+    modelScene->models = res.loadModel("model/sphere.obj");
     modelScene->transform.move({0, 1, 0});
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("plane.obj");
+    modelScene->models = res.loadModel("model/plane.obj");
     modelScene->transform.move({0, 0, 0});
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("cube.obj");
+    modelScene->models = res.loadModel("model/cube.obj");
     modelScene->transform.move({0, 1, 3});
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("fountain.obj");
+    modelScene->models = res.loadModel("model/fountain.obj");
     modelScene->transform.move({2, 0, -3});
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("Human.obj");
+    modelScene->models = res.loadModel("model/Human.obj");
     modelScene->transform.move({-2, 0, -3});
 
     for (auto & s : scene.children) {
         for (auto & m : s->models) m->material->shader = shader;
     }
 
-    scene.children.emplace_back(res.loadScene("scene_demo.xml"));
+    scene.children.emplace_back(res.loadScene("scene/scene_demo.xml"));
 
     // modelScene->material->shader = shader;
 
