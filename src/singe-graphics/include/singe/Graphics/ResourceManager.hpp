@@ -92,8 +92,7 @@ namespace singe {
          *
          * @return shared_ptr to the glpp::Texture
          */
-        shared_ptr<Texture> getTexture(const string & path,
-                                         bool useCached = true);
+        shared_ptr<Texture> getTexture(const string & path, bool useCached = true);
 
         /**
          * Load a Shader or return the cached shader if it exists.
@@ -108,8 +107,8 @@ namespace singe {
          * @return shared_ptr to the Shader
          */
         shared_ptr<Shader> getShader(const string & vertPath,
-                                       const string & fragPath,
-                                       bool useCached = true);
+                                     const string & fragPath,
+                                     bool useCached = true);
 
         /**
          * Load an MVPShader or return the cached shader if it exists.
@@ -124,21 +123,25 @@ namespace singe {
          * @return shared_ptr to the MVPShader
          */
         shared_ptr<MVPShader> getMVPShader(const string & vertPath,
-                                             const string & fragPath,
-                                             bool useCached = true);
+                                           const string & fragPath,
+                                           bool useCached = true);
 
         /**
          * Load a model.
          *
-         * If useCached is false, the loaded model will not be added to the
-         * cache.
-         *
-         * @param path the texture path relative to resource root
+         * @param path the model path relative to resource root
          *
          * @return vector of models
          */
         vector<shared_ptr<Model>> loadModel(const string & path);
 
-        shared_ptr<Scene> loadScene(const string & name);
+        /**
+         * Load a scene.
+         *
+         * @param path the scene path relative to resource root
+         *
+         * @return shared_ptr to the Scene
+         */
+        shared_ptr<Scene> loadScene(const string & path);
     };
 }

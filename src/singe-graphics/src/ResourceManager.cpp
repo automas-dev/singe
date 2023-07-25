@@ -50,7 +50,7 @@ namespace singe {
     }
 
     shared_ptr<Texture> ResourceManager::getTexture(const string & path,
-                                                      bool useCached) {
+                                                    bool useCached) {
         Logging::Resource->debug("ResourceManager::getTexture {} {}", path,
                                  useCached);
 
@@ -70,8 +70,8 @@ namespace singe {
     }
 
     shared_ptr<Shader> ResourceManager::getShader(const string & vertPath,
-                                                    const string & fragPath,
-                                                    bool useCached) {
+                                                  const string & fragPath,
+                                                  bool useCached) {
         Logging::Resource->debug("ResourceManager::getShader {} {} {}",
                                  vertPath, fragPath, useCached);
 
@@ -95,8 +95,8 @@ namespace singe {
     }
 
     shared_ptr<MVPShader> ResourceManager::getMVPShader(const string & vertPath,
-                                                          const string & fragPath,
-                                                          bool useCached) {
+                                                        const string & fragPath,
+                                                        bool useCached) {
         Logging::Resource->debug("ResourceManager::getMVPShader {} {} {}",
                                  vertPath, fragPath, useCached);
 
@@ -218,11 +218,10 @@ namespace singe {
         return scene;
     }
 
-    shared_ptr<Scene> ResourceManager::loadScene(const string & name) {
-        Logging::Resource->debug("ResourceManager::loadScene {}", name);
-        static fs::path subPath("scene");
+    shared_ptr<Scene> ResourceManager::loadScene(const string & path) {
+        Logging::Resource->debug("ResourceManager::loadScene {}", path);
 
-        fs::path fullPath = resourceAt(subPath / name);
+        fs::path fullPath = resourceAt(path);
         Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
         ifstream is(fullPath);
