@@ -92,7 +92,7 @@ namespace singe {
          *
          * @return shared_ptr to the glpp::Texture
          */
-        shared_ptr<Texture> & getTexture(const string & path,
+        shared_ptr<Texture> getTexture(const string & path,
                                          bool useCached = true);
 
         /**
@@ -107,7 +107,7 @@ namespace singe {
          *
          * @return shared_ptr to the Shader
          */
-        shared_ptr<Shader> & getShader(const string & vertPath,
+        shared_ptr<Shader> getShader(const string & vertPath,
                                        const string & fragPath,
                                        bool useCached = true);
 
@@ -123,7 +123,7 @@ namespace singe {
          *
          * @return shared_ptr to the MVPShader
          */
-        shared_ptr<MVPShader> & getMVPShader(const string & vertPath,
+        shared_ptr<MVPShader> getMVPShader(const string & vertPath,
                                              const string & fragPath,
                                              bool useCached = true);
 

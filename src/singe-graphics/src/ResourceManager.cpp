@@ -49,7 +49,7 @@ namespace singe {
             return root / subPath;
     }
 
-    shared_ptr<Texture> & ResourceManager::getTexture(const string & path,
+    shared_ptr<Texture> ResourceManager::getTexture(const string & path,
                                                       bool useCached) {
         Logging::Resource->debug("ResourceManager::getTexture {} {}", path,
                                  useCached);
@@ -64,12 +64,12 @@ namespace singe {
 
         auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
         if (useCached) {
-            textures[path] = move(texture);
+            textures[path] = texture;
         }
         return texture;
     }
 
-    shared_ptr<Shader> & ResourceManager::getShader(const string & vertPath,
+    shared_ptr<Shader> ResourceManager::getShader(const string & vertPath,
                                                     const string & fragPath,
                                                     bool useCached) {
         Logging::Resource->debug("ResourceManager::getShader {} {} {}",
@@ -82,19 +82,19 @@ namespace singe {
 
         map<string, shared_ptr<Shader>>::iterator cached;
         if (useCached
-            && (cached = shaders.find(vertPath + fragPath)) == shaders.end()) {
+            && (cached = shaders.find(vertPath + fragPath)) != shaders.end()) {
             return cached->second;
         }
 
         auto shader = make_shared<Shader>(
             glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
         if (useCached) {
-            shaders[vertPath + fragPath] = move(shader);
+            shaders[vertPath + fragPath] = shader;
         }
         return shader;
     }
 
-    shared_ptr<MVPShader> & ResourceManager::getMVPShader(const string & vertPath,
+    shared_ptr<MVPShader> ResourceManager::getMVPShader(const string & vertPath,
                                                           const string & fragPath,
                                                           bool useCached) {
         Logging::Resource->debug("ResourceManager::getMVPShader {} {} {}",
@@ -107,14 +107,14 @@ namespace singe {
 
         map<string, shared_ptr<MVPShader>>::iterator cached;
         if (useCached
-            && (cached = mvpShaders.find(vertPath + fragPath)) == mvpShaders.end()) {
+            && (cached = mvpShaders.find(vertPath + fragPath)) != mvpShaders.end()) {
             return cached->second;
         }
 
         auto shader = make_shared<MVPShader>(
             glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
         if (useCached) {
-            mvpShaders[vertPath + fragPath] = move(shader);
+            mvpShaders[vertPath + fragPath] = shader;
         }
         return shader;
     }
