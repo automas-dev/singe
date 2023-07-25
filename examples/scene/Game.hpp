@@ -18,7 +18,7 @@ using namespace glm;
 
 class Game : public GameBase {
     ResourceManager res;
-    std::shared_ptr<singe::Shader> shader;
+    std::shared_ptr<singe::MVPShader> shader;
     Grid grid;
     Scene scene;
     shared_ptr<Scene> otherScene;

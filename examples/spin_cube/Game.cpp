@@ -5,7 +5,7 @@
 Game::Game(Window & window)
     : GameBase(window),
       res("../../../examples/res"),
-      shader(res.getMVPShader("default")),
+      shader(res.getMVPShader("shader/default.vert", "shader/default.frag")),
       grid(10, {1, 1, 1, 1}, true) {
 
     camera.setPosition({5, 2, 5});
