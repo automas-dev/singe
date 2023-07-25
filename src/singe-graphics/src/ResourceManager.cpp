@@ -198,17 +198,40 @@ namespace singe {
         // TODO: Cameras
 
         for (auto & resModel : resScene->models) {
-            auto model = make_shared<Model>();
+            auto models = res->loadModel(resModel.mesh.path);
 
-            model->transform = convertTransform(resModel.transform);
+            for (auto & model : models) {
+                model->transform = convertTransform(resModel.transform);
+
+                string vertSource;
+                string fragSource;
+                for (auto & source : resModel.shader.source) {
+                    if (source.type == "vertex") {
+                        vertSource = source.path;
+                    }
+                    else if (source.type == "fragment") {
+                        fragSource = source.path;
+                    }
+                    else {
+                        Logging::Resource->warning("Unknown source type {}",
+                                                   source.type);
+                    }
+                }
+                if (vertSource.empty())
+                    throw ResourceLoadException("No vertex shader source");
+                if (fragSource.empty())
+                    throw ResourceLoadException("No fragment shader source");
+                model->material->shader = res->getShader(vertSource, fragSource);
+            }
 
             // TODO: mesh
             // model->res->loadModel()
+            res->loadModel(resModel.mesh.path);
 
             // TODO: shader
             // model->material->shader = res->loadShader()
 
-            scene->models.emplace_back(model);
+            // scene->models.emplace_back(model);
         }
 
         for (auto & child : resScene->children) {
