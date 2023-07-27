@@ -39,7 +39,7 @@
     </model>
 
     <model name="human">
-        <mesh path="model/human.obj" />
+        <mesh path="model/Human.obj" />
         <shader ref="default" />
     </model>
 
@@ -115,7 +115,7 @@
         </transform>
 
         <model name="human">
-            <mesh path="obj/Human.obj" />
+            <mesh path="model/Human.obj" />
             <shader ref="default" />
         </model>
     </scene>
