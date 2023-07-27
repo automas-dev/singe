@@ -5,6 +5,15 @@
 using std::make_shared;
 using glpp::extra::Grid;
 
+static void fillShader(shared_ptr<singe::MVPShader> & shader, Scene & scene) {
+    for (auto & model : scene.models) {
+        model->material->shader = shader;
+    }
+    for (auto & child : scene.children) {
+        fillShader(shader, *child);
+    }
+}
+
 Game::Game(Window & window)
     : GameBase(window),
       res("../../examples/res"),
@@ -55,6 +64,7 @@ Game::Game(Window & window)
     }
 
     scene.children.emplace_back(res.loadScene("scene/scene_demo.xml"));
+    fillShader(shader, scene);
 
     // modelScene->material->shader = shader;
 
