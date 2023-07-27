@@ -222,6 +222,7 @@ namespace singe {
                 if (fragSource.empty())
                     throw ResourceLoadException("No fragment shader source");
                 model->material->shader = res->getShader(vertSource, fragSource);
+                scene->models.emplace_back(model);
             }
 
             // TODO: mesh
