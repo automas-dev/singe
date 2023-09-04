@@ -8,6 +8,16 @@ to use info messages instead of debug for method calls (ie. calling getTexture
 will use info for the first log message detailing the method name and
 parameters).
 
+In the morning: I've created the Resource component and copied ResourceManger
+into it. This includes the code from my first attempt at a multi-threaded
+loader which currently does not work. The loader still calls glpp methods for
+loading textures and shaders, which make opengl calls themselves to load into
+the gpu and then return the opengl id. This code will need to be re-written in
+the Resource component so all the files can be read into memory before trying
+to load into the gpu. In theory the gpu could start loading resources in the
+main thread while the files are read in the resource thread. Maybe I can bring
+back DispatchQueue?
+
 ## 2023-07-23
 
 This is the start of a development log. I have used markdown files in the past
