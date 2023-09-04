@@ -51,7 +51,7 @@ namespace singe {
 
     shared_ptr<Texture> ResourceManager::getTexture(const string & path,
                                                     bool useCached) {
-        Logging::Resource->debug("ResourceManager::getTexture {} {}", path,
+        Logging::Resource->info("ResourceManager::getTexture {} {}", path,
                                  useCached);
 
         fs::path fullPath = resourceAt(path);
@@ -75,7 +75,7 @@ namespace singe {
     shared_ptr<Shader> ResourceManager::getShader(const string & vertPath,
                                                   const string & fragPath,
                                                   bool useCached) {
-        Logging::Resource->debug("ResourceManager::getShader {} {} {}",
+        Logging::Resource->info("ResourceManager::getShader {} {} {}",
                                  vertPath, fragPath, useCached);
 
         fs::path fullVertexPath = resourceAt(vertPath);
@@ -103,7 +103,7 @@ namespace singe {
     shared_ptr<MVPShader> ResourceManager::getMVPShader(const string & vertPath,
                                                         const string & fragPath,
                                                         bool useCached) {
-        Logging::Resource->debug("ResourceManager::getMVPShader {} {} {}",
+        Logging::Resource->info("ResourceManager::getMVPShader {} {} {}",
                                  vertPath, fragPath, useCached);
 
         fs::path fullVertexPath = resourceAt(vertPath);
@@ -129,7 +129,7 @@ namespace singe {
     }
 
     vector<shared_ptr<Model>> ResourceManager::loadModel(const string & path) {
-        Logging::Resource->debug("ResourceManager::loadModel {}", path);
+        Logging::Resource->info("ResourceManager::loadModel {}", path);
 
         fs::path fullPath = resourceAt(path);
         Logging::Resource->trace("Full path is {}", fullPath.c_str());
@@ -252,7 +252,7 @@ namespace singe {
     }
 
     shared_ptr<Scene> ResourceManager::loadScene(const string & path) {
-        Logging::Resource->debug("ResourceManager::loadScene {}", path);
+        Logging::Resource->info("ResourceManager::loadScene {}", path);
 
         fs::path fullPath = resourceAt(path);
         Logging::Resource->trace("Full path is {}", fullPath.c_str());
