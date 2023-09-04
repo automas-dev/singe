@@ -59,11 +59,14 @@ namespace singe {
 
         map<string, shared_ptr<Texture>>::iterator cached;
         if (useCached && (cached = textures.find(path)) != textures.end()) {
+            Logging::Resource->debug("Using cached texture");
             return cached->second;
         }
 
         auto texture = make_shared<Texture>(Texture::fromPath(fullPath));
+        Logging::Resource->debug("Loading texture from file");
         if (useCached) {
+            Logging::Resource->debug("Adding texture to cache");
             textures[path] = texture;
         }
         return texture;
@@ -83,12 +86,15 @@ namespace singe {
         map<string, shared_ptr<Shader>>::iterator cached;
         if (useCached
             && (cached = shaders.find(vertPath + fragPath)) != shaders.end()) {
+            Logging::Resource->debug("Using cached shader");
             return cached->second;
         }
 
         auto shader = make_shared<Shader>(
             glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
+        Logging::Resource->debug("Loading shader from file");
         if (useCached) {
+            Logging::Resource->debug("Adding shader to cache");
             shaders[vertPath + fragPath] = shader;
         }
         return shader;
@@ -108,12 +114,15 @@ namespace singe {
         map<string, shared_ptr<MVPShader>>::iterator cached;
         if (useCached
             && (cached = mvpShaders.find(vertPath + fragPath)) != mvpShaders.end()) {
+            Logging::Resource->debug("Using cached shader");
             return cached->second;
         }
 
         auto shader = make_shared<MVPShader>(
             glpp::Shader::fromPaths(fullVertexPath, fullFragmentPath));
+        Logging::Resource->debug("Loading shader from file");
         if (useCached) {
+            Logging::Resource->debug("Adding shader to cache");
             mvpShaders[vertPath + fragPath] = shader;
         }
         return shader;
