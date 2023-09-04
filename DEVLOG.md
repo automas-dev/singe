@@ -1,5 +1,13 @@
 # Dev Log
 
+## 2023-09-04
+
+I've updated logging in the ResourceManager. I added debug messages when loading
+resources from file and when using the cache. Resource logging was also updated
+to use info messages instead of debug for method calls (ie. calling getTexture
+will use info for the first log message detailing the method name and
+parameters).
+
 ## 2023-07-23
 
 This is the start of a development log. I have used markdown files in the past
