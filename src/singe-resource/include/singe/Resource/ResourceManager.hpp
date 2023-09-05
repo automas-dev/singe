@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stb_image.h>
+
 #include <atomic>
 #include <condition_variable>
 #include <filesystem>
@@ -46,6 +48,54 @@ namespace singe {
     class ResourceLoadException : public std::runtime_error {
     public:
         using std::runtime_error::runtime_error;
+    };
+
+    template<typename T>
+    class ResourceCache {
+        map<string, T> cache;
+        mutex m;
+
+    public:
+        ResourceCache();
+
+        void add(const string & key, const T & item) {
+            unique_lock lk(m);
+            cache.emplace(key, item);
+        }
+
+        void add(const string & key, T && item) {
+            unique_lock lk(m);
+            cache.emplace(key, move(item));
+        }
+
+        bool contains(const string & key) {
+            unique_lock lk(m);
+            return cache.find(key) != cache.end();
+        }
+
+        // FIXME: reference breaks on next add()
+        T & get(const string & key) {
+            unique_lock lk(m);
+            return cache[key];
+        }
+    };
+
+    class ResourceLoader {
+        ResourceCache<void> textureCache;
+        ResourceCache<void> modelCache;
+        thread t;
+        mutex m;
+        condition_variable cv;
+
+
+        vector<thread> workers;
+
+    public:
+        ResourceLoader();
+
+        virtual ~ResourceLoader();
+
+        future<void> loadScene(const string & path);
     };
 
     /**
