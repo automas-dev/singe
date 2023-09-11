@@ -4,7 +4,6 @@ set(HEADER_LIST
     Material.hpp
     Model.hpp
     RenderState.hpp
-    ResourceManager.hpp
     Scene.hpp
     Shader.hpp
     UniformExtra.hpp)
@@ -14,7 +13,6 @@ set(SOURCE_LIST
     Material.cpp
     Model.cpp
     RenderState.cpp
-    ResourceManager.cpp
     Scene.cpp
     Shader.cpp
     UniformExtra.cpp)

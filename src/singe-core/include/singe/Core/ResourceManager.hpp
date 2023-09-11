@@ -8,10 +8,10 @@
 #include <string>
 #include <vector>
 
-#include "Material.hpp"
-#include "Model.hpp"
-#include "Scene.hpp"
-#include "Shader.hpp"
+#include "singe/Graphics/Material.hpp"
+#include "singe/Graphics/Model.hpp"
+#include "singe/Graphics/Scene.hpp"
+#include "singe/Graphics/Shader.hpp"
 #include "singe/Support/log.hpp"
 
 namespace singe::Logging {

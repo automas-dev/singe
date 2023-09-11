@@ -2,8 +2,8 @@
 
 #include <singe/Core/FPSDisplay.hpp>
 #include <singe/Core/GameBase.hpp>
+#include <singe/Core/ResourceManager.hpp>
 #include <singe/Core/Window.hpp>
-#include <singe/Graphics/ResourceManager.hpp>
 #include <singe/Graphics/Scene.hpp>
 #include <singe/Support/log.hpp>
 using namespace singe;
@@ -27,7 +27,7 @@ class Game : public GameBase {
     enum DisplayMode {
         Point = GL_POINT,
         Line = GL_LINE,
-        Fill = GL_FILL
+        Fill = GL_FILL,
     };
 
     DisplayMode wireframe;

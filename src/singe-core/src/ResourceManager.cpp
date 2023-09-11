@@ -1,4 +1,4 @@
-#include "singe/Graphics/ResourceManager.hpp"
+#include "singe/Core/ResourceManager.hpp"
 
 #include <Wavefront.hpp>
 #include <filesystem>
