@@ -1,17 +1,11 @@
 include(${CMAKE_CURRENT_LIST_DIR}/Wavefront.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/glpp.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/rapidxml.cmake)
-# include(${CMAKE_CURRENT_LIST_DIR}/glm.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/glm.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/fmt.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/spdlog.cmake)
 
 # include(FetchContent)
-
-# FetchContent_Declare(
-#     googletest
-#     GIT_REPOSITORY  https://github.com/google/googletest
-#     GIT_TAG         release-1.12.1
-# )
 
 # FetchContent_Declare(
 #     DispatchQueue
@@ -26,8 +20,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/spdlog.cmake)
 # )
 
 # FetchContent_MakeAvailable(
-#     rapidxml
-#     googletest
 #     DispatchQueue
 #     assimp
 #     )
