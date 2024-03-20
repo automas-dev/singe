@@ -17,9 +17,13 @@ namespace singe {
      * Wrapper for glpp shader which also holds mvp uniform.
      */
     class Shader {
+    public:
+        using Ptr = shared_ptr<Shader>;
+        using ConstPtr = const shared_ptr<Shader>;
+
     protected:
         glpp::Shader m_shader;
-        vector<shared_ptr<UniformExtra>> m_extras;
+        vector<UniformExtra::Ptr> m_extras;
 
     public:
         /**
@@ -52,7 +56,7 @@ namespace singe {
          *
          * @param extra a shared_ptr to a derived class of UniformExtra
          */
-        void addExtra(const shared_ptr<UniformExtra> & extra);
+        void addExtra(UniformExtra::ConstPtr & extra);
 
         /**
          * Bind the shader
@@ -77,6 +81,11 @@ namespace singe {
      * have a uniform called mvp of type mat4.
      */
     class MVPShader : public Shader {
+    public:
+        using Ptr = shared_ptr<MVPShader>;
+        using ConstPtr = const shared_ptr<MVPShader>;
+
+    private:
         glpp::Uniform m_mvp;
 
     public:

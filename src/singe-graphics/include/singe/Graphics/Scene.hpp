@@ -19,8 +19,11 @@ namespace singe {
      * Group of Models and child Scenes.
      */
     struct Scene {
-        vector<shared_ptr<Scene>> children;
-        vector<shared_ptr<Model>> models;
+        using Ptr = shared_ptr<Scene>;
+        using ConstPtr = const shared_ptr<Scene>;
+
+        vector<Scene::Ptr> children;
+        vector<Model::Ptr> models;
         shared_ptr<Grid> grid;
         Transform transform;
 
@@ -40,14 +43,14 @@ namespace singe {
          *
          * @return reference to the new Scene
          */
-        shared_ptr<Scene> & addChild();
+        Scene::Ptr & addChild();
 
         /**
          * Create and return a new model.
          *
          * @return reference to the new model
          */
-        shared_ptr<Model> & addModel();
+        Model::Ptr & addModel();
 
         /**
          * Draw child scenes and then mesh in this scene.

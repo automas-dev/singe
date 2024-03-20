@@ -49,15 +49,14 @@ namespace singe {
             return root / subPath;
     }
 
-    shared_ptr<Texture> ResourceManager::getTexture(const string & path,
-                                                    bool useCached) {
+    Texture::Ptr ResourceManager::getTexture(const string & path, bool useCached) {
         Logging::Resource->info("ResourceManager::getTexture {} {}", path,
-                                 useCached);
+                                useCached);
 
         fs::path fullPath = resourceAt(path);
         Logging::Resource->trace("Full path is {}", fullPath.c_str());
 
-        map<string, shared_ptr<Texture>>::iterator cached;
+        map<string, Texture::Ptr>::iterator cached;
         if (useCached && (cached = textures.find(path)) != textures.end()) {
             Logging::Resource->debug("Using cached texture");
             return cached->second;
@@ -72,18 +71,18 @@ namespace singe {
         return texture;
     }
 
-    shared_ptr<Shader> ResourceManager::getShader(const string & vertPath,
-                                                  const string & fragPath,
-                                                  bool useCached) {
-        Logging::Resource->info("ResourceManager::getShader {} {} {}",
-                                 vertPath, fragPath, useCached);
+    Shader::Ptr ResourceManager::getShader(const string & vertPath,
+                                           const string & fragPath,
+                                           bool useCached) {
+        Logging::Resource->info("ResourceManager::getShader {} {} {}", vertPath,
+                                fragPath, useCached);
 
         fs::path fullVertexPath = resourceAt(vertPath);
         fs::path fullFragmentPath = resourceAt(fragPath);
         Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
         Logging::Resource->trace("Fragment path is {}", fullFragmentPath.c_str());
 
-        map<string, shared_ptr<Shader>>::iterator cached;
+        map<string, Shader::Ptr>::iterator cached;
         if (useCached
             && (cached = shaders.find(vertPath + fragPath)) != shaders.end()) {
             Logging::Resource->debug("Using cached shader");
@@ -100,18 +99,18 @@ namespace singe {
         return shader;
     }
 
-    shared_ptr<MVPShader> ResourceManager::getMVPShader(const string & vertPath,
-                                                        const string & fragPath,
-                                                        bool useCached) {
+    MVPShader::Ptr ResourceManager::getMVPShader(const string & vertPath,
+                                                 const string & fragPath,
+                                                 bool useCached) {
         Logging::Resource->info("ResourceManager::getMVPShader {} {} {}",
-                                 vertPath, fragPath, useCached);
+                                vertPath, fragPath, useCached);
 
         fs::path fullVertexPath = resourceAt(vertPath);
         fs::path fullFragmentPath = resourceAt(fragPath);
         Logging::Resource->trace("Vertex path is {}", fullVertexPath.c_str());
         Logging::Resource->trace("Fragment path is {}", fullFragmentPath.c_str());
 
-        map<string, shared_ptr<MVPShader>>::iterator cached;
+        map<string, MVPShader::Ptr>::iterator cached;
         if (useCached
             && (cached = mvpShaders.find(vertPath + fragPath)) != mvpShaders.end()) {
             Logging::Resource->debug("Using cached shader");
@@ -128,7 +127,7 @@ namespace singe {
         return shader;
     }
 
-    vector<shared_ptr<Model>> ResourceManager::loadModel(const string & path) {
+    vector<Model::Ptr> ResourceManager::loadModel(const string & path) {
         Logging::Resource->info("ResourceManager::loadModel {}", path);
 
         fs::path fullPath = resourceAt(path);
@@ -145,7 +144,7 @@ namespace singe {
             return {};
         }
 
-        vector<shared_ptr<Material>> materials;
+        vector<Material::Ptr> materials;
 
         for (auto & mat : wfModel.materials) {
             auto material = materials.emplace_back(make_shared<Material>());
@@ -164,7 +163,7 @@ namespace singe {
                 material->specularTexture = getTexture(mat->texSpecular);
         }
 
-        vector<shared_ptr<Model>> models;
+        vector<Model::Ptr> models;
 
         for (auto & obj : wfModel.objects) {
             auto & model = models.emplace_back(make_shared<Model>());
@@ -192,8 +191,8 @@ namespace singe {
         return Transform(transform.pos, glm::quat(transform.rot), transform.scale);
     }
 
-    static shared_ptr<Scene> convertScene(ResourceManager * res,
-                                          shared_ptr<scene::Scene> & resScene) {
+    static Scene::Ptr convertScene(ResourceManager * res,
+                                   shared_ptr<scene::Scene> & resScene) {
         auto scene = make_shared<Scene>();
 
         if (resScene->grid) {
@@ -251,7 +250,7 @@ namespace singe {
         return scene;
     }
 
-    shared_ptr<Scene> ResourceManager::loadScene(const string & path) {
+    Scene::Ptr ResourceManager::loadScene(const string & path) {
         Logging::Resource->info("ResourceManager::loadScene {}", path);
 
         fs::path fullPath = resourceAt(path);

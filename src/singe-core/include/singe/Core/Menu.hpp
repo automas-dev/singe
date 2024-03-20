@@ -9,24 +9,29 @@
 #include "singe/Core/Window.hpp"
 
 namespace singe {
+    using std::string;
+    using std::shared_ptr;
+    using std::function;
 
     /**
      * A single item in a Menu. Currently this can be used as a label or a
      * button.
      */
     class MenuItem : public sf::Text {
-        std::function<void()> callback;
+    public:
+        using Ptr = shared_ptr<MenuItem>;
+        using ConstPtr = shared_ptr<const MenuItem>;
+
+    private:
+        function<void()> callback;
 
     public:
-        using Ptr = std::shared_ptr<MenuItem>;
-        using ConstPtr = std::shared_ptr<const MenuItem>;
-
         /**
          * Create a new MenuItem with a callback for click events.
          *
          * @param callback the callback for click events
          */
-        MenuItem(std::function<void()> callback);
+        MenuItem(function<void()> callback);
 
         /// Destructor
         virtual ~MenuItem();
@@ -36,7 +41,7 @@ namespace singe {
          *
          * @param callback the calback for click events
          */
-        void setCallback(std::function<void()> callback);
+        void setCallback(function<void()> callback);
 
         /**
          * Handle a click event for this item by calling the callback lambda.
@@ -57,6 +62,11 @@ namespace singe {
      * A menu system for the title screen and the in game pause menu.
      */
     class Menu : public sf::Drawable, public sf::Transformable, public EventHandler {
+    public:
+        using Ptr = shared_ptr<Menu>;
+        using ConstPtr = shared_ptr<const Menu>;
+
+    private:
         sf::Font font;
         sf::Text title;
         std::list<MenuItem::Ptr> items;
@@ -64,9 +74,6 @@ namespace singe {
         bool visible;
 
     public:
-        using Ptr = std::shared_ptr<Menu>;
-        using ConstPtr = std::shared_ptr<const Menu>;
-
         /**
          * Construct a Menu.
          */
@@ -86,7 +93,7 @@ namespace singe {
          * @param font the Font to use for the title and menu items
          * @param title the menu title
          */
-        Menu(const sf::Font & font, const std::string & title);
+        Menu(const sf::Font & font, const string & title);
 
         /**
          * Destruct the Menu.
@@ -105,7 +112,7 @@ namespace singe {
          *
          * @param text the new title
          */
-        void setTitle(const std::string & text);
+        void setTitle(const string & text);
 
         /**
          * Make the Menu visible and start accepting events.
@@ -125,7 +132,7 @@ namespace singe {
         bool isVisible() const;
 
         /// TODO: Document addMenuItem once it's fate is decided
-        bool addMenuItem(const std::string & text, std::function<void()> callback);
+        bool addMenuItem(const string & text, function<void()> callback);
 
         /**
          * Override for sf::Drawable::draw. If the menu is visible, this method

@@ -37,9 +37,9 @@ namespace singe {
      */
     class ResourceManager {
         fs::path root;
-        map<string, shared_ptr<Texture>> textures;
-        map<string, shared_ptr<Shader>> shaders;
-        map<string, shared_ptr<MVPShader>> mvpShaders;
+        map<string, Texture::Ptr> textures;
+        map<string, Shader::Ptr> shaders;
+        map<string, MVPShader::Ptr> mvpShaders;
 
     public:
         /**
@@ -92,7 +92,7 @@ namespace singe {
          *
          * @return shared_ptr to the glpp::Texture
          */
-        shared_ptr<Texture> getTexture(const string & path, bool useCached = true);
+        Texture::Ptr getTexture(const string & path, bool useCached = true);
 
         /**
          * Load a Shader or return the cached shader if it exists.
@@ -106,9 +106,9 @@ namespace singe {
          *
          * @return shared_ptr to the Shader
          */
-        shared_ptr<Shader> getShader(const string & vertPath,
-                                     const string & fragPath,
-                                     bool useCached = true);
+        Shader::Ptr getShader(const string & vertPath,
+                              const string & fragPath,
+                              bool useCached = true);
 
         /**
          * Load an MVPShader or return the cached shader if it exists.
@@ -122,9 +122,9 @@ namespace singe {
          *
          * @return shared_ptr to the MVPShader
          */
-        shared_ptr<MVPShader> getMVPShader(const string & vertPath,
-                                           const string & fragPath,
-                                           bool useCached = true);
+        MVPShader::Ptr getMVPShader(const string & vertPath,
+                                    const string & fragPath,
+                                    bool useCached = true);
 
         /**
          * Load a model.
@@ -133,7 +133,7 @@ namespace singe {
          *
          * @return vector of models
          */
-        vector<shared_ptr<Model>> loadModel(const string & path);
+        vector<Model::Ptr> loadModel(const string & path);
 
         /**
          * Load a scene.
@@ -142,6 +142,6 @@ namespace singe {
          *
          * @return shared_ptr to the Scene
          */
-        shared_ptr<Scene> loadScene(const string & path);
+        Scene::Ptr loadScene(const string & path);
     };
 }

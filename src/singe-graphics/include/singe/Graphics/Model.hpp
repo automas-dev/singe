@@ -23,11 +23,16 @@ namespace singe {
      * will buffer the mesh points into the vertex buffer.
      */
     class Model {
+    public:
+        using Ptr = shared_ptr<Model>;
+        using ConstPtr = const shared_ptr<Model>;
+
+    private:
         VertexBufferArray array;
 
     public:
         vector<Vertex> points;
-        shared_ptr<Material> material;
+        Material::Ptr material;
         Transform transform;
 
         /**
