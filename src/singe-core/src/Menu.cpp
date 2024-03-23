@@ -32,11 +32,13 @@ namespace singe {
 
     Menu::Menu() : isMouseDown(false), visible(false) {}
 
-    Menu::Menu(const sf::Font & font) : font(font) {
+    Menu::Menu(const sf::Font & font)
+        : isMouseDown(false), visible(false), font(font) {
         title.setFont(this->font);
         title.setCharacterSize(48);
     }
-    Menu::Menu(const sf::Font & font, const string & title) : font(font) {
+    Menu::Menu(const sf::Font & font, const string & title)
+        : isMouseDown(false), visible(false), font(font) {
         this->title.setString(title);
         this->title.setFont(this->font);
         this->title.setCharacterSize(48);
@@ -70,8 +72,7 @@ namespace singe {
         return visible;
     }
 
-    bool Menu::addMenuItem(const string & text,
-                           function<void()> callback) {
+    bool Menu::addMenuItem(const string & text, function<void()> callback) {
         auto menuItem = make_shared<MenuItem>(callback);
 
         menuItem->setFont(this->font);
