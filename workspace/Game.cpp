@@ -14,7 +14,7 @@ static void fillShader(shared_ptr<singe::MVPShader> & shader, Scene & scene) {
     }
 }
 
-Game::Game(Window & window)
+Game::Game(Window::Ptr & window)
     : GameBase(window),
       res("../../examples/res"),
       shader(res.getMVPShader("shader/default.vert", "shader/default.frag")) {
@@ -27,41 +27,41 @@ Game::Game(Window & window)
     loadingText.setOrigin(loadingText.getLocalBounds().left,
                           loadingText.getLocalBounds().top);
     loadingText.setPosition(100, 100);
-    window.window.draw(loadingText);
-    window.display();
+    window->window.draw(loadingText);
+    window->display();
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
 
     // TODO: load here
 
-    scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
+    // scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
 
-    shared_ptr<Scene> modelScene;
+    // shared_ptr<Scene> modelScene;
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("model/sphere.obj");
-    modelScene->transform.move({0, 1, 0});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/sphere.obj");
+    // modelScene->transform.move({0, 1, 0});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("model/plane.obj");
-    modelScene->transform.move({0, 0, 0});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/plane.obj");
+    // modelScene->transform.move({0, 0, 0});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("model/cube.obj");
-    modelScene->transform.move({0, 1, 3});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/cube.obj");
+    // modelScene->transform.move({0, 1, 3});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("model/fountain.obj");
-    modelScene->transform.move({2, 0, -3});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/fountain.obj");
+    // modelScene->transform.move({2, 0, -3});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("model/Human.obj");
-    modelScene->transform.move({-2, 0, -3});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/Human.obj");
+    // modelScene->transform.move({-2, 0, -3});
 
-    for (auto & s : scene.children) {
-        for (auto & m : s->models) m->material->shader = shader;
-    }
+    // for (auto & s : scene.children) {
+    //     for (auto & m : s->models) m->material->shader = shader;
+    // }
 
     scene.children.emplace_back(res.loadScene("scene/scene_demo.xml"));
     fillShader(shader, scene);
@@ -72,7 +72,7 @@ Game::Game(Window & window)
     // No fancy render api, just each model can be drawn
     // Maybe add something like pyglet Batch to group rendering
 
-    window.setMouseGrab(true);
+    window->setMouseGrab(true);
 }
 
 Game::~Game() {}

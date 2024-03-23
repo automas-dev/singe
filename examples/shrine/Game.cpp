@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-Game::Game(Window & window)
+Game::Game(Window::Ptr & window)
     : GameBase(window),
       res("../../../examples/res"),
       shader(res.getMVPShader("shader/default.vert", "shader/default.frag")),
@@ -28,7 +28,7 @@ Game::Game(Window & window)
     // No fancy render api, just each model can be drawn
     // Maybe add something like pyglet Batch to group rendering
 
-    window.setMouseGrab(false);
+    window->setMouseGrab(false);
 }
 
 Game::~Game() {}
@@ -36,7 +36,7 @@ Game::~Game() {}
 void Game::onMouseDown(const sf::Event::MouseButtonEvent & event) {
     switch (event.button) {
         case sf::Mouse::Button::Right:
-            window.setMouseGrab(true);
+            window->setMouseGrab(true);
             break;
     }
 }
@@ -44,7 +44,7 @@ void Game::onMouseDown(const sf::Event::MouseButtonEvent & event) {
 void Game::onMouseUp(const sf::Event::MouseButtonEvent & event) {
     switch (event.button) {
         case sf::Mouse::Button::Right:
-            window.setMouseGrab(false);
+            window->setMouseGrab(false);
             break;
     }
 }

@@ -16,30 +16,30 @@ namespace singe::Logging {
 
 namespace singe {
 
-    GameBase::GameBase(Window & window)
+    GameBase::GameBase(Window::Ptr & window)
         : window(window),
           mouseSensitivity(0.2, 0.2),
           moveSpeed(5),
           fpsShow(true),
-          camera(window.getSize(), Camera::Perspective, 80.0f),
+          camera(window->getSize(), Camera::Perspective, 80.0f),
           menu(nullptr) {
 
         uiFont.loadFromMemory(__default_font_start, __default_font_size);
         fpsDisplay.setFont(uiFont);
 
-        menu = std::make_shared<Menu>(uiFont, "tmp title");
+        menu = std::make_shared<Menu>(uiFont, window->title);
         menu->setPosition(300, 300);
-        window.addEventHandler(menu.get());
+        window->addEventHandler(menu.get());
 
         menu->addMenuItem("Resume", [&]() {
             menu->hide();
-            window.setMouseGrab(true);
+            window->setMouseGrab(true);
         });
         menu->addMenuItem("Exit", [&]() {
-            window.close();
+            window->close();
         });
 
-        window.addEventHandler(this);
+        window->addEventHandler(this);
     }
 
     GameBase::~GameBase() {}
@@ -49,12 +49,12 @@ namespace singe {
 
         sf::Clock clock;
 
-        while (window.isOpen()) {
-            window.poll();
+        while (window->isOpen()) {
+            window->poll();
 
             sf::Time delta = clock.restart();
 
-            if (window.getMouseGrab()) {
+            if (window->getMouseGrab()) {
                 int x = sf::Keyboard::isKeyPressed(sf::Keyboard::D)
                         - sf::Keyboard::isKeyPressed(sf::Keyboard::A);
                 int y = sf::Keyboard::isKeyPressed(sf::Keyboard::E)
@@ -62,10 +62,10 @@ namespace singe {
                 int z = sf::Keyboard::isKeyPressed(sf::Keyboard::S)
                         - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 
-                glm::ivec2 center(window.getSize().x / 2, window.getSize().y / 2);
-                auto mouse = window.getMousePosition();
-                if (window.getMouseGrab()) {
-                    window.setMousePosition(center);
+                glm::ivec2 center(window->getSize().x / 2, window->getSize().y / 2);
+                auto mouse = window->getMousePosition();
+                if (window->getMouseGrab()) {
+                    window->setMousePosition(center);
                 }
 
                 glm::vec2 mouseDelta(mouse.x - center.x, mouse.y - center.y);
@@ -88,29 +88,29 @@ namespace singe {
             FrameBuffer::clear();
             onDraw();
             if (menu || fpsShow) {
-                window.window.pushGLStates();
+                window->window.pushGLStates();
             }
 
             if (menu)
-                window.window.draw(*menu);
+                window->window.draw(*menu);
             if (fpsShow)
-                window.window.draw(fpsDisplay);
+                window->window.draw(fpsDisplay);
 
             if (menu || fpsShow) {
-                window.window.popGLStates();
+                window->window.popGLStates();
             }
-            window.display();
+            window->display();
         }
     }
 
     void GameBase::Stop(void) {
         Logging::Core->info("stopping main game loop");
-        window.close();
+        window->close();
     }
 
     void GameBase::Fail(int status) noexcept {
         Logging::Core->error("a failure occurred, status={}, exiting!", status);
-        window.close();
+        window->close();
         exit(status);
     }
 
@@ -132,8 +132,8 @@ namespace singe {
 
     void GameBase::onKeyPressed(const sf::Event::KeyEvent & event) {
         if (event.code == sf::Keyboard::Escape) {
-            window.setMouseGrab(!window.getMouseGrab());
-            if (window.getMouseGrab()) {
+            window->setMouseGrab(!window->getMouseGrab());
+            if (window->getMouseGrab()) {
                 menu->hide();
             }
             else {

@@ -1,6 +1,7 @@
 #include <spdlog/spdlog.h>
 
 #include <glpp/extra/debug.hpp>
+#include <memory>
 
 #include "Game.hpp"
 
@@ -9,7 +10,7 @@ int main() {
     Logging::Resource->setLevel(Logging::Logger::Debug);
 
     try {
-        Window window("Workspace");
+        Window::Ptr window = std::make_shared<Window>("Workspace");
 
         glpp::extra::initDebug();
 

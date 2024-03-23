@@ -23,7 +23,7 @@ class Game : public GameBase {
     float tPillar;
 
 public:
-    Game(Window & window);
+    Game(Window::Ptr & window);
     virtual ~Game();
 
     void onMouseDown(const sf::Event::MouseButtonEvent & event) override;

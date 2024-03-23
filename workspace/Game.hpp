@@ -19,7 +19,7 @@ class Game : public GameBase {
     Scene scene;
 
 public:
-    Game(Window & window);
+    Game(Window::Ptr & window);
     virtual ~Game();
 
     void onUpdate(const sf::Time & delta) override;

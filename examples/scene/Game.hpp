@@ -33,7 +33,7 @@ class Game : public GameBase {
     DisplayMode wireframe;
 
 public:
-    Game(Window & window);
+    Game(Window::Ptr & window);
     virtual ~Game();
 
     void onKeyPressed(const sf::Event::KeyEvent & event) override;

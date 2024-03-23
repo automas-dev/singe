@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-Game::Game(Window & window)
+Game::Game(Window::Ptr & window)
     : GameBase(window),
       res("../../../examples/res"),
       shader(res.getMVPShader("shader/default.vert", "shader/default.frag")),
@@ -36,7 +36,7 @@ Game::Game(Window & window)
     // No fancy render api, just each model can be drawn
     // Maybe add something like pyglet Batch to group rendering
 
-    window.setMouseGrab(true);
+    window->setMouseGrab(true);
 
     Logging::Game->info("Keyboard:");
     Logging::Game->info("W - Forward");

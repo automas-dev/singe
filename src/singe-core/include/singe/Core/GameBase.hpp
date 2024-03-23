@@ -38,7 +38,7 @@ namespace singe {
 
     protected:
         /// Reference to the Window object
-        Window & window;
+        Window::Ptr window;
 
         /**
          * Pointer to the Camera object created by GameBase.
@@ -63,7 +63,7 @@ namespace singe {
         /**
          * Construct a new GameBase.
          */
-        GameBase(Window & window);
+        GameBase(Window::Ptr & window);
 
         /**
          * Destruct the GameBase.

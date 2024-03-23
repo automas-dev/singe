@@ -12,6 +12,7 @@
 #include <vector>
 
 namespace singe {
+    using std::shared_ptr;
 
     class EventHandler {
     public:
@@ -72,6 +73,11 @@ namespace singe {
     };
 
     class Window : public EventHandler {
+    public:
+        using Ptr = shared_ptr<Window>;
+        using ConstPtr = const shared_ptr<Window>;
+
+    private:
         bool grab;
 
     protected:
@@ -80,11 +86,15 @@ namespace singe {
     public:
         /// Pointer to the SFML RenderWindow object
         sf::RenderWindow window;
+        const std::string title;
 
         Window(const std::string & title,
                unsigned int width = 800,
                unsigned int height = 600,
                bool fullscreen = false);
+
+        Window(const Window &) = delete;
+        Window & operator=(const Window &) = delete;
 
         /**
          * Default move constructor.

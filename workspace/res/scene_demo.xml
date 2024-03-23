@@ -43,15 +43,6 @@
         <shader ref="light" />
     </model>
 
-    <!-- Grid -->
-
-    <grid>
-        <size>10</size>
-        <color>0.5 0.5 0.5 1</color>
-    </grid>
-
-    <!-- Scene -->
-
     <model name="plane">
         <mesh path="model/plane.obj" />
         <shader ref="light" />
@@ -65,6 +56,15 @@
         <mesh path="model/plane.obj" />
         <shader ref="light" />
     </model>
+
+    <!-- Grid -->
+
+    <grid>
+        <size>10</size>
+        <color>0.5 0.5 0.5 1</color>
+    </grid>
+
+    <!-- Scene -->
 
     <scene name="sphere">
         <transform>
