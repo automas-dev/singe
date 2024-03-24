@@ -4,6 +4,7 @@
 #include <memory>
 
 namespace singe {
+    using std::shared_ptr;
 
     /**
      * An SFML Text that shows calculates and shows the frame rate
@@ -20,8 +21,8 @@ namespace singe {
         void updateLabel();
 
     public:
-        using Ptr = std::shared_ptr<FPSDisplay>;
-        using ConstPtr = std::shared_ptr<const FPSDisplay>;
+        using Ptr = shared_ptr<FPSDisplay>;
+        using ConstPtr = shared_ptr<const FPSDisplay>;
 
         /**
          * Create a new FPSDisplay.

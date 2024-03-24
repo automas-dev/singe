@@ -67,9 +67,6 @@ dependencies and their versions, see the cmake files in the
 ```sh
 git clone https://github.com/twh2898/singe.git
 cd singe
-mkdir build
-cd build
-cmake ..
 make
 ```
 

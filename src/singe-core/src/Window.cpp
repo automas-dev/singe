@@ -10,6 +10,7 @@ namespace singe {
                    unsigned int height,
                    bool fullscreen)
         : grab(false),
+          title(title),
           window(sf::VideoMode(width, height),
                  title,
                  sf::Style::Default | (fullscreen ? sf::Style::Fullscreen : 0),

@@ -1,6 +1,7 @@
 #include <spdlog/spdlog.h>
 
 #include <glpp/extra/debug.hpp>
+#include <memory>
 
 #include "Game.hpp"
 
@@ -8,7 +9,7 @@ int main() {
     spdlog::set_level(spdlog::level::trace);
 
     try {
-        Window window("Spin Cube");
+        Window::Ptr window = std::make_shared<Window>("Spin Cube");
 
         glpp::extra::initDebug();
 

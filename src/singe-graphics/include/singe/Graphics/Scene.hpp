@@ -1,11 +1,14 @@
 #pragma once
 
+#include <glpp/extra/Grid.hpp>
 #include <glpp/extra/Transform.hpp>
 #include <memory>
 #include <vector>
 
-#include "Mesh.hpp"
+#include "Model.hpp"
 #include "RenderState.hpp"
+
+using glpp::extra::Grid;
 
 namespace singe {
     using std::shared_ptr;
@@ -13,11 +16,15 @@ namespace singe {
     using glpp::extra::Transform;
 
     /**
-     * Group of Mesh and child Scenes.
+     * Group of Models and child Scenes.
      */
     struct Scene {
-        vector<shared_ptr<Scene>> children;
-        vector<shared_ptr<Mesh>> models;
+        using Ptr = shared_ptr<Scene>;
+        using ConstPtr = const shared_ptr<Scene>;
+
+        vector<Scene::Ptr> children;
+        vector<Model::Ptr> models;
+        shared_ptr<Grid> grid;
         Transform transform;
 
         Scene();
@@ -36,19 +43,19 @@ namespace singe {
          *
          * @return reference to the new Scene
          */
-        shared_ptr<Scene> & addChild();
+        Scene::Ptr & addChild();
 
         /**
          * Create and return a new model.
          *
          * @return reference to the new model
          */
-        shared_ptr<Mesh> & addModel();
+        Model::Ptr & addModel();
 
         /**
          * Draw child scenes and then mesh in this scene.
          *
-         * Mesh in this scene will be drawn with this transform and child
+         * Models in this scene will be drawn with this transform and child
          * scenes will transform with this scene as their origin.
          *
          * @param state the RenderState with the current global transform

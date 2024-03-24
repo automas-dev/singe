@@ -17,15 +17,18 @@ namespace singe {
      * Material properties, textures and shader.
      */
     struct Material {
-        shared_ptr<Shader> shader;
+        using Ptr = shared_ptr<Material>;
+        using ConstPtr = const shared_ptr<Material>;
+
+        Shader::Ptr shader;
 
         string name;
         vec3 ambient, diffuse, specular;
         float specExp;
         float alpha;
-        shared_ptr<Texture> texture;
-        shared_ptr<Texture> normalTexture;
-        shared_ptr<Texture> specularTexture;
+        Texture::Ptr texture;
+        Texture::Ptr normalTexture;
+        Texture::Ptr specularTexture;
 
         Material();
 

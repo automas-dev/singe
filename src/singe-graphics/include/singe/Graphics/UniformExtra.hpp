@@ -2,8 +2,10 @@
 
 #include <glm/glm.hpp>
 #include <glpp/Shader.hpp>
+#include <memory>
 
 namespace singe {
+    using std::shared_ptr;
     using glm::mat2;
     using glm::mat3;
     using glm::mat4;
@@ -19,6 +21,10 @@ namespace singe {
      * uniform type.
      */
     class UniformExtra {
+    public:
+        using Ptr = shared_ptr<UniformExtra>;
+        using ConstPtr = const shared_ptr<UniformExtra>;
+
     protected:
         glpp::Uniform uniform;
 
@@ -47,6 +53,9 @@ namespace singe {
      */
     class BoolUniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<BoolUniformExtra>;
+        using ConstPtr = const shared_ptr<BoolUniformExtra>;
+
         /// The uniform value
         bool value;
 
@@ -68,6 +77,9 @@ namespace singe {
      */
     class IntUniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<IntUniformExtra>;
+        using ConstPtr = const shared_ptr<IntUniformExtra>;
+
         /// The uniform value
         int value;
 
@@ -89,6 +101,9 @@ namespace singe {
      */
     class UIntUniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<UIntUniformExtra>;
+        using ConstPtr = const shared_ptr<UIntUniformExtra>;
+
         /// The uniform value
         unsigned int value;
 
@@ -110,6 +125,9 @@ namespace singe {
      */
     class FloatUniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<FloatUniformExtra>;
+        using ConstPtr = const shared_ptr<FloatUniformExtra>;
+
         /// The uniform value
         float value;
 
@@ -131,6 +149,9 @@ namespace singe {
      */
     class Vec2UniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<Vec2UniformExtra>;
+        using ConstPtr = const shared_ptr<Vec2UniformExtra>;
+
         /// The uniform value
         vec2 value;
 
@@ -152,6 +173,9 @@ namespace singe {
      */
     class Vec3UniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<Vec3UniformExtra>;
+        using ConstPtr = const shared_ptr<Vec3UniformExtra>;
+
         /// The uniform value
         vec3 value;
 
@@ -173,6 +197,9 @@ namespace singe {
      */
     class Vec4UniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<Vec4UniformExtra>;
+        using ConstPtr = const shared_ptr<Vec4UniformExtra>;
+
         /// The uniform value
         vec4 value;
 
@@ -194,6 +221,9 @@ namespace singe {
      */
     class Mat2UniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<Mat2UniformExtra>;
+        using ConstPtr = const shared_ptr<Mat2UniformExtra>;
+
         /// The uniform value
         mat2 value;
 
@@ -215,6 +245,9 @@ namespace singe {
      */
     class Mat3UniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<Mat3UniformExtra>;
+        using ConstPtr = const shared_ptr<Mat3UniformExtra>;
+
         /// The uniform value
         mat3 value;
 
@@ -236,6 +269,9 @@ namespace singe {
      */
     class Mat4UniformExtra : public UniformExtra {
     public:
+        using Ptr = shared_ptr<Mat4UniformExtra>;
+        using ConstPtr = const shared_ptr<Mat4UniformExtra>;
+
         /// The uniform value
         mat4 value;
 

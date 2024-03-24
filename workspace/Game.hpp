@@ -2,28 +2,24 @@
 
 #include <singe/Core/FPSDisplay.hpp>
 #include <singe/Core/GameBase.hpp>
+#include <singe/Core/ResourceManager.hpp>
 #include <singe/Core/Window.hpp>
-#include <singe/Graphics/Mesh.hpp>
-#include <singe/Graphics/ResourceManager.hpp>
+#include <singe/Graphics/Model.hpp>
 #include <singe/Graphics/Scene.hpp>
 #include <singe/Graphics/Shader.hpp>
 #include <singe/Support/log.hpp>
 using namespace singe;
-
-#include <glpp/extra/Grid.hpp>
-using glpp::extra::Grid;
 
 #include <memory>
 
 class Game : public GameBase {
     ResourceManager res;
     FPSDisplay fps;
-    std::shared_ptr<singe::Shader> shader;
-    Grid grid;
+    std::shared_ptr<singe::MVPShader> shader;
     Scene scene;
 
 public:
-    Game(Window & window);
+    Game(Window::Ptr & window);
     virtual ~Game();
 
     void onUpdate(const sf::Time & delta) override;

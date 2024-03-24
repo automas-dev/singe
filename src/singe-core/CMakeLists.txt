@@ -4,6 +4,7 @@ set(HEADER_LIST
     FPSDisplay.hpp
     GameBase.hpp
     Menu.hpp
+    ResourceManager.hpp
     Window.hpp
 )
 list(TRANSFORM HEADER_LIST PREPEND "include/${PROJECT_NAME}/${TARGET}/")
@@ -12,6 +13,7 @@ set(SOURCE_LIST
     FPSDisplay.cpp
     GameBase.cpp
     Menu.cpp
+    ResourceManager.cpp
     Window.cpp
 )
 list(TRANSFORM SOURCE_LIST PREPEND "src/")
@@ -27,7 +29,7 @@ target_link_libraries(${TARGET}
     glpp
     Wavefront
     Support
-    # Graphics
+    Graphics
     GLEW::GLEW
     sfml-graphics
     glm

@@ -3,12 +3,21 @@
 #include <stdexcept>
 
 using std::make_shared;
+using glpp::extra::Grid;
 
-Game::Game(Window & window)
+static void fillShader(shared_ptr<singe::MVPShader> & shader, Scene & scene) {
+    for (auto & model : scene.models) {
+        model->material->shader = shader;
+    }
+    for (auto & child : scene.children) {
+        fillShader(shader, *child);
+    }
+}
+
+Game::Game(Window::Ptr & window)
     : GameBase(window),
       res("../../examples/res"),
-      shader(res.getMVPShader("default")),
-      grid(10, {1, 1, 1, 1}, true) {
+      shader(res.getMVPShader("shader/default.vert", "shader/default.frag")) {
 
     sf::Text loadingText;
     loadingText.setFont(uiFont);
@@ -18,39 +27,44 @@ Game::Game(Window & window)
     loadingText.setOrigin(loadingText.getLocalBounds().left,
                           loadingText.getLocalBounds().top);
     loadingText.setPosition(100, 100);
-    window.window.draw(loadingText);
-    window.display();
+    window->window.draw(loadingText);
+    window->display();
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
 
     // TODO: load here
 
-    shared_ptr<Scene> modelScene;
+    // scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("sphere.obj");
-    modelScene->transform.move({0, 1, 0});
+    // shared_ptr<Scene> modelScene;
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("plane.obj");
-    modelScene->transform.move({0, 0, 0});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/sphere.obj");
+    // modelScene->transform.move({0, 1, 0});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("cube.obj");
-    modelScene->transform.move({0, 1, 3});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/plane.obj");
+    // modelScene->transform.move({0, 0, 0});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("fountain.obj");
-    modelScene->transform.move({2, 0, -3});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/cube.obj");
+    // modelScene->transform.move({0, 1, 3});
 
-    modelScene = scene.addChild();
-    modelScene->models = res.loadModel("Human.obj");
-    modelScene->transform.move({-2, 0, -3});
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/fountain.obj");
+    // modelScene->transform.move({2, 0, -3});
 
-    for (auto & s : scene.children) {
-        for (auto & m : s->models) m->material->shader = shader;
-    }
+    // modelScene = scene.addChild();
+    // modelScene->models = res.loadModel("model/Human.obj");
+    // modelScene->transform.move({-2, 0, -3});
+
+    // for (auto & s : scene.children) {
+    //     for (auto & m : s->models) m->material->shader = shader;
+    // }
+
+    scene.children.emplace_back(res.loadScene("scene/scene_demo.xml"));
+    fillShader(shader, scene);
 
     // modelScene->material->shader = shader;
 
@@ -58,7 +72,7 @@ Game::Game(Window & window)
     // No fancy render api, just each model can be drawn
     // Maybe add something like pyglet Batch to group rendering
 
-    window.setMouseGrab(true);
+    window->setMouseGrab(true);
 }
 
 Game::~Game() {}
@@ -87,8 +101,8 @@ void Game::onDraw() const {
     setupGl();
 
     RenderState state(camera);
+    state.setGridEnable(true);
     scene.draw(state);
-    grid.draw(state.getMVP());
 
     glpp::BufferArray::unbind();
 }

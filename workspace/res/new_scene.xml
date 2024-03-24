@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="workspace">
+    <camera name="fpv_camera">
+        <pose>5 2 5 0.2 -0.75 0</pose>
+        <projection>
+            <mode>perspective</mode>
+            <fov>70</fov>
+            <znear>0.01</znear>
+            <zfar>1000</zfar>
+        </projection>
+    </camera>
+
+    <shader name="default" type="mvp">
+        <source type="vertex" path="shader/default.vert" />
+        <source type="fragment" path="shader/default.frag" />
+    </shader>
+
+    <grid>
+        <size>10</size>
+        <color>1 1 1 1</color>
+    </grid>
+
+    <scene name="sphere">
+        <transform>
+            <position>0 1 0</position>
+        </transform>
+
+        <model name="sphere">
+            <mesh path="model/sphere.obj" />
+            <shader ref="default" />
+        </model>
+    </scene>
+
+    <scene name="plane">
+        <model name="plane">
+            <mesh path="model/plane.obj" />
+            <shader ref="default" />
+        </model>
+    </scene>
+
+    <scene name="cube">
+        <transform>
+            <position>0 1 3</position>
+        </transform>
+
+        <model name="cube">
+            <mesh path="model/cube.obj" />
+            <shader ref="default" />
+        </model>
+    </scene>
+
+    <scene name="fountain">
+        <transform>
+            <position>2 0 -3</position>
+        </transform>
+
+        <model name="fountain">
+            <mesh path="model/fountain.obj" />
+            <shader ref="default" />
+        </model>
+    </scene>
+
+    <scene name="human">
+        <transform>
+            <position>-2 0 -3</position>
+        </transform>
+
+        <model name="Human">
+            <mesh path="model/Human.obj" />
+            <shader ref="default" />
+        </model>
+    </scene>
+</scene>

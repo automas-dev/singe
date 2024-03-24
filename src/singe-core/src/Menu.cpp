@@ -7,17 +7,17 @@ const sf::Color dark(10, 10, 10);
 
 namespace singe {
 
-    MenuItem::MenuItem(std::function<void()> callback) : callback(callback) {}
+    MenuItem::MenuItem(function<void()> callback) : callback(callback) {}
 
     MenuItem::~MenuItem() {}
 
-    void MenuItem::setCallback(std::function<void(void)> callback) {
+    void MenuItem::setCallback(function<void(void)> callback) {
         this->callback = callback;
     }
 
     void MenuItem::onClick() const {
         Logging::Graphics->info("MenuItem {} was clicked, calling callback",
-                                std::string(getString()));
+                                string(getString()));
         callback();
     }
 
@@ -28,14 +28,17 @@ namespace singe {
 }
 
 namespace singe {
+    using std::make_shared;
 
     Menu::Menu() : isMouseDown(false), visible(false) {}
 
-    Menu::Menu(const sf::Font & font) : font(font) {
+    Menu::Menu(const sf::Font & font)
+        : isMouseDown(false), visible(false), font(font) {
         title.setFont(this->font);
         title.setCharacterSize(48);
     }
-    Menu::Menu(const sf::Font & font, const std::string & title) : font(font) {
+    Menu::Menu(const sf::Font & font, const string & title)
+        : isMouseDown(false), visible(false), font(font) {
         this->title.setString(title);
         this->title.setFont(this->font);
         this->title.setCharacterSize(48);
@@ -51,7 +54,7 @@ namespace singe {
         }
     }
 
-    void Menu::setTitle(const std::string & text) {
+    void Menu::setTitle(const string & text) {
         this->title.setString(text);
     }
 
@@ -69,9 +72,8 @@ namespace singe {
         return visible;
     }
 
-    bool Menu::addMenuItem(const std::string & text,
-                           std::function<void()> callback) {
-        auto menuItem = std::make_shared<MenuItem>(callback);
+    bool Menu::addMenuItem(const string & text, function<void()> callback) {
+        auto menuItem = make_shared<MenuItem>(callback);
 
         menuItem->setFont(this->font);
         menuItem->setString(text);

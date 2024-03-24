@@ -2,8 +2,8 @@
 
 #include <singe/Core/FPSDisplay.hpp>
 #include <singe/Core/GameBase.hpp>
+#include <singe/Core/ResourceManager.hpp>
 #include <singe/Core/Window.hpp>
-#include <singe/Graphics/ResourceManager.hpp>
 #include <singe/Graphics/Scene.hpp>
 #include <singe/Support/log.hpp>
 using namespace singe;
@@ -16,12 +16,12 @@ using glpp::extra::Grid;
 class Game : public GameBase {
     ResourceManager res;
     FPSDisplay fps;
-    std::shared_ptr<singe::Shader> shader;
+    std::shared_ptr<singe::MVPShader> shader;
     Grid grid;
     Scene scene;
 
 public:
-    Game(Window & window);
+    Game(Window::Ptr & window);
     virtual ~Game();
 
     void onUpdate(const sf::Time & delta) override;

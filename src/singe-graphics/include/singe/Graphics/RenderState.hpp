@@ -24,6 +24,7 @@ namespace singe {
         mat4 view;
         mat4 model;
         mat4 local;
+        bool drawGrid;
 
     public:
         /**
@@ -38,11 +39,13 @@ namespace singe {
          * @param view the view matrix
          * @param model the model matrix
          * @param local the local matrix
+         * @param drawGrid should a grid be drawn if present
          */
         RenderState(const mat4 & projection,
                     const mat4 & view,
                     const mat4 & model,
-                    const mat4 & local);
+                    const mat4 & local,
+                    bool drawGrid = false);
 
         /**
          * Create a RenderState with initial transform.
@@ -53,9 +56,24 @@ namespace singe {
          */
         RenderState(const Camera & camera,
                     const mat4 & model = mat4(1),
-                    const mat4 & local = mat4(1));
+                    const mat4 & local = mat4(1),
+                    bool drawGrid = false);
 
         ~RenderState();
+
+        /**
+         * @brief Will a grid be drawn if present.
+         *
+         * @return is grid draw enabled
+         */
+        bool getGridEnable() const;
+
+        /**
+         * @brief Enable or disable grid draw if a grid is present.
+         *
+         * @param enabled state of grid draw
+         */
+        void setGridEnable(bool enabled);
 
         /**
          * Get the vp transform.

@@ -11,12 +11,14 @@ namespace singe {
     Scene::Scene(Scene && other)
         : children(move(other.children)),
           models(move(other.models)),
-          transform(move(other.transform)) {}
+          transform(move(other.transform)),
+          grid(move(other.grid)) {}
 
     Scene & Scene::operator=(Scene && other) {
         children = move(other.children);
         models = move(other.models);
         transform = move(other.transform);
+        grid = move(other.grid);
         return *this;
     }
 
@@ -26,12 +28,14 @@ namespace singe {
         return children.emplace_back(make_shared<Scene>());
     }
 
-    shared_ptr<Mesh> & Scene::addModel() {
-        return models.emplace_back(make_shared<Mesh>());
+    shared_ptr<Model> & Scene::addModel() {
+        return models.emplace_back(make_shared<Model>());
     }
 
     void Scene::draw(RenderState state) const {
         state.pushTransform(transform);
+        if (grid && state.getGridEnable())
+            grid->draw(state.getMVP());
         for (auto & model : models) model->draw(state);
         for (auto & child : children) child->draw(state);
     }
