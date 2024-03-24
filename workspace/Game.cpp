@@ -30,7 +30,7 @@ Game::Game(Window::Ptr & window)
       shader(res.getMVPShader("shader/default.vert", "shader/default.frag")),
       circle_shader(make_shared<singe::Shader>(glpp::Shader(
           circle_vertexShaderSource, circle_fragmentShaderSource))),
-      circle(make_shared<Circle>(0.03, vec4(1.0, 0.0, 0.0, 1.0))) {
+      circle(make_shared<Diamond>(vec2(0.02), vec4(1.0, 0.0, 0.0, 1.0))) {
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
@@ -59,6 +59,8 @@ void Game::onUpdate(const sf::Time & delta) {
     projPoint /= projPoint.w;
     point = vec3(projPoint.x, projPoint.y, 0.0);
     circle->setPos(point);
+    float r = (float)camera.getScreenSize().x / (float)camera.getScreenSize().y;
+    circle->setSize({circle->getSize().x, circle->getSize().x * r});
 }
 
 inline void setupGl() {

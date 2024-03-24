@@ -12,15 +12,15 @@ using namespace singe;
 
 #include <memory>
 
-class Circle {
+class Diamond {
     BufferArray::Ptr array;
     int n;
-    float size;
+    glm::vec2 size;
     glm::vec4 color;
     glm::vec2 pos;
 
 public:
-    Circle(float size, const glm::vec4 & color)
+    Diamond(glm::vec2 size, const glm::vec4 & color)
         : n(0),
           size(size),
           color(color),
@@ -32,11 +32,11 @@ public:
         updateBuffer();
     }
 
-    float getSize() const {
+    glm::vec2 getSize() const {
         return size;
     }
 
-    void setSize(float size) {
+    void setSize(glm::vec2 size) {
         this->size = size;
         updateBuffer();
     }
@@ -62,17 +62,17 @@ private:
         int i = 0;
         float x = pos.x;
         float y = pos.y;
-        vertices.emplace_back(x - size, y);
-        vertices.emplace_back(x, y - size);
+        vertices.emplace_back(x - size.x, y);
+        vertices.emplace_back(x, y - size.y);
 
-        vertices.emplace_back(x, y - size);
-        vertices.emplace_back(x + size, y);
+        vertices.emplace_back(x, y - size.y);
+        vertices.emplace_back(x + size.x, y);
 
-        vertices.emplace_back(x + size, y);
-        vertices.emplace_back(x, y + size);
+        vertices.emplace_back(x + size.x, y);
+        vertices.emplace_back(x, y + size.y);
 
-        vertices.emplace_back(x, y + size);
-        vertices.emplace_back(x - size, y);
+        vertices.emplace_back(x, y + size.y);
+        vertices.emplace_back(x - size.x, y);
 
         for (int j = 0; j < i; j++) {
             colors.push_back(color);
@@ -94,7 +94,7 @@ class Game : public GameBase {
     std::shared_ptr<singe::Shader> circle_shader;
     Scene scene;
     glm::vec3 point;
-    shared_ptr<Circle> circle;
+    shared_ptr<Diamond> circle;
 
 public:
     Game(Window::Ptr & window);
