@@ -51,8 +51,14 @@ void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
     scene.models[0]->transform.rotateEuler({0, s * 0.5, 0});
 
+    RenderState tmpState (camera);
+    tmpState.pushTransform(scene.transform.toMatrix());
+    tmpState.pushTransform(scene.models[0]->transform.toMatrix());
     point = scene.models[0]->points[0].pos;
-    // circle->setPos(point);
+    auto projPoint = tmpState.getMVP() * vec4(point, 1.0);
+    projPoint /= projPoint.w;
+    point = vec3(projPoint.x, projPoint.y, 0.0);
+    circle->setPos(point);
 }
 
 inline void setupGl() {
