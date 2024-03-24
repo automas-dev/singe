@@ -5,72 +5,42 @@
 using std::make_shared;
 using glpp::extra::Grid;
 
-static void fillShader(shared_ptr<singe::MVPShader> & shader, Scene & scene) {
-    for (auto & model : scene.models) {
-        model->material->shader = shader;
-    }
-    for (auto & child : scene.children) {
-        fillShader(shader, *child);
-    }
-}
+static const char * circle_vertexShaderSource = R"(
+#version 330 core
+layout (location = 0) in vec2 aPos;
+layout (location = 1) in vec4 aCol;
+out vec4 color;
+void main() {
+    gl_Position = vec4(aPos, 0.0, 1.0);
+    color = aCol;
+})";
+
+static const char * circle_fragmentShaderSource = R"(
+#version 330 core
+in vec4 color;
+out vec4 FragColor;
+void main() {
+    // FragColor = color;
+    FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
 Game::Game(Window::Ptr & window)
     : GameBase(window),
       res("../../examples/res"),
-      shader(res.getMVPShader("shader/default.vert", "shader/default.frag")) {
-
-    sf::Text loadingText;
-    loadingText.setFont(uiFont);
-    loadingText.setString("Loading");
-    loadingText.setCharacterSize(32);
-    loadingText.setFillColor(sf::Color(200, 200, 200));
-    loadingText.setOrigin(loadingText.getLocalBounds().left,
-                          loadingText.getLocalBounds().top);
-    loadingText.setPosition(100, 100);
-    window->window.draw(loadingText);
-    window->display();
+      shader(res.getMVPShader("shader/default.vert", "shader/default.frag")),
+      circle_shader(make_shared<singe::Shader>(glpp::Shader(
+          circle_vertexShaderSource, circle_fragmentShaderSource))),
+      circle(make_shared<Circle>(0.03, vec4(1.0, 0.0, 0.0, 1.0))) {
 
     camera.setPosition({5, 2, 5});
     camera.setRotation({0.2, -0.75, 0});
 
-    // TODO: load here
+    scene.models = res.loadModel("model/cube.obj");
+    scene.models[0]->material->shader = shader;
 
-    // scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
+    scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
 
-    // shared_ptr<Scene> modelScene;
-
-    // modelScene = scene.addChild();
-    // modelScene->models = res.loadModel("model/sphere.obj");
-    // modelScene->transform.move({0, 1, 0});
-
-    // modelScene = scene.addChild();
-    // modelScene->models = res.loadModel("model/plane.obj");
-    // modelScene->transform.move({0, 0, 0});
-
-    // modelScene = scene.addChild();
-    // modelScene->models = res.loadModel("model/cube.obj");
-    // modelScene->transform.move({0, 1, 3});
-
-    // modelScene = scene.addChild();
-    // modelScene->models = res.loadModel("model/fountain.obj");
-    // modelScene->transform.move({2, 0, -3});
-
-    // modelScene = scene.addChild();
-    // modelScene->models = res.loadModel("model/Human.obj");
-    // modelScene->transform.move({-2, 0, -3});
-
-    // for (auto & s : scene.children) {
-    //     for (auto & m : s->models) m->material->shader = shader;
-    // }
-
-    scene.children.emplace_back(res.loadScene("scene/scene_demo.xml"));
-    fillShader(shader, scene);
-
-    // modelScene->material->shader = shader;
-
-    // Load models / textures / scenes
-    // No fancy render api, just each model can be drawn
-    // Maybe add something like pyglet Batch to group rendering
+    circle->setPos({0.5, 0.9});
 
     window->setMouseGrab(true);
 }
@@ -79,10 +49,10 @@ Game::~Game() {}
 
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
-    // TODO: update here
-    scene.transform.rotateEuler({0, s * 0.5, 0});
-    for (auto & child : scene.children)
-        child->transform.rotateEuler({0, -s, 0});
+    scene.models[0]->transform.rotateEuler({0, s * 0.5, 0});
+
+    point = scene.models[0]->points[0].pos;
+    // circle->setPos(point);
 }
 
 inline void setupGl() {
@@ -103,6 +73,16 @@ void Game::onDraw() const {
     RenderState state(camera);
     state.setGridEnable(true);
     scene.draw(state);
+
+    mat4 mvp = state.getMVP();
+    auto screen = mvp * glm::vec4(point, 0);
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+
+    circle_shader->shader().bind();
+    circle->draw();
 
     glpp::BufferArray::unbind();
 }
