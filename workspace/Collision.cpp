@@ -24,114 +24,17 @@ namespace singe {
         return dxs + dys + dzs < rs;
     }
 
-    static int axisCheck(float low, float high, float x) {
-        if (x < low)
-            return -1;
-        if (x > high)
-            return 1;
-        return 0;
-    }
-
     bool collides(const Sphere & sphere, const AABB & box) {
-        int acx = axisCheck(box.a.x, box.b.x, sphere.p.x);
-        int acy = axisCheck(box.a.y, box.b.y, sphere.p.y);
-        int acz = axisCheck(box.a.z, box.b.z, sphere.p.z);
-
-        int axis = 3 - (abs(acx) + abs(acy) + abs(acz));
-
-        if (axis == 3)
-            return true;
-
-        // Overlap on 2 axis - check face
-        if (axis == 2) {
-            // Negative X face
-            if (acx < 0)
-                return sphere.p.x + sphere.r > box.a.x;
-            // Positive X face
-            if (acx > 0)
-                return sphere.p.x - sphere.r < box.b.x;
-            // Negative Y face
-            if (acy < 0)
-                return sphere.p.y + sphere.r > box.a.y;
-            // Positive Y face
-            if (acy > 0)
-                return sphere.p.y - sphere.r < box.b.y;
-            // Negative Z face
-            if (acz < 0)
-                return sphere.p.z + sphere.r > box.a.z;
-            // Positive Z face
-            if (acz > 0)
-                return sphere.p.z - sphere.r < box.b.z;
-            return false;
+        // https://gamedev.stackexchange.com/a/156877
+        float sqDist = 0.0f;
+        for (int i = 0; i < 3; i++) {
+            float v = sphere.p[i];
+            if (v < box.a[i])
+                sqDist += (box.a[i] - v) * (box.a[i] - v);
+            if (v > box.b[i])
+                sqDist += (v - box.b[i]) * (v - box.b[i]);
         }
-
-        auto points = box.points();
-
-        // TODO: This can be check without closestPointOnLine because axis aligned
-
-        // Overlap on 1 axis - check edge
-        if (axis == 1) {
-            // X Lines
-            if (acx == 0) {
-                vec3 closest;
-                if (acy < 0 && acz < 0)
-                    closest = closestPointOnLine(sphere.p, points[0], points[1]);
-                if (acy < 0 && acz > 0)
-                    closest = closestPointOnLine(sphere.p, points[3], points[5]);
-                if (acy > 0 && acz < 0)
-                    closest = closestPointOnLine(sphere.p, points[2], points[4]);
-                if (acy > 0 && acz > 0)
-                    closest = closestPointOnLine(sphere.p, points[6], points[7]);
-                return glm::distance(closest, sphere.p) < sphere.r;
-            }
-            // Y Lines
-            if (acy == 0) {
-                vec3 closest;
-                if (acx < 0 && acz < 0)
-                    closest = closestPointOnLine(sphere.p, points[0], points[2]);
-                if (acx < 0 && acz > 0)
-                    closest = closestPointOnLine(sphere.p, points[3], points[6]);
-                if (acx > 0 && acz < 0)
-                    closest = closestPointOnLine(sphere.p, points[1], points[4]);
-                if (acx > 0 && acz > 0)
-                    closest = closestPointOnLine(sphere.p, points[5], points[7]);
-                return glm::distance(closest, sphere.p) < sphere.r;
-            }
-            // Z Lines
-            if (acz == 0) {
-                vec3 closest;
-                if (acx < 0 && acy < 0)
-                    closest = closestPointOnLine(sphere.p, points[0], points[3]);
-                if (acx < 0 && acy > 0)
-                    closest = closestPointOnLine(sphere.p, points[2], points[6]);
-                if (acx > 0 && acy < 0)
-                    closest = closestPointOnLine(sphere.p, points[1], points[5]);
-                if (acx > 0 && acy > 0)
-                    closest = closestPointOnLine(sphere.p, points[4], points[7]);
-                return glm::distance(closest, sphere.p) < sphere.r;
-            }
-        }
-
-        // No axis overlap - check points
-        for (auto & p : points) {
-            if (collides(p, sphere))
-                return true;
-        }
-
-        // Collision detection steps
-        /*
-        If point is in all three axis, collision
-
-        All points
-
-        If point is out of all axis, only check corners
-
-        If point is in one axis, check edge
-
-        If point is in two axis, check face
-        */
-
-        return false;
+        return sqDist < sphere.r * sphere.r;
     }
 
     bool collides(const AABB & box1, const AABB & box2) {
