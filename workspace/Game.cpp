@@ -5,46 +5,120 @@
 using std::make_shared;
 using glpp::extra::Grid;
 
-static glm::vec2 reverseProject(glm::vec3 & point, glm::mat4 & mvp) {
-    auto projPoint = mvp * vec4(point, 1.0);
-    projPoint /= projPoint.w;
-    return vec3(projPoint.x, projPoint.y, 0.0);
-}
-
 Game::Game(Window::Ptr & window) : GameBase(window), res("../../examples/res") {
+
+    drawGrid = true;
+    drawMarker = false;
+    move = true;
+
+    step = 0.1;
 
     shader = res.getMVPShader("shader/default.vert", "shader/default.frag");
 
-    circle = make_shared<Diamond>(vec2(0.02), vec4(1.0, 0.0, 0.0, 1.0));
-    circle->setPos({0.5, 0.9});
-
-    camera.setPosition({5, 2, 5});
+    camera.setPosition({3, 2, 3});
     camera.setRotation({0.2, -0.75, 0});
-
-    scene.models = res.loadModel("model/cube.obj");
-    scene.models[0]->material->shader = shader;
 
     scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
 
-    line = make_shared<glpp::extra::Line>(vec3(0, 0, 0), vec3(1, 2, 3),
-                                          vec4(1.0, 0.0, 1.0, 1.0));
+    marker = make_shared<Diamond>(vec2(0.03), vec4(1.0, 0.0, 0.0, 1.0), &camera);
+
+    box.aabb = AABB({0, 0, 0}, {1, 1, 1});
+    box.scene = scene.addChild();
+    box.scene->models = res.loadModel("model/corner_cube.obj");
+    box.scene->models[0]->material->shader = shader;
+
+    ball.sphere.p = glm::vec3(0.5, 0.5, 1.5);
+    ball.sphere.r = 0.2;
+    ball.scene = scene.addChild();
+    ball.scene->models = res.loadModel("model/sphere.obj");
+    ball.scene->models[0]->material->shader = shader;
+
+    reset();
 
     window->setMouseGrab(true);
 }
 
 Game::~Game() {}
 
+void Game::reset() {
+    ball.sphere.p.z = 1.5;
+}
+
+void Game::onKeyReleased(const sf::Event::KeyEvent & event) {
+    GameBase::onKeyReleased(event);
+    switch (event.code) {
+        case sf::Keyboard::G:
+            drawGrid = !drawGrid;
+            break;
+        case sf::Keyboard::M:
+            drawMarker = !drawMarker;
+            break;
+        case sf::Keyboard::R:
+            reset();
+            break;
+        case sf::Keyboard::Space:
+            move = !move;
+            break;
+        case sf::Keyboard::Up:
+            ball.sphere.p.y += step;
+            break;
+        case sf::Keyboard::Down:
+            ball.sphere.p.y -= step;
+            break;
+        case sf::Keyboard::Left:
+            ball.sphere.p.x -= step;
+            break;
+        case sf::Keyboard::Right:
+            ball.sphere.p.x += step;
+            break;
+        case sf::Keyboard::PageUp:
+            step *= 1.1;
+            break;
+        case sf::Keyboard::PageDown:
+            step *= 0.9;
+            break;
+        default:
+            GameBase::onKeyReleased(event);
+            break;
+    }
+}
+
+static glm::vec3 aabb_center(const AABB & aabb) {
+    return glm::min(aabb.a, aabb.b);
+}
+
+static glm::vec3 aabb_scale(const AABB & aabb) {
+    auto max = glm::max(aabb.a, aabb.b);
+    auto min = glm::min(aabb.a, aabb.b);
+    return max - min;
+}
+
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
-    scene.models[0]->transform.rotateEuler({0, s * 0.5, 0});
 
-    glm::mat4 mvp = camera.projMatrix() * camera.viewMatrix()
-                    * scene.transform.toMatrix()
-                    * scene.models[0]->transform.toMatrix();
-    vec2 point = reverseProject(scene.models[0]->points[0].pos, mvp);
-    circle->setPos(point);
-    float r = (float)camera.getScreenSize().x / (float)camera.getScreenSize().y;
-    circle->setSize({circle->getSize().x, circle->getSize().x * r});
+    if (move) {
+        ball.sphere.p += glm::vec3(0, 0, -s * step);
+    }
+
+    bool fullCollide = true;
+    if (fullCollide) {
+        drawMarker = collides(ball.sphere, box.aabb);
+    }
+    else {
+        drawMarker = false;
+        for (auto & p : box.aabb.points()) {
+            drawMarker = drawMarker || collides(p, ball.sphere);
+        }
+    }
+
+    move = !drawMarker && move;
+
+    box.scene->transform.setPosition(aabb_center(box.aabb));
+    box.scene->transform.setScale(aabb_scale(box.aabb));
+    ball.scene->transform.setPosition(ball.sphere.p);
+    ball.scene->transform.setScale(glm::vec3(ball.sphere.r));
+
+    marker->setPos(ball.sphere.p);
 }
 
 inline void setupGl() {
@@ -63,18 +137,15 @@ void Game::onDraw() const {
     setupGl();
 
     RenderState state(camera);
-    state.setGridEnable(true);
+    state.setGridEnable(drawGrid);
     scene.draw(state);
-
-    mat4 mvp = state.getMVP();
-
-    line->draw(mvp);
 
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 
-    circle->draw();
+    if (drawMarker)
+        marker->draw();
 
     glpp::BufferArray::unbind();
 }

@@ -25,6 +25,8 @@ class Diamond {
     glm::vec4 color;
     glm::vec2 pos;
 
+    Camera * camera;
+
     void updateLine() {
         std::vector<glm::vec3> points;
 
@@ -43,20 +45,27 @@ class Diamond {
         line->setPoints(std::move(points));
     }
 
+    glm::vec2 reverseProject(const glm::vec3 & point, const glm::mat4 & mvp) {
+        auto projPoint = mvp * vec4(point, 1.0);
+        projPoint /= projPoint.w;
+        return vec3(projPoint.x, projPoint.y, 0.0);
+    }
+
 public:
-    Diamond(glm::vec2 size, const glm::vec4 & color)
+    Diamond(const glm::vec2 & size, const glm::vec4 & color, Camera * camera)
         : line(std::make_shared<glpp::extra::Line>(glm::vec4(1.0, 0.0, 0.0, 1.0))),
           size(size),
           color(color),
-          pos(0) {
+          pos(0),
+          camera(camera) {
         updateLine();
     }
 
-    glm::vec2 getSize() const {
+    const glm::vec2 & getSize() const {
         return size;
     }
 
-    void setSize(glm::vec2 size) {
+    void setSize(const glm::vec2 & size) {
         this->size = size;
         updateLine();
     }
@@ -65,9 +74,18 @@ public:
         return pos;
     }
 
-    void setPos(glm::vec2 pos) {
+    void setPos(const glm::vec2 & pos) {
         this->pos = pos;
         updateLine();
+    }
+
+    void setPos(const glm::vec3 & point) {
+        glm::mat4 vp = camera->projMatrix() * camera->viewMatrix();
+        setPos(reverseProject(point, vp));
+        float r =
+            (float)camera->getScreenSize().x / (float)camera->getScreenSize().y;
+
+        setSize({size.x, size.x * r});
     }
 
     void draw() const {

@@ -14,6 +14,17 @@ using namespace singe;
 #include <memory>
 
 #include "Diamond.hpp"
+#include "Collision.hpp"
+
+struct Box {
+    AABB aabb;
+    singe::Scene::Ptr scene;
+};
+
+struct Ball {
+    Sphere sphere;
+    singe::Scene::Ptr scene;
+};
 
 class Game : public GameBase {
     ResourceManager res;
@@ -21,12 +32,24 @@ class Game : public GameBase {
     std::shared_ptr<singe::MVPShader> shader;
     std::shared_ptr<singe::Shader> circle_shader;
     Scene scene;
-    shared_ptr<Diamond> circle;
-    glpp::extra::Line::Ptr line;
+    shared_ptr<Diamond> marker;
+
+    bool drawGrid;
+    bool drawMarker;
+    bool move;
+
+    Box box;
+    Ball ball;
+
+    float step;
+
+    void reset();
 
 public:
     Game(Window::Ptr & window);
     virtual ~Game();
+
+    void onKeyReleased(const sf::Event::KeyEvent & event) override;
 
     void onUpdate(const sf::Time & delta) override;
     void onDraw(void) const override;

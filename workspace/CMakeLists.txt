@@ -4,6 +4,8 @@ add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
+    Collision.cpp
+    Collision.hpp
     Diamond.hpp
 )
 
