@@ -54,4 +54,5 @@ namespace singe {
     bool collides(const vec3 & point, const Sphere & sphere);
     bool collides(const Sphere & s1, const Sphere & s2);
     bool collides(const Sphere & sphere, const AABB & box);
+    bool collides(const AABB & box1, const AABB & box2);
 }

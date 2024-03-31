@@ -36,9 +36,11 @@ class Game : public GameBase {
 
     bool drawGrid;
     bool drawMarker;
-    bool move;
+    bool moveBall;
+    bool moveBox;
 
     Box box;
+    Box box2;
     Ball ball;
 
     float step;

@@ -9,7 +9,8 @@ Game::Game(Window::Ptr & window) : GameBase(window), res("../../examples/res") {
 
     drawGrid = true;
     drawMarker = false;
-    move = true;
+    moveBall = true;
+    moveBox = true;
 
     step = 0.1;
 
@@ -27,6 +28,10 @@ Game::Game(Window::Ptr & window) : GameBase(window), res("../../examples/res") {
     box.scene->models = res.loadModel("model/corner_cube.obj");
     box.scene->models[0]->material->shader = shader;
 
+    box2.aabb = AABB({0, 0, 0}, {0.5, 0.5, 0.5});
+    box2.scene = scene.addChild();
+    box2.scene->models = box.scene->models;
+
     ball.sphere.p = glm::vec3(0.5, 0.5, 1.5);
     ball.sphere.r = 0.2;
     ball.scene = scene.addChild();
@@ -42,6 +47,8 @@ Game::~Game() {}
 
 void Game::reset() {
     ball.sphere.p.z = 1.5;
+    box2.aabb.a = {0.25, 1.1, 0.25};
+    box2.aabb.b = {0.75, 1.6, 0.75};
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & event) {
@@ -57,7 +64,8 @@ void Game::onKeyReleased(const sf::Event::KeyEvent & event) {
             reset();
             break;
         case sf::Keyboard::Space:
-            move = !move;
+            moveBox = !(moveBox || moveBall);
+            moveBall = moveBox;
             break;
         case sf::Keyboard::Up:
             ball.sphere.p.y += step;
@@ -96,27 +104,26 @@ static glm::vec3 aabb_scale(const AABB & aabb) {
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
 
-    if (move) {
+    if (moveBall) {
         ball.sphere.p += glm::vec3(0, 0, -s * step);
     }
 
-    bool fullCollide = true;
-    if (fullCollide) {
-        drawMarker = collides(ball.sphere, box.aabb);
-    }
-    else {
-        drawMarker = false;
-        for (auto & p : box.aabb.points()) {
-            drawMarker = drawMarker || collides(p, ball.sphere);
-        }
+    if (moveBox) {
+        box2.aabb.a += glm::vec3(0, -s * step, 0);
+        box2.aabb.b += glm::vec3(0, -s * step, 0);
     }
 
-    move = !drawMarker && move;
+    drawMarker = collides(ball.sphere, box.aabb) || collides(box.aabb, box2.aabb);
+
+    moveBox = !drawMarker && moveBox;
+    moveBall = !drawMarker && moveBall;
 
     box.scene->transform.setPosition(aabb_center(box.aabb));
     box.scene->transform.setScale(aabb_scale(box.aabb));
     ball.scene->transform.setPosition(ball.sphere.p);
     ball.scene->transform.setScale(glm::vec3(ball.sphere.r));
+    box2.scene->transform.setPosition(aabb_center(box2.aabb));
+    box2.scene->transform.setScale(aabb_scale(box2.aabb));
 
     marker->setPos(ball.sphere.p);
 }

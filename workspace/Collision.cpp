@@ -133,4 +133,19 @@ namespace singe {
 
         return false;
     }
+
+    bool collides(const AABB & box1, const AABB & box2) {
+        auto min1 = glm::min(box1.a, box1.b);
+        auto max1 = glm::max(box1.a, box1.b);
+        auto min2 = glm::min(box2.a, box2.b);
+        auto max2 = glm::max(box2.a, box2.b);
+
+        bool hit = true;
+        for (int i = 0; i < 3; i++) {
+            if (min1[i] >= max2[i] || max1[i] <= min2[i])
+                hit = false;
+        }
+
+        return hit;
+    }
 }
