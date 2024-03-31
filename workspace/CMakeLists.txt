@@ -7,6 +7,8 @@ add_executable(${TARGET}
     Collision.cpp
     Collision.hpp
     Diamond.hpp
+    Physics.cpp
+    Physics.hpp
 )
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)
