@@ -27,7 +27,7 @@ Game::Game(Window::Ptr & window)
     line = make_shared<glpp::extra::Line>(vec3(0, 0, 0), vec3(1, 2, 3),
                                           vec4(1.0, 0.0, 1.0, 1.0));
 
-    scene.models = res.loadModel("model/cube.obj");
+    scene.models = res.loadModel("model/angle_cube.obj");
     scene.models[0]->material->shader = shader;
 
     window->setMouseGrab(true);

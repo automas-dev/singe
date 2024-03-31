@@ -92,7 +92,7 @@
         </transform>
 
         <model name="cube">
-            <mesh path="model/cube.obj" />
+            <mesh path="model/angle_cube.obj" />
             <shader ref="light" />
         </model>
     </scene>
