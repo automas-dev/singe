@@ -20,19 +20,19 @@ Game::Game(Window::Ptr & window)
     objectScene->transform.move({0, 2, 0});
 
     modelScene = objectScene->addChild();
-    modelScene->models = res.loadModel("sphere.obj");
+    modelScene->models = res.loadModel("model/sphere.obj");
 
     modelScene = objectScene->addChild();
-    modelScene->models = res.loadModel("plane.obj");
+    modelScene->models = res.loadModel("model/plane.obj");
 
     otherScene = scene.addChild();
 
     modelScene = otherScene->addChild();
-    modelScene->models = res.loadModel("fountain.obj");
+    modelScene->models = res.loadModel("model/fountain.obj");
     modelScene->transform.move({0, 0, 3});
 
     modelScene = otherScene->addChild();
-    modelScene->models = res.loadModel("Human.obj");
+    modelScene->models = res.loadModel("model/Human.obj");
     modelScene->transform.move({3, 0, 0});
 
     for (auto & s : scene.children) {
