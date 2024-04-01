@@ -3,11 +3,6 @@
 namespace singe {
     using glm::closestPointOnLine;
 
-    bool collides(const vec3 & point, const AABB & box) {
-        return point.x > box.a.x && point.x < box.b.x && point.y > box.a.y
-               && point.y < box.b.y && point.z > box.a.z && point.z < box.b.z;
-    }
-
     bool collides(const vec3 & point, const Sphere & sphere) {
         auto dxs = pow(sphere.p.x - point.x, 2);
         auto dys = pow(sphere.p.y - point.y, 2);
@@ -24,24 +19,33 @@ namespace singe {
         return dxs + dys + dzs < rs;
     }
 
+    bool collides(const vec3 & point, const AABB & box) {
+        vec3 a = box.min();
+        vec3 b = box.max();
+        return point.x > a.x && point.x < b.x && point.y > a.y && point.y < b.y
+               && point.z > a.z && point.z < b.z;
+    }
+
     bool collides(const Sphere & sphere, const AABB & box) {
+        vec3 a = box.min();
+        vec3 b = box.max();
         // https://gamedev.stackexchange.com/a/156877
         float sqDist = 0.0f;
         for (int i = 0; i < 3; i++) {
             float v = sphere.p[i];
-            if (v < box.a[i])
-                sqDist += (box.a[i] - v) * (box.a[i] - v);
-            if (v > box.b[i])
-                sqDist += (v - box.b[i]) * (v - box.b[i]);
+            if (v < a[i])
+                sqDist += (a[i] - v) * (a[i] - v);
+            if (v > b[i])
+                sqDist += (v - b[i]) * (v - b[i]);
         }
         return sqDist < sphere.r * sphere.r;
     }
 
     bool collides(const AABB & box1, const AABB & box2) {
-        auto min1 = glm::min(box1.a, box1.b);
-        auto max1 = glm::max(box1.a, box1.b);
-        auto min2 = glm::min(box2.a, box2.b);
-        auto max2 = glm::max(box2.a, box2.b);
+        vec3 min1 = box1.min();
+        vec3 max1 = box1.max();
+        vec3 min2 = box2.min();
+        vec3 max2 = box2.max();
 
         bool hit = true;
         for (int i = 0; i < 3; i++) {

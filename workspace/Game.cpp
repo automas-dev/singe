@@ -47,8 +47,7 @@ Game::~Game() {}
 
 void Game::reset() {
     ball.sphere.p.z = 1.5;
-    box2.aabb.a = {0.25, 1.1, 0.25};
-    box2.aabb.b = {0.75, 1.6, 0.75};
+    box2.aabb.pos = {0.5, 1.35, 0.5};
 }
 
 void Game::onKeyReleased(const sf::Event::KeyEvent & event) {
@@ -91,16 +90,6 @@ void Game::onKeyReleased(const sf::Event::KeyEvent & event) {
     }
 }
 
-static glm::vec3 aabb_center(const AABB & aabb) {
-    return glm::min(aabb.a, aabb.b);
-}
-
-static glm::vec3 aabb_scale(const AABB & aabb) {
-    auto max = glm::max(aabb.a, aabb.b);
-    auto min = glm::min(aabb.a, aabb.b);
-    return max - min;
-}
-
 void Game::onUpdate(const sf::Time & delta) {
     float s = delta.asSeconds();
 
@@ -109,8 +98,7 @@ void Game::onUpdate(const sf::Time & delta) {
     }
 
     if (moveBox) {
-        box2.aabb.a += glm::vec3(0, -s * step, 0);
-        box2.aabb.b += glm::vec3(0, -s * step, 0);
+        box2.aabb.pos += glm::vec3(0, -s * step, 0);
     }
 
     drawMarker = collides(ball.sphere, box.aabb) || collides(box.aabb, box2.aabb);
@@ -118,12 +106,12 @@ void Game::onUpdate(const sf::Time & delta) {
     moveBox = !drawMarker && moveBox;
     moveBall = !drawMarker && moveBall;
 
-    box.scene->transform.setPosition(aabb_center(box.aabb));
-    box.scene->transform.setScale(aabb_scale(box.aabb));
+    box.scene->transform.setPosition(box.aabb.pos);
+    box.scene->transform.setScale(box.aabb.size);
     ball.scene->transform.setPosition(ball.sphere.p);
     ball.scene->transform.setScale(glm::vec3(ball.sphere.r));
-    box2.scene->transform.setPosition(aabb_center(box2.aabb));
-    box2.scene->transform.setScale(aabb_scale(box2.aabb));
+    box2.scene->transform.setPosition(box2.aabb.pos);
+    box2.scene->transform.setScale(box2.aabb.size);
 
     marker->setPos(ball.sphere.p);
 }
@@ -138,6 +126,7 @@ inline void setupGl() {
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glLineWidth(1.0);
 }
 
 void Game::onDraw() const {
@@ -150,6 +139,7 @@ void Game::onDraw() const {
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
+    glLineWidth(4.0);
 
     if (drawMarker)
         marker->draw();
