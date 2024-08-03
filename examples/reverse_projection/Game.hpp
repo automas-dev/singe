@@ -10,7 +10,7 @@
 #include <singe/Support/log.hpp>
 using namespace singe;
 
-#include <glpp/extra/Shapes.hpp>
+#include <glpp/extra/Line.hpp>
 #include <memory>
 
 #include "Diamond.hpp"

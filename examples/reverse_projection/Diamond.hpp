@@ -12,7 +12,7 @@ using namespace singe;
 
 #include <glm/glm.hpp>
 #include <glpp/Buffer.hpp>
-#include <glpp/extra/Shapes.hpp>
+#include <glpp/extra/Line.hpp>
 #include <memory>
 #include <vector>
 using glpp::BufferArray;
