@@ -7,6 +7,7 @@ add_executable(${TARGET}
     Collision.cpp
     Collision.hpp
     Diamond.hpp
+    Markers.hpp
     Physics.cpp
     Physics.hpp
 )

@@ -14,6 +14,7 @@ using namespace singe;
 #include <memory>
 
 #include "Diamond.hpp"
+#include "Markers.hpp"
 #include "Collision.hpp"
 
 struct Box {
@@ -33,6 +34,7 @@ class Game : public GameBase {
     std::shared_ptr<singe::Shader> circle_shader;
     Scene scene;
     shared_ptr<Diamond> marker;
+    Markers::Ptr markers;
 
     bool drawGrid;
     bool drawMarker;
