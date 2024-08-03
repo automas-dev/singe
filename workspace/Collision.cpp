@@ -34,11 +34,11 @@ namespace singe {
         for (int i = 0; i < 3; i++) {
             float v = sphere.p[i];
             if (v < a[i])
-                sqDist += (a[i] - v) * (a[i] - v);
+                sqDist += pow(a[i] - v, 2);
             if (v > b[i])
-                sqDist += (v - b[i]) * (v - b[i]);
+                sqDist += pow(v - b[i], 2);
         }
-        return sqDist < sphere.r * sphere.r;
+        return sqDist < pow(sphere.r, 2);
     }
 
     bool collides(const AABB & box1, const AABB & box2) {
