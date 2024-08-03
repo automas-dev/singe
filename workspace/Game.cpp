@@ -66,6 +66,12 @@ void Game::onKeyReleased(const sf::Event::KeyEvent & event) {
             moveBox = !(moveBox || moveBall);
             moveBall = moveBox;
             break;
+        case sf::Keyboard::I:
+            moveBox = !moveBox;
+            break;
+        case sf::Keyboard::O:
+            moveBall = !moveBall;
+            break;
         case sf::Keyboard::Up:
             ball.sphere.p.y += step;
             break;
@@ -106,12 +112,9 @@ void Game::onUpdate(const sf::Time & delta) {
     moveBox = !drawMarker && moveBox;
     moveBall = !drawMarker && moveBall;
 
-    box.scene->transform.setPosition(box.aabb.pos);
-    box.scene->transform.setScale(box.aabb.size);
-    ball.scene->transform.setPosition(ball.sphere.p);
-    ball.scene->transform.setScale(glm::vec3(ball.sphere.r));
-    box2.scene->transform.setPosition(box2.aabb.pos);
-    box2.scene->transform.setScale(box2.aabb.size);
+    box.updateTransform();
+    box2.updateTransform();
+    ball.updateTransform();
 
     marker->setPos(ball.sphere.p);
 }

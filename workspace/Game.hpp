@@ -13,18 +13,28 @@ using namespace singe;
 #include <glpp/extra/Line.hpp>
 #include <memory>
 
+#include "Collision.hpp"
 #include "Diamond.hpp"
 #include "Markers.hpp"
-#include "Collision.hpp"
 
 struct Box {
     AABB aabb;
     singe::Scene::Ptr scene;
+
+    void updateTransform() {
+        scene->transform.setPosition(aabb.pos - aabb.size / vec3(2));
+        scene->transform.setScale(aabb.size);
+    }
 };
 
 struct Ball {
     Sphere sphere;
     singe::Scene::Ptr scene;
+
+    void updateTransform() {
+        scene->transform.setPosition(sphere.p);
+        scene->transform.setScale(glm::vec3(sphere.r));
+    }
 };
 
 class Game : public GameBase {
