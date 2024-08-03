@@ -2,6 +2,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
+#include <glm/ext/quaternion_float.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/closest_point.hpp>
 #include <vector>
@@ -53,8 +54,8 @@ namespace singe {
 
         vector<vec3> normals() const {
             return vector<vec3> {
-                {-1, 0, 0}, {1, 0, 0},  {0, -1, 0},
-                {0, 1, 0},  {0, 0, -1}, {0, 0, 1},
+                {1, 0, 0},  {0, 1, 0},  {0, 0, 1},
+                {-1, 0, 0}, {0, -1, 0}, {0, 0, -1},
             };
         }
     };
@@ -68,6 +69,26 @@ namespace singe {
 
         OBB(const vec3 & pos, const quat & rot, const vec3 & size)
             : pos(pos), rot(rot), size(size) {}
+
+        vector<vec3> points() const {
+            vec3 d = size / vec3(2.0);
+
+            vector<vec3> pts {
+                {-d.x, -d.y, -d.z}, {d.x, -d.y, -d.z}, // +x
+                {-d.x, d.y, -d.z}, // +y
+                {-d.x, -d.y, d.z}, // +z
+                {d.x, d.y, -d.z}, // +xy
+                {d.x, -d.y, d.z}, // +xz
+                {-d.x, d.y, d.z}, // +yz
+                {d.x, d.y, d.z}, // +xyz
+            };
+
+            for (auto & p : pts) {
+                p = (rot * p) + pos;
+            }
+
+            return pts;
+        }
 
         vector<vec3> normals() const {
             vec3 d = size / vec3(2);
