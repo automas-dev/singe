@@ -16,7 +16,7 @@ Game::Game(Window::Ptr & window)
     shared_ptr<Scene> modelScene;
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("cube.obj");
+    modelScene->models = res.loadModel("model/angle_cube.obj");
     modelScene->transform.move({0, 0, 3});
 
     for (auto & s : scene.children) {

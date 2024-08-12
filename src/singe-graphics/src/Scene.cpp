@@ -24,11 +24,11 @@ namespace singe {
 
     Scene::~Scene() {}
 
-    shared_ptr<Scene> & Scene::addChild() {
+    Scene::Ptr & Scene::addChild() {
         return children.emplace_back(make_shared<Scene>());
     }
 
-    shared_ptr<Model> & Scene::addModel() {
+    Model::Ptr & Scene::addModel() {
         return models.emplace_back(make_shared<Model>());
     }
 

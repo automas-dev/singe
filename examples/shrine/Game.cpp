@@ -15,10 +15,10 @@ Game::Game(Window::Ptr & window)
     shared_ptr<Scene> modelScene;
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("plane.obj");
+    modelScene->models = res.loadModel("model/plane.obj");
 
     pillar = scene.addChild();
-    pillar->models = res.loadModel("pillar.obj");
+    pillar->models = res.loadModel("model/pillar.obj");
 
     for (auto & s : scene.children) {
         for (auto & m : s->models) m->material->shader = shader;

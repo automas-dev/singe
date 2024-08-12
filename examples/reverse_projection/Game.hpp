@@ -13,20 +13,20 @@ using namespace singe;
 #include <glpp/extra/Line.hpp>
 #include <memory>
 
+#include "Diamond.hpp"
+
 class Game : public GameBase {
     ResourceManager res;
     FPSDisplay fps;
     std::shared_ptr<singe::MVPShader> shader;
     std::shared_ptr<singe::Shader> circle_shader;
     Scene scene;
-
-    bool drawGrid;
+    shared_ptr<Diamond> circle;
+    glpp::extra::Line::Ptr line;
 
 public:
     Game(Window::Ptr & window);
     virtual ~Game();
-
-    void onKeyReleased(const sf::Event::KeyEvent & event) override;
 
     void onUpdate(const sf::Time & delta) override;
     void onDraw(void) const override;
