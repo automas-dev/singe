@@ -1,21 +1,41 @@
 #include "Game.hpp"
 
+#include <tinyxml2.h>
+
 #include <stdexcept>
+#include <string>
+
+#include "FastScene.hpp"
 
 using std::make_shared;
+using namespace std;
 using glpp::extra::Grid;
+
+void Game::parseScene() {
+    tinyxml2::XMLDocument doc;
+    doc.LoadFile("../../workspace/res/scene.xml");
+    if (doc.ErrorID()) {
+        Logging::Game->error("Failed to open scene xml");
+        return;
+    }
+
+    auto ns = fast::parseScene(&doc);
+    scene.grid = ns->grid;
+}
 
 Game::Game(Window::Ptr & window)
     : GameBase(window), res("../../examples/res") {
 
     drawGrid = true;
 
+    parseScene();
+
     shader = res.getMVPShader("shader/default.vert", "shader/default.frag");
 
     camera.setPosition({3, 2, 3});
     camera.setRotation({0.2, -0.75, 0});
 
-    scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
+    // scene.grid = make_shared<Grid>(10, vec4(1, 1, 1, 1), true);
 
     window->setMouseGrab(true);
 }

@@ -4,6 +4,8 @@ add_executable(${TARGET}
     main.cpp
     Game.hpp
     Game.cpp
+    FastScene.hpp
+    FastScene.cpp
 )
 
 target_compile_features(${TARGET} PRIVATE cxx_std_17)
@@ -14,4 +16,5 @@ PRIVATE
     Threads::Threads
     Core
     Graphics
+    tinyxml2
 )

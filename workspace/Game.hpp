@@ -22,6 +22,8 @@ class Game : public GameBase {
 
     bool drawGrid;
 
+    void parseScene();
+
 public:
     Game(Window::Ptr & window);
     virtual ~Game();

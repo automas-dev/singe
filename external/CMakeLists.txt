@@ -1,6 +1,7 @@
 include(${CMAKE_CURRENT_LIST_DIR}/Wavefront.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/glpp.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/rapidxml.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/tinyxml.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/glm.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/fmt.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/spdlog.cmake)

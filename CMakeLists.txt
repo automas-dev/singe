@@ -48,6 +48,7 @@ find_package(Threads REQUIRED)
 find_package(SFML 2.5 REQUIRED CONFIG COMPONENTS graphics window system)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
+# find_package(tinyxml2 REQUIRED)
 
 find_package(Bullet REQUIRED)
 include_directories(${BULLET_INCLUDE_DIR})
