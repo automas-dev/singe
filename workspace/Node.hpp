@@ -225,6 +225,7 @@ namespace fast {
         }
     };
 
+    // TODO this does not need to inherit from Node, there are no children or transform
     class MeshNode : public Node {
     public:
         using Ptr = shared_ptr<MeshNode>;
