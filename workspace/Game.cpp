@@ -6,21 +6,19 @@
 #include <string>
 
 #include "FastScene.hpp"
+#include "Node.hpp"
 
 using std::make_shared;
 using namespace std;
 using glpp::extra::Grid;
 
 void Game::parseScene() {
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile("../../workspace/res/scene.xml");
-    if (doc.ErrorID()) {
+    fast::FastScene fastLoader;
+    auto root = fastLoader.loadFile("../../workspace/res/scene.xml");
+    if (!root) {
         Logging::Game->error("Failed to open scene xml");
         return;
     }
-
-    auto ns = fast::parseScene(&doc);
-    scene.grid = ns->grid;
 }
 
 Game::Game(Window::Ptr & window)

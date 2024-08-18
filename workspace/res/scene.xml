@@ -1,31 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<scene xmlns="https://www.w3schools.com"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="https://www.w3schools.com scene.xsd"
-    name="root">
-
-    <grid>
-        <size>5</size>
-        <color>0.7 0.8 0.9 1.0</color>
-    </grid>
-
+<root>
     <environment>
         <material name="default_env">
-            <type>SolidColor</type>
-            <color>0.3 0.3 0.3</color>
+            <diffuse>
+                <color>0.3 0.3 0.3</color>
+            </diffuse>
         </material>
     </environment>
 
-    <camera name="fpv_camera">
-        <pose>5 2 5 0 0 0</pose>
-        <control>fpv</control>
-        <active>true</active>
-        <projection>
-            <mode>perspective</mode>
-            <fov>80</fov>
-            <znear>0.01</znear>
-            <zfar>1000</zfar>
-        </projection>
+    <!-- How about this, primitive types can be attributes but complex types
+    must be nodes? -->
+
+    <camera name="fpv_camera" control="fpv" active="true">
+        <transform pos="5 2 5" />
+        <projection mode="perspective" fov="80" znear="0.01" zfar="1000" />
     </camera>
-</scene>
+
+    <!-- Here value fields are attributes and node fields are children -->
+    <!-- <grid name="grid 1" size="5">
+        <color>0.7 0.8 0.9</color>
+    </grid> -->
+
+    <!-- <grid name="grid with more" size="5"> -->
+    <!-- can be pos, rot, scale or matrix -->
+    <!-- rotation can be euler (3 float) or quaternion (4 float) -->
+    <!-- scale can be a single float or 3 floats  -->
+    <!-- <transform pos="0 0.1 0" rot="0 3.14 0" scale="3.0" />
+        <color>0.7 0.8 0.9 1.0</color>
+    </grid> -->
+
+    <mesh name="terrain" path="/model/terrain.obj">
+        <material name="grass">
+            <diffuse>
+                <color>0 1 0 1</color>
+                <!-- channels can be gray, rgb or rgba -->
+                <image path="/grass_diff.png" channels="rgb" />
+            </diffuse>
+            <emission>
+                <color>1 1 1 1</color>
+                <image path="/grass_emit.png" channels="gray" />
+            </emission>
+        </material>
+    </mesh>
+
+    <mesh name="rock" path="/model/rock.obj" visible="false">
+        <transform pos="0.1 0 0" />
+        <material name="rock">
+            <diffuse>
+                <image for="diffuse" path="/img/rock_diff.png" channels="rgb" />
+            </diffuse>
+            <normal>
+                <image path="/rock_norm.png" channels="rgb" />
+            </normal>
+        </material>
+    </mesh>
+
+    <!-- mesh allows override of the transform field only (tbd future additions) -->
+    <scene name="crop_of_rocks" visible="false">
+        <mesh ref="rock">
+            <transform pos="0.1 0 0" />
+        </mesh>
+
+        <mesh ref="rock">
+            <transform pos="0.2 0 0" />
+        </mesh>
+
+        <mesh ref="rock">
+            <transform pos="0.3 0 0" />
+        </mesh>
+    </scene>
+
+    <scene ref="crop_of_rocks">
+        <transform pos="0 3 0" />
+    </scene>
+
+    <scene ref="crop_of_rocks">
+        <transform pos="-2 0 0" rotation="0 3.14 0" />
+    </scene>
+
+    <scene name="v2 scene">
+        <!-- <grid name="v2 grid" size="3"> -->
+        <!-- <transform pos="0 1 2" scale="1 1 0.5" /> -->
+        <!-- <transform scale="0.3" />
+        </grid> -->
+        <mesh ref="rock" />
+    </scene>
+
+    <!-- <todo>
+        world environment
+        fog
+        mesh
+        material
+        physics
+        collision
+        sphere
+        aabb
+        obb
+        ray
+        mesh
+        rigid body
+        static body
+        particles
+        light
+        point
+        spot
+        direction
+    </todo> -->
+</root>
