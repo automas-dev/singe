@@ -10,7 +10,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/spdlog.cmake)
 
 # FetchContent_Declare(
 #     DispatchQueue
-#     GIT_REPOSITORY  https://github.com/twh2898/DispatchQueue.git
+#     GIT_REPOSITORY  https://github.com/automas-dev/DispatchQueue.git
 #     GIT_TAG         0.2.2
 # )
 
