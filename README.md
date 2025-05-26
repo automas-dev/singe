@@ -50,7 +50,7 @@ on rendering through nodes instead of draw calls.
 ## Dependencies
 
 This project relies on abstractions for OpenGL form the
-[GLPP](https://github.com/twh2898/glpp.git) project. For an exact list of
+[GLPP](https://github.com/automas-dev/glpp.git) project. For an exact list of
 dependencies and their versions, see the cmake files in the
 [external/](external/) directory.
 
@@ -65,7 +65,7 @@ dependencies and their versions, see the cmake files in the
 ## Building
 
 ```sh
-git clone https://github.com/twh2898/singe.git
+git clone https://github.com/automas-dev/singe.git
 cd singe
 make
 ```

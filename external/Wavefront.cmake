@@ -2,7 +2,7 @@ include(FetchContent)
 
 FetchContent_Declare(
     Wavefront
-    GIT_REPOSITORY  https://github.com/twh2898/wavefront.git
+    GIT_REPOSITORY  https://github.com/automas-dev/wavefront.git
     GIT_TAG         0.2.0
 )
 

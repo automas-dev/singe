@@ -2,7 +2,7 @@ include(FetchContent)
 
 FetchContent_Declare(
     glpp
-    GIT_REPOSITORY  https://github.com/twh2898/glpp.git
+    GIT_REPOSITORY  https://github.com/automas-dev/glpp.git
     GIT_TAG         0.9.1
 )
 
