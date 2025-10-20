@@ -17,15 +17,15 @@ Game::Game(Window::Ptr & window)
     shared_ptr<Scene> modelScene;
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("plane.obj");
+    modelScene->models = res.loadModel("model/plane.obj");
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("sphere.obj");
+    modelScene->models = res.loadModel("model/sphere.obj");
     modelScene->transform.move({1, 2, 3});
     modelScene->transform.scale({0.1, 0.1, 0.1});
 
     modelScene = scene.addChild();
-    modelScene->models = res.loadModel("hall.obj");
+    modelScene->models = res.loadModel("model/hall.obj");
     modelScene->transform.move({0, 0, -5});
 
     for (auto & s : scene.children) {
