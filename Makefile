@@ -22,4 +22,10 @@ build:
 install:
 	cmake --install ${PWD}/build --config ${CONFIG}
 
-.PHONY: config build install
+lint:
+	@find src examples workspace -name '*.c' -or -name '*.h' -or -name '*.cpp' -or -name '*.hpp' | xargs clang-format --dry-run --Werror --sort-includes
+
+format:
+	@find src examples workspace -name '*.c' -or -name '*.h' -or -name '*.cpp' -or -name '*.hpp' | xargs clang-format -i --Werror --sort-includes
+
+.PHONY: config build install lint format

@@ -22,10 +22,10 @@ namespace singe {
 
         Shader::Ptr shader;
 
-        string name;
-        vec3 ambient, diffuse, specular;
-        float specExp;
-        float alpha;
+        string       name;
+        vec3         ambient, diffuse, specular;
+        float        specExp;
+        float        alpha;
         Texture::Ptr texture;
         Texture::Ptr normalTexture;
         Texture::Ptr specularTexture;

@@ -33,8 +33,8 @@ namespace singe {
      */
     class GameBase : public EventHandler {
         glm::vec2 mouseSensitivity;
-        float moveSpeed;
-        bool fpsShow;
+        float     moveSpeed;
+        bool      fpsShow;
 
     protected:
         /// Reference to the Window object

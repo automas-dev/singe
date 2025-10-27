@@ -73,7 +73,7 @@ namespace singe {
 
     Shader::Ptr ResourceManager::getShader(const string & vertPath,
                                            const string & fragPath,
-                                           bool useCached) {
+                                           bool           useCached) {
         Logging::Resource->info("ResourceManager::getShader {} {} {}", vertPath,
                                 fragPath, useCached);
 
@@ -101,7 +101,7 @@ namespace singe {
 
     MVPShader::Ptr ResourceManager::getMVPShader(const string & vertPath,
                                                  const string & fragPath,
-                                                 bool useCached) {
+                                                 bool           useCached) {
         Logging::Resource->info("ResourceManager::getMVPShader {} {} {}",
                                 vertPath, fragPath, useCached);
 
@@ -191,7 +191,7 @@ namespace singe {
         return Transform(transform.pos, glm::quat(transform.rot), transform.scale);
     }
 
-    static Scene::Ptr convertScene(ResourceManager * res,
+    static Scene::Ptr convertScene(ResourceManager *          res,
                                    shared_ptr<scene::Scene> & resScene) {
         auto scene = make_shared<Scene>();
 

@@ -14,11 +14,11 @@ using glpp::extra::Grid;
 #include <memory>
 
 class Game : public GameBase {
-    ResourceManager res;
-    FPSDisplay fps;
-    std::shared_ptr<singe::MVPShader> shader;
-    Grid grid;
-    Scene scene;
+    ResourceManager       res;
+    FPSDisplay            fps;
+    singe::MVPShader::Ptr shader;
+    Grid                  grid;
+    Scene                 scene;
 
 public:
     Game(Window::Ptr & window);

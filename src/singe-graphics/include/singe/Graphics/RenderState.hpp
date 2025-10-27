@@ -45,7 +45,7 @@ namespace singe {
                     const mat4 & view,
                     const mat4 & model,
                     const mat4 & local,
-                    bool drawGrid = false);
+                    bool         drawGrid = false);
 
         /**
          * Create a RenderState with initial transform.
@@ -55,9 +55,9 @@ namespace singe {
          * @param local the local matrix
          */
         RenderState(const Camera & camera,
-                    const mat4 & model = mat4(1),
-                    const mat4 & local = mat4(1),
-                    bool drawGrid = false);
+                    const mat4 &   model = mat4(1),
+                    const mat4 &   local = mat4(1),
+                    bool           drawGrid = false);
 
         ~RenderState();
 

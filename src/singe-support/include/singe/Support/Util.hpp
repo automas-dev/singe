@@ -14,8 +14,8 @@
 std::vector<std::string> splitString(const std::string & str, char delim = ' ');
 
 class Tokenizer {
-    char token;
-    std::istream & stream;
+    char                 token;
+    std::istream &       stream;
     const std::istream & end;
 
 public:

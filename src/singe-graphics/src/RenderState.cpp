@@ -8,7 +8,7 @@ namespace singe {
                              const mat4 & view,
                              const mat4 & model,
                              const mat4 & local,
-                             bool drawGrid)
+                             bool         drawGrid)
         : projection(projection),
           view(view),
           model(model),
@@ -16,9 +16,9 @@ namespace singe {
           drawGrid(drawGrid) {}
 
     RenderState::RenderState(const Camera & camera,
-                             const mat4 & model,
-                             const mat4 & local,
-                             bool drawGrid)
+                             const mat4 &   model,
+                             const mat4 &   local,
+                             bool           drawGrid)
         : projection(camera.projMatrix()),
           view(camera.viewMatrix()),
           model(model),

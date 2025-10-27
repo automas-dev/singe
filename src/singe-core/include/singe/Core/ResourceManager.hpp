@@ -36,9 +36,9 @@ namespace singe {
      * Manage path resolution, resource loading and resource caching for re-use.
      */
     class ResourceManager {
-        fs::path root;
-        map<string, Texture::Ptr> textures;
-        map<string, Shader::Ptr> shaders;
+        fs::path                    root;
+        map<string, Texture::Ptr>   textures;
+        map<string, Shader::Ptr>    shaders;
         map<string, MVPShader::Ptr> mvpShaders;
 
     public:
@@ -108,7 +108,7 @@ namespace singe {
          */
         Shader::Ptr getShader(const string & vertPath,
                               const string & fragPath,
-                              bool useCached = true);
+                              bool           useCached = true);
 
         /**
          * Load an MVPShader or return the cached shader if it exists.
@@ -124,7 +124,7 @@ namespace singe {
          */
         MVPShader::Ptr getMVPShader(const string & vertPath,
                                     const string & fragPath,
-                                    bool useCached = true);
+                                    bool           useCached = true);
 
         /**
          * Load a model.

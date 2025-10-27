@@ -103,6 +103,7 @@ namespace singe {
         states.transform *= getTransform();
 
         auto size = sf::Vector2f(target.getSize().x, target.getSize().y);
+
         sf::RectangleShape background(size);
         background.setFillColor(sf::Color(0, 0, 0, 100));
 
