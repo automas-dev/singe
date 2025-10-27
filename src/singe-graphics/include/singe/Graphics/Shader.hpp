@@ -22,7 +22,7 @@ namespace singe {
         using ConstPtr = const shared_ptr<Shader>;
 
     protected:
-        glpp::Shader m_shader;
+        glpp::Shader              m_shader;
         vector<UniformExtra::Ptr> m_extras;
 
     public:

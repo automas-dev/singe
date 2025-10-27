@@ -16,13 +16,13 @@ using namespace singe;
 #include "Diamond.hpp"
 
 class Game : public GameBase {
-    ResourceManager res;
-    FPSDisplay fps;
-    std::shared_ptr<singe::MVPShader> shader;
-    std::shared_ptr<singe::Shader> circle_shader;
-    Scene scene;
-    shared_ptr<Diamond> circle;
-    glpp::extra::Line::Ptr line;
+    ResourceManager          res;
+    FPSDisplay               fps;
+    singe::MVPShader::Ptr    shader;
+    singe::Shader::Ptr       circle_shader;
+    Scene                    scene;
+    std::shared_ptr<Diamond> circle;
+    glpp::extra::Line::Ptr   line;
 
 public:
     Game(Window::Ptr & window);

@@ -32,8 +32,8 @@ namespace singe {
 
     public:
         vector<Vertex> points;
-        Material::Ptr material;
-        Transform transform;
+        Material::Ptr  material;
+        Transform      transform;
 
         /**
          * Create an empty Model. This will do nothing until points are added to

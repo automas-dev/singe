@@ -49,7 +49,7 @@ namespace singe::scene {
                 PERSPECTIVE,
             };
 
-            Mode mode;
+            Mode  mode;
             float fov;
             float near;
             float far;
@@ -57,17 +57,17 @@ namespace singe::scene {
             Projection(float fov = 80,
                        float near = 0.01,
                        float far = 1000,
-                       Mode mode = PERSPECTIVE)
+                       Mode  mode = PERSPECTIVE)
                 : fov(fov), near(near), far(far), mode(mode) {}
         };
 
-        string name;
-        Pose pose;
+        string     name;
+        Pose       pose;
         Projection projection;
 
         Camera(const string & name,
-               Projection projection = Projection(),
-               Pose pose = Pose())
+               Projection     projection = Projection(),
+               Pose           pose = Pose())
             : name(name), projection(projection), pose(pose) {}
     };
 
@@ -87,7 +87,7 @@ namespace singe::scene {
             };
 
             string name;
-            Type type;
+            Type   type;
             string value;
 
             Uniform(const string & name, Type type, const string & value = "")
@@ -102,9 +102,9 @@ namespace singe::scene {
                 : type(type), path(path) {}
         };
 
-        string name;
-        string type;
-        vector<Source> source;
+        string          name;
+        string          type;
+        vector<Source>  source;
         vector<Uniform> uniforms;
 
         Shader(const string & name, const string & type) : name(name) {}
@@ -117,20 +117,20 @@ namespace singe::scene {
             Mesh(const string & path) : path(path) {}
         };
 
-        string name;
+        string    name;
         Transform transform;
-        Mesh mesh;
-        Shader shader;
+        Mesh      mesh;
+        Shader    shader;
 
-        Model(const string & name,
-              const Mesh & mesh,
-              const Shader & shader,
+        Model(const string &    name,
+              const Mesh &      mesh,
+              const Shader &    shader,
               const Transform & transform = Transform())
             : name(name), mesh(mesh), shader(shader), transform(transform) {}
     };
 
     struct Grid {
-        int size;
+        int  size;
         vec4 color;
 
         Grid(int size = 10, const vec4 & color = vec4(1))
@@ -138,13 +138,13 @@ namespace singe::scene {
     };
 
     struct Scene {
-        shared_ptr<Scene> parent;
-        string name;
-        Transform transform;
-        shared_ptr<Grid> grid;
-        vector<Camera> cameras;
-        vector<Shader> shaders;
-        vector<Model> models;
+        shared_ptr<Scene>         parent;
+        string                    name;
+        Transform                 transform;
+        shared_ptr<Grid>          grid;
+        vector<Camera>            cameras;
+        vector<Shader>            shaders;
+        vector<Model>             models;
         vector<shared_ptr<Scene>> children;
 
         /// Find a shader by ref name

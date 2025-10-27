@@ -14,11 +14,11 @@ using namespace singe;
 #include <memory>
 
 class Game : public GameBase {
-    ResourceManager res;
-    FPSDisplay fps;
-    std::shared_ptr<singe::MVPShader> shader;
-    std::shared_ptr<singe::Shader> circle_shader;
-    Scene scene;
+    ResourceManager       res;
+    FPSDisplay            fps;
+    singe::MVPShader::Ptr shader;
+    singe::Shader::Ptr    circle_shader;
+    Scene                 scene;
 
     bool drawGrid;
 

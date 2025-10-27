@@ -67,11 +67,11 @@ namespace singe {
         using ConstPtr = shared_ptr<const Menu>;
 
     private:
-        sf::Font font;
-        sf::Text title;
+        sf::Font                 font;
+        sf::Text                 title;
         std::list<MenuItem::Ptr> items;
-        bool isMouseDown;
-        bool visible;
+        bool                     isMouseDown;
+        bool                     visible;
 
     public:
         /**

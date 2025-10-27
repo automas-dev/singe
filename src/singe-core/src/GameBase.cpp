@@ -63,7 +63,7 @@ namespace singe {
                         - sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 
                 glm::ivec2 center(window->getSize().x / 2, window->getSize().y / 2);
-                auto mouse = window->getMousePosition();
+                auto       mouse = window->getMousePosition();
                 if (window->getMouseGrab()) {
                     window->setMousePosition(center);
                 }

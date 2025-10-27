@@ -10,7 +10,7 @@ namespace singe {
      * An SFML Text that shows calculates and shows the frame rate
      */
     class FPSDisplay : public sf::Text {
-        int frames;
+        int   frames;
         float time;
         float fps;
         float rate;

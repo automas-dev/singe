@@ -6,9 +6,9 @@ namespace singe {
     const sf::ContextSettings settings(24, 1, 8, 3, 0);
 
     Window::Window(const std::string & title,
-                   unsigned int width,
-                   unsigned int height,
-                   bool fullscreen)
+                   unsigned int        width,
+                   unsigned int        height,
+                   bool                fullscreen)
         : grab(false),
           title(title),
           window(sf::VideoMode(width, height),
@@ -43,7 +43,7 @@ namespace singe {
         window.setMouseCursorGrabbed(grab);
 
         if (grab) {
-            auto size = window.getSize();
+            auto         size = window.getSize();
             sf::Vector2i center(size.x / 2, size.y / 2);
             sf::Mouse::setPosition(center, window);
         }

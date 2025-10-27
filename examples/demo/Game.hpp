@@ -17,12 +17,12 @@ using namespace glm;
 #include <memory>
 
 class Game : public GameBase {
-    ResourceManager res;
-    std::shared_ptr<singe::MVPShader> shader;
-    Grid grid;
-    Scene scene;
-    Scene * otherScene;
-    bool showGrid;
+    ResourceManager       res;
+    singe::MVPShader::Ptr shader;
+    Grid                  grid;
+    Scene                 scene;
+    Scene *               otherScene;
+    bool                  showGrid;
 
     enum DisplayMode {
         Point = GL_POINT,

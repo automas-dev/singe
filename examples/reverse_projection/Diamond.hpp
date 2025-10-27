@@ -21,6 +21,7 @@ using glpp::Buffer;
 
 class Diamond {
     glpp::extra::Line::Ptr line;
+
     glm::vec2 size;
     glm::vec4 color;
     glm::vec2 pos;

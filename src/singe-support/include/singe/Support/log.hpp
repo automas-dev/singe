@@ -41,7 +41,7 @@ namespace singe::Logging {
 
     private:
         std::shared_ptr<spdlog::logger> logger;
-        Level level;
+        Level                           level;
 
     public:
         using Ptr = std::shared_ptr<Logger>;
@@ -63,7 +63,7 @@ namespace singe::Logging {
 #else
                      Info
 #endif
-            ) {
+              ) {
         }
 
         /**

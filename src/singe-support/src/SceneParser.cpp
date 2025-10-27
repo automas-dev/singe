@@ -31,7 +31,7 @@ namespace singe::scene {
     }
 
 #define _STR2(x) #x
-#define _STR(x) _STR2(x)
+#define _STR(x)  _STR2(x)
 
 #define ERROR(node, msg)                  \
     throw SceneParseError(traceNode(node) \
@@ -207,7 +207,7 @@ namespace singe::scene {
             ERROR(node, "missing type attribute");
 
         string type_str(type_attr->value(), type_attr->value_size());
-        auto type = uniformType(type_str);
+        auto   type = uniformType(type_str);
 
         string value(node->value(), node->value_size());
 
@@ -282,7 +282,7 @@ namespace singe::scene {
         if (!path_attr)
             ERROR(node, "missing path attribute");
 
-        string path(path_attr->value(), path_attr->value_size());
+        string      path(path_attr->value(), path_attr->value_size());
         Model::Mesh mesh(path);
 
         return mesh;
@@ -336,7 +336,7 @@ namespace singe::scene {
     }
 
     static shared_ptr<Scene> parseScene(const xml_node<char> * node,
-                                        shared_ptr<Scene> parent) {
+                                        shared_ptr<Scene>      parent) {
         PTR_CHECK(node);
 
         auto * name_attr = node->first_attribute("name");

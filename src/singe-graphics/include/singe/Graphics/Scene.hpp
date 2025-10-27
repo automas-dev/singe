@@ -24,8 +24,8 @@ namespace singe {
 
         vector<Scene::Ptr> children;
         vector<Model::Ptr> models;
-        shared_ptr<Grid> grid;
-        Transform transform;
+        Grid::Ptr          grid;
+        Transform          transform;
 
         Scene();
 
